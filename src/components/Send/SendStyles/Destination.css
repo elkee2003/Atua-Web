@@ -1,0 +1,19 @@
+.destinationCon {
+    display: flex;
+    flex-direction: column;
+    padding:20px;
+}
+.locationNxtBtnCon {
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    /* padding:15px; */
+    width: 150px;
+    background-color: aqua;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.locationNxtBtn {
+    font-size: 55px;
+}

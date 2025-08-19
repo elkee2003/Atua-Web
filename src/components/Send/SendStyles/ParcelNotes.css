@@ -1,0 +1,41 @@
+.parcelNotesCon {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding:20px;
+    align-items: center;
+    justify-content: center;
+}
+.parcelTxt {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+.parcelNoteInput {
+    padding: 8px;
+    width: 100%; /* take up full available width */
+    max-width: 600px; /* but don’t grow beyond 600px */
+    resize: none; /* prevent manual resize if you want */
+    overflow: hidden; 
+    min-height: 200px;
+    border-width: 2px;
+    border-color: #02061b;
+    border-radius: 20px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 1300px) {
+  
+}
+@media (max-width: 900px) {
+
+
+}
+@media (max-width: 500px) {
+    .parcelNoteInput {
+        width: 400px;
+        max-width: 100%; /* let it shrink fully on very small screens */
+    }
+}

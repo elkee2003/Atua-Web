@@ -1,0 +1,54 @@
+.services-wrapper {
+    width: 100%;
+    background-color: var(--white);
+    display: flex; 
+    align-items: center;
+}
+.services-container{
+    justify-content: center;
+}
+
+.bold-txt {
+    font-weight: 600;
+}
+
+.bg-image {
+    height: 70vh;
+    width: 90vw;
+    margin:1rem 0;
+    border-radius: 20px;
+    overflow: hidden;
+    /* background-color: transparent; */
+    background: rgb(245, 245, 245);
+    /* background: url('/backgroundBig.png'); */
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: 0.8s ease-in-out;
+}
+
+@media (max-width: 900px) {
+    .bg-image {
+        height: 75vh;
+        width: 100%;
+    }
+}
+
+@media (max-width: 700px) {
+    .bg-image {
+        /* border-top-left-radius: 5rem;
+        border-top-right-radius: 5rem;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0; */
+        border-radius: 5rem 5rem 0 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .bg-image {
+        border-radius: 7rem 7rem 0 0;
+    }
+}
+
+@media (max-width: 500px) {
+}
