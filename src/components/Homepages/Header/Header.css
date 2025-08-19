@@ -33,6 +33,7 @@
 .logoCon {
     width: 100px;
     height: 100px;
+    z-index: 200;
 }
 
 .logoCon img {
@@ -182,7 +183,7 @@
       top: -25rem;
       left: 0;
       flex-direction: column;
-      background: var(--blue-gradient);
+      background: var(--black-gradient);
       width: 100%;
       padding-top: 4.5rem;
       padding-bottom: 1rem;

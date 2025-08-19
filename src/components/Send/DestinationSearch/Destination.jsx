@@ -1,120 +1,90 @@
-import React, { useState, useEffect, useRef } from 'react';
-import '../SendStyles/Destination.css';
+import React, { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { Autocomplete } from "@react-google-maps/api";
+import "../SendStyles/Destination.css";
 import { MdNavigateNext } from "react-icons/md";
-import { useNavigate } from 'react-router-dom';
-import { useJsApiLoader, StandaloneSearchBox } from '@react-google-maps/api';
-
-const libraries = ["places"];
+import {useLocationContext} from '../../../../Provider/LocationProvider';
 
 function DestinationSearch() {
   const originRef = useRef(null);
   const destinationRef = useRef(null);
+  const navigate = useNavigate();
 
-  const googleApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+  const {originPlace, destinationPlace, setOriginPlace, setDestinationPlace, originPlaceLat, setOriginPlaceLat, originPlaceLng, setOriginPlaceLng,  destinationPlaceLat, setDestinationPlaceLat, destinationPlaceLng, setDestinationPlaceLng} = useLocationContext()
 
-  // Load the Google Maps API
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: googleApiKey,
-    libraries, // Use the consistent libraries array
-  });
+  const handlePlaceChanged = (ref, type) => {
+    if (!ref.current) return;
+    const place = ref.current.getPlace();
+    if (!place?.geometry) return;
 
-    const [originPlace, setOriginPlace] = useState(null);
-    const [originPlaceLat, setOriginPlaceLat] = useState(null);
-    const [originPlaceLng, setOriginPlaceLng] = useState(null);
-    const [destinationPlace, setDestinationPlace]= useState(null)
-    const [destinationPlaceLat, setDestinationPlaceLat]= useState(null)
-    const [destinationPlaceLng, setDestinationPlaceLng]= useState(null)
-    const [lastDestination, setLastDestination] = useState(null);
-    const navigate = useNavigate();
+    const address = place.formatted_address;
+    const lat = place.geometry.location.lat();
+    const lng = place.geometry.location.lng();
 
-    const handlePlacesChanged = (ref, type) => {
-    if (ref.current) {
-      const places = ref.current.getPlaces();
-      if (places?.length > 0) {
-        const place = places[0];
-        const address = place.formatted_address;
-        const lat = place.geometry.location.lat();
-        const lng = place.geometry.location.lng();
-
-        if (type === "origin") {
-          setOriginPlace(address);
-          setOriginPlaceLat(lat);
-          setOriginPlaceLng(lng);
-        } else {
-          setDestinationPlace(address);
-          setDestinationPlaceLat(lat);
-          setDestinationPlaceLng(lng);
-        }
-
-        console.log(`${type} selected:`, { address, lat, lng });
-      }
+    if (type === "origin") {
+      setOriginPlace(address);
+      setOriginPlaceLat(lat);
+      setOriginPlaceLng(lng);
+    } else {
+      setDestinationPlace(address);
+      setDestinationPlaceLat(lat);
+      setDestinationPlaceLng(lng);
     }
   };
 
   return (
-    <div className='destinationCon'>
-        {/* Google Places Autocomplete */}
-        {isLoaded ? (
-            <>
-                {/* Origin Input */}
-                <div className="autocompleteContainer" style={{ marginBottom: "15px" }}>
-                    <StandaloneSearchBox
-                    onLoad={(ref) => (originRef.current = ref)}
-                    onPlacesChanged={() => handlePlacesChanged(originRef, "origin")}
-                    options={{
-                        componentRestrictions: { country: ["ng", "gh", "us"] },
-                    }}
-                    >
-                    <input
-                        type="text"
-                        placeholder="Enter Origin"
-                        className="inputAutoComplete"
-                        style={{ width: "100%", padding: "10px", fontSize: "16px" }}
-                    />
-                    </StandaloneSearchBox>
-                </div>
-
-                {/* Destination Input */}
-                <div className="autocompleteContainer">
-                    <StandaloneSearchBox
-                    onLoad={(ref) => (destinationRef.current = ref)}
-                    onPlacesChanged={() => handlePlacesChanged(destinationRef, "destination")}
-                    options={{
-                        componentRestrictions: { country: ["ng", "gh", "us"] },
-                    }}
-                    >
-                    <input
-                        type="text"
-                        placeholder="Enter Destination"
-                        className="inputAutoComplete"
-                        style={{ width: "100%", padding: "10px", fontSize: "16px" }}
-                    />
-                    </StandaloneSearchBox>
-                </div>
-
-                {/* Debug Display */}
-                <div style={{ marginTop: "20px" }}>
-                    <p><strong>Origin:</strong> {originPlace} ({originPlaceLat}, {originPlaceLng})</p>
-                    <p><strong>Destination:</strong> {destinationPlace} ({destinationPlaceLat}, {destinationPlaceLng})</p>
-                </div>
-            </>
-        ) : (
-            <p>Loading...</p>
-        )}
-
-        {/* Button */}
-        <div 
-            className='locationNxtBtnCon'
-            onClick={()=> navigate('/send/parcel-notes')}
+    <div className="destinationCon">
+      {/* Origin Input */}
+      <div className="autocompleteContainer">
+        <Autocomplete
+          onLoad={(ref) => (originRef.current = ref)}
+          onPlaceChanged={() => handlePlaceChanged(originRef, "origin")}
+          options={{ componentRestrictions: { country: ["ng", "gh", "us"] } }}
         >
-            <MdNavigateNext 
-                className='locationNxtBtn' 
-            />
-        </div>
-        
+          <input
+            type="text"
+            placeholder="From?"
+            className="inputAutoComplete"
+          />
+        </Autocomplete>
+      </div>
+
+      {/* Destination Input */}
+      <div className="autocompleteContainer">
+        <Autocomplete
+          onLoad={(ref) => (destinationRef.current = ref)}
+          onPlaceChanged={() => handlePlaceChanged(destinationRef, "destination")}
+          options={{ componentRestrictions: { country: ["ng", "gh", "us"] } }}
+        >
+          <input
+            type="text"
+            placeholder="To?"
+            className="inputAutoComplete"
+          />
+        </Autocomplete>
+      </div>
+
+      {/* Debug info */}
+      <div style={{ marginTop: "20px" }}>
+        <p>
+          <strong>Origin:</strong> {originPlace} ({originPlaceLat},{" "}
+          {originPlaceLng})
+        </p>
+        <p>
+          <strong>Destination:</strong> {destinationPlace} (
+          {destinationPlaceLat}, {destinationPlaceLng})
+        </p>
+      </div>
+
+      {/* Next button */}
+      <div
+        className="locationNxtBtnCon"
+        onClick={() => navigate("/send/parcel-notes")}
+      >
+        <MdNavigateNext className="locationNxtBtn" />
+      </div>
     </div>
-  )
+  );
 }
 
 export default DestinationSearch;
