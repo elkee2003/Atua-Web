@@ -1,0 +1,93 @@
+.orderHistoryListContainer {
+  padding: 10px;
+  background-color: #dddbdb;
+  border-radius: 20px;
+  margin-bottom: 15px;
+}
+
+.subHeading {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.detail {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.priceTypeRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.priceType {
+  font-size: 15px;
+}
+
+.statusRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.greenIcon {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #03eb03;
+}
+
+.redIcon {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #eb1e03;
+}
+
+.deleteButtonCon {
+  padding: 10px;
+  margin-top: 10px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background-color: #f31d1d;
+}
+
+.deleteButtonTxt {
+  font-size: 15px;
+  font-weight: bold;
+  color: white;
+}
+
+.cancelButtonCon {
+  padding: 10px;
+  margin-top: 10px;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #f31d1d;
+  border-radius: 15px;
+}
+
+.cancelButtonTxt {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+@media (max-width: 1300px) {
+  
+}
+
+@media (max-width: 900px) {
+
+
+}
+
+@media (max-width: 500px) {
+}

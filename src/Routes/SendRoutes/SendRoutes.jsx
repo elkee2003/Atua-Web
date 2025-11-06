@@ -11,6 +11,12 @@ import ParcelNote from '../../../src/components/Send/ContentPages/Home/ParcelNot
 import ReviewOrder from '../../../src/components/Send/ContentPages/Home/ParcelNote/ParcelReview';
 import GoogleMapsProvider from '../../../Provider/GoogleMapsProvider';
 import SearchResult from '../../components/Send/ContentPages/Home/SearchResult/SearchResult';
+import Checkout from '../../components/Send/ContentPages/Home/SearchResult/Checkout';
+
+// Order Page
+import OrderHistoryMain from '../../components/Send/ContentPages/OrderHistory/OrderHistoryMain/OrderHistoryMain';
+import OrderHistoryList from '../../components/Send/ContentPages/OrderHistory/OrderHistoryList/OrderHistoryList';
+import OrderLiveUpdate from '../../components/Send/ContentPages/OrderHistory/OrderLiveUpdate/OrderLiveUpdate';
 
 
 const SendRoutes = () => (
@@ -36,6 +42,15 @@ const SendRoutes = () => (
 
                 {/* Search Result*/}
                 <Route path="search_results" element={<SearchResult />} />
+
+                {/* Checkout*/}
+                <Route path="checkout" element={<Checkout />} />
+
+                {/* OrderHistory Main */}
+                <Route path="orders" element={<OrderHistoryMain />} />
+
+                {/* Order Live Update */}
+                <Route path="order_live_update" element={<OrderHistoryMain />} />
 
                 {/* 404 */}
                 <Route

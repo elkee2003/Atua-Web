@@ -32,12 +32,22 @@ function DestinationSearch() {
     }
   };
 
+  // ✅ Check before navigating
+  const handleNextClick = () => {
+    if (!originPlace || !destinationPlace) {
+      alert("Please select both origin and destination before continuing.");
+      return;
+    }
+    navigate("/send/parcel_notes");
+  };
+
   // Automatic navigation
   // useEffect(() => {
   //   if (originPlace && destinationPlace) {
   //     navigate("/send/parcel_notes");
   //   }
   // }, [originPlace, destinationPlace]);
+  
 
   return (
     <div className="destinationCon">
@@ -72,7 +82,7 @@ function DestinationSearch() {
       </div>
 
       {/* Debug info */}
-      <div style={{ marginTop: "20px" }}>
+      {/* <div style={{ marginTop: "20px" }}>
         <p>
           <strong>Origin:</strong> {originPlace} ({originPlaceLat},{" "}
           {originPlaceLng})
@@ -81,12 +91,12 @@ function DestinationSearch() {
           <strong>Destination:</strong> {destinationPlace} (
           {destinationPlaceLat}, {destinationPlaceLng})
         </p>
-      </div>
+      </div> */}
 
       {/* Next button */}
       <div
         className="locationNxtBtnCon"
-        onClick={() => navigate("/send/parcel_notes")}
+        onClick={handleNextClick}
       >
         <MdNavigateNext className="locationNxtBtn" />
       </div>

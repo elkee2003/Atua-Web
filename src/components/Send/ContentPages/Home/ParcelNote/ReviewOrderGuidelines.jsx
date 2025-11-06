@@ -8,7 +8,7 @@ function ReviewOrderGuidelines() {
       <div className="guidelineSection">
         <h2 className="mainHeader">Review parcel guidelines</h2>
 
-        <p className="header">
+        <p className="guildlineHeader">
           To achieve a successful delivery, please confirm that your parcel is:
         </p>
         <p className="policyText">• ₦30,000 or less in value</p>

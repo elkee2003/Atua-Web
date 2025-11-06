@@ -29,6 +29,8 @@ function HomeScreen() {
     }
   }, []);
 
+  console.log({currentPosition})
+
   // ✅ Fetch couriers from Amplify DataStore
   const fetchCouriers = async () => {
     try {
@@ -36,6 +38,7 @@ function HomeScreen() {
         c.isOnline.eq(true)
       );
       setCouriers(onlineCouriers);
+      console.log('couriers:',couriers)
     } catch (error) {
       console.error('Failed to fetch couriers:', error);
     }

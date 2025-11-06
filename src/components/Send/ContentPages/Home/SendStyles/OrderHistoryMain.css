@@ -1,0 +1,58 @@
+.orderHistoryMainContainer {
+  display: flex;
+  width: 75vw;
+  flex-direction: column;
+  margin-top: 35px;
+  margin-inline: 10px;
+}
+
+.orderHistoryMainHeader {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #3cff00;
+  flex: 1;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ccc;
+  border-top: 5px solid #333;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.noOrdersCon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.noOrders {
+  font-size: 30px;
+  font-weight: bold;
+  color: #afadad;
+}
+
+@media (max-width: 1300px) {
+  
+}
+
+@media (max-width: 900px) {
+
+    .orderHistoryMainContainer{
+        width: 100vw;
+    }
+
+}
+
+@media (max-width: 500px) {
+}

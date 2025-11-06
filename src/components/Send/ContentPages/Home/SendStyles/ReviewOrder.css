@@ -1,6 +1,6 @@
 .reviewContainer {
     position: relative;
-    width: 70vw;
+    width: 78vw;
     background-color: rgba(228, 225, 225, 0.85);
     min-height: 100vh;
     position: relative;
@@ -58,7 +58,7 @@
 .buttonContainer {
   position: fixed;
   bottom: 0;
-  width: 100%;
+  width: 78vw;
   height: 90px;
   background-color: rgba(228, 225, 225, 0.85);
   display: flex;
@@ -99,11 +99,15 @@
         font-size: 1rem;
     }
 
+    .buttonContainer {
+        width: 100vw;
+        margin-bottom: 4rem;
+    }
+
     .doneButton {
         width: 130px;
         height: 60px;
         font-size: 1.3rem;
-        margin-bottom: 10rem;
     }
 }
 
