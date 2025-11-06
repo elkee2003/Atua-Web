@@ -1,0 +1,30 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-atua-staging-19d66-authRole",
+      "UnauthRoleArn": "arn:aws:iam::703145406670:role/amplify-atua-staging-19d66-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::703145406670:role/amplify-atua-staging-19d66-authRole",
+      "Region": "eu-north-1",
+      "DeploymentBucketName": "amplify-atua-staging-19d66-deployment",
+      "UnauthRoleName": "amplify-atua-staging-19d66-unauthRole",
+      "StackName": "amplify-atua-staging-19d66",
+      "StackId": "arn:aws:cloudformation:eu-north-1:703145406670:stack/amplify-atua-staging-19d66/26011ef0-a979-11f0-9b40-0ea2af258faf",
+      "AmplifyAppId": "d4d2e6dwzso4a",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-atua-staging-19d66-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "atuac06ab999c06ab999": {}
+      },
+      "function": {
+        "atuac06ab999c06ab999PostConfirmation": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/atuac06ab999c06ab999PostConfirmation-6b7a5168724642576477-build.zip"
+        }
+      },
+      "api": {
+        "Atua": {}
+      }
+    }
+  }
+}

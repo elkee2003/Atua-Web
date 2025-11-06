@@ -1,0 +1,75 @@
+.atuaTypeContainer {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f3f1f1;
+  cursor: pointer;
+}
+
+.atuaTypeContainer.selected {
+  background-color: #e9e7e7;
+}
+
+.atuaTypeImage {
+  height: 70px;
+  width: 80px;
+  object-fit: contain;
+}
+
+.atuaTypeMiddle {
+  flex: 1;
+  margin: 0 10px;
+  text-align: center;
+}
+
+.atuaTypeInfoRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.atuaTypeInfoIcon {
+  font-size: 20px;
+  margin-left: 5px;
+}
+
+.atuaTypeRight {
+  width: 100px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.atuaTypeLabel {
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.atuaTypeTime {
+  color: #5d5d5d;
+}
+
+.atuaTypePrice {
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+.confirmBtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 20px;
+  background-color: #01a70f;
+  margin: 0 20px 30px;
+  cursor: pointer;
+}
+
+.confirmBtnText {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+}

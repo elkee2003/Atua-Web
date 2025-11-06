@@ -5,7 +5,8 @@ const OrderContext = createContext({})
 const OrderProvider = ({children}) => {
 
     const [recipientName, setRecipientName]= useState('')
-    const [recipientNumber, setRecipientNumber]= useState('')
+    const [recipientNumber, setRecipientNumber]= useState('');
+    const [recipientNumber2, setRecipientNumber2]= useState('');
     const [orderDetails, setOrderDetails]= useState('')
     const [transportationType, setTransportationType]= useState('')
     const [orders, setOrders]= useState('')
@@ -17,7 +18,7 @@ const OrderProvider = ({children}) => {
     const createOrder = []
 
   return (
-    <OrderContext.Provider value={{recipientName, recipientNumber, orderDetails, setRecipientName, setRecipientNumber, setOrderDetails, transportationType, setTransportationType, orders, setOrders,price, setPrice, courierFee, setCourierFee, removeOrder, createOrder}}>
+    <OrderContext.Provider value={{recipientName, recipientNumber, recipientNumber2, orderDetails, setRecipientName, setRecipientNumber, setRecipientNumber2, setOrderDetails, transportationType, setTransportationType, orders, setOrders,price, setPrice, courierFee, setCourierFee, removeOrder, createOrder}}>
         {children}
     </OrderContext.Provider>
   )

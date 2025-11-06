@@ -113,7 +113,10 @@ const Hero = () => {
         {/* Explore */}
         <div
             className="hero-send-con"
-            onClick={()=>navigate('/send/home')}
+            onClick={
+                ()=>navigate('/send/home')
+                // ()=>navigate('/send/destination-search')
+            }
         >
             <p className="hero-send-txt">Send</p>
         </div>

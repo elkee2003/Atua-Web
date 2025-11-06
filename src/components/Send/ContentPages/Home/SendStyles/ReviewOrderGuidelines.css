@@ -1,0 +1,63 @@
+.guidelinesContainer {
+  background-color: rgba(63, 61, 61, 0.85);
+  margin-top: 20px;
+  margin-inline: 10px;
+  padding: 20px;
+  border-radius: 20px;
+  margin-bottom: 120px;
+  color: #ebe8e8;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.mainHeader {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.header {
+  font-size: 1.1rem;
+  font-weight: bold;
+  line-height: 1.5rem;
+  margin: 10px 0;
+}
+
+.guidelineSection {
+  border-bottom: 1px solid #7e7d7d;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.policyText {
+  line-height: 1.5rem;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.policyLastText {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.3rem;
+  color: #ebe8e8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .guidelinesContainer {
+    padding: 15px;
+  }
+
+  .mainHeader {
+    font-size: 1.2rem;
+  }
+
+  .header {
+    font-size: 1rem;
+  }
+
+  .policyText,
+  .policyLastText {
+    font-size: 0.9rem;
+  }
+}

@@ -1,0 +1,148 @@
+.client-sidebar {
+    width: 20vw;
+    height: 100vh;
+    gap:50px;
+    color: #0b0431;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
+  }
+
+  .client-logoClickClient {
+    cursor: pointer;
+  }
+  
+  /* Dashboard heading */
+  /* .sidebar h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #040842;
+    text-align: center;
+  } */
+  
+  /* Navigation links */
+  .client-sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .client-sidebar nav ul li {
+    margin: 15px 0;
+  }
+
+  .client-nav-container {
+    display: flex;
+    position: relative;
+    align-items: center;
+    gap:0.5rem;
+  }
+
+  .clientNotification-badge {
+    background-color: red;
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 999px;
+    position: absolute;
+    top: -4px;
+    right: -10px;
+    min-width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+  
+  .client-sidebar nav ul li a {
+    text-decoration: none;
+    color: #0c0533;
+    font-size: 1.2rem;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+  
+  .client-sidebar nav ul li a:hover {
+    font-size: 1.3rem;
+    background-color: #f0f0f0; 
+    color: #26e600; 
+  }
+
+  .client-sidebar nav ul li a svg {
+    font-size: 1.8rem;
+  }
+
+  /* Bottom tab navigator (hidden by default) */
+.client-bottom-nav {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    color: #0b0431;
+    justify-content: space-around;
+    padding: 15px 0;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+  }
+
+  .client-bottom-nav a svg {
+    font-size: 1.5rem; 
+}
+  
+  .client-bottom-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #0c0533;
+    font-size: 1rem;
+    transition: color 0.3s;
+  }
+  
+  .client-bottom-nav a:hover {
+    color: #26e600;
+  }
+
+  .client-active-link {
+    font-weight: bold; /* Make the active link bold */
+    border-radius: 5px;
+  }
+  
+  /* Media query for max-width: 900px */
+    @media (max-width: 900px) {
+        .client-sidebar {
+            display: none;
+        }
+    
+        /* .content {
+            margin-left: 0; 
+        } */
+    
+        .client-bottom-nav {
+            display: flex; 
+        }
+
+        .clientBottomNavBellCon {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          align-items: center;
+        }
+
+        .clientNotification-badge {
+          top: -8px;
+          right: -3px;
+          min-width: 20px;
+          height: 20px;
+        }
+    }

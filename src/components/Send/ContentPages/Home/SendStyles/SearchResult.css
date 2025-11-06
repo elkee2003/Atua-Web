@@ -1,0 +1,45 @@
+.searchResultContainer {
+  position: relative;
+  width: 80vw;
+  padding-left: 0.7rem;
+  margin-bottom: 2rem;
+}
+
+.backBtn {
+  position: absolute;
+  top: 25px;
+  left: 1.6rem;
+  height: 35px;
+  width: 35px;
+  border-radius: 10px;
+  background-color: #d8d3d3;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+}
+
+.backBtnIcon {
+  font-size: 30px;
+  color: #6e6d6d;
+}
+@media (max-width: 1300px) {
+  
+}
+@media (max-width: 900px) {
+    .searchResultContainer {
+        width: 100vw;
+        padding-left: 0;
+        margin-bottom: 10rem;
+    }
+
+    .backBtn {
+        left: 10px;
+    }
+
+}
+@media (max-width: 500px) {
+
+}
