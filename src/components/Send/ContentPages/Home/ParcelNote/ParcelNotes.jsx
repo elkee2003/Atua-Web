@@ -49,7 +49,7 @@ function ParcelNote() {
         className="parcelInput"
         value={recipientName}
         onChange={(e) => setRecipientName(e.target.value)}
-        placeholder="Sending to e.g. Opus"
+        placeholder="Recipient name e.g. Opus"
       />
       {recipientNameError && <p className="errorText">{recipientNameError}</p>}
 
@@ -63,7 +63,7 @@ function ParcelNote() {
           const value = e.target.value.replace(/\D/g, "");
           setRecipientNumber(value);
         }}
-        placeholder="e.g. 08030000000"
+        placeholder="Recipient number e.g. 0803..."
       />
       {recipientNumberError && (
         <p className="errorText">{recipientNumberError}</p>
@@ -79,7 +79,7 @@ function ParcelNote() {
           const value = e.target.value.replace(/\D/g, "");
           setRecipientNumber2(value);
         }}
-        placeholder="Backup number eg:07090000"
+        placeholder="Backup (recipient) e.g. 0709...(opt)" 
       />
       {recipientNumberError && (
         <p className="errorText">{recipientNumberError2}</p>
