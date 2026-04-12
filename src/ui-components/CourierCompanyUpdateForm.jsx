@@ -7,11 +7,9 @@
 /* eslint-disable */
 import * as React from "react";
 import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import { CourierCompany } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { generateClient } from "aws-amplify/api";
-import { getCourierCompany } from "../graphql/queries";
-import { updateCourierCompany } from "../graphql/mutations";
-const client = generateClient();
+import { DataStore } from "aws-amplify/datastore";
 export default function CourierCompanyUpdateForm(props) {
   const {
     id: idProp,
@@ -97,12 +95,7 @@ export default function CourierCompanyUpdateForm(props) {
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? (
-            await client.graphql({
-              query: getCourierCompany.replaceAll("__typename", ""),
-              variables: { id: idProp },
-            })
-          )?.data?.getCourierCompany
+        ? await DataStore.query(CourierCompany, idProp)
         : courierCompanyModelProp;
       setCourierCompanyRecord(record);
     };
@@ -155,20 +148,20 @@ export default function CourierCompanyUpdateForm(props) {
         let modelFields = {
           sub,
           firstName,
-          lastName: lastName ?? null,
-          profilePic: profilePic ?? null,
-          address: address ?? null,
-          lat: lat ?? null,
-          lng: lng ?? null,
-          landmark: landmark ?? null,
-          phoneNumber: phoneNumber ?? null,
-          email: email ?? null,
-          adminFirstName: adminFirstName ?? null,
-          adminLastName: adminLastName ?? null,
-          adminPhoneNumber: adminPhoneNumber ?? null,
-          bankName: bankName ?? null,
-          accountNumber: accountNumber ?? null,
-          push_token: push_token ?? null,
+          lastName,
+          profilePic,
+          address,
+          lat,
+          lng,
+          landmark,
+          phoneNumber,
+          email,
+          adminFirstName,
+          adminLastName,
+          adminPhoneNumber,
+          bankName,
+          accountNumber,
+          push_token,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -198,22 +191,17 @@ export default function CourierCompanyUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await client.graphql({
-            query: updateCourierCompany.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                id: courierCompanyRecord.id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            CourierCompany.copyOf(courierCompanyRecord, (updated) => {
+              Object.assign(updated, modelFields);
+            })
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}

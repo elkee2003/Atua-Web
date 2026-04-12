@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { Courier } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -32,16 +33,18 @@ export declare type CourierUpdateFormInputValues = {
     phoneNumber?: string;
     email?: string;
     courierNIN?: string;
-    courierBVN?: string;
+    courierNINImage?: string;
+    bankCode?: string;
     bankName?: string;
     accountName?: string;
     accountNumber?: string;
     transportationType?: string;
-    vehicleType?: string;
+    vehicleClass?: string;
     model?: string;
+    vehicleColour?: string;
     plateNumber?: string;
     maxiImages?: string[];
-    maxiTransportPrice?: number;
+    maxiDescription?: string;
     guarantorName?: string;
     guarantorLastName?: string;
     guarantorProfession?: string;
@@ -50,10 +53,18 @@ export declare type CourierUpdateFormInputValues = {
     guarantorAddress?: string;
     guarantorEmail?: string;
     guarantorNIN?: string;
+    guarantorNINImage?: string;
     lat?: number;
     lng?: number;
     heading?: number;
     push_token?: string;
+    isApproved?: boolean;
+    approvedById?: string;
+    currentBatchCount?: number;
+    currentExpressCount?: number;
+    currentMaxiCount?: number;
+    lastBatchAssignedAt?: string;
+    statusKey?: string;
 };
 export declare type CourierUpdateFormValidationValues = {
     sub?: ValidationFunction<string>;
@@ -66,16 +77,18 @@ export declare type CourierUpdateFormValidationValues = {
     phoneNumber?: ValidationFunction<string>;
     email?: ValidationFunction<string>;
     courierNIN?: ValidationFunction<string>;
-    courierBVN?: ValidationFunction<string>;
+    courierNINImage?: ValidationFunction<string>;
+    bankCode?: ValidationFunction<string>;
     bankName?: ValidationFunction<string>;
     accountName?: ValidationFunction<string>;
     accountNumber?: ValidationFunction<string>;
     transportationType?: ValidationFunction<string>;
-    vehicleType?: ValidationFunction<string>;
+    vehicleClass?: ValidationFunction<string>;
     model?: ValidationFunction<string>;
+    vehicleColour?: ValidationFunction<string>;
     plateNumber?: ValidationFunction<string>;
     maxiImages?: ValidationFunction<string>;
-    maxiTransportPrice?: ValidationFunction<number>;
+    maxiDescription?: ValidationFunction<string>;
     guarantorName?: ValidationFunction<string>;
     guarantorLastName?: ValidationFunction<string>;
     guarantorProfession?: ValidationFunction<string>;
@@ -84,10 +97,18 @@ export declare type CourierUpdateFormValidationValues = {
     guarantorAddress?: ValidationFunction<string>;
     guarantorEmail?: ValidationFunction<string>;
     guarantorNIN?: ValidationFunction<string>;
+    guarantorNINImage?: ValidationFunction<string>;
     lat?: ValidationFunction<number>;
     lng?: ValidationFunction<number>;
     heading?: ValidationFunction<number>;
     push_token?: ValidationFunction<string>;
+    isApproved?: ValidationFunction<boolean>;
+    approvedById?: ValidationFunction<string>;
+    currentBatchCount?: ValidationFunction<number>;
+    currentExpressCount?: ValidationFunction<number>;
+    currentMaxiCount?: ValidationFunction<number>;
+    lastBatchAssignedAt?: ValidationFunction<string>;
+    statusKey?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type CourierUpdateFormOverridesProps = {
@@ -102,16 +123,18 @@ export declare type CourierUpdateFormOverridesProps = {
     phoneNumber?: PrimitiveOverrideProps<TextFieldProps>;
     email?: PrimitiveOverrideProps<TextFieldProps>;
     courierNIN?: PrimitiveOverrideProps<TextFieldProps>;
-    courierBVN?: PrimitiveOverrideProps<TextFieldProps>;
+    courierNINImage?: PrimitiveOverrideProps<TextFieldProps>;
+    bankCode?: PrimitiveOverrideProps<TextFieldProps>;
     bankName?: PrimitiveOverrideProps<TextFieldProps>;
     accountName?: PrimitiveOverrideProps<TextFieldProps>;
     accountNumber?: PrimitiveOverrideProps<TextFieldProps>;
     transportationType?: PrimitiveOverrideProps<TextFieldProps>;
-    vehicleType?: PrimitiveOverrideProps<TextFieldProps>;
+    vehicleClass?: PrimitiveOverrideProps<TextFieldProps>;
     model?: PrimitiveOverrideProps<TextFieldProps>;
+    vehicleColour?: PrimitiveOverrideProps<TextFieldProps>;
     plateNumber?: PrimitiveOverrideProps<TextFieldProps>;
     maxiImages?: PrimitiveOverrideProps<TextFieldProps>;
-    maxiTransportPrice?: PrimitiveOverrideProps<TextFieldProps>;
+    maxiDescription?: PrimitiveOverrideProps<TextFieldProps>;
     guarantorName?: PrimitiveOverrideProps<TextFieldProps>;
     guarantorLastName?: PrimitiveOverrideProps<TextFieldProps>;
     guarantorProfession?: PrimitiveOverrideProps<TextFieldProps>;
@@ -120,16 +143,24 @@ export declare type CourierUpdateFormOverridesProps = {
     guarantorAddress?: PrimitiveOverrideProps<TextFieldProps>;
     guarantorEmail?: PrimitiveOverrideProps<TextFieldProps>;
     guarantorNIN?: PrimitiveOverrideProps<TextFieldProps>;
+    guarantorNINImage?: PrimitiveOverrideProps<TextFieldProps>;
     lat?: PrimitiveOverrideProps<TextFieldProps>;
     lng?: PrimitiveOverrideProps<TextFieldProps>;
     heading?: PrimitiveOverrideProps<TextFieldProps>;
     push_token?: PrimitiveOverrideProps<TextFieldProps>;
+    isApproved?: PrimitiveOverrideProps<SwitchFieldProps>;
+    approvedById?: PrimitiveOverrideProps<TextFieldProps>;
+    currentBatchCount?: PrimitiveOverrideProps<TextFieldProps>;
+    currentExpressCount?: PrimitiveOverrideProps<TextFieldProps>;
+    currentMaxiCount?: PrimitiveOverrideProps<TextFieldProps>;
+    lastBatchAssignedAt?: PrimitiveOverrideProps<TextFieldProps>;
+    statusKey?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CourierUpdateFormProps = React.PropsWithChildren<{
     overrides?: CourierUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    courier?: any;
+    courier?: Courier;
     onSubmit?: (fields: CourierUpdateFormInputValues) => CourierUpdateFormInputValues;
     onSuccess?: (fields: CourierUpdateFormInputValues) => void;
     onError?: (fields: CourierUpdateFormInputValues, errorMessage: string) => void;

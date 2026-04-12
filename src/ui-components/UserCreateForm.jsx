@@ -6,11 +6,16 @@
 
 /* eslint-disable */
 import * as React from "react";
-import { Button, Flex, Grid, TextField } from "@aws-amplify/ui-react";
+import {
+  Button,
+  Flex,
+  Grid,
+  SwitchField,
+  TextField,
+} from "@aws-amplify/ui-react";
+import { User } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { generateClient } from "aws-amplify/api";
-import { createUser } from "../graphql/mutations";
-const client = generateClient();
+import { DataStore } from "aws-amplify/datastore";
 export default function UserCreateForm(props) {
   const {
     clearOnSuccess = true,
@@ -26,17 +31,20 @@ export default function UserCreateForm(props) {
     sub: "",
     firstName: "",
     lastName: "",
+    email: "",
     phoneNumber: "",
     profilePic: "",
     address: "",
     exactAddress: "",
     lat: "",
     lng: "",
+    isBlocked: false,
     push_token: "",
   };
   const [sub, setSub] = React.useState(initialValues.sub);
   const [firstName, setFirstName] = React.useState(initialValues.firstName);
   const [lastName, setLastName] = React.useState(initialValues.lastName);
+  const [email, setEmail] = React.useState(initialValues.email);
   const [phoneNumber, setPhoneNumber] = React.useState(
     initialValues.phoneNumber
   );
@@ -47,18 +55,21 @@ export default function UserCreateForm(props) {
   );
   const [lat, setLat] = React.useState(initialValues.lat);
   const [lng, setLng] = React.useState(initialValues.lng);
+  const [isBlocked, setIsBlocked] = React.useState(initialValues.isBlocked);
   const [push_token, setPush_token] = React.useState(initialValues.push_token);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setSub(initialValues.sub);
     setFirstName(initialValues.firstName);
     setLastName(initialValues.lastName);
+    setEmail(initialValues.email);
     setPhoneNumber(initialValues.phoneNumber);
     setProfilePic(initialValues.profilePic);
     setAddress(initialValues.address);
     setExactAddress(initialValues.exactAddress);
     setLat(initialValues.lat);
     setLng(initialValues.lng);
+    setIsBlocked(initialValues.isBlocked);
     setPush_token(initialValues.push_token);
     setErrors({});
   };
@@ -66,12 +77,14 @@ export default function UserCreateForm(props) {
     sub: [{ type: "Required" }],
     firstName: [{ type: "Required" }],
     lastName: [],
+    email: [],
     phoneNumber: [],
     profilePic: [],
     address: [],
     exactAddress: [],
     lat: [],
     lng: [],
+    isBlocked: [],
     push_token: [],
   };
   const runValidationTasks = async (
@@ -103,12 +116,14 @@ export default function UserCreateForm(props) {
           sub,
           firstName,
           lastName,
+          email,
           phoneNumber,
           profilePic,
           address,
           exactAddress,
           lat,
           lng,
+          isBlocked,
           push_token,
         };
         const validationResponses = await Promise.all(
@@ -139,14 +154,7 @@ export default function UserCreateForm(props) {
               modelFields[key] = null;
             }
           });
-          await client.graphql({
-            query: createUser.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(new User(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -155,8 +163,7 @@ export default function UserCreateForm(props) {
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
@@ -175,12 +182,14 @@ export default function UserCreateForm(props) {
               sub: value,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -208,12 +217,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName: value,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -241,12 +252,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName: value,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -263,6 +276,41 @@ export default function UserCreateForm(props) {
         {...getOverrideProps(overrides, "lastName")}
       ></TextField>
       <TextField
+        label="Email"
+        isRequired={false}
+        isReadOnly={false}
+        value={email}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              firstName,
+              lastName,
+              email: value,
+              phoneNumber,
+              profilePic,
+              address,
+              exactAddress,
+              lat,
+              lng,
+              isBlocked,
+              push_token,
+            };
+            const result = onChange(modelFields);
+            value = result?.email ?? value;
+          }
+          if (errors.email?.hasError) {
+            runValidationTasks("email", value);
+          }
+          setEmail(value);
+        }}
+        onBlur={() => runValidationTasks("email", email)}
+        errorMessage={errors.email?.errorMessage}
+        hasError={errors.email?.hasError}
+        {...getOverrideProps(overrides, "email")}
+      ></TextField>
+      <TextField
         label="Phone number"
         isRequired={false}
         isReadOnly={false}
@@ -274,12 +322,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber: value,
               profilePic,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -307,12 +357,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic: value,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -340,12 +392,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address: value,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -373,12 +427,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress: value,
               lat,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -410,12 +466,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat: value,
               lng,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -447,12 +505,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat,
               lng: value,
+              isBlocked,
               push_token,
             };
             const result = onChange(modelFields);
@@ -468,6 +528,41 @@ export default function UserCreateForm(props) {
         hasError={errors.lng?.hasError}
         {...getOverrideProps(overrides, "lng")}
       ></TextField>
+      <SwitchField
+        label="Is blocked"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isBlocked}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              firstName,
+              lastName,
+              email,
+              phoneNumber,
+              profilePic,
+              address,
+              exactAddress,
+              lat,
+              lng,
+              isBlocked: value,
+              push_token,
+            };
+            const result = onChange(modelFields);
+            value = result?.isBlocked ?? value;
+          }
+          if (errors.isBlocked?.hasError) {
+            runValidationTasks("isBlocked", value);
+          }
+          setIsBlocked(value);
+        }}
+        onBlur={() => runValidationTasks("isBlocked", isBlocked)}
+        errorMessage={errors.isBlocked?.errorMessage}
+        hasError={errors.isBlocked?.hasError}
+        {...getOverrideProps(overrides, "isBlocked")}
+      ></SwitchField>
       <TextField
         label="Push token"
         isRequired={false}
@@ -480,12 +575,14 @@ export default function UserCreateForm(props) {
               sub,
               firstName,
               lastName,
+              email,
               phoneNumber,
               profilePic,
               address,
               exactAddress,
               lat,
               lng,
+              isBlocked,
               push_token: value,
             };
             const result = onChange(modelFields);

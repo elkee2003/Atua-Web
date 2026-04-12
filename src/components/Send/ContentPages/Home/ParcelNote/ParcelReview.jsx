@@ -3,9 +3,9 @@ import { IoArrowBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import "../SendStyles/ReviewOrder.css";
 import ReviewOrderGuidelines from "./ReviewOrderGuidelines";
-import { useLocationContext } from "../../../../../../Provider/LocationProvider";
-import { useAuthContext } from "../../../../../../Provider/AuthProvider";
-import { useOrderContext } from "../../../../../../Provider/OrderProvider";
+import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
+import { useOrderContext } from "../../../../../../Providers/ClientProvider/OrderProvider";
 
 function ReviewOrder() {
   const navigate = useNavigate();

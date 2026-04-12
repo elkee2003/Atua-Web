@@ -1,0 +1,457 @@
+.profileContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 90px;
+}
+.reviewProContainer {
+  display: flex;
+  width: 80vw;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px;
+}
+
+.clientBckBtnCon {
+  position: absolute;
+  top: 25px;
+  left:18rem;
+}
+
+.bckBtnIcon {
+  font-size: 30px;
+  color: black;
+}
+
+.profilePicContainerFull {
+  position: relative;
+}
+
+.profilePicContainerEdit {
+  position: relative;
+  justify-self: center;
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+  background-color: #d6d6d6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.profilePicContainer {
+  position: relative;
+  justify-self: center;
+  height: 150px;
+  width: 150px;
+  border-radius: 75px;
+  background-color: #a2a2a8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 75px;
+}
+
+.removeButtonContainer {
+  position: absolute;
+  top: 20px;
+  right: 140px;
+  z-index: 1;
+}
+
+.removebtn {
+  color: #c70f0f;
+  font-size: 40px;
+}
+
+.plusIconContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+}
+
+.plusIcon {
+  color: rgba(3, 3, 59, 0.7);
+  background-color: transparent;
+  font-size: 60px;
+  cursor: pointer;
+}
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+}
+
+.profileInput {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-right: 7rem;
+  background-color: white;
+  padding: 10px;
+  border: 2px solid rgb(3, 3, 48);
+  border-radius: 5px;
+}
+
+.usernameInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding:0 10px
+}
+
+
+.profileInputClientUsername {
+  width:100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  /* margin-right: 7rem; */
+  background-color: white;
+  padding: 10px;
+  border: 2px solid rgb(3, 3, 48);
+  border-radius: 5px;
+}
+
+.errorInput {
+  border: 2px solid red;
+}
+
+.clientError {
+  color: red;
+  font-size: 14px;
+}
+
+.profileInputLast {
+  margin-top: 10px;
+  margin-bottom: 1rem;
+  margin-right: 7rem;
+  background-color: white;
+  padding: 10px;
+  border: 2px solid rgb(3, 3, 48);
+  border-radius: 5px;
+}
+
+.clientError {
+  color: #d80b0b;
+  font-size: 13px;
+  margin-top: 5px;
+  margin-left: 25px;
+  margin-right: 15px;
+  margin-bottom: 5px;
+}
+
+.profileNxtBtn  {
+  position: fixed;
+  background-color: #0c052e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  left: 680px;
+  right: 380px;
+  margin-top: 20px;
+  bottom: 0.7rem;
+  border-radius: 20px;
+}
+
+.nxtBtnIcon {
+  font-size: 50px;
+  color: white;
+}
+
+.signoutBtn {
+  position: absolute;
+  top: 10px;
+  right: 2rem;
+  cursor: pointer;
+}
+
+.signoutTxt {
+  font-size: 17px;
+  color: #c90707;
+}
+
+/* Review styles */
+.subHeader {
+  margin-top: 15px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.inputReview {
+  min-width:460px;
+  padding: 8px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: white;
+  background-color: #3b3b3b;
+  border-radius: 20px;
+}
+
+.inputReviewLast {
+  padding: 5px;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: white;
+  background-color: #3b3b3b;
+  border-radius: 20px;
+  margin-bottom: 20px;
+}
+
+.saveBtn {
+  position: fixed;
+  background-color: #05c405;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px;
+  left: 680px;
+  right: 380px;
+  margin-top: 20px;
+  bottom: 0.7rem;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.saveBtnTxt {
+  font-size: 30px;
+  font-weight: bold;
+  color: #e9e6e6;
+}
+
+/* Empty items for users not signed in */
+.emptyProfileCon {
+  display: flex;
+  height: 100vh;
+  width: 75vw;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10px;
+  margin-right: 10px;
+  /* margin-bottom: 30px; */
+}
+
+.emptyInputCon {
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.emptyInput {
+  min-width: 400px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: rgb(179, 179, 179);
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.emptyInputAuthTxt {
+  min-width: 400px;
+  white-space: pre-wrap;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background-color: rgb(179, 179, 179);
+  padding: 25px;
+  border-radius: 15px;
+  color: rgb(216, 7, 7);
+}
+
+
+
+.emptyBtnCon {
+  background-color: #0c052e;
+  min-width: 140px;
+  margin-top: 10px;
+  padding: 10px;
+  margin-left: 80px;
+  margin-right: 80px;
+  margin-bottom: 30px;
+  text-align: center;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.emptyBtnTxt {
+  font-size: 25px;
+  font-weight: bold;
+  color: #e9e6e6;
+}
+
+@media (max-width: 1300px) {
+
+  .profileInput {
+    margin-right: 8rem;
+    margin-left: 8rem;
+  }
+
+  .usernameInputWrapper {
+    margin-right: 8rem;
+    margin-left: 8rem;
+  }
+
+  .profileInputLast{
+    margin-right: 8rem;
+    margin-left: 8rem;
+  }
+
+  .clientError {
+      position:fixed;
+      bottom: 3rem;
+      font-size: 1.1rem;
+      margin-bottom: 6.5rem;
+  }
+
+  .profileNxtBtn  {
+    left: 480px;
+    right: 180px;
+  }
+  
+  .saveBtn  {
+    left: 480px;
+    right: 180px;
+  }
+}
+
+@media (max-width: 900px) {
+
+  .profileContainer {
+    width: 100vw;
+    margin-left: 0;
+  }
+  
+  .usernameInputWrapper {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .clientBckBtnCon {
+    left: 15px;
+  }
+
+  .reviewProContainer {
+    width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .emptyProfileCon {
+    width: 100vw;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 5rem;
+  }
+
+  .profileInput {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .profileInputLast {
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 7rem;
+  }
+
+  .formContainer {
+    width: 80vw;
+  }
+
+  .removeButtonContainer {
+    top: 20px;
+    right: 90px;
+  }
+
+  .clientError {
+      position:fixed;
+      bottom: 3rem;
+      font-size: 1.1rem;
+      margin-bottom: 6.5rem;
+  }
+
+  .profileNxtBtn  {
+      position: fixed;
+      padding: 2px;
+      right: 160px;
+      left: 160px;
+      margin-top: 20px;
+      margin-bottom: 5rem;
+  }
+
+  .inputReview {
+    min-width:360px;
+  }
+
+  .saveBtn  {
+      position: fixed;
+      padding: 2px;
+      right: 160px;
+      left: 160px;
+      margin-top: 20px;
+      margin-bottom: 5rem;
+  }
+
+
+}
+
+@media (max-width: 500px) {
+  .signoutBtn {
+    right: 10px;
+  }
+  
+  .profileNxtBtn  {
+    right: 120px;
+    left: 120px;
+  }
+
+  .inputReview {
+    min-width:340px;
+  }
+  
+  .inputReviewLast {
+    min-width:340px;
+  }
+  
+
+  .saveBtn  {
+    padding:10px ;
+    right: 105px;
+    left: 105px;
+  }
+
+  .saveBtnTxt {
+    font-size: 25px;
+  }
+
+  .emptyInput {
+    min-width: 300px;
+  }
+}
+@media (max-width: 450px) {
+  .emptyInput {
+    min-width: 250px;
+  }
+}

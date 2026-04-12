@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import '../../Home/SendStyles/OrderHistoryMain.css';
 import { DataStore } from "aws-amplify/datastore";
 import { Order, Courier } from "../../../../../models";
-import { useAuthContext } from "../../../../../../Provider/AuthProvider";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 import OrderHistoryList from "../OrderHistoryList/OrderHistoryList";
 
 const OrderHistoryMain = () => {

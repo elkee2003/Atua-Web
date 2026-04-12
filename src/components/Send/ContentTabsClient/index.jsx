@@ -11,7 +11,7 @@ function ContentTabsClient ({ unreadCount }){
         <>
             {/* Sidebar for larger screens */}
             <div className="client-sidebar">
-                {/* <h2>Opusama</h2> */}
+                {/* <h2>Atua</h2> */}
                 <div 
                     className='client-logoClickClient'
                     onClick={() => navigate('/')}

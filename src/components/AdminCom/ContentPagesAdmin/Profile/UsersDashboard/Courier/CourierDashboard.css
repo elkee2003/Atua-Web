@@ -1,0 +1,184 @@
+.dashboard {
+  padding: 24px;
+  background: #f7f9fc;
+  min-height: 100vh;
+  font-family: Inter, sans-serif;
+}
+
+/* HEADER */
+.dashboard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-top h1 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.dashboard-top p {
+  margin: 4px 0 0;
+  color: #666;
+}
+
+.refresh-btn {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* SEARCH */
+.search-wrapper {
+  margin-bottom: 20px;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  padding: 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+/* HEADER */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #111;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.phone {
+  font-size: 12px;
+  color: #777;
+}
+
+/* TRANSPORT */
+.transport {
+  font-size: 11px;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+/* STATUS */
+.status {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.online {
+  background: #e6f7ee;
+  color: #1f9d55;
+}
+
+.offline {
+  background: #eee;
+}
+
+/* BODY */
+.card-body {
+  margin-top: 12px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.approved {
+  background: #e6f0ff;
+  color: #2563eb;
+}
+
+.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* BUTTON */
+.action-btn {
+  margin-top: 12px;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary {
+  background: #111;
+  color: white;
+}
+
+.danger {
+  background: #ef4444;
+  color: white;
+}
+
+/* STATES */
+.loading,
+.empty {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}

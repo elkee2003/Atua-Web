@@ -1,0 +1,82 @@
+.orders-page {
+  padding: 32px;
+  background: #f6f8fc;
+  min-height: 100vh;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+/* FILTERS */
+.filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.filters input,
+.filters select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* ORDER LIST */
+.orders-table {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.order-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* ROUTE */
+.route .from {
+  font-weight: 600;
+}
+
+.route .to {
+  color: #666;
+  font-size: 13px;
+}
+
+/* META */
+.meta {
+  text-align: right;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.status.delivered {
+  background: #e6f7ee;
+  color: #1f9d55;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.status.in_transit {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.price {
+  display: block;
+  margin-top: 6px;
+  font-weight: 600;
+}

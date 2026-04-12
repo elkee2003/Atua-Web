@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Autocomplete } from "@react-google-maps/api";
 import "../SendStyles/Destination.css";
 import { MdNavigateNext } from "react-icons/md";
-import {useLocationContext} from '../../../../../../Provider/LocationProvider';
+import {useLocationContext} from '../../../../../../Providers/ClientProvider/LocationProvider';
 
 function DestinationSearch() {
   const originRef = useRef(null);
@@ -12,6 +12,38 @@ function DestinationSearch() {
 
   const {originPlace, destinationPlace, setOriginPlace, setDestinationPlace, originPlaceLat, setOriginPlaceLat, originPlaceLng, setOriginPlaceLng,  destinationPlaceLat, setDestinationPlaceLat, destinationPlaceLng, setDestinationPlaceLng} = useLocationContext();
 
+  // ✅ Prepopulate current location as origin
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+
+          setOriginPlaceLat(lat);
+          setOriginPlaceLng(lng);
+
+          // Reverse geocode to get address
+          const geocoder = new window.google.maps.Geocoder();
+          const result = await geocoder.geocode({ location: { lat, lng } });
+          if (result.results && result.results[0]) {
+            const address = result.results[0].formatted_address;
+            setOriginPlace(address);
+
+            // ✅ Fill input field visually
+            const input = document.querySelector(
+              "input[placeholder='From?']"
+            );
+            if (input) input.value = address;
+          }
+        },
+        (err) => console.error("Geolocation error:", err),
+        { enableHighAccuracy: true }
+      );
+    }
+  }, []);
+
+  // ✅ Handle when user picks a place manually
   const handlePlaceChanged = (ref, type) => {
     if (!ref.current) return;
     const place = ref.current.getPlace();

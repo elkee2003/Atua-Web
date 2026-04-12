@@ -1,0 +1,82 @@
+.deleteAccContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+  padding:20px;
+  /* margin-inline: 20px; */
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px;
+}
+
+.subHeader {
+  font-size: 19px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+.txtNum {
+  margin-top: 8px;
+}
+
+.txtBulletRow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.pointer {
+  font-size: 30px;
+}
+
+.txt {
+  font-size: 18px;
+}
+
+.subHeaderTxt {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.lastSection {
+  margin-bottom: 15px;
+}
+
+.deltBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2rem 19rem ;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: red;
+  cursor: pointer;
+}
+
+.deltTxt {
+  font-size: 23px;
+  font-weight: bold;
+  color: black;
+}
+@media (max-width: 900px) {
+    .deleteAccContainer {
+        /* width: 85vw; */
+        margin-bottom: 7rem;
+    }
+
+    .deltBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+        padding: 10px;
+        border-radius: 25px;
+        background-color: red;
+        cursor: pointer;
+    }
+}

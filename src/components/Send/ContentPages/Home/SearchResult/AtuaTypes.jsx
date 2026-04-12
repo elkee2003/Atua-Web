@@ -3,7 +3,7 @@ import "../SendStyles/AtuaTypes.css";
 import { IoInformationCircleOutline, IoPricetag } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import deliveryMediums from "../../../../../assets/types";
-import { useOrderContext } from "../../../../../../Provider/OrderProvider";
+import { useOrderContext } from "../../../../../../Providers/ClientProvider/OrderProvider";
 
 const AtuaTypes = ({
   selectedType,

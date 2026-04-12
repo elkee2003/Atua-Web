@@ -2,10 +2,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AuthRoutes from './Routes/HomePageRoutes/AuthRoutes';
 import SendRoutes from './Routes/SendRoutes/SendRoutes';
+import AdminRoutes from './Routes/AdminRoutes/AdminRoutes';
 // import AuthProvider from '../Provider/AuthProvider';
-import ProfileProvider from '../Provider/ProfileProvider';
-import LocationProvider from '../Provider/LocationProvider';
-import OrderProvider from '../Provider/OrderProvider';
+import ProfileProvider from '../Providers/ClientProvider/ProfileProvider';
+import LocationProvider from '../Providers/ClientProvider/LocationProvider';
+import OrderProvider from '../Providers/ClientProvider/OrderProvider';
 
 function App() {
 
@@ -20,6 +21,8 @@ function App() {
                   <Route path="/*" element={<AuthRoutes />} />
                   
                   <Route path="/send/*" element={<SendRoutes />} />
+
+                  <Route path="/admin/*" element={<AdminRoutes />} />
                 </Routes>
               </OrderProvider>
             </LocationProvider>

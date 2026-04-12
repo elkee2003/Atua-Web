@@ -9,7 +9,7 @@ import HomeScreen from '../../../src/components/Send/ContentPages/Home/HomeScree
 import DestinationSearch from '../../../src/components/Send/ContentPages/Home/DestinationSearch/Destination';
 import ParcelNote from '../../../src/components/Send/ContentPages/Home/ParcelNote/ParcelNotes';
 import ReviewOrder from '../../../src/components/Send/ContentPages/Home/ParcelNote/ParcelReview';
-import GoogleMapsProvider from '../../../Provider/GoogleMapsProvider';
+import GoogleMapsProvider from '../../../Providers/ClientProvider/GoogleMapsProvider';
 import SearchResult from '../../components/Send/ContentPages/Home/SearchResult/SearchResult';
 import Checkout from '../../components/Send/ContentPages/Home/SearchResult/Checkout';
 
@@ -18,6 +18,16 @@ import OrderHistoryMain from '../../components/Send/ContentPages/OrderHistory/Or
 import OrderHistoryList from '../../components/Send/ContentPages/OrderHistory/OrderHistoryList/OrderHistoryList';
 import OrderLiveUpdate from '../../components/Send/ContentPages/OrderHistory/OrderLiveUpdate/OrderLiveUpdate';
 
+// Profile Page
+import UserProfile from '../../components/Send/ContentPages/Profile/Profile';
+import EditProfile from '../../components/Send/ContentPages/Profile/EditProfile';
+import ReviewProfileEdit from '../../components/Send/ContentPages/Profile/EditProfile/ReviewProfile';
+
+
+// Profile Buttons
+import ProfileOptions from '../../components/Send/ContentPages/Profile/MainProfile/ProfileOptionBtns/ProfileOptionsBtn';
+import Support from '../../components/Send/ContentPages/Profile/ProfileBtnsCom/Support/Support';
+import DeleteAccount from '../../components/Send/ContentPages/Profile/ProfileBtnsCom/DeleteAccount/DeleteAccount';
 
 const SendRoutes = () => (
     <GoogleMapsProvider>
@@ -51,6 +61,22 @@ const SendRoutes = () => (
 
                 {/* Order Live Update */}
                 <Route path="order_live_update" element={<OrderHistoryMain />} />
+
+
+                {/* User Profile */}
+                <Route path="profile" element={<UserProfile />} />
+
+                <Route path="edit_profile" element={<UserProfile />} />
+
+                <Route path="review_edit" element={<ReviewProfileEdit />} />
+
+                {/* User Profile Options Buttons */}
+                <Route path="profile_options" element={<ProfileOptions />} />
+
+                <Route path="support" element={<Support />} />
+
+                <Route path="delete_account" element={<DeleteAccount />} />
+                
 
                 {/* 404 */}
                 <Route

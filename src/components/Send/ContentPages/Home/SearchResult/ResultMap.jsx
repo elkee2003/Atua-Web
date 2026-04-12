@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
-import { useLocationContext } from "../../../../../../Provider/LocationProvider";
+import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
 import holidays from '../../../../../assets/holiday';
 import { DataStore } from 'aws-amplify/datastore';
 import {Courier} from  '../../../../../models'

@@ -19,11 +19,9 @@ import {
   TextField,
   useTheme,
 } from "@aws-amplify/ui-react";
+import { Courier } from "../models";
 import { fetchByPath, getOverrideProps, validateField } from "./utils";
-import { generateClient } from "aws-amplify/api";
-import { getCourier } from "../graphql/queries";
-import { updateCourier } from "../graphql/mutations";
-const client = generateClient();
+import { DataStore } from "aws-amplify/datastore";
 function ArrayField({
   items = [],
   onChange,
@@ -202,16 +200,18 @@ export default function CourierUpdateForm(props) {
     phoneNumber: "",
     email: "",
     courierNIN: "",
-    courierBVN: "",
+    courierNINImage: "",
+    bankCode: "",
     bankName: "",
     accountName: "",
     accountNumber: "",
     transportationType: "",
-    vehicleType: "",
+    vehicleClass: "",
     model: "",
+    vehicleColour: "",
     plateNumber: "",
     maxiImages: [],
-    maxiTransportPrice: "",
+    maxiDescription: "",
     guarantorName: "",
     guarantorLastName: "",
     guarantorProfession: "",
@@ -220,10 +220,18 @@ export default function CourierUpdateForm(props) {
     guarantorAddress: "",
     guarantorEmail: "",
     guarantorNIN: "",
+    guarantorNINImage: "",
     lat: "",
     lng: "",
     heading: "",
     push_token: "",
+    isApproved: false,
+    approvedById: "",
+    currentBatchCount: "",
+    currentExpressCount: "",
+    currentMaxiCount: "",
+    lastBatchAssignedAt: "",
+    statusKey: "",
   };
   const [sub, setSub] = React.useState(initialValues.sub);
   const [isOnline, setIsOnline] = React.useState(initialValues.isOnline);
@@ -237,7 +245,10 @@ export default function CourierUpdateForm(props) {
   );
   const [email, setEmail] = React.useState(initialValues.email);
   const [courierNIN, setCourierNIN] = React.useState(initialValues.courierNIN);
-  const [courierBVN, setCourierBVN] = React.useState(initialValues.courierBVN);
+  const [courierNINImage, setCourierNINImage] = React.useState(
+    initialValues.courierNINImage
+  );
+  const [bankCode, setBankCode] = React.useState(initialValues.bankCode);
   const [bankName, setBankName] = React.useState(initialValues.bankName);
   const [accountName, setAccountName] = React.useState(
     initialValues.accountName
@@ -248,16 +259,19 @@ export default function CourierUpdateForm(props) {
   const [transportationType, setTransportationType] = React.useState(
     initialValues.transportationType
   );
-  const [vehicleType, setVehicleType] = React.useState(
-    initialValues.vehicleType
+  const [vehicleClass, setVehicleClass] = React.useState(
+    initialValues.vehicleClass
   );
   const [model, setModel] = React.useState(initialValues.model);
+  const [vehicleColour, setVehicleColour] = React.useState(
+    initialValues.vehicleColour
+  );
   const [plateNumber, setPlateNumber] = React.useState(
     initialValues.plateNumber
   );
   const [maxiImages, setMaxiImages] = React.useState(initialValues.maxiImages);
-  const [maxiTransportPrice, setMaxiTransportPrice] = React.useState(
-    initialValues.maxiTransportPrice
+  const [maxiDescription, setMaxiDescription] = React.useState(
+    initialValues.maxiDescription
   );
   const [guarantorName, setGuarantorName] = React.useState(
     initialValues.guarantorName
@@ -283,10 +297,30 @@ export default function CourierUpdateForm(props) {
   const [guarantorNIN, setGuarantorNIN] = React.useState(
     initialValues.guarantorNIN
   );
+  const [guarantorNINImage, setGuarantorNINImage] = React.useState(
+    initialValues.guarantorNINImage
+  );
   const [lat, setLat] = React.useState(initialValues.lat);
   const [lng, setLng] = React.useState(initialValues.lng);
   const [heading, setHeading] = React.useState(initialValues.heading);
   const [push_token, setPush_token] = React.useState(initialValues.push_token);
+  const [isApproved, setIsApproved] = React.useState(initialValues.isApproved);
+  const [approvedById, setApprovedById] = React.useState(
+    initialValues.approvedById
+  );
+  const [currentBatchCount, setCurrentBatchCount] = React.useState(
+    initialValues.currentBatchCount
+  );
+  const [currentExpressCount, setCurrentExpressCount] = React.useState(
+    initialValues.currentExpressCount
+  );
+  const [currentMaxiCount, setCurrentMaxiCount] = React.useState(
+    initialValues.currentMaxiCount
+  );
+  const [lastBatchAssignedAt, setLastBatchAssignedAt] = React.useState(
+    initialValues.lastBatchAssignedAt
+  );
+  const [statusKey, setStatusKey] = React.useState(initialValues.statusKey);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = courierRecord
@@ -302,17 +336,19 @@ export default function CourierUpdateForm(props) {
     setPhoneNumber(cleanValues.phoneNumber);
     setEmail(cleanValues.email);
     setCourierNIN(cleanValues.courierNIN);
-    setCourierBVN(cleanValues.courierBVN);
+    setCourierNINImage(cleanValues.courierNINImage);
+    setBankCode(cleanValues.bankCode);
     setBankName(cleanValues.bankName);
     setAccountName(cleanValues.accountName);
     setAccountNumber(cleanValues.accountNumber);
     setTransportationType(cleanValues.transportationType);
-    setVehicleType(cleanValues.vehicleType);
+    setVehicleClass(cleanValues.vehicleClass);
     setModel(cleanValues.model);
+    setVehicleColour(cleanValues.vehicleColour);
     setPlateNumber(cleanValues.plateNumber);
     setMaxiImages(cleanValues.maxiImages ?? []);
     setCurrentMaxiImagesValue("");
-    setMaxiTransportPrice(cleanValues.maxiTransportPrice);
+    setMaxiDescription(cleanValues.maxiDescription);
     setGuarantorName(cleanValues.guarantorName);
     setGuarantorLastName(cleanValues.guarantorLastName);
     setGuarantorProfession(cleanValues.guarantorProfession);
@@ -321,22 +357,25 @@ export default function CourierUpdateForm(props) {
     setGuarantorAddress(cleanValues.guarantorAddress);
     setGuarantorEmail(cleanValues.guarantorEmail);
     setGuarantorNIN(cleanValues.guarantorNIN);
+    setGuarantorNINImage(cleanValues.guarantorNINImage);
     setLat(cleanValues.lat);
     setLng(cleanValues.lng);
     setHeading(cleanValues.heading);
     setPush_token(cleanValues.push_token);
+    setIsApproved(cleanValues.isApproved);
+    setApprovedById(cleanValues.approvedById);
+    setCurrentBatchCount(cleanValues.currentBatchCount);
+    setCurrentExpressCount(cleanValues.currentExpressCount);
+    setCurrentMaxiCount(cleanValues.currentMaxiCount);
+    setLastBatchAssignedAt(cleanValues.lastBatchAssignedAt);
+    setStatusKey(cleanValues.statusKey);
     setErrors({});
   };
   const [courierRecord, setCourierRecord] = React.useState(courierModelProp);
   React.useEffect(() => {
     const queryData = async () => {
       const record = idProp
-        ? (
-            await client.graphql({
-              query: getCourier.replaceAll("__typename", ""),
-              variables: { id: idProp },
-            })
-          )?.data?.getCourier
+        ? await DataStore.query(Courier, idProp)
         : courierModelProp;
       setCourierRecord(record);
     };
@@ -357,16 +396,18 @@ export default function CourierUpdateForm(props) {
     phoneNumber: [],
     email: [],
     courierNIN: [],
-    courierBVN: [],
+    courierNINImage: [],
+    bankCode: [],
     bankName: [],
     accountName: [],
     accountNumber: [],
     transportationType: [],
-    vehicleType: [],
+    vehicleClass: [],
     model: [],
+    vehicleColour: [],
     plateNumber: [],
     maxiImages: [],
-    maxiTransportPrice: [],
+    maxiDescription: [],
     guarantorName: [],
     guarantorLastName: [],
     guarantorProfession: [],
@@ -375,10 +416,18 @@ export default function CourierUpdateForm(props) {
     guarantorAddress: [],
     guarantorEmail: [],
     guarantorNIN: [],
+    guarantorNINImage: [],
     lat: [],
     lng: [],
     heading: [],
     push_token: [],
+    isApproved: [],
+    approvedById: [],
+    currentBatchCount: [],
+    currentExpressCount: [],
+    currentMaxiCount: [],
+    lastBatchAssignedAt: [],
+    statusKey: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -397,6 +446,23 @@ export default function CourierUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
   return (
     <Grid
       as="form"
@@ -407,37 +473,47 @@ export default function CourierUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           sub,
-          isOnline: isOnline ?? null,
+          isOnline,
           firstName,
-          lastName: lastName ?? null,
-          profilePic: profilePic ?? null,
-          address: address ?? null,
-          landMark: landMark ?? null,
-          phoneNumber: phoneNumber ?? null,
-          email: email ?? null,
-          courierNIN: courierNIN ?? null,
-          courierBVN: courierBVN ?? null,
-          bankName: bankName ?? null,
-          accountName: accountName ?? null,
-          accountNumber: accountNumber ?? null,
-          transportationType: transportationType ?? null,
-          vehicleType: vehicleType ?? null,
-          model: model ?? null,
-          plateNumber: plateNumber ?? null,
-          maxiImages: maxiImages ?? null,
-          maxiTransportPrice: maxiTransportPrice ?? null,
-          guarantorName: guarantorName ?? null,
-          guarantorLastName: guarantorLastName ?? null,
-          guarantorProfession: guarantorProfession ?? null,
-          guarantorNumber: guarantorNumber ?? null,
-          guarantorRelationship: guarantorRelationship ?? null,
-          guarantorAddress: guarantorAddress ?? null,
-          guarantorEmail: guarantorEmail ?? null,
-          guarantorNIN: guarantorNIN ?? null,
-          lat: lat ?? null,
-          lng: lng ?? null,
-          heading: heading ?? null,
-          push_token: push_token ?? null,
+          lastName,
+          profilePic,
+          address,
+          landMark,
+          phoneNumber,
+          email,
+          courierNIN,
+          courierNINImage,
+          bankCode,
+          bankName,
+          accountName,
+          accountNumber,
+          transportationType,
+          vehicleClass,
+          model,
+          vehicleColour,
+          plateNumber,
+          maxiImages,
+          maxiDescription,
+          guarantorName,
+          guarantorLastName,
+          guarantorProfession,
+          guarantorNumber,
+          guarantorRelationship,
+          guarantorAddress,
+          guarantorEmail,
+          guarantorNIN,
+          guarantorNINImage,
+          lat,
+          lng,
+          heading,
+          push_token,
+          isApproved,
+          approvedById,
+          currentBatchCount,
+          currentExpressCount,
+          currentMaxiCount,
+          lastBatchAssignedAt,
+          statusKey,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -467,22 +543,17 @@ export default function CourierUpdateForm(props) {
               modelFields[key] = null;
             }
           });
-          await client.graphql({
-            query: updateCourier.replaceAll("__typename", ""),
-            variables: {
-              input: {
-                id: courierRecord.id,
-                ...modelFields,
-              },
-            },
-          });
+          await DataStore.save(
+            Courier.copyOf(courierRecord, (updated) => {
+              Object.assign(updated, modelFields);
+            })
+          );
           if (onSuccess) {
             onSuccess(modelFields);
           }
         } catch (err) {
           if (onError) {
-            const messages = err.errors.map((e) => e.message).join("\n");
-            onError(modelFields, messages);
+            onError(modelFields, err.message);
           }
         }
       }}
@@ -508,16 +579,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -526,10 +599,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.sub ?? value;
@@ -563,16 +644,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -581,10 +664,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.isOnline ?? value;
@@ -618,16 +709,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -636,10 +729,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.firstName ?? value;
@@ -673,16 +774,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -691,10 +794,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.lastName ?? value;
@@ -728,16 +839,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -746,10 +859,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.profilePic ?? value;
@@ -783,16 +904,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -801,10 +924,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.address ?? value;
@@ -838,16 +969,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -856,10 +989,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.landMark ?? value;
@@ -893,16 +1034,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber: value,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -911,10 +1054,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.phoneNumber ?? value;
@@ -948,16 +1099,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email: value,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -966,10 +1119,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.email ?? value;
@@ -1003,16 +1164,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN: value,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1021,10 +1184,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.courierNIN ?? value;
@@ -1040,10 +1211,10 @@ export default function CourierUpdateForm(props) {
         {...getOverrideProps(overrides, "courierNIN")}
       ></TextField>
       <TextField
-        label="Courier bvn"
+        label="Courier nin image"
         isRequired={false}
         isReadOnly={false}
-        value={courierBVN}
+        value={courierNINImage}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1058,16 +1229,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN: value,
+              courierNINImage: value,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1076,23 +1249,96 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
-            value = result?.courierBVN ?? value;
+            value = result?.courierNINImage ?? value;
           }
-          if (errors.courierBVN?.hasError) {
-            runValidationTasks("courierBVN", value);
+          if (errors.courierNINImage?.hasError) {
+            runValidationTasks("courierNINImage", value);
           }
-          setCourierBVN(value);
+          setCourierNINImage(value);
         }}
-        onBlur={() => runValidationTasks("courierBVN", courierBVN)}
-        errorMessage={errors.courierBVN?.errorMessage}
-        hasError={errors.courierBVN?.hasError}
-        {...getOverrideProps(overrides, "courierBVN")}
+        onBlur={() => runValidationTasks("courierNINImage", courierNINImage)}
+        errorMessage={errors.courierNINImage?.errorMessage}
+        hasError={errors.courierNINImage?.hasError}
+        {...getOverrideProps(overrides, "courierNINImage")}
+      ></TextField>
+      <TextField
+        label="Bank code"
+        isRequired={false}
+        isReadOnly={false}
+        value={bankCode}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode: value,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.bankCode ?? value;
+          }
+          if (errors.bankCode?.hasError) {
+            runValidationTasks("bankCode", value);
+          }
+          setBankCode(value);
+        }}
+        onBlur={() => runValidationTasks("bankCode", bankCode)}
+        errorMessage={errors.bankCode?.errorMessage}
+        hasError={errors.bankCode?.hasError}
+        {...getOverrideProps(overrides, "bankCode")}
       ></TextField>
       <TextField
         label="Bank name"
@@ -1113,16 +1359,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName: value,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1131,10 +1379,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.bankName ?? value;
@@ -1168,16 +1424,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName: value,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1186,10 +1444,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.accountName ?? value;
@@ -1223,16 +1489,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber: value,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1241,10 +1509,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.accountNumber ?? value;
@@ -1278,16 +1554,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType: value,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1296,10 +1574,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.transportationType ?? value;
@@ -1317,10 +1603,10 @@ export default function CourierUpdateForm(props) {
         {...getOverrideProps(overrides, "transportationType")}
       ></TextField>
       <TextField
-        label="Vehicle type"
+        label="Vehicle class"
         isRequired={false}
         isReadOnly={false}
-        value={vehicleType}
+        value={vehicleClass}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -1335,16 +1621,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType: value,
+              vehicleClass: value,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1353,23 +1641,31 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
-            value = result?.vehicleType ?? value;
+            value = result?.vehicleClass ?? value;
           }
-          if (errors.vehicleType?.hasError) {
-            runValidationTasks("vehicleType", value);
+          if (errors.vehicleClass?.hasError) {
+            runValidationTasks("vehicleClass", value);
           }
-          setVehicleType(value);
+          setVehicleClass(value);
         }}
-        onBlur={() => runValidationTasks("vehicleType", vehicleType)}
-        errorMessage={errors.vehicleType?.errorMessage}
-        hasError={errors.vehicleType?.hasError}
-        {...getOverrideProps(overrides, "vehicleType")}
+        onBlur={() => runValidationTasks("vehicleClass", vehicleClass)}
+        errorMessage={errors.vehicleClass?.errorMessage}
+        hasError={errors.vehicleClass?.hasError}
+        {...getOverrideProps(overrides, "vehicleClass")}
       ></TextField>
       <TextField
         label="Model"
@@ -1390,16 +1686,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model: value,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1408,10 +1706,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.model ?? value;
@@ -1425,6 +1731,71 @@ export default function CourierUpdateForm(props) {
         errorMessage={errors.model?.errorMessage}
         hasError={errors.model?.hasError}
         {...getOverrideProps(overrides, "model")}
+      ></TextField>
+      <TextField
+        label="Vehicle colour"
+        isRequired={false}
+        isReadOnly={false}
+        value={vehicleColour}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour: value,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.vehicleColour ?? value;
+          }
+          if (errors.vehicleColour?.hasError) {
+            runValidationTasks("vehicleColour", value);
+          }
+          setVehicleColour(value);
+        }}
+        onBlur={() => runValidationTasks("vehicleColour", vehicleColour)}
+        errorMessage={errors.vehicleColour?.errorMessage}
+        hasError={errors.vehicleColour?.hasError}
+        {...getOverrideProps(overrides, "vehicleColour")}
       ></TextField>
       <TextField
         label="Plate number"
@@ -1445,16 +1816,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber: value,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1463,10 +1836,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.plateNumber ?? value;
@@ -1496,16 +1877,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages: values,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1514,10 +1897,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             values = result?.maxiImages ?? values;
@@ -1560,16 +1951,12 @@ export default function CourierUpdateForm(props) {
         ></TextField>
       </ArrayField>
       <TextField
-        label="Maxi transport price"
+        label="Maxi description"
         isRequired={false}
         isReadOnly={false}
-        type="number"
-        step="any"
-        value={maxiTransportPrice}
+        value={maxiDescription}
         onChange={(e) => {
-          let value = isNaN(parseFloat(e.target.value))
-            ? e.target.value
-            : parseFloat(e.target.value);
+          let { value } = e.target;
           if (onChange) {
             const modelFields = {
               sub,
@@ -1582,16 +1969,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice: value,
+              maxiDescription: value,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1600,25 +1989,31 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
-            value = result?.maxiTransportPrice ?? value;
+            value = result?.maxiDescription ?? value;
           }
-          if (errors.maxiTransportPrice?.hasError) {
-            runValidationTasks("maxiTransportPrice", value);
+          if (errors.maxiDescription?.hasError) {
+            runValidationTasks("maxiDescription", value);
           }
-          setMaxiTransportPrice(value);
+          setMaxiDescription(value);
         }}
-        onBlur={() =>
-          runValidationTasks("maxiTransportPrice", maxiTransportPrice)
-        }
-        errorMessage={errors.maxiTransportPrice?.errorMessage}
-        hasError={errors.maxiTransportPrice?.hasError}
-        {...getOverrideProps(overrides, "maxiTransportPrice")}
+        onBlur={() => runValidationTasks("maxiDescription", maxiDescription)}
+        errorMessage={errors.maxiDescription?.errorMessage}
+        hasError={errors.maxiDescription?.hasError}
+        {...getOverrideProps(overrides, "maxiDescription")}
       ></TextField>
       <TextField
         label="Guarantor name"
@@ -1639,16 +2034,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName: value,
               guarantorLastName,
               guarantorProfession,
@@ -1657,10 +2054,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorName ?? value;
@@ -1694,16 +2099,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName: value,
               guarantorProfession,
@@ -1712,10 +2119,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorLastName ?? value;
@@ -1751,16 +2166,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession: value,
@@ -1769,10 +2186,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorProfession ?? value;
@@ -1808,16 +2233,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1826,10 +2253,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorNumber ?? value;
@@ -1863,16 +2298,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1881,10 +2318,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorRelationship ?? value;
@@ -1920,16 +2365,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1938,10 +2385,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress: value,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorAddress ?? value;
@@ -1975,16 +2430,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -1993,10 +2450,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail: value,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorEmail ?? value;
@@ -2030,16 +2495,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -2048,10 +2515,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN: value,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.guarantorNIN ?? value;
@@ -2065,6 +2540,73 @@ export default function CourierUpdateForm(props) {
         errorMessage={errors.guarantorNIN?.errorMessage}
         hasError={errors.guarantorNIN?.hasError}
         {...getOverrideProps(overrides, "guarantorNIN")}
+      ></TextField>
+      <TextField
+        label="Guarantor nin image"
+        isRequired={false}
+        isReadOnly={false}
+        value={guarantorNINImage}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage: value,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.guarantorNINImage ?? value;
+          }
+          if (errors.guarantorNINImage?.hasError) {
+            runValidationTasks("guarantorNINImage", value);
+          }
+          setGuarantorNINImage(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("guarantorNINImage", guarantorNINImage)
+        }
+        errorMessage={errors.guarantorNINImage?.errorMessage}
+        hasError={errors.guarantorNINImage?.hasError}
+        {...getOverrideProps(overrides, "guarantorNINImage")}
       ></TextField>
       <TextField
         label="Lat"
@@ -2089,16 +2631,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -2107,10 +2651,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat: value,
               lng,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.lat ?? value;
@@ -2148,16 +2700,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -2166,10 +2720,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng: value,
               heading,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.lng ?? value;
@@ -2207,16 +2769,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -2225,10 +2789,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading: value,
               push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.heading ?? value;
@@ -2262,16 +2834,18 @@ export default function CourierUpdateForm(props) {
               phoneNumber,
               email,
               courierNIN,
-              courierBVN,
+              courierNINImage,
+              bankCode,
               bankName,
               accountName,
               accountNumber,
               transportationType,
-              vehicleType,
+              vehicleClass,
               model,
+              vehicleColour,
               plateNumber,
               maxiImages,
-              maxiTransportPrice,
+              maxiDescription,
               guarantorName,
               guarantorLastName,
               guarantorProfession,
@@ -2280,10 +2854,18 @@ export default function CourierUpdateForm(props) {
               guarantorAddress,
               guarantorEmail,
               guarantorNIN,
+              guarantorNINImage,
               lat,
               lng,
               heading,
               push_token: value,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
             };
             const result = onChange(modelFields);
             value = result?.push_token ?? value;
@@ -2297,6 +2879,483 @@ export default function CourierUpdateForm(props) {
         errorMessage={errors.push_token?.errorMessage}
         hasError={errors.push_token?.hasError}
         {...getOverrideProps(overrides, "push_token")}
+      ></TextField>
+      <SwitchField
+        label="Is approved"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isApproved}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved: value,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.isApproved ?? value;
+          }
+          if (errors.isApproved?.hasError) {
+            runValidationTasks("isApproved", value);
+          }
+          setIsApproved(value);
+        }}
+        onBlur={() => runValidationTasks("isApproved", isApproved)}
+        errorMessage={errors.isApproved?.errorMessage}
+        hasError={errors.isApproved?.hasError}
+        {...getOverrideProps(overrides, "isApproved")}
+      ></SwitchField>
+      <TextField
+        label="Approved by id"
+        isRequired={false}
+        isReadOnly={false}
+        value={approvedById}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById: value,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.approvedById ?? value;
+          }
+          if (errors.approvedById?.hasError) {
+            runValidationTasks("approvedById", value);
+          }
+          setApprovedById(value);
+        }}
+        onBlur={() => runValidationTasks("approvedById", approvedById)}
+        errorMessage={errors.approvedById?.errorMessage}
+        hasError={errors.approvedById?.hasError}
+        {...getOverrideProps(overrides, "approvedById")}
+      ></TextField>
+      <TextField
+        label="Current batch count"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={currentBatchCount}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount: value,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.currentBatchCount ?? value;
+          }
+          if (errors.currentBatchCount?.hasError) {
+            runValidationTasks("currentBatchCount", value);
+          }
+          setCurrentBatchCount(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("currentBatchCount", currentBatchCount)
+        }
+        errorMessage={errors.currentBatchCount?.errorMessage}
+        hasError={errors.currentBatchCount?.hasError}
+        {...getOverrideProps(overrides, "currentBatchCount")}
+      ></TextField>
+      <TextField
+        label="Current express count"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={currentExpressCount}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount: value,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.currentExpressCount ?? value;
+          }
+          if (errors.currentExpressCount?.hasError) {
+            runValidationTasks("currentExpressCount", value);
+          }
+          setCurrentExpressCount(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("currentExpressCount", currentExpressCount)
+        }
+        errorMessage={errors.currentExpressCount?.errorMessage}
+        hasError={errors.currentExpressCount?.hasError}
+        {...getOverrideProps(overrides, "currentExpressCount")}
+      ></TextField>
+      <TextField
+        label="Current maxi count"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={currentMaxiCount}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount: value,
+              lastBatchAssignedAt,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.currentMaxiCount ?? value;
+          }
+          if (errors.currentMaxiCount?.hasError) {
+            runValidationTasks("currentMaxiCount", value);
+          }
+          setCurrentMaxiCount(value);
+        }}
+        onBlur={() => runValidationTasks("currentMaxiCount", currentMaxiCount)}
+        errorMessage={errors.currentMaxiCount?.errorMessage}
+        hasError={errors.currentMaxiCount?.hasError}
+        {...getOverrideProps(overrides, "currentMaxiCount")}
+      ></TextField>
+      <TextField
+        label="Last batch assigned at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={
+          lastBatchAssignedAt && convertToLocal(new Date(lastBatchAssignedAt))
+        }
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt: value,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.lastBatchAssignedAt ?? value;
+          }
+          if (errors.lastBatchAssignedAt?.hasError) {
+            runValidationTasks("lastBatchAssignedAt", value);
+          }
+          setLastBatchAssignedAt(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("lastBatchAssignedAt", lastBatchAssignedAt)
+        }
+        errorMessage={errors.lastBatchAssignedAt?.errorMessage}
+        hasError={errors.lastBatchAssignedAt?.hasError}
+        {...getOverrideProps(overrides, "lastBatchAssignedAt")}
+      ></TextField>
+      <TextField
+        label="Status key"
+        isRequired={false}
+        isReadOnly={false}
+        value={statusKey}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              statusKey: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.statusKey ?? value;
+          }
+          if (errors.statusKey?.hasError) {
+            runValidationTasks("statusKey", value);
+          }
+          setStatusKey(value);
+        }}
+        onBlur={() => runValidationTasks("statusKey", statusKey)}
+        errorMessage={errors.statusKey?.errorMessage}
+        hasError={errors.statusKey?.hasError}
+        {...getOverrideProps(overrides, "statusKey")}
       ></TextField>
       <Flex
         justifyContent="space-between"

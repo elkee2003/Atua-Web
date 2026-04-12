@@ -5,7 +5,8 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { User } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -25,24 +26,28 @@ export declare type UserUpdateFormInputValues = {
     sub?: string;
     firstName?: string;
     lastName?: string;
+    email?: string;
     phoneNumber?: string;
     profilePic?: string;
     address?: string;
     exactAddress?: string;
     lat?: number;
     lng?: number;
+    isBlocked?: boolean;
     push_token?: string;
 };
 export declare type UserUpdateFormValidationValues = {
     sub?: ValidationFunction<string>;
     firstName?: ValidationFunction<string>;
     lastName?: ValidationFunction<string>;
+    email?: ValidationFunction<string>;
     phoneNumber?: ValidationFunction<string>;
     profilePic?: ValidationFunction<string>;
     address?: ValidationFunction<string>;
     exactAddress?: ValidationFunction<string>;
     lat?: ValidationFunction<number>;
     lng?: ValidationFunction<number>;
+    isBlocked?: ValidationFunction<boolean>;
     push_token?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -51,19 +56,21 @@ export declare type UserUpdateFormOverridesProps = {
     sub?: PrimitiveOverrideProps<TextFieldProps>;
     firstName?: PrimitiveOverrideProps<TextFieldProps>;
     lastName?: PrimitiveOverrideProps<TextFieldProps>;
+    email?: PrimitiveOverrideProps<TextFieldProps>;
     phoneNumber?: PrimitiveOverrideProps<TextFieldProps>;
     profilePic?: PrimitiveOverrideProps<TextFieldProps>;
     address?: PrimitiveOverrideProps<TextFieldProps>;
     exactAddress?: PrimitiveOverrideProps<TextFieldProps>;
     lat?: PrimitiveOverrideProps<TextFieldProps>;
     lng?: PrimitiveOverrideProps<TextFieldProps>;
+    isBlocked?: PrimitiveOverrideProps<SwitchFieldProps>;
     push_token?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type UserUpdateFormProps = React.PropsWithChildren<{
     overrides?: UserUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    user?: any;
+    user?: User;
     onSubmit?: (fields: UserUpdateFormInputValues) => UserUpdateFormInputValues;
     onSuccess?: (fields: UserUpdateFormInputValues) => void;
     onError?: (fields: UserUpdateFormInputValues, errorMessage: string) => void;

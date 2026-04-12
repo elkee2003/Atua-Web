@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import '../SendStyles/ParcelNotes.css';
 import { useNavigate } from "react-router-dom";
-import {useAuthContext} from '../../../../../../Provider/AuthProvider';
-import {useOrderContext} from '../../../../../../Provider/OrderProvider';
+import {useAuthContext} from '../../../../../../Providers/ClientProvider/AuthProvider';
+import {useOrderContext} from '../../../../../../Providers/ClientProvider/OrderProvider';
 
 function ParcelNote() {
   const navigate = useNavigate();

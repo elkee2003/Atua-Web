@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { DataStore } from 'aws-amplify/datastore';
 import {Order} from  '../../../../../models';
 import ReviewOrderGuidelines from "../ParcelNote/ReviewOrderGuidelines";
-import { useOrderContext } from "../../../../../../Provider/OrderProvider";
-import { useLocationContext } from "../../../../../../Provider/LocationProvider";
-import { useAuthContext } from "../../../../../../Provider/AuthProvider";
+import { useOrderContext } from "../../../../../../Providers/ClientProvider/OrderProvider";
+import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 
 
 const Checkout = () => {

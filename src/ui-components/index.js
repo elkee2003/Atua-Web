@@ -8,6 +8,8 @@ export { default as CourierCompanyCreateForm } from "./CourierCompanyCreateForm"
 export { default as CourierCompanyUpdateForm } from "./CourierCompanyUpdateForm";
 export { default as CourierCreateForm } from "./CourierCreateForm";
 export { default as CourierUpdateForm } from "./CourierUpdateForm";
+export { default as OfferCreateForm } from "./OfferCreateForm";
+export { default as OfferUpdateForm } from "./OfferUpdateForm";
 export { default as UserCreateForm } from "./UserCreateForm";
 export { default as UserUpdateForm } from "./UserUpdateForm";
 export { default as studioTheme } from "./studioTheme";

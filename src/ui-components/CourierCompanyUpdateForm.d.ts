@@ -6,6 +6,7 @@
 
 import * as React from "react";
 import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { CourierCompany } from "../models";
 export declare type EscapeHatchProps = {
     [elementHierarchy: string]: Record<string, unknown>;
 } | null;
@@ -81,7 +82,7 @@ export declare type CourierCompanyUpdateFormProps = React.PropsWithChildren<{
     overrides?: CourierCompanyUpdateFormOverridesProps | undefined | null;
 } & {
     id?: string;
-    courierCompany?: any;
+    courierCompany?: CourierCompany;
     onSubmit?: (fields: CourierCompanyUpdateFormInputValues) => CourierCompanyUpdateFormInputValues;
     onSuccess?: (fields: CourierCompanyUpdateFormInputValues) => void;
     onError?: (fields: CourierCompanyUpdateFormInputValues, errorMessage: string) => void;

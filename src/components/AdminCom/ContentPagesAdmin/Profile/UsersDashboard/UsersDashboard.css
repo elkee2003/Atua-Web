@@ -1,0 +1,103 @@
+.atua-dashboard {
+  padding: 30px;
+  background: #f7f9fc;
+  min-height: 100vh;
+  width:80vw;
+  font-family: "Inter", sans-serif;
+}
+
+/* HEADER */
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 28px;
+  margin: 0;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  margin-top: 6px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* GRID */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* CARD BASE */
+.kpi-card {
+  border-radius: 16px;
+  padding: 20px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+/* TEXT */
+.kpi-title {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.kpi-value {
+  font-size: 32px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+/* COLOR VARIANTS */
+.kpi-card.primary {
+  background: linear-gradient(135deg, #4a90e2, #357abd);
+}
+
+.kpi-card.secondary {
+  background: linear-gradient(135deg, #7b61ff, #5a47d6);
+}
+
+.kpi-card.dark {
+  background: linear-gradient(135deg, #1f1f1f, #000);
+}
+
+.kpi-card.success {
+  background: linear-gradient(135deg, #0f9d58, #0b7d45);
+}
+
+.kpi-card.warning {
+  background: linear-gradient(135deg, #f57c00, #e65100);
+}
+
+.kpi-card.neutral {
+  background: linear-gradient(135deg, #607d8b, #455a64);
+}
+
+/* SUBTLE GLOW EFFECT */
+.kpi-card::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: -40%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .kpi-value {
+    font-size: 26px;
+  }
+}
