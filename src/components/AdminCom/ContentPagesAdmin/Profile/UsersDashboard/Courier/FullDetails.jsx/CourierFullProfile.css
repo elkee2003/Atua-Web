@@ -107,6 +107,10 @@
   cursor: pointer;
 }
 
+.btn:active {
+  transform: scale(0.96);
+}
+
 .primary { background: #111; color: white; }
 
 .batch {
@@ -126,6 +130,26 @@
 
 .maxi:hover {
   background: #ea580c;
+}
+
+/* TIMER RESET (neutral system action) */
+.btn.warning {
+  background: #facc15;
+  color: #111827;
+}
+
+.btn.warning:hover {
+  background: #eab308;
+}
+
+/* FORCE DISPATCH (strong action, but not destructive) */
+.btn.force {
+  background: #0ea5e9;
+  color: white;
+}
+
+.btn.force:hover {
+  background: #0284c7;
 }
 
 .danger {

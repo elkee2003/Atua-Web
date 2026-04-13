@@ -62,6 +62,7 @@ function CourierFullProfile() {
     }
   };
 
+  // function to reset currentBatchCount
   const resetBatchCount = async () => {
     const fresh = await DataStore.query(Courier, courier.id);
     await DataStore.save(
@@ -72,6 +73,7 @@ function CourierFullProfile() {
     fetchCourier();
   };
 
+  // function to reset currentExpressCount
   const resetExpressCount = async () => {
     const fresh = await DataStore.query(Courier, courier.id);
     await DataStore.save(
@@ -82,12 +84,39 @@ function CourierFullProfile() {
     fetchCourier();
   };
 
+  // function to reset currentMaxiCount
   const resetMaxiCount = async () => {
     const fresh = await DataStore.query(Courier, courier.id);
 
     await DataStore.save(
       Courier.copyOf(fresh, (u) => {
         u.currentMaxiCount = 0;
+      })
+    );
+
+    fetchCourier();
+  };
+
+  // function to reset timer
+  const resetDispatchTimer = async () => {
+    const fresh = await DataStore.query(Courier, courier.id);
+
+    await DataStore.save(
+      Courier.copyOf(fresh, (u) => {
+        u.lastBatchAssignedAt = new Date().toISOString();
+      })
+    );
+
+    fetchCourier();
+  };
+
+  // function to force dispatch
+  const forceDispatchNow = async () => {
+    const fresh = await DataStore.query(Courier, courier.id);
+
+    await DataStore.save(
+      Courier.copyOf(fresh, (u) => {
+        u.lastBatchAssignedAt = new Date(0).toISOString(); // 🔥 forces timeout
       })
     );
 
@@ -206,6 +235,19 @@ function CourierFullProfile() {
 
             <button className="btn maxi" onClick={resetMaxiCount}>
               Reset Maxi
+            </button>
+
+            <button className="btn warning" onClick={resetDispatchTimer}>
+              Reset Timer
+            </button>
+
+            <button className="btn force" onClick={() => {
+              if (window.confirm("Force dispatch all orders for this courier?")) {
+                forceDispatchNow();
+              }
+            }}
+            >
+              ⚡ Force Dispatch
             </button>
 
             <button className="btn danger" onClick={handleDeleteCourier}>
