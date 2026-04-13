@@ -99,28 +99,44 @@ function CourierFullProfile() {
 
   // function to reset timer
   const resetDispatchTimer = async () => {
-    const fresh = await DataStore.query(Courier, courier.id);
+    setActionLoading(true);
 
-    await DataStore.save(
-      Courier.copyOf(fresh, (u) => {
-        u.lastBatchAssignedAt = new Date().toISOString();
-      })
-    );
+    try {
+      const fresh = await DataStore.query(Courier, courier.id);
 
-    fetchCourier();
+      await DataStore.save(
+        Courier.copyOf(fresh, (u) => {
+          u.lastBatchAssignedAt = new Date().toISOString();
+        })
+      );
+
+      fetchCourier();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   // function to force dispatch
   const forceDispatchNow = async () => {
-    const fresh = await DataStore.query(Courier, courier.id);
+    setActionLoading(true);
 
-    await DataStore.save(
-      Courier.copyOf(fresh, (u) => {
-        u.lastBatchAssignedAt = new Date(0).toISOString(); // 🔥 forces timeout
-      })
-    );
+    try {
+      const fresh = await DataStore.query(Courier, courier.id);
 
-    fetchCourier();
+      await DataStore.save(
+        Courier.copyOf(fresh, (u) => {
+          u.lastBatchAssignedAt = new Date(0).toISOString();
+        })
+      );
+
+      fetchCourier();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const deleteCourierMedia = async () => {
@@ -237,17 +253,24 @@ function CourierFullProfile() {
               Reset Maxi
             </button>
 
-            <button className="btn warning" onClick={resetDispatchTimer}>
+            <button 
+              className="btn warning"
+              disabled={actionLoading} 
+              onClick={resetDispatchTimer}
+            >
               Reset Timer
             </button>
 
-            <button className="btn force" onClick={() => {
-              if (window.confirm("Force dispatch all orders for this courier?")) {
-                forceDispatchNow();
-              }
-            }}
+            <button 
+              className="btn force" 
+              disabled={actionLoading}
+              onClick={() => {
+                if (window.confirm("Force dispatch all orders for this courier?")) {
+                  forceDispatchNow();
+                }
+              }}
             >
-              ⚡ Force Dispatch
+              Reset Timer (3hr)
             </button>
 
             <button className="btn danger" onClick={handleDeleteCourier}>
