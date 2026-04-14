@@ -1,106 +1,175 @@
-import React from "react";
-import '../../Home/SendStyles/OrderHistoryList.css';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DataStore } from "aws-amplify/datastore";
+import { Order } from "../../../../../../src/models";
+import "./orderHistoryList.css";
 
-const OrderHistoryList = ({ order, onDelete, onCancel }) => {
+const OrderHistoryList = ({ order, refreshOrders }) => {
+  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const goToOrderLiveUpdate = () => {
-    if (order.status === "ACCEPTED" || order.status === "PICKEDUP") {
-      navigate(`/send/order_live_update/${order.id}`);
+  const isLive = order.status === "ACCEPTED";
+
+  const toggleExpand = () => {
+    setExpanded((prev) => !prev);
+  };
+
+  const goToOrderDetails = (e) => {
+    e.stopPropagation();
+    navigate(`/orderdetails/${order.id}`);
+  };
+
+  const goToTracking = (e) => {
+    e.stopPropagation();
+    navigate(`/order-tracking/${order.id}`);
+  };
+
+  const deleteOrder = async (e) => {
+    e.stopPropagation();
+
+    const confirm = window.confirm(
+      "Are you sure you want to permanently delete this order?"
+    );
+    if (!confirm) return;
+
+    try {
+      const orderToDelete = await DataStore.query(Order, order.id);
+      if (orderToDelete) {
+        await DataStore.delete(orderToDelete);
+        refreshOrders?.();
+      }
+    } catch (error) {
+      console.log("Delete error:", error);
     }
   };
 
-  const handleCopyPhoneNumber = async () => {
-    if (order.courier && order.courier.phoneNumber) {
-      await navigator.clipboard.writeText(order.courier.phoneNumber);
-      alert("Phone Number Copied! You can paste it into the dialer to make a call.");
+  const cancelOrder = async (e) => {
+    e.stopPropagation();
+
+    const confirm = window.confirm("Do you want to cancel this delivery?");
+    if (!confirm) return;
+
+    try {
+      const orderToCancel = await DataStore.query(Order, order.id);
+      if (orderToCancel) {
+        await DataStore.save(
+          Order.copyOf(orderToCancel, (updated) => {
+            updated.status = "READY_FOR_PICKUP";
+            updated.assignedCourierId = null;
+          })
+        );
+        refreshOrders?.();
+      }
+    } catch (error) {
+      console.log("Cancel error:", error);
     }
   };
 
-  const getStatusText = (status) => {
-    if (status === "DELIVERED") return "Completed";
-    if (status === "ACCEPTED") return "Accepted";
-    return "Pending";
+  const getStatusClass = () => {
+    switch (order.status) {
+      case "DELIVERED":
+        return "orderHistoryList-statusDelivered";
+      case "ACCEPTED":
+      case "PICKEDUP":
+        return "orderHistoryList-statusActive";
+      case "CANCELLED":
+        return "orderHistoryList-statusCancelled";
+      default:
+        return "orderHistoryList-statusPending";
+    }
   };
 
   return (
-    <div className="orderHistoryListContainer" onClick={goToOrderLiveUpdate}>
-      <p className="subHeading">Date:</p>
-      <p className="detail">{order?.createdAt ? order?.createdAt.substring(0, 10) : ""}</p>
+    <div
+      className={`orderHistoryList-card ${
+        isLive ? "orderHistoryList-cardActive" : ""
+      }`}
+      onClick={toggleExpand}
+    >
+      {/* HEADER */}
+      <div className="orderHistoryList-topRow">
+        <span className="orderHistoryList-date">
+          {order?.createdAt?.substring(0, 10)}
+        </span>
 
-      <p className="subHeading">Recipient Name:</p>
-      <p className="detail">{order.recipientName}</p>
+        <div
+          className={`orderHistoryList-statusBadge ${getStatusClass()}`}
+        >
+          {order.status}
+        </div>
+      </div>
 
-      <p className="subHeading">Item Sent:</p>
-      <p className="detail">{order.orderDetails}</p>
+      {/* SUMMARY */}
+      <h3 className="orderHistoryList-recipient">
+        {order.recipientName}
+      </h3>
 
-      <p className="subHeading">Destination:</p>
-      <p className="detail">
-        {order?.parcelDestination
-          ? order?.parcelDestination.length > 20
-            ? `${order.parcelDestination.substring(0, 30)}...`
-            : order.parcelDestination
-          : ""}
+      <div className="orderHistoryList-bottomRow">
+        <span className="orderHistoryList-price">
+          ₦
+          {order?.totalPrice?.toLocaleString() ||
+            order?.initialOfferPrice?.toLocaleString()}
+        </span>
+
+        <span className="orderHistoryList-transport">
+          {order.transportationType}
+        </span>
+      </div>
+
+      <p className="orderHistoryList-expandHint">
+        {expanded ? "Click to collapse ▲" : "Click to expand ▼"}
       </p>
 
-      <p className="subHeading">Status:</p>
-      <div className="statusRow">
-        <p className="detail">{getStatusText(order.status)}</p>
-        {(order.status === "DELIVERED" || order.status === "ACCEPTED") ? (
-          <div className="greenIcon"></div>
-        ) : (
-          <div className="redIcon"></div>
-        )}
-      </div>
-
-      {order.courier && order.status !== "DELIVERED" && (
-        <div>
-          <p className="subHeading">Courier Name:</p>
-          <p className="detail">{order.courier.firstName}</p>
-
-          <p className="subHeading">Courier Phone number:</p>
-          <p className="detail phoneNumber" onClick={handleCopyPhoneNumber}>
-            {order.courier.phoneNumber}
+      {/* COLLAPSIBLE CONTENT */}
+      <div
+        className={`orderHistoryList-collapsible ${
+          expanded ? "expanded" : ""
+        }`}
+      >
+        <div className="orderHistoryList-expandedContent">
+          <p className="orderHistoryList-details">
+            {order.orderDetails}
           </p>
-        </div>
-      )}
 
-      <div className="priceTypeRow">
-        <div>
-          <p className="subHeading">Price:</p>
-          <p className="priceType">₦{order?.price?.toLocaleString()}</p>
-        </div>
+          <div className="orderHistoryList-divider" />
 
-        <div>
-          <p className="subHeading">Transport Type:</p>
-          <p className="priceType">{order?.transportationType}</p>
+          {/* BUTTONS */}
+          <div className="orderHistoryList-buttonRow">
+            <button
+              className="orderHistoryList-primaryButton"
+              onClick={goToTracking}
+            >
+              Track
+            </button>
+
+            <button
+              className="orderHistoryList-secondaryButton"
+              onClick={goToOrderDetails}
+            >
+              Details
+            </button>
+          </div>
+
+          {/* CONDITIONAL ACTIONS */}
+          {order.status === "READY_FOR_PICKUP" && (
+            <button
+              className="orderHistoryList-dangerButton"
+              onClick={deleteOrder}
+            >
+              Delete Order
+            </button>
+          )}
+
+          {order.status === "ACCEPTED" && (
+            <button
+              className="orderHistoryList-warningButton"
+              onClick={cancelOrder}
+            >
+              Cancel Delivery
+            </button>
+          )}
         </div>
       </div>
-
-      {order.status === "READY_FOR_PICKUP" && (
-        <button
-          className="deleteButtonCon"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (confirm("Are you sure you want to delete this order?")) onDelete();
-          }}
-        >
-          <span className="deleteButtonTxt">Delete Order</span>
-        </button>
-      )}
-
-      {order.status === "ACCEPTED" && (
-        <button
-          className="cancelButtonCon"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (confirm("Are you sure you want to cancel this order?")) onCancel();
-          }}
-        >
-          <span className="cancelButtonTxt">Cancel Order</span>
-        </button>
-      )}
     </div>
   );
 };

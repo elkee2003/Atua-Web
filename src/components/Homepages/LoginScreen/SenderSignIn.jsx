@@ -54,15 +54,15 @@ const SignIn = () => {
       <div className="login-wrapper">
 
         <div className="login-left">
-          <h1>Welcome Back 👋</h1>
+          <h1>Welcome Back</h1>
           <p>
             Manage deliveries, track packages, and grow with Atua Logistics.
           </p>
 
           <div className="login-highlight">
-            <span>⚡ Fast deliveries</span>
-            <span>🔒 Secure platform</span>
-            <span>🌍 Nationwide coverage</span>
+            <span>Fast deliveries</span>
+            <span>Secure platform</span>
+            <span>Nationwide coverage</span>
           </div>
         </div>
 

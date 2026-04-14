@@ -1,10 +1,13 @@
 import { useProfileContext } from "../../../../../../Providers/ClientProvider/ProfileProvider";
 import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 import { signOut } from "aws-amplify/auth";
 import "./Styles.css";
 
 const EditProfile = () => {
   const navigate = useNavigate();
+  const {dbUser, authUser} = useAuthContext();
+  console.log('dbuser:', dbUser, 'authuser:', authUser)
 
   const {
     firstName,
@@ -43,7 +46,7 @@ const EditProfile = () => {
   // ✅ NEXT
   const handleNext = () => {
     if (onValidateInput()) {
-      navigate("/profile/address");
+      navigate("/send/address_page");
     }
   };
 
@@ -64,7 +67,7 @@ const EditProfile = () => {
     <div className="editProfile-container">
       {/* HEADER */}
       <div className="editProfile-header">
-        <button onClick={() => navigate(-1)}>← Back</button>
+        <button onClick={() => navigate(-1)}>←</button>
         <h2>Edit Profile</h2>
         <button
           className="editProfile-signout"

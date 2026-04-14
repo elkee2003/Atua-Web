@@ -1,0 +1,109 @@
+.profileParent-container {
+  display: flex;
+  width:80vw;  
+}
+
+.profileLoading-container {
+  min-height: 100vh;
+  width: 100%;
+  background: #f4f6f8;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* SHIMMER EFFECT */
+.shimmer {
+  position: relative;
+  overflow: hidden;
+  background: #e0e0e0;
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  height: 100%;
+  width: 150%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    left: 150%;
+  }
+}
+
+/* HEADER */
+.profileLoading-header {
+  height: 40px;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+/* CONTENT */
+.profileLoading-content {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* AVATAR */
+.profileLoading-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+}
+
+/* NAME */
+.profileLoading-name {
+  height: 20px;
+  width: 180px;
+  margin: 0 auto 30px;
+  border-radius: 8px;
+}
+
+/* CARD */
+.profileLoading-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.profileLoading-row {
+  height: 14px;
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* BUTTONS */
+.profileLoading-btn {
+  height: 45px;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+
+.profileLoading-btn.outline {
+  background: transparent;
+  border: 2px solid #e0e0e0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .profileParent-container {
+    width: 100vw;
+  }
+}

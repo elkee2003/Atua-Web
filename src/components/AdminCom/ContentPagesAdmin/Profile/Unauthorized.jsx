@@ -15,7 +15,7 @@ const Unauthorized = () => {
         {/* TEXT */}
         <h1>Access Restricted</h1>
         <p>
-          You don’t have permission to view this page.  
+          You don't have permission to view this page.  
           If you believe this is a mistake, contact support.
         </p>
 

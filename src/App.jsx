@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import AuthRoutes from './Routes/HomePageRoutes/AuthRoutes';
 import SendRoutes from './Routes/SendRoutes/SendRoutes';
 import AdminRoutes from './Routes/AdminRoutes/AdminRoutes';
-// import AuthProvider from '../Provider/AuthProvider';
+import AuthProvider from '../Providers/ClientProvider/AuthProvider';
 import ProfileProvider from '../Providers/ClientProvider/ProfileProvider';
 import LocationProvider from '../Providers/ClientProvider/LocationProvider';
 import OrderProvider from '../Providers/ClientProvider/OrderProvider';
@@ -13,7 +13,7 @@ function App() {
   return (
     <div className='App'>
       <Router>
-        {/* <AuthProvider> */}
+        <AuthProvider>
           <ProfileProvider>
             <LocationProvider>
               <OrderProvider>
@@ -27,7 +27,7 @@ function App() {
               </OrderProvider>
             </LocationProvider>
           </ProfileProvider>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </Router>
     </div>
   )

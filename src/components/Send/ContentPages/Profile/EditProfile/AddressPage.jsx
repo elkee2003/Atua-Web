@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Autocomplete } from "@react-google-maps/api";
-import { useProfileContext } from "@/providers/ProfileProvider";
+import { useProfileContext } from "../../../../../../Providers/ClientProvider/ProfileProvider";
 import "./Styles.css";
 
 const AddressPage = () => {
@@ -36,7 +36,7 @@ const AddressPage = () => {
 
   const handleNext = () => {
     if (onValidateAddressInput()) {
-      navigate("/profile/reviewprofile");
+      navigate("/send/review_edit");
     }
   };
 

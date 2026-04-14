@@ -7,16 +7,7 @@ import { User } from "../../src/models";
 
 const AuthContext = createContext({});
 
-const waitForDataStoreReady = () => {
-  return new Promise((resolve) => {
-    const unsubscribe = Hub.listen("datastore", ({ payload }) => {
-      if (payload.event === "ready") {
-        unsubscribe();
-        resolve();
-      }
-    });
-  });
-};
+
 
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate(); // ✅ added
@@ -71,8 +62,6 @@ const AuthProvider = ({ children }) => {
     try {
       setLoadingUser(true);
 
-      await waitForDataStoreReady();
-
       const users = await DataStore.query(User, (u) => u.sub.eq(sub));
 
       setDbUser(users.length > 0 ? users[0] : null);
@@ -89,11 +78,7 @@ const AuthProvider = ({ children }) => {
 
     try {
       setLoadingUser(true);
-      await DataStore.clear();
-      await DataStore.start();
-      await dbCurrentUser();
-    } catch (e) {
-      console.log("Refresh error:", e);
+      await dbCurrentUser(); // ✅ enough
     } finally {
       setLoadingUser(false);
     }

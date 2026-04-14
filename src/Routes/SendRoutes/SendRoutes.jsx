@@ -22,7 +22,7 @@ import OrderLiveUpdate from '../../components/Send/ContentPages/OrderHistory/Ord
 import UserProfile from '../../components/Send/ContentPages/Profile/Profile';
 import EditProfile from '../../components/Send/ContentPages/Profile/EditProfile/EditProfile';
 import ReviewProfileEdit from '../../components/Send/ContentPages/Profile/EditProfile/ReviewProfile';
-
+import AddressPage from '../../components/Send/ContentPages/Profile/EditProfile/AddressPage';
 
 // Profile Buttons
 
@@ -67,6 +67,8 @@ const SendRoutes = () => (
                 <Route path="profile" element={<UserProfile />} />
 
                 <Route path="edit_profile" element={<EditProfile />} />
+
+                <Route path="address_page" element={<AddressPage />} />
 
                 <Route path="review_edit" element={<ReviewProfileEdit />} />
 

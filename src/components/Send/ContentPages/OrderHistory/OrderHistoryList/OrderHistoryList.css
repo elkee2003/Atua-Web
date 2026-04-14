@@ -1,0 +1,162 @@
+/* CARD */
+.orderHistoryList-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.orderHistoryList-cardActive {
+  border: 1px solid #e5e7eb;
+}
+
+/* HEADER */
+.orderHistoryList-topRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.orderHistoryList-date {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* STATUS */
+.orderHistoryList-statusBadge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.orderHistoryList-statusDelivered {
+  background: #16a34a;
+}
+
+.orderHistoryList-statusActive {
+  background: #2563eb;
+}
+
+.orderHistoryList-statusPending {
+  background: #f59e0b;
+}
+
+.orderHistoryList-statusCancelled {
+  background: #dc2626;
+}
+
+/* SUMMARY */
+.orderHistoryList-recipient {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 12px;
+  color: #111827;
+}
+
+.orderHistoryList-bottomRow {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.orderHistoryList-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.orderHistoryList-transport {
+  font-size: 13px;
+  color: #6b7280;
+  text-transform: capitalize;
+}
+
+.orderHistoryList-expandHint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* COLLAPSIBLE ANIMATION */
+.orderHistoryList-collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.orderHistoryList-collapsible.expanded {
+  max-height: 500px; /* enough space */
+}
+
+/* EXPANDED CONTENT */
+.orderHistoryList-expandedContent {
+  margin-top: 12px;
+}
+
+.orderHistoryList-details {
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 20px;
+}
+
+.orderHistoryList-divider {
+  height: 1px;
+  background: #f3f4f6;
+  margin: 14px 0;
+}
+
+/* BUTTONS */
+.orderHistoryList-buttonRow {
+  display: flex;
+  gap: 10px;
+}
+
+.orderHistoryList-primaryButton {
+  flex: 1;
+  background: #2563eb;
+  color: white;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.orderHistoryList-secondaryButton {
+  flex: 1;
+  background: #f3f4f6;
+  color: #111827;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* DANGER */
+.orderHistoryList-dangerButton {
+  margin-top: 12px;
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* WARNING */
+.orderHistoryList-warningButton {
+  margin-top: 12px;
+  background: #fff7ed;
+  color: #ea580c;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}

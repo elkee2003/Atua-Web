@@ -20,7 +20,9 @@ const MainProfile = () => {
     setProfilePic,
   } = useProfileContext();
 
-  const { dbUser } = useAuthContext();
+  const { dbUser, authUser } = useAuthContext();
+
+  console.log("dbuser:", dbUser)
 
   const [loading, setLoading] = useState(true);
 
@@ -77,6 +79,25 @@ const MainProfile = () => {
       console.log("Sign out error:", err);
     }
   };
+
+  // If no authuser
+  if (!authUser) {
+    return (
+      <div className="emptyProfile">
+        <img src="/placeholder.png" className="emptyAvatar" />
+
+        <h2>Welcome</h2>
+        <p>Please sign in to view your profile</p>
+
+        <button
+          className="emptyBtn"
+          onClick={() => navigate("/?section=signin")}
+        >
+          Sign In
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="mainProfile-container">
@@ -139,7 +160,7 @@ const MainProfile = () => {
         <div className="mainProfile-buttons">
           <button
             className="mainProfile-primaryBtn"
-            onClick={() => navigate("/profile/edit")} // ✅ updated
+            onClick={() => navigate("/send/edit_profile")}
           >
             Edit Profile
           </button>

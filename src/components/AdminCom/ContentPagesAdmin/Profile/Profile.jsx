@@ -6,12 +6,11 @@ import UserDashboard from './UsersDashboard/UsersDashboard';
 
 function Profile() {
   const {dbUser} = useAuthContext();
-  console.log('dbuser:', dbUser)
 
   // Replace with real admin check later
-  // if (dbUser?.id !== "dslhsghioisdisoissssiso") {
-  //   return <Unauthorized />;
-  // }
+  if (dbUser?.id !== "dslhsghioisdisoissssiso") {
+    return <Unauthorized />;
+  }
 
   return (
     <div >

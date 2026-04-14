@@ -1,97 +1,89 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useState, useContext, useEffect, createContext } from "react";
 import { useAuthContext } from "./AuthProvider";
 
-// This is converted already to be compatible to web app
-
 const ProfileContext = createContext({});
-
-const initialState = {
-  profilePic: null,
-  firstName: "",
-  lastName: "",
-  exactAddress: "",
-  address: "",
-  lat: "0",
-  lng: "0",
-  phoneNumber: "",
-  errorMessage: "",
-};
 
 const ProfileProvider = ({ children }) => {
   const { dbUser } = useAuthContext();
 
-  const [profile, setProfile] = useState(initialState);
+  const [profilePic, setProfilePic] = useState(null);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [exactAddress, setExactAddress] = useState("");
+  const [address, setAddress] = useState("");
+  const [lat, setLat] = useState("0");
+  const [lng, setLng] = useState("0");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // ---------------- UPDATE FIELD ----------------
-  const updateProfileField = (field, value) => {
-    setProfile((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // ---------------- VALIDATION ----------------
   const validateInput = () => {
-    if (!profile.firstName) {
-      return "First Name is required";
+    setErrorMessage("");
+
+    if (!firstName) {
+      setErrorMessage("First Name is Required");
+      return false;
     }
 
-    if (!profile.phoneNumber || profile.phoneNumber.length < 10) {
-      return "Valid phone number required";
+    if (!phoneNumber || phoneNumber.length < 10) {
+      setErrorMessage("Kindly fill in Phone Number");
+      return false;
     }
 
-    return null;
+    return true;
   };
 
   const validateAddressInput = () => {
-    if (!profile.exactAddress) {
-      return "Exact address is required";
+    setErrorMessage("");
+
+    if (!exactAddress) {
+      setErrorMessage("Exact Address is required");
+      return false;
     }
 
-    if (!profile.address) {
-      return "Address is required";
+    if (!address) {
+      setErrorMessage("Address is required");
+      return false;
     }
 
-    return null;
+    return true;
   };
 
-  // ---------------- WRAPPERS ----------------
-  const onValidateInput = () => {
-    const error = validateInput();
-    setProfile((prev) => ({ ...prev, errorMessage: error || "" }));
-    return !error;
-  };
-
-  const onValidateAddressInput = () => {
-    const error = validateAddressInput();
-    setProfile((prev) => ({ ...prev, errorMessage: error || "" }));
-    return !error;
-  };
-
-  // ---------------- LOAD FROM DB ----------------
   useEffect(() => {
     if (!dbUser) return;
 
-    setProfile((prev) => ({
-      ...prev,
-      profilePic: dbUser.profilePic || null,
-      firstName: dbUser.firstName || "",
-      lastName: dbUser.lastName || "",
-      exactAddress: dbUser.exactAddress || "",
-      address: dbUser.address || "",
-      phoneNumber: dbUser.phoneNumber || "",
-      lat: dbUser.lat?.toString() || "0",
-      lng: dbUser.lng?.toString() || "0",
-    }));
+    setProfilePic(dbUser?.profilePic || null);
+    setFirstName(dbUser?.firstName || "");
+    setLastName(dbUser?.lastName || "");
+    setExactAddress(dbUser?.exactAddress || "");
+    setAddress(dbUser?.address || "");
+    setPhoneNumber(dbUser?.phoneNumber || "");
+    setLat(dbUser?.lat?.toString() || "0");
+    setLng(dbUser?.lng?.toString() || "0");
   }, [dbUser]);
 
   return (
     <ProfileContext.Provider
       value={{
-        profile,
-        updateProfileField,
-        onValidateInput,
-        onValidateAddressInput,
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
+        exactAddress,
+        setExactAddress,
+        address,
+        setAddress,
+        lat,
+        setLat,
+        lng,
+        setLng,
+        phoneNumber,
+        setPhoneNumber,
+        profilePic,
+        setProfilePic,
+        errorMessage,
+        setErrorMessage,
+        onValidateInput: validateInput,
+        onValidateAddressInput: validateAddressInput,
       }}
     >
       {children}
