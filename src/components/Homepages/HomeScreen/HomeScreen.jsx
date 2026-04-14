@@ -4,9 +4,9 @@ import Hero from '../Hero/Hero';
 import AboutUs from '../AboutUs/AboutUs';
 import OurServices from '../OurServices/OurServices';
 import OurMission from '../OurMission/OurMission';
-// import Signin from '../Signin/Signin';
-// import Contact from '../Contact/Contact';
+import ContactUs from '../ContactUs/ContactUs';
 import Footer from '../Footer/Footer';
+import SenderSignIn from '../LoginScreen/SenderSignIn';
 
 function Home (){
     return (
@@ -16,8 +16,8 @@ function Home (){
             <AboutUs/>
             <OurServices/>
             <OurMission/>
-            {/* <Signin/> */}
-            {/* <Contact/> */}
+            <SenderSignIn/>
+            <ContactUs/>
             <Footer/>
         </>
     )

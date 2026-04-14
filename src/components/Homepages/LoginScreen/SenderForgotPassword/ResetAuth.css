@@ -1,0 +1,96 @@
+/* SECTION */
+.reset-section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+/* CONTAINER */
+.reset-container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* CARD */
+.reset-card {
+  background: #ffffff;
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+  text-align: center;
+  border: 1px solid #e2e8f0;
+  animation: resetFadeIn 0.4s ease;
+}
+
+/* ANIMATION */
+@keyframes resetFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* TITLE */
+.reset-card h1 {
+  font-size: 1.9rem;
+  color: #0f172a;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+/* DESCRIPTION */
+.reset-card p {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+/* INPUT ALIGNMENT FIX */
+.reset-card .ci-field {
+  text-align: left;
+}
+
+/* BUTTON SPACING */
+.reset-card .cb-btn {
+  margin-top: 1rem;
+}
+
+/* LINK */
+.reset-link {
+  margin-top: 1.5rem;
+  font-size: 13px;
+  color: #64748b;
+  cursor: pointer;
+  transition: 0.25s ease;
+  display: inline-block;
+}
+
+.reset-link:hover {
+  color: #6366f1;
+  transform: translateY(-1px);
+}
+
+/* EMAIL HIGHLIGHT */
+.reset-card strong {
+  color: #0f172a;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+@media (max-width: 500px) {
+  .reset-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .reset-card h1 {
+    font-size: 1.6rem;
+  }
+}

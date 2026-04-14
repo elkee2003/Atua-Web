@@ -1,20 +1,22 @@
 import React from 'react';
 import { useAuthContext } from '../../../../../Providers/ClientProvider/AuthProvider';
-// import EditProfile from './EditProfile/index';
-// import MainProfile from './MainProfile/MainProfile';
+import AdminProfile from './AdminProfilePage/AdminProfile';
+import Unauthorized from './Unauthorized';
 import UserDashboard from './UsersDashboard/UsersDashboard';
 
 function Profile() {
   const {dbUser} = useAuthContext();
+  console.log('dbuser:', dbUser)
+
+  // Replace with real admin check later
+  // if (dbUser?.id !== "dslhsghioisdisoissssiso") {
+  //   return <Unauthorized />;
+  // }
 
   return (
     <div >
-        <UserDashboard/>
-      {/* {dbUser ?
-        <MainProfile/>
-      :
-        <EditProfile/>
-      } */}
+        {/* <UserDashboard/> */}
+      <AdminProfile/>
     </div>
   )
 }

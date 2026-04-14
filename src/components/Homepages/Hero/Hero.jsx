@@ -1,127 +1,92 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Hero.css";
 
-// Custom hook to get screen size category
-const useScreenCategory = () => {
-  const [category, setCategory] = useState("large");
+const Hero = () => {
+  const navigate = useNavigate();
+  const [index, setIndex] = useState(0);
+
+  const images = useMemo(
+    () => ["/image1.jpeg", "/image2.png"],
+    []
+  );
 
   useEffect(() => {
-    const checkCategory = () => {
-      const width = window.innerWidth;
-      if (width >= 1100) setCategory("large");
-      else if (width >= 500) setCategory("medium");
-      else setCategory("small");
-    };
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [images]);
 
-    checkCategory();
-    window.addEventListener("resize", checkCategory);
-    return () => window.removeEventListener("resize", checkCategory);
-  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % images.length);
+    }, 6000);
 
-  return category;
-};
-
-
-const Hero = () => {
-
-    const navigate = useNavigate();
-
-    const [currentImage, setCurrentImage] = useState(0);
-
-    const screenCategory = useScreenCategory();
-
-    const imageSets = useMemo(() => ({
-        large: [
-            '/image1.jpeg', '/image2.png'
-        ],
-        medium: [
-            '/image1.jpeg', '/image2.png'
-        ],
-        small: [
-            '/image1.jpeg', '/image2.png'
-        ],
-    }), []);
-
-    const images = imageSets[screenCategory] || [];
-
-    // Preload images on category change only
-    useEffect(() => {
-        images.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-        });
-    }, [screenCategory]);
-
-    // Background image changer
-    useEffect(() => {
-        let isMounted = true;
-
-        const changeImage = () => {
-        const nextIndex = (currentImage + 1) % images.length;
-        const img = new Image();
-        img.src = images[nextIndex];
-        img.onload = () => {
-            if (isMounted) setCurrentImage(nextIndex);
-        };
-        };
-
-        const interval = setInterval(changeImage, 4000);
-        return () => {
-        isMounted = false;
-        clearInterval(interval);
-        };
-    }, [currentImage, images]);
-
-    // const navigateToSignIn = () => {
-    //     const signInElement = document.getElementById('signin');
-    //     if (signInElement) {
-    //         const elementTop = signInElement.getBoundingClientRect().top + window.scrollY - 80; // Adjust for any fixed headers
-    //         window.scrollTo({ top: elementTop, behavior: 'smooth' });
-    //     }
-    // };
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
-    <div
-        id='hero'
-        className="hero-background"
-        style={{
-            backgroundImage: `url(${images[currentImage]})`,
-        }} 
+    <section
+      className="hero"
+      style={{ backgroundImage: `url(${images[index]})` }}
     >
+      <div className="hero-overlay" />
 
-        {/* Write up section */}
-        <div className="writeup-container">
-            <span>Send</span> Parcels<span> Without</span> Bounds
+      <div className="hero-container">
+        {/* LEFT */}
+        <div className="hero-text">
+          <p className="hero-tag">Logistics made simple</p>
+
+          <h1>
+            Deliver <span>Anything</span> <br />
+            Across <span>Any City</span>
+          </h1>
+
+          <p className="hero-subtext">
+            Fast, reliable and secure delivery at your fingertips.
+            From small packages to bulk shipments — we move it all.
+          </p>
+
+          <div className="hero-actions">
+            <button
+              className="btn-primary"
+              onClick={() => navigate("/send/home")}
+            >
+              Send a Package →
+            </button>
+          </div>
         </div>
 
-        {/* Hero Overlay */}
-        <div className="hero-Overlay" />
+        {/* RIGHT CARD */}
+        <div className="hero-card">
+          <h3>Start in seconds</h3>
 
-        {/* Button container */}
-        {/* <div className="hero-btn-container"> */}
+          <div className="step">
+            <span>📍</span>
+            <p>Set pickup & destination</p>
+          </div>
 
-            {/* <button className="hero-button">
-                Download App
-            </button> */}
-            
-            {/* <button className="hero-button" onClick={navigateToSignIn}>
-                Sign In
-            </button> */}
-        {/* </div> */}
+          <div className="step">
+            <span>🚚</span>
+            <p>Select delivery option</p>
+          </div>
 
-        {/* Explore */}
-        <div
-            className="hero-send-con"
-            onClick={
-                ()=>navigate('/send/home')
-                // ()=>navigate('/send/destination-search')
-            }
-        >
-            <p className="hero-send-txt">Send</p>
+          <div className="step">
+            <span>💳</span>
+            <p>Checkout securely</p>
+          </div>
+
+          <button
+            className="card-btn"
+            onClick={() => navigate("/send/home")}
+          >
+            Continue →
+          </button>
         </div>
-    </div>
-  )
-}
+      </div>
+    </section>
+  );
+};
 
-export default Hero
+export default Hero;

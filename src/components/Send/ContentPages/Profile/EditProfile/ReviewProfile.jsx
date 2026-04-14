@@ -1,73 +1,58 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MdCancel } from "react-icons/md";
-import { IoArrowBack } from "react-icons/io5"; 
-import { useProfileContext } from '../../../../../../Providers/ClientProvider/ProfileProvider';
-import { useAuthContext } from '../../../../../../Providers/ClientProvider/AuthProvider';
-import { DataStore } from 'aws-amplify/datastore';
-import { User } from '../../../../../models';
-import { uploadData, remove } from 'aws-amplify/storage';
-import "./Styles.css"; 
+import { DataStore } from "aws-amplify/datastore";
+import { remove, uploadData } from "aws-amplify/storage";
+import { v4 as uuidv4 } from "uuid";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
+import { useProfileContext } from "../../../../../../Providers/ClientProvider/ProfileProvider";
+import { User } from "../../../../../models";
+import "./Styles.css";
 
-const ReviewDetails = () => {
+const ReviewProfile = () => {
   const navigate = useNavigate();
 
-  const { firstName, lastName, username, profilePic, setProfilePic, address, phoneNumber } = useProfileContext();
+  const {
+    firstName,
+    lastName,
+    profilePic,
+    setProfilePic,
+    exactAddress,
+    address,
+    lat,
+    lng,
+    phoneNumber,
+  } = useProfileContext();
 
   const { dbUser, setDbUser, sub, userMail } = useAuthContext();
 
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Function to manipulate the image using canvas
-  const manipulateImage = async (imageUrl) => {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.src = imageUrl;
-
-      img.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const targetWidth = 600;
-        const scale = targetWidth / img.width;
-        canvas.width = targetWidth;
-        canvas.height = img.height * scale;
-
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(
-          (blob) => {
-            resolve(blob);
-          },
-          "image/jpeg",
-          0.7 // Compression quality
-        );
-      };
-
-      img.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  // Function to upload image
-  async function uploadImage() {
+  // ✅ Upload Image (WEB VERSION)
+  const uploadImage = async () => {
     try {
+      if (!profilePic) return null;
+
+      // delete old
       if (dbUser?.profilePic) {
         await remove({ path: dbUser.profilePic });
       }
 
-      const manipulatedBlob = await manipulateImage(profilePic);
-      const fileKey = `public/profilePhoto/${sub}/${crypto.randomUUID()}.jpg`;
+      const response = await fetch(profilePic);
+      const blob = await response.blob();
+
+      const fileKey = `public/profilePhoto/${sub}/${uuidv4()}.jpg`;
 
       const result = await uploadData({
         path: fileKey,
-        data: manipulatedBlob,
+        data: blob,
         options: {
           contentType: "image/jpeg",
           onProgress: ({ transferredBytes, totalBytes }) => {
             if (totalBytes) {
-              const progress = Math.round((transferredBytes / totalBytes) * 100);
-              setUploadProgress(progress);
+              setUploadProgress(
+                Math.round((transferredBytes / totalBytes) * 100)
+              );
             }
           },
         },
@@ -75,145 +60,154 @@ const ReviewDetails = () => {
 
       return result.path;
     } catch (err) {
-      console.error("Error uploading file:", err);
+      console.log(err);
     }
-  }
+  };
 
-  const deleteProfilePic = async () => {
+  const handleDeleteImage = async () => {
     if (!dbUser?.profilePic) return;
 
-    setUploading(true);
+    const confirm = window.confirm("Remove profile picture?");
+    if (!confirm) return;
+
     try {
       await remove({ path: dbUser.profilePic });
-      const updatedUser = await DataStore.save(
-        User.copyOf(dbUser, (updated) => {
-          updated.profilePic = null;
+
+      const updated = await DataStore.save(
+        User.copyOf(dbUser, (u) => {
+          u.profilePic = null;
         })
       );
 
-      setDbUser(updatedUser);
-      alert("Profile Picture Removed");
+      setDbUser(updated);
       setProfilePic(null);
-    } catch (error) {
-      alert("Error removing profile picture");
-      console.error("Error removing profile picture:", error);
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const createUser = async () => {
-    if (uploading) return;
-    setUploading(true);
-
-    try {
-      const uploadedImagePath = await uploadImage();
-      const user = await DataStore.save(
-        new User({
-          profilePic: uploadedImagePath,
-          firstName,
-          lastName,
-          email: userMail,
-          username,
-          address,
-          phoneNumber,
-          sub,
-        })
-      );
-      setDbUser(user);
-    } catch (e) {
-      alert(`Error: ${e.message}`);
-    }
-  };
-
-  const updateUser = async () => {
-    if (uploading) return;
-    setUploading(true);
-
-    try {
-      const uploadedImagePath = await uploadImage();
-      const user = await DataStore.save(
-        User.copyOf(dbUser, (updated) => {
-          updated.firstName = firstName;
-          updated.lastName = lastName;
-          updated.username = username;
-          updated.email = userMail;
-          updated.profilePic = uploadedImagePath;
-          updated.address = address;
-          updated.phoneNumber = phoneNumber;
-        })
-      );
-      setDbUser(user);
-    } catch (e) {
-      alert(`Error: ${e.message}`);
-    } finally {
-      setUploading(false);
+    } catch (err) {
+      console.log(err);
     }
   };
 
   const handleSave = async () => {
-    if (dbUser) {
-      await updateUser();
-      navigate("/clientcontent/profile"); 
-      setTimeout(() => {
-        navigate('/clientcontent/home');
-      }, 1000);
-    } else {
-      await createUser();
-      navigate("/clientcontent/profile");
-      setTimeout(() => {
-        navigate('/clientcontent/home');
-      }, 1000);
+    if (uploading) return;
+    setUploading(true);
+
+    try {
+      const uploadedImagePath = await uploadImage();
+
+      let user;
+
+      if (dbUser) {
+        user = await DataStore.save(
+          User.copyOf(dbUser, (u) => {
+            u.firstName = firstName;
+            u.lastName = lastName;
+            u.email = userMail;
+            u.profilePic = uploadedImagePath;
+            u.exactAddress = exactAddress;
+            u.address = address;
+            u.phoneNumber = phoneNumber;
+            u.lat = parseFloat(lat);
+            u.lng = parseFloat(lng);
+          })
+        );
+      } else {
+        user = await DataStore.save(
+          new User({
+            profilePic: uploadedImagePath,
+            firstName,
+            lastName,
+            email: userMail,
+            exactAddress,
+            address,
+            phoneNumber,
+            lat: parseFloat(lat),
+            lng: parseFloat(lng),
+            sub,
+          })
+        );
+      }
+
+      setDbUser(user);
+      navigate("/profile");
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setUploading(false);
     }
   };
 
   return (
-    <div className='reviewProContainer'>
-      <h1 className='title'>Review Profile</h1>
-
-      <button onClick={() => window.history.back()} className='bckBtnCon'>
-        <IoArrowBack className='bckBtnIcon' />
-      </button>
-
-      <div className='scrollContainer'>
-        {profilePic && (
-          <div className="profilePicContainerFull">
-            <div className='profilePicContainer'>
-              <img src={profilePic} alt="Profile" className='img' />
-            </div>
-            <button
-              className='removeButtonContainer'
-              disabled={uploading}
-              onClick={deleteProfilePic}
-            >
-              <MdCancel className='removebtn' />
-            </button>
-          </div>
-        )}
-
-        <p className='subHeader'>First Name:</p>
-        <p className='inputReview'>{firstName?.trim()}</p>
-
-        <p className='subHeader'>Last Name:</p>
-        <p className='inputReview'>{lastName?.trim()}</p>
-
-        <p className='subHeader'>Username:</p>
-        <p className='inputReview'>@{username?.trim()}</p>
-
-        <p className='subHeader'>Address:</p>
-        <p className='inputReview'>{address?.trim()}</p>
-
-        <p className='subHeader'>Phone Number:</p>
-        <p className='inputReviewLast'>{phoneNumber}</p>
+    <div className="reviewProfile-container">
+      {/* HEADER */}
+      <div className="reviewProfile-header">
+        <button onClick={() => navigate(-1)}>← Back</button>
+        <h2>Review Profile</h2>
       </div>
 
-      <button className='saveBtn' disabled={uploading} onClick={handleSave}>
-        <p className="saveBtnTxt">
-          {uploading ? `Saving... ${uploadProgress}%` : "Save"}
-        </p>
-      </button>
+      {/* CARD */}
+      <div className="reviewProfile-card">
+        {/* AVATAR */}
+        <div className="reviewProfile-avatarSection">
+          <div className="reviewProfile-avatarWrapper">
+            {profilePic ? (
+              <img src={profilePic} />
+            ) : (
+              <div className="reviewProfile-avatarFallback">
+                {firstName?.[0]}
+              </div>
+            )}
+
+            {profilePic && (
+              <button
+                className="reviewProfile-removeBtn"
+                onClick={handleDeleteImage}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* DETAILS */}
+        <div className="reviewProfile-details">
+          <div className="reviewProfile-row">
+            <span>First Name</span>
+            <p>{firstName}</p>
+          </div>
+
+          <div className="reviewProfile-row">
+            <span>Last Name</span>
+            <p>{lastName}</p>
+          </div>
+
+          <div className="reviewProfile-row">
+            <span>Exact Address</span>
+            <p>{exactAddress}</p>
+          </div>
+
+          <div className="reviewProfile-row">
+            <span>Selected Address</span>
+            <p>{address}</p>
+          </div>
+
+          <div className="reviewProfile-row">
+            <span>Phone Number</span>
+            <p>{phoneNumber}</p>
+          </div>
+        </div>
+
+        {/* SAVE */}
+        <button
+          className="reviewProfile-saveBtn"
+          onClick={handleSave}
+          disabled={uploading}
+        >
+          {uploading
+            ? `Saving... ${uploadProgress}%`
+            : "Save & Continue"}
+        </button>
+      </div>
     </div>
   );
 };
 
-export default ReviewDetails;
+export default ReviewProfile;

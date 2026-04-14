@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuthContext } from '../../../../../Providers/ClientProvider/AuthProvider';
-import EditProfile from './EditProfile/index';
+import EditProfile from './EditProfile/EditProfile';
 import MainProfile from './MainProfile/MainProfile';
 
 function Profile() {

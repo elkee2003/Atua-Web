@@ -20,12 +20,12 @@ import OrderLiveUpdate from '../../components/Send/ContentPages/OrderHistory/Ord
 
 // Profile Page
 import UserProfile from '../../components/Send/ContentPages/Profile/Profile';
-import EditProfile from '../../components/Send/ContentPages/Profile/EditProfile';
+import EditProfile from '../../components/Send/ContentPages/Profile/EditProfile/EditProfile';
 import ReviewProfileEdit from '../../components/Send/ContentPages/Profile/EditProfile/ReviewProfile';
 
 
 // Profile Buttons
-import ProfileOptions from '../../components/Send/ContentPages/Profile/MainProfile/ProfileOptionBtns/ProfileOptionsBtn';
+
 import Support from '../../components/Send/ContentPages/Profile/ProfileBtnsCom/Support/Support';
 import DeleteAccount from '../../components/Send/ContentPages/Profile/ProfileBtnsCom/DeleteAccount/DeleteAccount';
 
@@ -66,12 +66,11 @@ const SendRoutes = () => (
                 {/* User Profile */}
                 <Route path="profile" element={<UserProfile />} />
 
-                <Route path="edit_profile" element={<UserProfile />} />
+                <Route path="edit_profile" element={<EditProfile />} />
 
                 <Route path="review_edit" element={<ReviewProfileEdit />} />
 
                 {/* User Profile Options Buttons */}
-                <Route path="profile_options" element={<ProfileOptions />} />
 
                 <Route path="support" element={<Support />} />
 

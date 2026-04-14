@@ -46,9 +46,16 @@ function CourierFullProfile() {
       await DataStore.save(
         Courier.copyOf(fresh, (u) => {
           const newStatus = !fresh.isApproved;
+
           u.isApproved = newStatus;
           u.approvedById = newStatus ? dbUser?.id : null;
-          u.statusKey = `${fresh.isOnline ? "ONLINE" : "OFFLINE"}#${
+
+          // ✅ FORCE OFFLINE IF UNAPPROVED
+          if (!newStatus) {
+            u.isOnline = false;
+          }
+
+          u.statusKey = `${u.isOnline ? "ONLINE" : "OFFLINE"}#${
             newStatus ? "APPROVED" : "NOT_APPROVED"
           }`;
         })
@@ -258,7 +265,7 @@ function CourierFullProfile() {
               disabled={actionLoading} 
               onClick={resetDispatchTimer}
             >
-              Reset Timer
+              {actionLoading ? "Resetting..." : "Reset Timer (3hr)"}
             </button>
 
             <button 
@@ -270,7 +277,7 @@ function CourierFullProfile() {
                 }
               }}
             >
-              Reset Timer (3hr)
+               {actionLoading ? "Dispatching..." : "⚡ Force Dispatch"}
             </button>
 
             <button className="btn danger" onClick={handleDeleteCourier}>

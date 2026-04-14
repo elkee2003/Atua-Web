@@ -1,54 +1,133 @@
-.aboutUs-wrapper {
-    width: 100%;
-    background-color: var(--white);
-    display: flex; 
-    align-items: center;
-}
-.aboutUs-container{
-    justify-content: center;
+.about {
+  padding: 100px 0;
+  background: #ffffff;
+  color: #020617;
 }
 
-.bold-txt {
-    font-weight: 600;
+.about-container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.bg-image {
-    height: 70vh;
-    width: 90vw;
-    margin:1rem 0;
-    border-radius: 20px;
-    overflow: hidden;
-    /* background-color: transparent; */
-    background: rgb(245, 245, 245);
-    /* background: url('/backgroundBig.png'); */
-    background-size: cover; 
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: 0.8s ease-in-out;
+/* HEADER */
+.about-header {
+  text-align: center;
+  max-width: 700px;
+  margin: auto;
+  margin-bottom: 60px;
 }
 
+.about-tag {
+  color: #22c55e;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.about-header h2 {
+  font-size: 44px;
+  margin: 15px 0;
+  font-weight: 800;
+  color: #020617;
+}
+
+/* BRAND GRADIENT TEXT */
+.about-header h2 span {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-header p {
+  color: #475569;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* GRID */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+  margin-bottom: 60px;
+}
+
+/* IMAGE */
+.about-image {
+  height: 420px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  transition: 0.8s ease;
+
+  /* softer shadow for white theme */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* CONTENT */
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.about-item h4 {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #020617;
+}
+
+.about-item p {
+  color: #475569;
+  line-height: 1.6;
+}
+
+/* STATS */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+/* 🔥 MAKE STATS FEEL LIKE CARDS */
+.about-stats div {
+  background: #f8fafc;
+  padding: 25px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  transition: 0.25s;
+}
+
+.about-stats div:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+.about-stats h3 {
+  font-size: 28px;
+  color: #22c55e;
+}
+
+.about-stats p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
-    .bg-image {
-        height: 75vh;
-        width: 100%;
-    }
-}
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
 
-@media (max-width: 700px) {
-    .bg-image {
-        /* border-top-left-radius: 5rem;
-        border-top-right-radius: 5rem;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0; */
-        border-radius: 5rem 5rem 0 0;
-    }
-}
+  .about-header h2 {
+    font-size: 32px;
+  }
 
-@media (max-width: 600px) {
-    .bg-image {
-        border-radius: 7rem 7rem 0 0;
-    }
-}
-
-@media (max-width: 500px) {
+  .about-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }

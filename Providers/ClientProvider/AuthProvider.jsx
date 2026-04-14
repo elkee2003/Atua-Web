@@ -1,15 +1,12 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
 import { getCurrentUser, signOut } from "aws-amplify/auth";
 import { DataStore } from "aws-amplify/datastore";
 import { Hub } from "aws-amplify/utils";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "../../src/models";
 
-// This is converted already to be compatible to web app
-
 const AuthContext = createContext({});
 
-// ✅ Wait for DataStore sync
 const waitForDataStoreReady = () => {
   return new Promise((resolve) => {
     const unsubscribe = Hub.listen("datastore", ({ payload }) => {
@@ -22,44 +19,38 @@ const waitForDataStoreReady = () => {
 };
 
 const AuthProvider = ({ children }) => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // ✅ added
 
   const [authUser, setAuthUser] = useState(null);
   const [dbUser, setDbUser] = useState(null);
   const [sub, setSub] = useState(null);
   const [userMail, setUserMail] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
-  // ---------------- LOGOUT / CLEANUP ----------------
+  // ✅ HANDLE USER DELETED
   const handleUserDeleted = async () => {
-    console.log("User invalid/deleted — clearing session");
-
+    console.log("User deleted — clearing session...");
     try {
       await signOut({ global: true });
       await DataStore.clear();
       await DataStore.start();
     } catch (err) {
-      console.log("Cleanup error:", err);
+      console.log("Error clearing session:", err);
+    } finally {
+      setAuthUser(null);
+      setDbUser(null);
+      setSub(null);
+      navigate("/", { replace: true }); // ✅ updated
     }
-
-    setAuthUser(null);
-    setDbUser(null);
-    setSub(null);
-
-    navigate("/login");
   };
 
-  // ---------------- GET AUTH USER ----------------
+  // ✅ GET AUTH USER
   const currentAuthenticatedUser = async () => {
     try {
       const user = await getCurrentUser();
-
       setAuthUser(user);
       setSub(user.userId);
-
-      // ✅ FIXED: use user directly (not stale state)
-      const email = user?.signInDetails?.loginId;
-      setUserMail(email);
-
+      setUserMail(user?.signInDetails?.loginId);
     } catch (err) {
       console.log("Auth check failed:", err.name);
 
@@ -73,47 +64,68 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  // ---------------- GET DB USER ----------------
+  // ✅ GET DB USER
   const dbCurrentUser = async () => {
     if (!sub) return;
 
     try {
+      setLoadingUser(true);
+
       await waitForDataStoreReady();
 
-      const users = await DataStore.query(User, (u) =>
-        u.sub.eq(sub)
-      );
+      const users = await DataStore.query(User, (u) => u.sub.eq(sub));
 
-      if (users.length > 0) {
-        setDbUser(users[0]);
-      } else {
-        setDbUser(null);
-      }
+      setDbUser(users.length > 0 ? users[0] : null);
     } catch (error) {
-      console.error("DB user error:", error);
+      console.error("Error getting dbuser: ", error);
+    } finally {
+      setLoadingUser(false);
     }
   };
 
-  // ---------------- INIT ----------------
+  // ✅ REFRESH USER
+  const refreshUser = async () => {
+    if (!sub) return;
+
+    try {
+      setLoadingUser(true);
+      await DataStore.clear();
+      await DataStore.start();
+      await dbCurrentUser();
+    } catch (e) {
+      console.log("Refresh error:", e);
+    } finally {
+      setLoadingUser(false);
+    }
+  };
+
   useEffect(() => {
     currentAuthenticatedUser();
   }, []);
 
-  // ---------------- AUTH EVENTS ----------------
+  // ✅ HUB LISTENER
   useEffect(() => {
-    const listener = async ({ payload }) => {
-      const { event } = payload;
-
-      if (event === "signedIn") {
-        await currentAuthenticatedUser();
+    const handleSignOutEvent = async () => {
+      try {
+        await DataStore.clear();
+      } catch (e) {
+        console.log("Error clearing DataStore:", e);
       }
 
-      if (event === "signedOut") {
-        setAuthUser(null);
-        setDbUser(null);
-        setSub(null);
+      setAuthUser(null);
+      setDbUser(null);
+      setSub(null);
 
-        navigate("/login");
+      navigate("/", { replace: true }); // ✅ updated
+    };
+
+    const listener = (data) => {
+      const { event } = data.payload;
+
+      if (event === "signedIn") {
+        currentAuthenticatedUser();
+      } else if (event === "signedOut") {
+        handleSignOutEvent();
       }
     };
 
@@ -122,14 +134,13 @@ const AuthProvider = ({ children }) => {
     return () => hubListener();
   }, []);
 
-  // ---------------- FETCH DB USER ----------------
   useEffect(() => {
     if (sub) {
       dbCurrentUser();
     }
   }, [sub]);
 
-  // ---------------- LIVE UPDATE USER ----------------
+  // ✅ UPDATE SUBSCRIPTION
   useEffect(() => {
     if (!dbUser) return;
 
@@ -144,21 +155,20 @@ const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe();
   }, [dbUser]);
 
-  // ---------------- HANDLE DELETE ----------------
+  // ✅ DELETE SUBSCRIPTION
   useEffect(() => {
     if (!dbUser) return;
 
-    const subDelete = DataStore.observe(User).subscribe(
+    const deleteSubscription = DataStore.observe(User).subscribe(
       async ({ element, opType }) => {
         if (opType === "DELETE" && element.id === dbUser.id) {
           await DataStore.clear();
           setDbUser(null);
-          navigate("/login");
         }
       }
     );
 
-    return () => subDelete.unsubscribe();
+    return () => deleteSubscription.unsubscribe();
   }, [dbUser]);
 
   return (
@@ -169,6 +179,8 @@ const AuthProvider = ({ children }) => {
         setDbUser,
         sub,
         userMail,
+        loadingUser,
+        refreshUser,
       }}
     >
       {children}

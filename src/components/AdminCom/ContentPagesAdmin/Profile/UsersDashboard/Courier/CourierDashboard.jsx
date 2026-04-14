@@ -92,12 +92,15 @@ function CourierDashboard() {
       await DataStore.save(
         Courier.copyOf(freshCourier, (updated) => {
           updated.isApproved = newApprovalStatus;
-
           updated.approvedById = newApprovalStatus ? dbUser?.id : null;
 
-          const isOnline = freshCourier.isOnline;
+          // ✅ FORCE OFFLINE IF UNAPPROVED
+          if (!newApprovalStatus) {
+            updated.isOnline = false;
+          }
 
-          updated.statusKey = `${isOnline ? "ONLINE" : "OFFLINE"}#${
+          // ✅ USE UPDATED VALUE (NOT freshCourier.isOnline)
+          updated.statusKey = `${updated.isOnline ? "ONLINE" : "OFFLINE"}#${
             newApprovalStatus ? "APPROVED" : "NOT_APPROVED"
           }`;
         })

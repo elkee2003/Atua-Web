@@ -1,128 +1,100 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import './OurServices.css';
-
-// Custom hook to check screen width
-const useMediaQuery = (query) => {
-  const [matches, setMatches] = useState(window.matchMedia(query).matches);
-
-  useEffect(() => {
-    const mediaQueryList = window.matchMedia(query);
-    const listener = (event) => setMatches(event.matches);
-
-    mediaQueryList.addEventListener("change", listener);
-    return () => mediaQueryList.removeEventListener("change", listener);
-  }, [query]);
-
-  return matches;
-};
+import React, { useState, useEffect, useMemo } from "react";
+import "./OurServices.css";
 
 const OurServices = () => {
+  const [currentImage, setCurrentImage] = useState(0);
 
-    const [currentImage, setCurrentImage] = useState(0);
-    
-    // Detect screen size using multiple queries
-    const isLargeScreen = useMediaQuery("(min-width: 1100px)");
-    const isMediumScreen = useMediaQuery("(min-width: 500px) and (max-width: 1099px)");
-    const isSmallScreen = useMediaQuery("(min-width: 250px) and (max-width: 499px)");
+  const images = useMemo(
+    () => ["/image1.jpeg", "/image2.png"],
+    []
+  );
 
-    const largeScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ];
+  useEffect(() => {
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [images]);
 
-    const mediumScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ]
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 6000);
 
-    const smallScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ]
-
-    // Choose images based on screen size
-    const images = useMemo(() => {
-            if (isLargeScreen) return largeScreenImages;
-            if (isMediumScreen) return mediumScreenImages;
-            if (isSmallScreen) return smallScreenImages;
-            return [];
-    }, [isLargeScreen, isMediumScreen, isSmallScreen]);
-
-
-    // Preload images
-    useEffect(() => {
-        images.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-        });
-    }, [images]);
-
-    // Change background image every 6 seconds
-    useEffect(() => {
-        let isMounted = true;
-
-        const changeImage = () => {
-            const nextIndex = (currentImage + 1) % images.length;
-            const img = new Image();
-            img.src = images[nextIndex];
-
-            img.onload = () => {
-            if (isMounted) setCurrentImage(nextIndex);
-            };
-        };
-
-        const interval = setInterval(changeImage, 6000);
-
-        return () => {
-            isMounted = false;
-            clearInterval(interval);
-        };
-    }, [currentImage, images]);
+    return () => clearInterval(interval);
+  }, [images.length]);
 
   return (
-    <section
-      id='services'
-      className="services-wrapper"
-    >
-        <div className="paddings innerWidth flexCenter services-container">
-            <div className="flexColStart">
-                <span className="primaryText">Services</span>
-                <span className="secondaryText bold-txt">
-                    Our service is designed for every need:
-                </span>
+    <section id="services" className="services">
+      <div className="services-container">
 
-                {/* images */}
-                <div 
-                    className='bg-image'
-                    style={{
-                        backgroundImage: `url(${images[currentImage]})`,
-                    }} 
-                />
+        {/* HEADER */}
+        <div className="services-header">
+          <span className="services-tag">Our Services</span>
 
-                {/* Text */}
+          <h2>
+            Delivery solutions for <span>every need</span>
+          </h2>
 
-                {/* Micro Express */}
-                <div className="secondaryText">
-                    Micro X (Express) - Fast and affordable small package delivery using couriers on foot, bicycles, or scooters. Perfect for documents, food, and light items.
-                </div>
-
-                {/* Moto Express */}
-                <div className="secondaryText">
-                    Moto X (Express) - Quick deliveries with motorcycles and cars for medium-sized packages that need to arrive immediately.
-                </div>
-
-                {/* Micro Group */}
-                <div className="secondaryText">
-                    Micro Group - Cost-effective small package delivery where your parcel is grouped with others. Ideal if you don't mind a flexible delivery time.
-                </div>
-
-                {/* Moto Group */}
-                <div className="secondaryText">
-                    Moto Group - Affordable medium-sized deliveries grouped together. Great for budget-conscious senders.
-                </div>
-
-                <div className="secondaryText">
-                    Big loads and bulk shipments with vans, trucks, and specialized vehicles.”
-                </div>
-            </div>
+          <p>
+            Whether you need speed, affordability, or scale — Atua offers flexible
+            delivery options designed to move anything, anywhere.
+          </p>
         </div>
+
+        {/* IMAGE */}
+        <div
+          className="services-image"
+          style={{ backgroundImage: `url(${images[currentImage]})` }}
+        />
+
+        {/* SERVICES GRID */}
+        <div className="services-grid">
+
+          <div className="service-card">
+            <h4>⚡ Micro Express</h4>
+            <p>
+              Fast and affordable delivery for small packages using bikes,
+              scooters, or foot couriers.
+            </p>
+          </div>
+
+          <div className="service-card">
+            <h4>🚚 Moto Express</h4>
+            <p>
+              Immediate delivery using motorcycles and cars for medium-sized
+              packages.
+            </p>
+          </div>
+
+          <div className="service-card">
+            <h4>📦 Micro Batch</h4>
+            <p>
+              Budget-friendly delivery where your parcel is grouped with others using bikes,
+              scooters, or foot couriers..
+              Ideal for flexible timing.
+            </p>
+          </div>
+
+          <div className="service-card">
+            <h4>📦 Moto Batch</h4>
+            <p>
+              Affordable grouped delivery for medium packages using motorcycles and cars. Save more while
+              staying efficient.
+            </p>
+          </div>
+
+          <div className="service-card highlight">
+            <h4>🏗 Bulk & Heavy Loads</h4>
+            <p>
+              Move large shipments with vans, trucks, and specialized vehicles
+              built for scale.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
     </section>
   );
 };

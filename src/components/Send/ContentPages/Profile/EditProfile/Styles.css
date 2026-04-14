@@ -1,457 +1,228 @@
-.profileContainer {
+.editProfile-container {
+  padding: 30px;
+  max-width: 500px;
+  margin: auto;
+}
+
+.editProfile-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  height: 100vh;
-  width: 100%;
-  margin-left: 10px;
-  margin-right: 10px;
-  margin-bottom: 90px;
-}
-.reviewProContainer {
-  display: flex;
-  width: 80vw;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-bottom: 30px;
 }
 
-
-.title {
-  font-size: 30px;
-  font-weight: bold;
-  text-align: center;
-  margin: 10px;
-}
-
-.clientBckBtnCon {
-  position: absolute;
-  top: 25px;
-  left:18rem;
-}
-
-.bckBtnIcon {
-  font-size: 30px;
-  color: black;
-}
-
-.profilePicContainerFull {
-  position: relative;
-}
-
-.profilePicContainerEdit {
-  position: relative;
-  justify-self: center;
-  height: 150px;
-  width: 150px;
-  border-radius: 75px;
-  background-color: #d6d6d6;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.profilePicContainer {
-  position: relative;
-  justify-self: center;
-  height: 150px;
-  width: 150px;
-  border-radius: 75px;
-  background-color: #a2a2a8;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-
-.img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 75px;
-}
-
-.removeButtonContainer {
-  position: absolute;
-  top: 20px;
-  right: 140px;
-  z-index: 1;
-}
-
-.removebtn {
-  color: #c70f0f;
-  font-size: 40px;
-}
-
-.plusIconContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-}
-
-.plusIcon {
-  color: rgba(3, 3, 59, 0.7);
-  background-color: transparent;
-  font-size: 60px;
-  cursor: pointer;
-}
-.formContainer {
-  display: flex;
-  flex-direction: column;
-  width: 50vw;
-}
-
-.profileInput {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-right: 7rem;
-  background-color: white;
-  padding: 10px;
-  border: 2px solid rgb(3, 3, 48);
-  border-radius: 5px;
-}
-
-.usernameInputWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding:0 10px
-}
-
-
-.profileInputClientUsername {
-  width:100%;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  /* margin-right: 7rem; */
-  background-color: white;
-  padding: 10px;
-  border: 2px solid rgb(3, 3, 48);
-  border-radius: 5px;
-}
-
-.errorInput {
-  border: 2px solid red;
-}
-
-.clientError {
+.editProfile-signout {
   color: red;
-  font-size: 14px;
-}
-
-.profileInputLast {
-  margin-top: 10px;
-  margin-bottom: 1rem;
-  margin-right: 7rem;
-  background-color: white;
-  padding: 10px;
-  border: 2px solid rgb(3, 3, 48);
-  border-radius: 5px;
-}
-
-.clientError {
-  color: #d80b0b;
-  font-size: 13px;
-  margin-top: 5px;
-  margin-left: 25px;
-  margin-right: 15px;
-  margin-bottom: 5px;
-}
-
-.profileNxtBtn  {
-  position: fixed;
-  background-color: #0c052e;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3px;
-  left: 680px;
-  right: 380px;
-  margin-top: 20px;
-  bottom: 0.7rem;
-  border-radius: 20px;
-}
-
-.nxtBtnIcon {
-  font-size: 50px;
-  color: white;
-}
-
-.signoutBtn {
-  position: absolute;
-  top: 10px;
-  right: 2rem;
+  border: none;
+  background: none;
   cursor: pointer;
 }
 
-.signoutTxt {
-  font-size: 17px;
-  color: #c90707;
-}
-
-/* Review styles */
-.subHeader {
-  margin-top: 15px;
-  font-size: 15px;
-  font-weight: bold;
-}
-
-.inputReview {
-  min-width:460px;
-  padding: 8px;
-  font-size: 18px;
-  letter-spacing: 0.5px;
-  color: white;
-  background-color: #3b3b3b;
-  border-radius: 20px;
-}
-
-.inputReviewLast {
-  padding: 5px;
-  font-size: 18px;
-  letter-spacing: 0.5px;
-  color: white;
-  background-color: #3b3b3b;
-  border-radius: 20px;
+.editProfile-avatarSection {
+  text-align: center;
   margin-bottom: 20px;
 }
 
-.saveBtn {
-  position: fixed;
-  background-color: #05c405;
+.editProfile-avatarWrapper {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: inline-block;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.editProfile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editProfile-placeholder {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3px;
-  left: 680px;
-  right: 380px;
-  margin-top: 20px;
-  bottom: 0.7rem;
-  border-radius: 20px;
+  height: 100%;
+  color: #555;
+}
+
+.editProfile-removeBtn {
+  margin-top: 10px;
+  background: red;
+  color: white;
+  border: none;
+  padding: 6px 10px;
   cursor: pointer;
 }
 
-.saveBtnTxt {
-  font-size: 30px;
-  font-weight: bold;
-  color: #e9e6e6;
-}
-
-/* Empty items for users not signed in */
-.emptyProfileCon {
-  display: flex;
-  height: 100vh;
-  width: 75vw;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 10px;
-  margin-right: 10px;
-  /* margin-bottom: 30px; */
-}
-
-.emptyInputCon {
+.editProfile-form {
   display: flex;
   flex-direction: column;
-  
+  gap: 10px;
 }
 
-.emptyInput {
-  min-width: 400px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-color: rgb(179, 179, 179);
-  padding: 25px;
-  border-radius: 15px;
-}
-
-.emptyInputAuthTxt {
-  min-width: 400px;
-  white-space: pre-wrap;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  background-color: rgb(179, 179, 179);
-  padding: 25px;
-  border-radius: 15px;
-  color: rgb(216, 7, 7);
-}
-
-
-
-.emptyBtnCon {
-  background-color: #0c052e;
-  min-width: 140px;
-  margin-top: 10px;
+.editProfile-form input {
   padding: 10px;
-  margin-left: 80px;
-  margin-right: 80px;
-  margin-bottom: 30px;
-  text-align: center;
-  border-radius: 30px;
+  border: 1px solid #ccc;
+}
+
+.editProfile-error {
+  color: red;
+  margin-top: 10px;
+}
+
+.editProfile-nextBtn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
   cursor: pointer;
 }
 
-.emptyBtnTxt {
-  font-size: 25px;
-  font-weight: bold;
-  color: #e9e6e6;
+/* Address Page Styles */
+.addressPage-container {
+  max-width: 500px;
+  margin: auto;
+  padding: 30px;
 }
 
-@media (max-width: 1300px) {
-
-  .profileInput {
-    margin-right: 8rem;
-    margin-left: 8rem;
-  }
-
-  .usernameInputWrapper {
-    margin-right: 8rem;
-    margin-left: 8rem;
-  }
-
-  .profileInputLast{
-    margin-right: 8rem;
-    margin-left: 8rem;
-  }
-
-  .clientError {
-      position:fixed;
-      bottom: 3rem;
-      font-size: 1.1rem;
-      margin-bottom: 6.5rem;
-  }
-
-  .profileNxtBtn  {
-    left: 480px;
-    right: 180px;
-  }
-  
-  .saveBtn  {
-    left: 480px;
-    right: 180px;
-  }
+.addressPage-input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
 }
 
-@media (max-width: 900px) {
-
-  .profileContainer {
-    width: 100vw;
-    margin-left: 0;
-  }
-  
-  .usernameInputWrapper {
-    margin-right: 0;
-    margin-left: 0;
-  }
-
-  .clientBckBtnCon {
-    left: 15px;
-  }
-
-  .reviewProContainer {
-    width: 100vw;
-    margin-left: 0;
-    margin-right: 0;
-  }
-
-  .emptyProfileCon {
-    width: 100vw;
-    margin-left: 0;
-    margin-right: 0;
-    margin-bottom: 5rem;
-  }
-
-  .profileInput {
-    margin-right: 10px;
-    margin-left: 10px;
-  }
-  .profileInputLast {
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-bottom: 7rem;
-  }
-
-  .formContainer {
-    width: 80vw;
-  }
-
-  .removeButtonContainer {
-    top: 20px;
-    right: 90px;
-  }
-
-  .clientError {
-      position:fixed;
-      bottom: 3rem;
-      font-size: 1.1rem;
-      margin-bottom: 6.5rem;
-  }
-
-  .profileNxtBtn  {
-      position: fixed;
-      padding: 2px;
-      right: 160px;
-      left: 160px;
-      margin-top: 20px;
-      margin-bottom: 5rem;
-  }
-
-  .inputReview {
-    min-width:360px;
-  }
-
-  .saveBtn  {
-      position: fixed;
-      padding: 2px;
-      right: 160px;
-      left: 160px;
-      margin-top: 20px;
-      margin-bottom: 5rem;
-  }
-
-
+.addressPage-autocomplete {
+  margin-bottom: 10px;
 }
 
-@media (max-width: 500px) {
-  .signoutBtn {
-    right: 10px;
-  }
-  
-  .profileNxtBtn  {
-    right: 120px;
-    left: 120px;
-  }
-
-  .inputReview {
-    min-width:340px;
-  }
-  
-  .inputReviewLast {
-    min-width:340px;
-  }
-  
-
-  .saveBtn  {
-    padding:10px ;
-    right: 105px;
-    left: 105px;
-  }
-
-  .saveBtnTxt {
-    font-size: 25px;
-  }
-
-  .emptyInput {
-    min-width: 300px;
-  }
+.addressPage-error {
+  color: red;
 }
-@media (max-width: 450px) {
-  .emptyInput {
-    min-width: 250px;
-  }
+
+.addressPage-nextBtn {
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* Review Profile Styles */
+.reviewProfile-container {
+  min-height: 100vh;
+  background: #0f172a;
+  padding: 40px;
+  color: #e5e7eb;
+  font-family: "Inter", sans-serif;
+}
+
+.reviewProfile-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.reviewProfile-header button {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+}
+
+/* CARD */
+.reviewProfile-card {
+  max-width: 600px;
+  margin: auto;
+  background: #111827;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* AVATAR */
+.reviewProfile-avatarSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.reviewProfile-avatarWrapper {
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+
+.reviewProfile-avatarWrapper img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewProfile-avatarFallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #6366f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.reviewProfile-removeBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #ef4444;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  color: white;
+  cursor: pointer;
+}
+
+/* DETAILS */
+.reviewProfile-details {
+  margin-top: 20px;
+}
+
+.reviewProfile-row {
+  margin-bottom: 15px;
+}
+
+.reviewProfile-row span {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.reviewProfile-row p {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* SAVE */
+.reviewProfile-saveBtn {
+  margin-top: 25px;
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reviewProfile-saveBtn:hover {
+  transform: translateY(-2px);
 }

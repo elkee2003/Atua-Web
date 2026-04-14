@@ -1,115 +1,73 @@
-import React, {useState, useEffect, useMemo} from 'react';
-import './OurMission.css';
-
-// Custom hook to check screen width
-const useMediaQuery = (query) => {
-  const [matches, setMatches] = useState(window.matchMedia(query).matches);
-
-  useEffect(() => {
-    const mediaQueryList = window.matchMedia(query);
-    const listener = (event) => setMatches(event.matches);
-
-    mediaQueryList.addEventListener("change", listener);
-    return () => mediaQueryList.removeEventListener("change", listener);
-  }, [query]);
-
-  return matches;
-};
+import React from "react";
+import "./OurMission.css";
 
 const OurMission = () => {
-
-    const [currentImage, setCurrentImage] = useState(0);
-    
-    // Detect screen size using multiple queries
-    const isLargeScreen = useMediaQuery("(min-width: 1100px)");
-    const isMediumScreen = useMediaQuery("(min-width: 500px) and (max-width: 1099px)");
-    const isSmallScreen = useMediaQuery("(min-width: 250px) and (max-width: 499px)");
-
-    const largeScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ];
-
-    const mediumScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ]
-
-    const smallScreenImages = [
-        '/image1.jpeg', '/image2.png'
-    ]
-
-    // Choose images based on screen size
-    const images = useMemo(() => {
-            if (isLargeScreen) return largeScreenImages;
-            if (isMediumScreen) return mediumScreenImages;
-            if (isSmallScreen) return smallScreenImages;
-            return [];
-    }, [isLargeScreen, isMediumScreen, isSmallScreen]);
-
-
-    // Preload images
-    useEffect(() => {
-        images.forEach((src) => {
-        const img = new Image();
-        img.src = src;
-        });
-    }, [images]);
-
-    // Change background image every 6 seconds
-    useEffect(() => {
-        let isMounted = true;
-
-        const changeImage = () => {
-            const nextIndex = (currentImage + 1) % images.length;
-            const img = new Image();
-            img.src = images[nextIndex];
-
-            img.onload = () => {
-            if (isMounted) setCurrentImage(nextIndex);
-            };
-        };
-
-        const interval = setInterval(changeImage, 6000);
-
-        return () => {
-            isMounted = false;
-            clearInterval(interval);
-        };
-    }, [currentImage, images]);
-
   return (
-    <section
-      id='mission'
-      className="mission-wrapper"
-    >
-        <div className="paddings innerWidth flexCenter mission-container">
-            <div className="flexColStart">
-                <span className="primaryText">Our Mission</span>
-                <span className="secondaryText bold-txt">
-                    Our mission is simple:
-                </span>
+    <section id="mission" className="mission">
+      <div className="mission-container">
 
-                {/* images */}
-                <div 
-                    className='bg-image'
-                    style={{
-                        backgroundImage: `url(${images[currentImage]})`,
-                    }} 
-                />
+        {/* HEADER */}
+        <div className="mission-header">
+          <span className="mission-tag">Our Mission</span>
 
-                {/* text */}
-                <div className="secondaryText">
-                    To make delivery faster, safer, and more affordable for everyone.
-                </div>
+          <h2>
+            Building the future of <span>logistics</span>
+          </h2>
 
-                <div className="secondaryText">
-                    To create opportunities for couriers and businesses to grow.
-                </div>
-
-                <div className="secondaryText">
-                    To build Africa's most reliable logistics network.
-                </div>
-            </div>
+          <p>
+            At Atua, our mission goes beyond delivery. We are building a smarter,
+            faster, and more reliable logistics network designed to empower
+            individuals, businesses, and entire economies.
+          </p>
         </div>
+
+        {/* CORE STATEMENT */}
+        <div className="mission-core">
+          <p>
+            To make delivery <strong>faster</strong>, <strong>safer</strong>, and{" "}
+            <strong>more accessible</strong> — while creating opportunities and
+            powering growth across Africa and beyond.
+          </p>
+        </div>
+
+        {/* PILLARS */}
+        <div className="mission-grid">
+
+          <div className="mission-card">
+            <h4>⚡ Speed & Efficiency</h4>
+            <p>
+              We leverage smart routing and real-time systems to ensure every
+              delivery happens as fast and efficiently as possible.
+            </p>
+          </div>
+
+          <div className="mission-card">
+            <h4>🔒 Trust & Reliability</h4>
+            <p>
+              Every package matters. We are committed to secure handling,
+              verified couriers, and consistent delivery performance.
+            </p>
+          </div>
+
+          <div className="mission-card">
+            <h4>🌍 Economic Empowerment</h4>
+            <p>
+              We create earning opportunities for couriers and enable businesses
+              to scale through accessible logistics.
+            </p>
+          </div>
+
+          <div className="mission-card highlight">
+            <h4>🚀 Global Vision</h4>
+            <p>
+              Our goal is to build Africa’s most reliable logistics network —
+              and expand it across borders to power global commerce.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
     </section>
   );
 };

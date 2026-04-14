@@ -1,0 +1,279 @@
+/* SECTION */
+.login-section {
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+/* WRAPPER */
+.login-wrapper {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login-reverse {
+  flex-direction: row-reverse;
+}
+
+/* LEFT */
+.login-left {
+  flex: 1;
+}
+
+.login-left h1 {
+  font-size: 2.5rem;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.login-left p {
+  color: #64748b;
+  margin-bottom: 2rem;
+}
+
+.login-highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 14px;
+  color: #475569;
+}
+
+/* CARD */
+.login-card {
+  flex: 1;
+  background: white;
+  padding: 2.5rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+}
+
+.login-card h2 {
+  margin-bottom: 1.5rem;
+  color: #0f172a;
+}
+
+/* INPUT OVERRIDE */
+.login-card .inputWrapper label {
+  color: #334155;
+}
+
+.login-card input {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+.login-card input:focus {
+  border-color: #6366f1;
+  background: white;
+}
+
+/* BUTTON */
+.login-card .btn {
+  background: #6366f1;
+}
+
+.login-card .btn:hover {
+  background: #4f46e5;
+}
+
+/* LINKS */
+.login-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.login-links span {
+  cursor: pointer;
+}
+
+.login-links span:hover {
+  color: #6366f1;
+}
+
+/* SWITCH */
+.login-switch {
+  margin-top: 1rem;
+  text-align: center;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.login-switch:hover {
+  color: #6366f1;
+}
+
+/* CHECKBOX */
+.login-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 13px;
+  color: #475569;
+}
+
+/* Custom Input Styles */
+/* FIELD WRAPPER */
+.ci-field {
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* LABEL */
+.ci-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+/* INPUT BOX */
+.ci-box {
+  display: flex;
+  align-items: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0 12px;
+  transition: all 0.25s ease;
+}
+
+/* INPUT */
+.ci-input {
+  flex: 1;
+  padding: 12px 6px;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #0f172a;
+}
+
+/* FOCUS STATE */
+.ci-box:focus-within {
+  border-color: #6366f1;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.08);
+}
+
+/* PASSWORD TOGGLE */
+.ci-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  color: #64748b;
+  padding: 0 6px;
+}
+
+/* ERROR STATE */
+.ci-box-error {
+  border-color: #ef4444 !important;
+  background: #fff5f5;
+}
+
+/* ERROR TEXT */
+.ci-error {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 5px;
+}
+
+/* HOVER (subtle polish) */
+.ci-box:hover {
+  border-color: #cbd5e1;
+}
+
+/* Custom button style */
+/* BASE BUTTON */
+.cb-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* PRIMARY BUTTON (MAIN CTA) */
+.cb-primary {
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  color: white;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+}
+
+/* HOVER */
+.cb-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+}
+
+/* ACTIVE */
+.cb-primary:active {
+  transform: scale(0.98);
+}
+
+/* DISABLED */
+.cb-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* LOADING STATE */
+.cb-loading {
+  position: relative;
+}
+
+/* OPTIONAL SPINNER FEEL (text still works) */
+.cb-loading::after {
+  content: "";
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: white;
+  border-radius: 50%;
+  margin-left: 8px;
+  animation: cb-spin 0.8s linear infinite;
+}
+
+@keyframes cb-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* SECONDARY BUTTON (optional use later) */
+.cb-secondary {
+  background: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+}
+
+.cb-secondary:hover {
+  background: #e2e8f0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .login-wrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+}
