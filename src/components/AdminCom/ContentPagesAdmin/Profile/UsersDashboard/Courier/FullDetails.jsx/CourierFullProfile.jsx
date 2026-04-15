@@ -75,6 +75,7 @@ function CourierFullProfile() {
     await DataStore.save(
       Courier.copyOf(fresh, (u) => {
         u.currentBatchCount = 0;
+        u.lastBatchAssignedAt = null;
       })
     );
     fetchCourier();
@@ -86,6 +87,7 @@ function CourierFullProfile() {
     await DataStore.save(
       Courier.copyOf(fresh, (u) => {
         u.currentExpressCount = 0;
+        u.lastBatchAssignedAt = null;
       })
     );
     fetchCourier();
@@ -98,13 +100,14 @@ function CourierFullProfile() {
     await DataStore.save(
       Courier.copyOf(fresh, (u) => {
         u.currentMaxiCount = 0;
+        u.lastBatchAssignedAt = null;
       })
     );
 
     fetchCourier();
   };
 
-  // function to reset timer
+  // function to reset timer, I have to add the currentBatchCount and currentExpressCount, if not standing alone (resetting lastBatchAssignedAt alone) is useless, in my courier side there is always likely going to be an active order
   const resetDispatchTimer = async () => {
     setActionLoading(true);
 
@@ -114,6 +117,9 @@ function CourierFullProfile() {
       await DataStore.save(
         Courier.copyOf(fresh, (u) => {
           u.lastBatchAssignedAt = new Date().toISOString();
+          u.currentMaxiCount = 0;
+          u.currentBatchCount = 0;
+          u.currentExpressCount = 0;
         })
       );
 
@@ -265,7 +271,7 @@ function CourierFullProfile() {
               disabled={actionLoading} 
               onClick={resetDispatchTimer}
             >
-              {actionLoading ? "Resetting..." : "Reset Timer (3hr)"}
+              {actionLoading ? "Resetting..." : "Reset All Counts / Timer"}
             </button>
 
             <button 

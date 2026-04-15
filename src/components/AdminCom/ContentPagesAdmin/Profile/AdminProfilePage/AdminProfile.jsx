@@ -108,9 +108,9 @@ const AdminProfile = () => {
           <div className="adminProfile-actions">
             <button
               className="adminProfile-primaryBtn"
-              onClick={() => navigate("/admin/edit-profile")}
+              onClick={() => navigate("/admin/users_dashboard")}
             >
-              Edit Profile
+              Users Dashboard
             </button>
 
             <button
