@@ -1,131 +1,586 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Autocomplete } from "@react-google-maps/api";
-import "../SendStyles/Destination.css";
 import { MdNavigateNext } from "react-icons/md";
-import {useLocationContext} from '../../../../../../Providers/ClientProvider/LocationProvider';
+import { AiFillCloseCircle } from "react-icons/ai";
+
+import "../SendStyles/Destination.css";
+
+import PlaceRow from "./PlaceRow";
+
+import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
+import "./Destination.css";
 
 function DestinationSearch() {
-  const originRef = useRef(null);
-  const destinationRef = useRef(null);
   const navigate = useNavigate();
 
-  const {originPlace, destinationPlace, setOriginPlace, setDestinationPlace, originPlaceLat, setOriginPlaceLat, originPlaceLng, setOriginPlaceLng,  destinationPlaceLat, setDestinationPlaceLat, destinationPlaceLng, setDestinationPlaceLng} = useLocationContext();
+  /* ------------------ INPUT REFS ------------------ */
 
-  // ✅ Prepopulate current location as origin
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
+  const originInputRef = useRef(null);
+  const destinationInputRef = useRef(null);
 
-          setOriginPlaceLat(lat);
-          setOriginPlaceLng(lng);
+  /* ------------------ DROPDOWN STATES ------------------ */
 
-          // Reverse geocode to get address
-          const geocoder = new window.google.maps.Geocoder();
-          const result = await geocoder.geocode({ location: { lat, lng } });
-          if (result.results && result.results[0]) {
-            const address = result.results[0].formatted_address;
-            setOriginPlace(address);
+  const [originPredictions, setOriginPredictions] = useState([]);
+  const [destinationPredictions, setDestinationPredictions] = useState([]);
 
-            // ✅ Fill input field visually
-            const input = document.querySelector(
-              "input[placeholder='From?']"
-            );
-            if (input) input.value = address;
-          }
-        },
-        (err) => console.error("Geolocation error:", err),
-        { enableHighAccuracy: true }
+  const [showOriginDropdown, setShowOriginDropdown] =
+    useState(false);
+
+  const [
+    showDestinationDropdown,
+    setShowDestinationDropdown,
+  ] = useState(false);
+
+  /* ------------------ CONTEXT ------------------ */
+
+  const {
+    setOriginAddress,
+    setDestinationAddress,
+
+    originLat,
+    setOriginLat,
+
+    originLng,
+    setOriginLng,
+
+    destinationLat,
+    setDestinationLat,
+
+    destinationLng,
+    setDestinationLng,
+
+    originState,
+    setOriginState,
+
+    destinationState,
+    setDestinationState,
+
+    setIsInterState,
+  } = useLocationContext();
+
+  /* ------------------ LOADING ------------------ */
+
+  const [originLoading, setOriginLoading] =
+    useState(false);
+
+  const [
+    destinationLoading,
+    setDestinationLoading,
+  ] = useState(false);
+
+  /* ------------------ HELPERS ------------------ */
+
+  const extractCoordinates = (details) => {
+    const location =
+      details?.geometry?.location;
+
+    if (!location) return null;
+
+    return {
+      lat: location.lat(),
+      lng: location.lng(),
+    };
+  };
+
+  const extractState = (details) => {
+    if (!details?.address_components)
+      return null;
+
+    const stateComponent =
+      details.address_components.find(
+        (component) =>
+          component.types.includes(
+            "administrative_area_level_1"
+          )
       );
-    }
-  }, []);
 
-  // ✅ Handle when user picks a place manually
-  const handlePlaceChanged = (ref, type) => {
-    if (!ref.current) return;
-    const place = ref.current.getPlace();
-    if (!place?.geometry) return;
+    return (
+      stateComponent?.long_name || null
+    );
+  };
 
-    const address = place.formatted_address;
-    const lat = place.geometry.location.lat();
-    const lng = place.geometry.location.lng();
-
-    if (type === "origin") {
-      setOriginPlace(address);
-      setOriginPlaceLat(lat);
-      setOriginPlaceLng(lng);
-    } else {
-      setDestinationPlace(address);
-      setDestinationPlaceLat(lat);
-      setDestinationPlaceLng(lng);
+  const saveLastDestination = async (
+    destination
+  ) => {
+    try {
+      localStorage.setItem(
+        "lastDestination",
+        destination
+      );
+    } catch (error) {
+      console.log(error);
     }
   };
 
-  // ✅ Check before navigating
-  const handleNextClick = () => {
-    if (!originPlace || !destinationPlace) {
-      alert("Please select both origin and destination before continuing.");
+  /* ------------------ CLEAR INPUTS ------------------ */
+
+  const clearOriginInput = () => {
+    if (originInputRef.current) {
+      originInputRef.current.value = "";
+    }
+
+    setOriginAddress(null);
+  };
+
+  const clearDestinationInput = () => {
+    if (destinationInputRef.current) {
+      destinationInputRef.current.value =
+        "";
+    }
+
+    setDestinationAddress(null);
+  };
+
+
+  /* ------------------ INTERSTATE DETECTION ------------------ */
+
+  useEffect(() => {
+    if (
+      originState &&
+      destinationState
+    ) {
+      setIsInterState(
+        originState !==
+          destinationState
+      );
+    }
+  }, [originState, destinationState]);
+
+  /* ------------------ PREPOPULATE CURRENT LOCATION ------------------ */
+
+  const populateCurrentLocation =
+    async () => {
+      try {
+        if (!navigator.geolocation) {
+          console.log(
+            "Geolocation not supported"
+          );
+
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const latitude =
+              position.coords.latitude;
+
+            const longitude =
+              position.coords.longitude;
+
+            setOriginLat(latitude);
+            setOriginLng(longitude);
+
+            const geocoder =
+              new window.google.maps.Geocoder();
+
+            geocoder.geocode(
+              {
+                location: {
+                  lat: latitude,
+                  lng: longitude,
+                },
+              },
+              (results, status) => {
+                if (
+                  status === "OK" &&
+                  results &&
+                  results[0]
+                ) {
+                  const result =
+                    results[0];
+
+                  const address =
+                    result.formatted_address;
+
+                  if (
+                    address &&
+                    originInputRef.current
+                  ) {
+                    originInputRef.current.value =
+                      address;
+
+                    const details = {
+                      geometry: {
+                        location: {
+                          lat: latitude,
+                          lng: longitude,
+                        },
+                      },
+                      address_components:
+                        result.address_components,
+                    };
+
+                    setOriginAddress({
+                      data: {
+                        description:
+                          address,
+                      },
+                      details,
+                    });
+
+                    const state =
+                      extractState(
+                        details
+                      );
+
+                    setOriginState(
+                      state
+                    );
+                  }
+                }
+              }
+            );
+          },
+          (error) => {
+            console.log(
+              "Location error",
+              error
+            );
+          },
+          {
+            enableHighAccuracy: true,
+          }
+        );
+      } catch (error) {
+        console.log(
+          "Location error",
+          error
+        );
+      }
+    };
+
+  useEffect(() => {
+    populateCurrentLocation();
+  }, []);
+
+  /* ------------------ GOOGLE PREDICTIONS ------------------ */
+
+  const getPredictions = (
+    value,
+    type
+  ) => {
+    if (!value) {
+      if (type === "origin") {
+        setOriginPredictions([]);
+      } else {
+        setDestinationPredictions(
+          []
+        );
+      }
+
       return;
     }
+
+    const service =
+      new window.google.maps.places
+        .AutocompleteService();
+
+    service.getPlacePredictions(
+      {
+        input: value,
+        componentRestrictions: {
+          country: "ng",
+        },
+      },
+      (predictions, status) => {
+        if (
+          status !==
+          window.google.maps.places
+            .PlacesServiceStatus.OK
+        ) {
+          return;
+        }
+
+        if (type === "origin") {
+          setOriginPredictions(
+            predictions || []
+          );
+
+          setShowOriginDropdown(
+            true
+          );
+        } else {
+          setDestinationPredictions(
+            predictions || []
+          );
+
+          setShowDestinationDropdown(
+            true
+          );
+        }
+      }
+    );
+  };
+
+  /* ------------------ SELECT PLACE ------------------ */
+
+  const selectPrediction = (
+    prediction,
+    type
+  ) => {
+    const service =
+      new window.google.maps.places.PlacesService(
+        document.createElement("div")
+      );
+
+    service.getDetails(
+      {
+        placeId: prediction.place_id,
+      },
+      (details, status) => {
+        if (
+          status !==
+          window.google.maps.places
+            .PlacesServiceStatus.OK
+        ) {
+          return;
+        }
+
+        const address =
+          details.formatted_address;
+
+        const coords =
+          extractCoordinates(details);
+
+        const state =
+          extractState(details);
+
+        if (type === "origin") {
+          setOriginAddress({
+            data: prediction,
+            details,
+          });
+
+          if (coords) {
+            setOriginLat(coords.lat);
+            setOriginLng(coords.lng);
+          }
+
+          setOriginState(state);
+
+          setOriginPredictions([]);
+
+          setShowOriginDropdown(
+            false
+          );
+
+          if (originInputRef.current) {
+            originInputRef.current.value =
+              address;
+          }
+        } else {
+          setDestinationAddress({
+            data: prediction,
+            details,
+          });
+
+          if (coords) {
+            setDestinationLat(
+              coords.lat
+            );
+
+            setDestinationLng(
+              coords.lng
+            );
+          }
+
+          setDestinationState(
+            state
+          );
+
+          saveLastDestination(
+            address
+          );
+
+          setDestinationPredictions(
+            []
+          );
+
+          setShowDestinationDropdown(
+            false
+          );
+
+          if (
+            destinationInputRef.current
+          ) {
+            destinationInputRef.current.value =
+              address;
+          }
+        }
+      }
+    );
+  };
+
+  /* ------------------ NEXT BUTTON ------------------ */
+
+  const handleNextClick = () => {
+    if (
+      !originLat ||
+      !destinationLat
+    ) {
+      alert(
+        "Please select both pickup and destination locations."
+      );
+
+      return;
+    }
+
     navigate("/send/parcel_notes");
   };
 
-  // Automatic navigation
-  // useEffect(() => {
-  //   if (originPlace && destinationPlace) {
-  //     navigate("/send/parcel_notes");
-  //   }
-  // }, [originPlace, destinationPlace]);
-  
-
   return (
     <div className="destinationCon">
-      {/* Origin Input */}
-      <div className="autocompleteContainer">
-        <Autocomplete
-          onLoad={(ref) => (originRef.current = ref)}
-          onPlaceChanged={() => handlePlaceChanged(originRef, "origin")}
-          options={{ componentRestrictions: { country: ["ng", "gh", "us"] } }}
-        >
-          <input
-            type="text"
-            placeholder="From?"
-            className="inputAutoComplete"
-          />
-        </Autocomplete>
+      {/* HEADER */}
+
+      <div className="destinationHeader">
+        <h2>
+          Pickup & delivery
+          locations
+        </h2>
       </div>
 
-      {/* Destination Input */}
-      <div className="autocompleteContainer">
-        <Autocomplete
-          onLoad={(ref) => (destinationRef.current = ref)}
-          onPlaceChanged={() => handlePlaceChanged(destinationRef, "destination")}
-          options={{ componentRestrictions: { country: ["ng", "gh", "us"] } }}
-        >
-          <input
-            type="text"
-            placeholder="To?"
-            className="inputAutoComplete"
-          />
-        </Autocomplete>
+      {/* SEARCH CARD */}
+
+      <div className="destinationCard">
+        {/* ORIGIN */}
+
+        <div className="autocompleteContainer">
+          <div className="inputWrapper">
+            <input
+              ref={originInputRef}
+              type="text"
+              placeholder="Pickup location"
+              className="inputAutoComplete"
+              onChange={(e) =>
+                getPredictions(
+                  e.target.value,
+                  "origin"
+                )
+              }
+              onFocus={() =>
+                setShowOriginDropdown(
+                  true
+                )
+              }
+            />
+
+            <div className="rightButtonContainer">
+              {originLoading && (
+                <span className="loadingText">
+                  Loading...
+                </span>
+              )}
+
+              <AiFillCloseCircle
+                className="clearBtn"
+                onClick={
+                  clearOriginInput
+                }
+              />
+            </div>
+          </div>
+
+          {/* ORIGIN DROPDOWN */}
+
+          {showOriginDropdown &&
+            originPredictions.length >
+              0 && (
+              <div className="placesDropdown">
+                {originPredictions.map(
+                  (item) => (
+                    <div
+                      key={
+                        item.place_id
+                      }
+                      onClick={() =>
+                        selectPrediction(
+                          item,
+                          "origin"
+                        )
+                      }
+                    >
+                      <PlaceRow
+                        data={item}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+        </div>
+
+        {/* DESTINATION */}
+
+        <div className="autocompleteContainer">
+          <div className="inputWrapper">
+            <input
+              ref={
+                destinationInputRef
+              }
+              type="text"
+              placeholder="Destination"
+              className="inputAutoComplete"
+              onChange={(e) =>
+                getPredictions(
+                  e.target.value,
+                  "destination"
+                )
+              }
+              onFocus={() =>
+                setShowDestinationDropdown(
+                  true
+                )
+              }
+            />
+
+            <div className="rightButtonContainer">
+              {destinationLoading && (
+                <span className="loadingText">
+                  Loading...
+                </span>
+              )}
+
+              <AiFillCloseCircle
+                className="clearBtn"
+                onClick={
+                  clearDestinationInput
+                }
+              />
+            </div>
+          </div>
+
+          {/* DESTINATION DROPDOWN */}
+
+          {showDestinationDropdown &&
+            destinationPredictions.length >
+              0 && (
+              <div className="placesDropdown">
+                {destinationPredictions.map(
+                  (item) => (
+                    <div
+                      key={
+                        item.place_id
+                      }
+                      onClick={() =>
+                        selectPrediction(
+                          item,
+                          "destination"
+                        )
+                      }
+                    >
+                      <PlaceRow
+                        data={item}
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+        </div>
       </div>
 
-      {/* Debug info */}
-      {/* <div style={{ marginTop: "20px" }}>
-        <p>
-          <strong>Origin:</strong> {originPlace} ({originPlaceLat},{" "}
-          {originPlaceLng})
-        </p>
-        <p>
-          <strong>Destination:</strong> {destinationPlace} (
-          {destinationPlaceLat}, {destinationPlaceLng})
-        </p>
-      </div> */}
+      {/* NEXT BUTTON */}
 
-      {/* Next button */}
       <div
         className="locationNxtBtnCon"
         onClick={handleNextClick}

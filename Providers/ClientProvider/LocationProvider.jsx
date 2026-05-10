@@ -6,20 +6,15 @@ const LocationProvider = ({ children }) => {
   const [originAddress, setOriginAddress] = useState(null);
   const [originLat, setOriginLat] = useState(null);
   const [originLng, setOriginLng] = useState(null);
-
   const [destinationAddress, setDestinationAddress] = useState(null);
   const [destinationLat, setDestinationLat] = useState(null);
   const [destinationLng, setDestinationLng] = useState(null);
-
   const [isRouteReady, setIsRouteReady] = useState(false);
   const [lastDestination, setLastDestination] = useState(null);
-
   const [originState, setOriginState] = useState(null);
   const [destinationState, setDestinationState] = useState(null);
-
   const [totalMins, setTotalMins] = useState(0);
   const [totalKm, setTotalKm] = useState(0);
-
   const [isInterState, setIsInterState] = useState(false);
   const [tripType, setTripType] = useState("");
 
@@ -60,40 +55,33 @@ const LocationProvider = ({ children }) => {
     <LocationContext.Provider
       value={{
         originAddress,
+        destinationAddress,
         setOriginAddress,
         originLat,
         setOriginLat,
         originLng,
         setOriginLng,
-
-        destinationAddress,
         setDestinationAddress,
         destinationLat,
         setDestinationLat,
         destinationLng,
         setDestinationLng,
-
         lastDestination,
         setLastDestination,
-
         isRouteReady,
         setIsRouteReady,
-
         originState,
         setOriginState,
         destinationState,
         setDestinationState,
-
         totalMins,
         setTotalMins,
         totalKm,
         setTotalKm,
-
         isInterState,
         setIsInterState,
         tripType,
         setTripType,
-
         resetAllLocationFields,
         resetDestinationOnly,
         resetOriginOnly,
@@ -105,4 +93,5 @@ const LocationProvider = ({ children }) => {
 };
 
 export default LocationProvider;
+
 export const useLocationContext = () => useContext(LocationContext);

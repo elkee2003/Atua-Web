@@ -1,0 +1,247 @@
+/* ------------------ CONTAINER ------------------ */
+
+.destinationCon {
+  min-height: 100vh;
+  background-color: #f7f7f7;
+}
+
+/* ------------------ HEADER ------------------ */
+
+.destinationHeader {
+  padding-top: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+}
+
+.destinationHeader h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ------------------ SEARCH CARD ------------------ */
+
+.destinationCard {
+  margin-left: 16px;
+  margin-right: 16px;
+
+  background-color: #fff;
+
+  border-radius: 14px;
+
+  padding: 12px;
+
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+  position: relative;
+}
+
+/* ------------------ AUTOCOMPLETE ------------------ */
+
+.autocompleteContainer {
+  margin-top: 9px;
+  margin-bottom: 9px;
+
+  position: relative;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.inputAutoComplete {
+  width: 100%;
+
+  background-color: #f1f1f1;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+
+  border: none;
+
+  outline: none;
+
+  box-sizing: border-box;
+}
+
+.inputAutoComplete:focus {
+  outline: none;
+}
+
+/* ------------------ SWAP BUTTON ------------------ */
+
+.swapButton {
+  position: absolute;
+
+  right: 12px;
+
+  top: 52px;
+
+  background-color: #fff;
+
+  padding: 6px;
+
+  border-radius: 20px;
+
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);
+
+  cursor: pointer;
+}
+
+/* ------------------ PLACE ROW ------------------ */
+
+.placeRow {
+  display: flex;
+
+  flex-direction: row;
+
+  align-items: center;
+
+  padding-top: 12px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid #eee;
+
+  cursor: pointer;
+
+  background: #fff;
+}
+
+.iconContainer {
+  background-color: #4a4a4a;
+
+  padding: 8px;
+
+  border-radius: 20px;
+
+  margin-right: 12px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.textContainer {
+  flex: 1;
+
+  overflow: hidden;
+}
+
+.locationTitle {
+  font-size: 15px;
+
+  font-weight: 500;
+
+  margin: 0;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.locationSubtitle {
+  font-size: 12px;
+
+  color: #888;
+
+  margin-top: 2px;
+
+  margin-bottom: 0;
+}
+
+/* ------------------ RIGHT BUTTON ------------------ */
+
+.rightButtonContainer {
+  position: absolute;
+
+  right: 10px;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  display: flex;
+
+  flex-direction: row;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+.loadingText {
+  font-size: 12px;
+
+  color: #666;
+}
+
+.clearBtn {
+  font-size: 18px;
+
+  cursor: pointer;
+
+  color: #555;
+}
+
+/* ------------------ DROPDOWN ------------------ */
+
+.placesDropdown {
+  background-color: #fff;
+
+  border-radius: 10px;
+
+  margin-top: 5px;
+
+  overflow: hidden;
+
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.08);
+
+  max-height: 300px;
+
+  overflow-y: auto;
+
+  position: absolute;
+
+  width: 100%;
+
+  z-index: 999;
+}
+
+/* ------------------ NEXT BUTTON ------------------ */
+
+.locationNxtBtnCon {
+    margin-top: 1.5rem;
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 50%;
+
+    background: #000;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    cursor: pointer;
+
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.locationNxtBtn {
+  color: #fff;
+
+  font-size: 30px;
+}

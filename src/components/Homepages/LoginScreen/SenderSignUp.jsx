@@ -47,11 +47,11 @@ const SignUp = () => {
       <div className="login-wrapper login-reverse">
 
         <div className="login-left">
-          <h1>Join Atua 🚀</h1>
+          <h1>Join Atua</h1>
           <p>Start sending packages with speed and confidence.</p>
 
           <div className="login-highlight">
-            <span>📦 Easy shipping</span>
+            <span>📦 Easy delivery</span>
             <span>💰 Affordable pricing</span>
             <span>📍 Real-time tracking</span>
           </div>

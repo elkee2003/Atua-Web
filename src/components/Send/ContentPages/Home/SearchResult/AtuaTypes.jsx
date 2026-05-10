@@ -41,18 +41,15 @@ const AtuaTypes = ({
   // Function for display of AtuaTypes
   const getImage=(medium)=>{
       if (medium?.type === 'Micro X'){
-          return '/Walk.png'
+          return '/AtuaMicroX.png'
       }
       if (medium?.type === 'Moto X'){
-          return '/Bike.jpg'
+          return '/AtuaMotoX.png'
       }
       if (medium?.type === 'Maxi'){
-          return '/UberXL.jpeg'
+          return '/AtuaMaxi.png'
       }
-      if (medium?.type === 'GROUP'){
-          return '/Deliverybicycle.png'
-      }
-      return '/UberXL.jpeg';
+      return '/AtuaMicroX.png';
   }
 
   // --- Info Alert ---
