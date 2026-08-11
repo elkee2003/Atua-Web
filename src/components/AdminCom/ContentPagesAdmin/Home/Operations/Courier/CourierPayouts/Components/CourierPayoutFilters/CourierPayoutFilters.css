@@ -1,0 +1,655 @@
+/* ==========================================================
+   COURIER PAYOUT FILTERS
+========================================================== */
+
+.courierPayoutFilters {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 10px;
+
+    padding: 12px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierPayoutFilters-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierPayoutFilters-title {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.courierPayoutFilters-titleIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.courierPayoutFilters-titleText {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierPayoutFilters-titleText span {
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    line-height: 1.3;
+}
+
+
+.courierPayoutFilters-titleText small {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierPayoutFilters-clearButton {
+    min-height: 30px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding:
+        0
+        11px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayoutFilters-clearButton:hover {
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+
+    color: #b91c1c;
+}
+
+
+.courierPayoutFilters-clearButton svg {
+    font-size: 10px;
+}
+
+
+.courierPayoutFilters-clearButton:focus-visible {
+    outline: 2px solid rgba(
+        220,
+        38,
+        38,
+        0.15
+    );
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   CONTROLS
+========================================================== */
+
+.courierPayoutFilters-controls {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 10px;
+
+    margin-top: 11px;
+}
+
+
+/* ==========================================================
+   CONTROL
+========================================================== */
+
+.courierPayoutFilters-control {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    min-width: 165px;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierPayoutFilters-label {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 650;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   SELECT WRAPPER
+========================================================== */
+
+.courierPayoutFilters-selectWrapper {
+    position: relative;
+
+    width: 185px;
+}
+
+
+/* ==========================================================
+   SELECT
+========================================================== */
+
+.courierPayoutFilters-select {
+    width: 100%;
+
+    height: 34px;
+
+    box-sizing: border-box;
+
+    appearance: none;
+
+    padding:
+        0
+        30px
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.courierPayoutFilters-select:hover {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+}
+
+
+.courierPayoutFilters-select:focus {
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 0 0 2px rgba(
+            148,
+            163,
+            184,
+            0.08
+        );
+}
+
+
+/* ==========================================================
+   SELECT ICON
+========================================================== */
+
+.courierPayoutFilters-selectIcon {
+    position: absolute;
+
+    top: 50%;
+
+    right: 9px;
+
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   ACTIVE FILTER
+========================================================== */
+
+.courierPayoutFilters-active {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 10px;
+
+    padding:
+        6px
+        8px;
+
+    border-radius: 6px;
+
+    background: #f8fafc;
+}
+
+
+.courierPayoutFilters-active span {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 550;
+}
+
+
+.courierPayoutFilters-active strong {
+    color: #475569;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierPayoutFilters {
+        padding: 11px;
+    }
+
+
+    .courierPayoutFilters-titleText span {
+        font-size: 10px;
+    }
+
+
+    .courierPayoutFilters-titleText small {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutFilters-select {
+        font-size: 8.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierPayoutFilters {
+        padding: 10px;
+    }
+
+
+    .courierPayoutFilters-controls {
+        width: 100%;
+
+        flex-wrap: wrap;
+    }
+
+
+    .courierPayoutFilters-control {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    .courierPayoutFilters-selectWrapper {
+        width: 100%;
+    }
+
+
+    .courierPayoutFilters-label {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutFilters-select {
+        height: 34px;
+
+        font-size: 9px;
+    }
+
+
+    .courierPayoutFilters-active span {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutFilters-active strong {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+    .courierPayoutFilters {
+        padding: 9px;
+
+        border-radius: 8px;
+    }
+
+
+    .courierPayoutFilters-header {
+        align-items: flex-start;
+
+        padding-bottom: 9px;
+    }
+
+
+    .courierPayoutFilters-title {
+        gap: 7px;
+    }
+
+
+    .courierPayoutFilters-titleIcon {
+        width: 29px;
+        height: 29px;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+    }
+
+
+    .courierPayoutFilters-titleText span {
+        font-size: 9px;
+    }
+
+
+    .courierPayoutFilters-titleText small {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutFilters-clearButton {
+        min-height: 29px;
+
+        padding:
+            0
+            9px;
+
+        gap: 5px;
+
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutFilters-clearButton svg {
+        font-size: 9px;
+    }
+
+
+    .courierPayoutFilters-controls {
+        margin-top: 9px;
+
+        gap: 9px;
+    }
+
+
+    .courierPayoutFilters-control {
+        gap: 5px;
+    }
+
+
+    .courierPayoutFilters-label {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutFilters-select {
+        height: 33px;
+
+        padding:
+            0
+            28px
+            0
+            10px;
+
+        font-size: 8.5px;
+    }
+
+
+    .courierPayoutFilters-selectIcon {
+        right: 8px;
+
+        font-size: 9px;
+    }
+
+
+    .courierPayoutFilters-active {
+        margin-top: 9px;
+
+        padding:
+            6px
+            8px;
+    }
+
+
+    .courierPayoutFilters-active span {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutFilters-active strong {
+        font-size: 7.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+    .courierPayoutFilters {
+        padding: 8px;
+    }
+
+
+    .courierPayoutFilters-title {
+        gap: 6px;
+    }
+
+
+    .courierPayoutFilters-titleIcon {
+        width: 27px;
+        height: 27px;
+
+        font-size: 11px;
+    }
+
+
+    .courierPayoutFilters-titleText span {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayoutFilters-titleText small {
+        font-size: 6.5px;
+    }
+
+
+    .courierPayoutFilters-clearButton {
+        min-height: 28px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 7px;
+    }
+
+
+    .courierPayoutFilters-controls {
+        margin-top: 8px;
+
+        gap: 8px;
+    }
+
+
+    .courierPayoutFilters-label {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutFilters-select {
+        height: 32px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutFilters-selectIcon {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutFilters-active {
+        margin-top: 8px;
+
+        padding:
+            5px
+            7px;
+    }
+
+
+    .courierPayoutFilters-active span,
+    .courierPayoutFilters-active strong {
+        font-size: 7px;
+    }
+
+}

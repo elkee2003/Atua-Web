@@ -55,7 +55,7 @@
 
     color: #c2410c;
 
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
 }
 
@@ -69,14 +69,14 @@
 
     flex-direction: column;
 
-    gap: 2px;
+    gap: 3px;
 }
 
 
 .courierLiveTracking-errorBannerText strong {
     color: #9a3412;
 
-    font-size: 9px;
+    font-size: 11px;
 
     font-weight: 700;
 }
@@ -87,7 +87,9 @@
 
     color: #c2410c;
 
-    font-size: 8px;
+    font-size: 10px;
+
+    line-height: 1.4;
 
     text-overflow: ellipsis;
 }
@@ -96,7 +98,7 @@
 .courierLiveTracking-errorBanner button {
     flex-shrink: 0;
 
-    padding: 6px 10px;
+    padding: 7px 11px;
 
     border: 1px solid #fed7aa;
 
@@ -106,7 +108,7 @@
 
     color: #c2410c;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 600;
 
@@ -249,7 +251,7 @@
 
     color: #64748b;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 500;
 }
@@ -291,14 +293,14 @@
 
     color: #94a3b8;
 
-    font-size: 7px;
+    font-size: 9px;
 }
 
 
 .courierLiveTracking-footerUpdated strong {
     color: #64748b;
 
-    font-size: 7px;
+    font-size: 9px;
 
     font-weight: 600;
 }
@@ -328,7 +330,7 @@
 
     color: #334155;
 
-    font-size: 16px;
+    font-size: 18px;
 
     font-weight: 700;
 }
@@ -339,7 +341,9 @@
 
     color: #94a3b8;
 
-    font-size: 9px;
+    font-size: 11px;
+
+    line-height: 1.4;
 }
 
 
@@ -416,7 +420,7 @@
 
     color: #c2410c;
 
-    font-size: 18px;
+    font-size: 20px;
 
     font-weight: 800;
 }
@@ -427,7 +431,7 @@
 
     color: #334155;
 
-    font-size: 16px;
+    font-size: 18px;
 
     font-weight: 700;
 }
@@ -440,7 +444,7 @@
 
     color: #64748b;
 
-    font-size: 9px;
+    font-size: 11px;
 
     line-height: 1.5;
 }
@@ -468,7 +472,7 @@
 
     border-radius: 8px;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 600;
 
@@ -593,7 +597,19 @@
 
 
     .courierLiveTracking-errorBanner button {
-        padding: 5px 8px;
+        padding: 6px 9px;
+
+        font-size: 9px;
+    }
+
+
+    .courierLiveTracking-errorBannerText strong {
+        font-size: 10px;
+    }
+
+
+    .courierLiveTracking-errorBannerText span {
+        font-size: 9px;
     }
 
 
@@ -622,9 +638,18 @@
     }
 
 
-    .courierLiveTracking-footerStatus,
+    .courierLiveTracking-footerStatus {
+        font-size: 9px;
+    }
+
+
     .courierLiveTracking-footerUpdated {
-        font-size: 7px;
+        font-size: 8px;
+    }
+
+
+    .courierLiveTracking-footerUpdated strong {
+        font-size: 8px;
     }
 
 }
@@ -648,13 +673,28 @@
     }
 
 
+    .courierLiveTracking-errorBannerText strong {
+        font-size: 10px;
+    }
+
+
     .courierLiveTracking-errorBannerText span {
-        font-size: 7px;
+        font-size: 8px;
     }
 
 
     .courierLiveTracking-errorBanner button {
-        font-size: 7px;
+        font-size: 8px;
+    }
+
+
+    .courierLiveTracking-footerStatus {
+        font-size: 8px;
+    }
+
+
+    .courierLiveTracking-footerUpdated {
+        font-size: 8px;
     }
 
 }

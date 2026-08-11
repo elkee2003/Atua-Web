@@ -1,0 +1,951 @@
+/* ==========================================================
+   COURIER REVIEWS LIST
+========================================================== */
+
+.courierReviewsList {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReviewsList-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 13px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReviewsList-title {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.courierReviewsList-titleIcon {
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 15px;
+}
+
+.courierReviewsList-title h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReviewsList-title p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.courierReviewsList-refreshButton {
+    min-height: 38px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReviewsList-refreshButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+
+    box-shadow:
+        0 2px 7px rgba(
+            15,
+            23,
+            42,
+            0.05
+        );
+}
+
+.courierReviewsList-refreshButton:active {
+    transform: translateY(1px);
+}
+
+.courierReviewsList-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+}
+
+.courierReviewsList-refreshButton svg {
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierReviewsList-refreshSpinning {
+    animation:
+        courierReviewsListSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierReviewsListSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   RESULT BAR
+========================================================== */
+
+.courierReviewsList-resultBar {
+    width: 100%;
+
+    min-height: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    box-sizing: border-box;
+
+    margin-bottom: 13px;
+
+    padding:
+        7px
+        10px;
+
+    border-top: 1px solid #eef2f6;
+
+    border-bottom: 1px solid #eef2f6;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   RESULT COUNT
+========================================================== */
+
+.courierReviewsList-resultCount {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 5px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.courierReviewsList-resultCount strong {
+    color: #334155;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   RESULT CONTEXT
+========================================================== */
+
+.courierReviewsList-resultContext {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   REVIEW ITEMS
+========================================================== */
+
+.courierReviewsList-items {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   LOAD MORE
+========================================================== */
+
+.courierReviewsList-loadMore {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding-top: 16px;
+}
+
+.courierReviewsList-loadMoreButton {
+    min-height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        16px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReviewsList-loadMoreButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+
+    box-shadow:
+        0 2px 8px rgba(
+            15,
+            23,
+            42,
+            0.05
+        );
+}
+
+.courierReviewsList-loadMoreButton:active {
+    transform: translateY(1px);
+}
+
+.courierReviewsList-loadMoreButton:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   LOAD MORE SPINNER
+========================================================== */
+
+.courierReviewsList-loadMoreSpinner {
+    width: 15px;
+
+    height: 15px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid #e2e8f0;
+
+    border-top-color: #64748b;
+
+    border-radius: 50%;
+
+    animation:
+        courierReviewsListSpin
+        0.8s linear infinite;
+}
+
+
+/* ==========================================================
+   LOADING LIST
+========================================================== */
+
+.courierReviewsList-loadingList {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   LOADING CARD
+========================================================== */
+
+.courierReviewsList-loadingCard {
+    width: 100%;
+
+    min-height: 180px;
+
+    box-sizing: border-box;
+
+    padding: 17px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   LOADING TOP
+========================================================== */
+
+.courierReviewsList-loadingTop {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 18px;
+}
+
+.courierReviewsList-loadingAvatar {
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+.courierReviewsList-loadingIdentity {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.courierReviewsList-loadingName {
+    width: 135px;
+
+    height: 14px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+.courierReviewsList-loadingDate {
+    width: 85px;
+
+    height: 10px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+.courierReviewsList-loadingRating {
+    width: 72px;
+
+    height: 26px;
+
+    flex-shrink: 0;
+
+    border-radius: 7px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+
+/* ==========================================================
+   LOADING TEXT
+========================================================== */
+
+.courierReviewsList-loadingText {
+    height: 12px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+.courierReviewsList-loadingText.large {
+    width: 88%;
+}
+
+.courierReviewsList-loadingText.medium {
+    width: 68%;
+
+    margin-top: 8px;
+}
+
+
+/* ==========================================================
+   LOADING BOTTOM
+========================================================== */
+
+.courierReviewsList-loadingBottom {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 22px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.courierReviewsList-loadingSmall {
+    width: 110px;
+
+    height: 10px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsListSkeleton
+        1.4s infinite;
+}
+
+.courierReviewsList-loadingSmall.short {
+    width: 70px;
+}
+
+
+/* ==========================================================
+   SKELETON ANIMATION
+========================================================== */
+
+@keyframes courierReviewsListSkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierReviewsList {
+        padding: 15px;
+    }
+
+    .courierReviewsList-title h2 {
+        font-size: 17px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviewsList {
+        padding: 14px;
+    }
+
+    .courierReviewsList-title h2 {
+        font-size: 17px;
+    }
+
+    .courierReviewsList-title p {
+        font-size: 11px;
+    }
+
+    .courierReviewsList-resultCount {
+        font-size: 11px;
+    }
+
+    .courierReviewsList-resultCount strong {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewsList {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReviewsList-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 11px;
+    }
+
+    .courierReviewsList-title {
+        align-items: flex-start;
+
+        gap: 8px;
+    }
+
+    .courierReviewsList-titleIcon {
+        width: 36px;
+
+        height: 36px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+    .courierReviewsList-title h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsList-title p {
+        margin-top: 3px;
+
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       REFRESH
+    ====================================================== */
+
+    .courierReviewsList-refreshButton {
+        width: 36px;
+
+        height: 36px;
+
+        min-height: 36px;
+
+        padding: 0;
+
+        border-radius: 8px;
+    }
+
+    .courierReviewsList-refreshButton span {
+        display: none;
+    }
+
+    .courierReviewsList-refreshButton svg {
+        font-size: 13px;
+    }
+
+
+    /* ======================================================
+       RESULT BAR
+    ====================================================== */
+
+    .courierReviewsList-resultBar {
+        min-height: 34px;
+
+        margin-bottom: 11px;
+
+        padding:
+            6px
+            8px;
+    }
+
+    .courierReviewsList-resultCount {
+        font-size: 10px;
+    }
+
+    .courierReviewsList-resultCount strong {
+        font-size: 13px;
+    }
+
+    .courierReviewsList-resultContext {
+        max-width: 55%;
+
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       ITEMS
+    ====================================================== */
+
+    .courierReviewsList-items {
+        gap: 9px;
+    }
+
+
+    /* ======================================================
+       LOAD MORE
+    ====================================================== */
+
+    .courierReviewsList-loadMore {
+        padding-top: 13px;
+    }
+
+    .courierReviewsList-loadMoreButton {
+        width: 100%;
+
+        min-height: 42px;
+
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       LOADING
+    ====================================================== */
+
+    .courierReviewsList-loadingCard {
+        min-height: 165px;
+
+        padding: 14px;
+
+        border-radius: 10px;
+    }
+
+    .courierReviewsList-loadingAvatar {
+        width: 42px;
+
+        height: 42px;
+    }
+
+    .courierReviewsList-loadingRating {
+        width: 62px;
+
+        height: 24px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviewsList {
+        padding: 11px;
+    }
+
+    .courierReviewsList-titleIcon {
+        width: 34px;
+
+        height: 34px;
+    }
+
+    .courierReviewsList-title h2 {
+        font-size: 15px;
+    }
+
+    .courierReviewsList-title p {
+        font-size: 10px;
+    }
+
+    .courierReviewsList-resultContext {
+        display: none;
+    }
+
+    .courierReviewsList-loadingCard {
+        padding: 12px;
+    }
+
+    .courierReviewsList-loadingAvatar {
+        width: 38px;
+
+        height: 38px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewsList {
+        padding: 10px;
+    }
+
+    .courierReviewsList-title h2 {
+        font-size: 14px;
+    }
+
+    .courierReviewsList-title p {
+        font-size: 9px;
+    }
+
+    .courierReviewsList-titleIcon {
+        width: 32px;
+
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+    .courierReviewsList-refreshButton {
+        width: 33px;
+
+        height: 33px;
+    }
+
+}

@@ -1,0 +1,947 @@
+/* ==========================================================
+   COURIER REPORTS LIST
+========================================================== */
+
+.courierReportsList {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReportsList-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   TITLE ROW
+========================================================== */
+
+.courierReportsList-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   TITLE ICON
+========================================================== */
+
+.courierReportsList-titleIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReportsList-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierReportsList-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   COUNT
+========================================================== */
+
+.courierReportsList-count {
+    min-width: 75px;
+
+    display: flex;
+
+    align-items: baseline;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    box-sizing: border-box;
+
+    padding:
+        7px
+        10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    white-space: nowrap;
+}
+
+.courierReportsList-count strong {
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+.courierReportsList-count span {
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   REPORT ITEMS
+========================================================== */
+
+.courierReportsList-items {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   PAGINATION
+========================================================== */
+
+.courierReportsList-pagination {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 18px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   PAGE BUTTON
+========================================================== */
+
+.courierReportsList-pageButton {
+    min-height: 36px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsList-pageButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReportsList-pageButton:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   PAGE NUMBERS
+========================================================== */
+
+.courierReportsList-pageNumbers {
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+}
+
+
+/* ==========================================================
+   PAGE NUMBER
+========================================================== */
+
+.courierReportsList-pageNumber {
+    width: 36px;
+
+    height: 36px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsList-pageNumber:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   ACTIVE PAGE
+========================================================== */
+
+.courierReportsList-pageNumber.active {
+    border-color: #ea580c;
+
+    background: #ea580c;
+
+    color: #ffffff;
+
+    cursor: default;
+}
+
+
+/* ==========================================================
+   ELLIPSIS
+========================================================== */
+
+.courierReportsList-ellipsis {
+    width: 24px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierReportsList-error {
+    width: 100%;
+
+    min-height: 250px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 30px;
+
+    border: 1px solid #fee2e2;
+
+    border-radius: 10px;
+
+    background: #fffafa;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   ERROR ICON
+========================================================== */
+
+.courierReportsList-errorIcon {
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 11px;
+
+    border-radius: 11px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================================
+   ERROR TITLE
+========================================================== */
+
+.courierReportsList-error h3 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   ERROR DESCRIPTION
+========================================================== */
+
+.courierReportsList-error p {
+    max-width: 420px;
+
+    margin:
+        6px
+        0
+        0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   RETRY BUTTON
+========================================================== */
+
+.courierReportsList-retryButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+    padding:
+        0
+        13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsList-retryButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierReportsList-loading {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   LOADING CARD
+========================================================== */
+
+.courierReportsList-loadingCard {
+    width: 100%;
+
+    min-height: 155px;
+
+    box-sizing: border-box;
+
+    padding: 15px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   LOADING TOP
+========================================================== */
+
+.courierReportsList-loadingTop {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   SKELETON ELEMENTS
+========================================================== */
+
+.courierReportsList-loadingIcon,
+.courierReportsList-loadingTitle,
+.courierReportsList-loadingBadge,
+.courierReportsList-loadingLine,
+.courierReportsList-loadingSmallBox {
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReportsListSkeleton
+        1.4s infinite;
+}
+
+
+/* ==========================================================
+   LOADING ICON
+========================================================== */
+
+.courierReportsList-loadingIcon {
+    width: 37px;
+
+    height: 37px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+}
+
+
+/* ==========================================================
+   LOADING TITLE
+========================================================== */
+
+.courierReportsList-loadingTitle {
+    width: 170px;
+
+    height: 17px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   LOADING BADGE
+========================================================== */
+
+.courierReportsList-loadingBadge {
+    width: 75px;
+
+    height: 25px;
+
+    margin-left: auto;
+
+    border-radius: 999px;
+}
+
+
+/* ==========================================================
+   LOADING LINES
+========================================================== */
+
+.courierReportsList-loadingLine {
+    height: 10px;
+
+    margin-top: 14px;
+
+    border-radius: 5px;
+}
+
+.courierReportsList-loadingLine.large {
+    width: 92%;
+}
+
+.courierReportsList-loadingLine.medium {
+    width: 70%;
+}
+
+.courierReportsList-loadingLine.small {
+    width: 45%;
+}
+
+
+/* ==========================================================
+   LOADING BOTTOM
+========================================================== */
+
+.courierReportsList-loadingBottom {
+    display: flex;
+
+    gap: 8px;
+
+    margin-top: 17px;
+}
+
+.courierReportsList-loadingSmallBox {
+    width: 85px;
+
+    height: 30px;
+
+    border-radius: 7px;
+}
+
+
+/* ==========================================================
+   SKELETON ANIMATION
+========================================================== */
+
+@keyframes courierReportsListSkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReportsList {
+        padding: 15px;
+    }
+
+    .courierReportsList-header h2 {
+        font-size: 18px;
+    }
+
+    .courierReportsList-header p {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReportsList {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReportsList-header {
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .courierReportsList-titleRow {
+        gap: 9px;
+    }
+
+    .courierReportsList-titleIcon {
+        width: 39px;
+
+        height: 39px;
+
+        border-radius: 9px;
+
+        font-size: 14px;
+    }
+
+    .courierReportsList-header h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsList-header p {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       COUNT
+    ====================================================== */
+
+    .courierReportsList-count {
+        min-width: 65px;
+
+        padding:
+            6px
+            8px;
+    }
+
+    .courierReportsList-count strong {
+        font-size: 15px;
+    }
+
+    .courierReportsList-count span {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       PAGINATION
+    ====================================================== */
+
+    .courierReportsList-pagination {
+        gap: 4px;
+
+        margin-top: 14px;
+
+        padding-top: 12px;
+    }
+
+    .courierReportsList-pageButton {
+        min-height: 34px;
+
+        padding:
+            0
+            9px;
+
+        font-size: 10px;
+    }
+
+    .courierReportsList-pageNumber {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 10px;
+    }
+
+    .courierReportsList-ellipsis {
+        width: 18px;
+
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       ERROR
+    ====================================================== */
+
+    .courierReportsList-error {
+        min-height: 220px;
+
+        padding: 22px;
+
+        border-radius: 9px;
+    }
+
+    .courierReportsList-errorIcon {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+    .courierReportsList-error h3 {
+        font-size: 15px;
+    }
+
+    .courierReportsList-error p {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       LOADING
+    ====================================================== */
+
+    .courierReportsList-loadingCard {
+        min-height: 135px;
+
+        padding: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsList {
+        padding: 10px;
+    }
+
+    .courierReportsList-header {
+        flex-direction: column;
+    }
+
+    .courierReportsList-count {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+    .courierReportsList-header h2 {
+        font-size: 16px;
+    }
+
+    .courierReportsList-header p {
+        font-size: 9px;
+    }
+
+    .courierReportsList-pagination {
+        flex-wrap: wrap;
+    }
+
+    .courierReportsList-pageButton {
+        font-size: 9px;
+    }
+
+    .courierReportsList-pageNumber {
+        width: 31px;
+
+        height: 31px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsList {
+        padding: 9px;
+    }
+
+    .courierReportsList-titleIcon {
+        width: 35px;
+
+        height: 35px;
+
+        font-size: 13px;
+    }
+
+    .courierReportsList-header h2 {
+        font-size: 15px;
+    }
+
+    .courierReportsList-header p {
+        font-size: 9px;
+    }
+
+    .courierReportsList-pageButton {
+        min-height: 31px;
+
+        padding:
+            0
+            7px;
+    }
+
+    .courierReportsList-pageNumber {
+        width: 29px;
+
+        height: 29px;
+    }
+
+}

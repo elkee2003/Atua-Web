@@ -1,0 +1,610 @@
+/* ==========================================================
+   COURIER REVIEWS SEARCH
+========================================================== */
+
+.courierReviewsSearch {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    padding: 16px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReviewsSearch-header {
+    width: 100%;
+
+    margin-bottom: 11px;
+}
+
+.courierReviewsSearch-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReviewsSearch-header p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   INPUT WRAPPER
+========================================================== */
+
+.courierReviewsSearch-inputWrapper {
+    width: 100%;
+
+    min-height: 48px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.courierReviewsSearch-inputWrapper:focus-within {
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            100,
+            116,
+            139,
+            0.08
+        );
+}
+
+
+/* ==========================================================
+   SEARCH ICON
+========================================================== */
+
+.courierReviewsSearch-searchIcon {
+    flex-shrink: 0;
+
+    margin-left: 14px;
+
+    color: #94a3b8;
+
+    font-size: 15px;
+
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   INPUT
+========================================================== */
+
+.courierReviewsSearch-inputWrapper input {
+    width: 100%;
+
+    min-width: 0;
+
+    height: 46px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        44px
+        0
+        11px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 550;
+
+    line-height: 1.4;
+}
+
+.courierReviewsSearch-inputWrapper input::placeholder {
+    color: #94a3b8;
+
+    opacity: 1;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+.courierReviewsSearch-inputWrapper input:disabled {
+    cursor: not-allowed;
+
+    color: #94a3b8;
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierReviewsSearch-clearButton {
+    position: absolute;
+
+    top: 50%;
+
+    right: 9px;
+
+    width: 30px;
+
+    height: 30px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transform: translateY(-50%);
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReviewsSearch-clearButton:hover {
+    background: #e2e8f0;
+
+    color: #334155;
+}
+
+.courierReviewsSearch-clearButton:active {
+    transform:
+        translateY(-50%)
+        scale(0.96);
+}
+
+.courierReviewsSearch-clearButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   LOADING SPINNER
+========================================================== */
+
+.courierReviewsSearch-spinner {
+    position: absolute;
+
+    top: 50%;
+
+    right: 15px;
+
+    width: 17px;
+
+    height: 17px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid #e2e8f0;
+
+    border-top-color: #64748b;
+
+    border-radius: 50%;
+
+    transform: translateY(-50%);
+
+    animation:
+        courierReviewsSearchSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierReviewsSearchSpin {
+
+    from {
+        transform:
+            translateY(-50%)
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            translateY(-50%)
+            rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   DISABLED
+========================================================== */
+
+.courierReviewsSearch-disabled {
+    background: #f8fafc;
+
+    border-color: #e5eaf0;
+}
+
+.courierReviewsSearch-disabled
+.courierReviewsSearch-searchIcon {
+    color: #cbd5e1;
+}
+
+
+/* ==========================================================
+   SEARCH STATUS
+========================================================== */
+
+.courierReviewsSearch-status {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 10px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+.courierReviewsSearch-status strong {
+    min-width: 0;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   RESET BUTTON
+========================================================== */
+
+.courierReviewsSearch-resetButton {
+    min-height: 26px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-left: 3px;
+
+    padding:
+        0
+        8px;
+
+    border:
+        1px solid #dbe2ea;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReviewsSearch-resetButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReviewsSearch-resetButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierReviewsSearch {
+        padding: 15px;
+    }
+
+    .courierReviewsSearch-inputWrapper {
+        min-height: 47px;
+    }
+
+    .courierReviewsSearch-inputWrapper input {
+        height: 45px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviewsSearch {
+        padding: 14px;
+    }
+
+    .courierReviewsSearch-header h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsSearch-header p {
+        font-size: 11px;
+    }
+
+    .courierReviewsSearch-inputWrapper {
+        min-height: 46px;
+    }
+
+    .courierReviewsSearch-inputWrapper input {
+        height: 44px;
+
+        font-size: 13px;
+    }
+
+    .courierReviewsSearch-inputWrapper input::placeholder {
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewsSearch {
+        margin-bottom: 12px;
+
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+    .courierReviewsSearch-header {
+        margin-bottom: 9px;
+    }
+
+    .courierReviewsSearch-header h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsSearch-header p {
+        margin-top: 3px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsSearch-inputWrapper {
+        min-height: 45px;
+
+        border-radius: 8px;
+    }
+
+    .courierReviewsSearch-searchIcon {
+        margin-left: 12px;
+
+        font-size: 14px;
+    }
+
+    .courierReviewsSearch-inputWrapper input {
+        height: 43px;
+
+        padding-right: 40px;
+
+        font-size: 13px;
+    }
+
+    .courierReviewsSearch-inputWrapper input::placeholder {
+        font-size: 11px;
+    }
+
+    .courierReviewsSearch-clearButton {
+        right: 7px;
+
+        width: 29px;
+
+        height: 29px;
+
+        border-radius: 6px;
+    }
+
+    .courierReviewsSearch-status {
+        margin-top: 8px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsSearch-status strong {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviewsSearch {
+        padding: 11px;
+    }
+
+    .courierReviewsSearch-header h2 {
+        font-size: 15px;
+    }
+
+    .courierReviewsSearch-header p {
+        font-size: 10px;
+    }
+
+    .courierReviewsSearch-inputWrapper {
+        min-height: 43px;
+    }
+
+    .courierReviewsSearch-inputWrapper input {
+        height: 41px;
+
+        font-size: 12px;
+    }
+
+    .courierReviewsSearch-inputWrapper input::placeholder {
+        font-size: 10px;
+    }
+
+    .courierReviewsSearch-searchIcon {
+        margin-left: 11px;
+
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewsSearch {
+        padding: 10px;
+    }
+
+    .courierReviewsSearch-header h2 {
+        font-size: 14px;
+    }
+
+    .courierReviewsSearch-header p {
+        font-size: 9px;
+    }
+
+    .courierReviewsSearch-inputWrapper input {
+        padding-left: 9px;
+
+        font-size: 11px;
+    }
+
+    .courierReviewsSearch-inputWrapper input::placeholder {
+        font-size: 9px;
+    }
+
+}

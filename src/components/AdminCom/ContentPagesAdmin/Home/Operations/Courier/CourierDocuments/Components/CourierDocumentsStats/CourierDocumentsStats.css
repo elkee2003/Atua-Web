@@ -1,0 +1,460 @@
+/* ==========================================================
+   COURIER DOCUMENTS STATS
+========================================================== */
+
+.courierDocumentsStats {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+/* ==========================================================
+   STAT CARD
+========================================================== */
+
+.courierDocumentsStats-card {
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 92px;
+
+    padding: 15px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.courierDocumentsStats-card:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 15px
+        rgba(15, 23, 42, 0.06);
+
+    border-color: #dbe2ea;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierDocumentsStats-icon {
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 17px;
+}
+
+
+/* ==========================================================
+   CARD COLORS
+========================================================== */
+
+.courierDocumentsStats-total
+.courierDocumentsStats-icon {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+.courierDocumentsStats-completed
+.courierDocumentsStats-icon {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierDocumentsStats-missing
+.courierDocumentsStats-icon {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+
+.courierDocumentsStats-percentage
+.courierDocumentsStats-icon {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierDocumentsStats-content {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.courierDocumentsStats-content span {
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    line-height: 1.35;
+}
+
+
+.courierDocumentsStats-content strong {
+    color: #1e293b;
+
+    font-size: 23px;
+
+    font-weight: 850;
+
+    line-height: 1.2;
+}
+
+
+.courierDocumentsStats-content small {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.35;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* ==========================================================
+   LOADING STATE
+========================================================== */
+
+.courierDocumentsStats-loadingCard {
+    min-height: 92px;
+}
+
+
+.courierDocumentsStats-loadingIcon {
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+
+    animation:
+        courierDocumentsStatsPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsStats-loadingContent {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.courierDocumentsStats-loadingLabel {
+    width: 72px;
+
+    height: 9px;
+
+    border-radius: 5px;
+
+    background: #e2e8f0;
+
+    animation:
+        courierDocumentsStatsPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsStats-loadingValue {
+    width: 45px;
+
+    height: 20px;
+
+    border-radius: 5px;
+
+    background: #e2e8f0;
+
+    animation:
+        courierDocumentsStatsPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+@keyframes courierDocumentsStatsPulse {
+
+    0% {
+        opacity: 0.45;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.45;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1050px) {
+
+    .courierDocumentsStats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+
+    .courierDocumentsStats-card {
+        min-height: 88px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocumentsStats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 9px;
+
+        margin-bottom: 10px;
+    }
+
+
+    .courierDocumentsStats-card {
+        min-height: 82px;
+
+        gap: 9px;
+
+        padding: 11px;
+
+        border-radius: 9px;
+    }
+
+
+    .courierDocumentsStats-icon {
+        width: 35px;
+
+        height: 35px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+
+    .courierDocumentsStats-content span {
+        font-size: 9px;
+    }
+
+
+    .courierDocumentsStats-content strong {
+        font-size: 19px;
+    }
+
+
+    .courierDocumentsStats-content small {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsStats-loadingCard {
+        min-height: 82px;
+    }
+
+
+    .courierDocumentsStats-loadingIcon {
+        width: 35px;
+
+        height: 35px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocumentsStats {
+        gap: 7px;
+    }
+
+
+    .courierDocumentsStats-card {
+        min-height: 76px;
+
+        gap: 7px;
+
+        padding: 9px;
+    }
+
+
+    .courierDocumentsStats-icon {
+        width: 31px;
+
+        height: 31px;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocumentsStats-content {
+        gap: 1px;
+    }
+
+
+    .courierDocumentsStats-content span {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsStats-content strong {
+        font-size: 17px;
+    }
+
+
+    .courierDocumentsStats-content small {
+        font-size: 6.5px;
+    }
+
+
+    .courierDocumentsStats-loadingCard {
+        min-height: 76px;
+    }
+
+
+    .courierDocumentsStats-loadingIcon {
+        width: 31px;
+
+        height: 31px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocumentsStats {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .courierDocumentsStats-card {
+        min-height: 70px;
+
+        padding: 10px;
+    }
+
+
+    .courierDocumentsStats-icon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsStats-content span {
+        font-size: 9px;
+    }
+
+
+    .courierDocumentsStats-content strong {
+        font-size: 18px;
+    }
+
+
+    .courierDocumentsStats-content small {
+        font-size: 7px;
+    }
+
+}

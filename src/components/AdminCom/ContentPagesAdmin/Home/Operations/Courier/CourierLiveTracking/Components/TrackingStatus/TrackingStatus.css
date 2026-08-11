@@ -70,7 +70,7 @@
 
     color: #475569;
 
-    font-size: 11px;
+    font-size: 14px;
 }
 
 
@@ -79,18 +79,22 @@
 
     color: #1e293b;
 
-    font-size: 13px;
+    font-size: 15px;
 
     font-weight: 700;
+
+    line-height: 1.2;
 }
 
 
 .trackingStatus-headerTitle p {
-    margin: 3px 0 0;
+    margin: 4px 0 0;
 
     color: #94a3b8;
 
-    font-size: 8px;
+    font-size: 10px;
+
+    line-height: 1.4;
 }
 
 
@@ -105,24 +109,28 @@
 
     gap: 5px;
 
-    padding: 5px 8px;
+    padding: 5px 9px;
 
     border-radius: 999px;
 
-    font-size: 8px;
+    font-size: 9px;
 
     font-weight: 700;
 
     letter-spacing: 0.04em;
+
+    line-height: 1.2;
 }
 
 
 .trackingStatus-mainBadge svg {
-    font-size: 5px;
+    font-size: 6px;
 }
 
 
-/* ACTIVE */
+/* ==========================================================
+   ACTIVE
+========================================================== */
 
 .trackingStatus-mainBadgeActive {
     background: #ecfdf5;
@@ -131,7 +139,9 @@
 }
 
 
-/* INACTIVE */
+/* ==========================================================
+   INACTIVE
+========================================================== */
 
 .trackingStatus-mainBadgeInactive {
     background: #f1f5f9;
@@ -196,16 +206,18 @@
 
     border-radius: 8px;
 
-    font-size: 9px;
+    font-size: 11px;
 }
 
 
 .trackingStatus-itemIcon svg {
-    font-size: 9px;
+    font-size: 10px;
 }
 
 
-/* ONLINE */
+/* ==========================================================
+   ONLINE
+========================================================== */
 
 .trackingStatus-iconOnline {
     background: #ecfdf5;
@@ -215,11 +227,13 @@
 
 
 .trackingStatus-iconOnline svg {
-    font-size: 6px;
+    font-size: 7px;
 }
 
 
-/* OFFLINE */
+/* ==========================================================
+   OFFLINE
+========================================================== */
 
 .trackingStatus-iconOffline {
     background: #f1f5f9;
@@ -229,11 +243,13 @@
 
 
 .trackingStatus-iconOffline svg {
-    font-size: 6px;
+    font-size: 7px;
 }
 
 
-/* APPROVED */
+/* ==========================================================
+   APPROVED
+========================================================== */
 
 .trackingStatus-iconApproved {
     background: #eff6ff;
@@ -242,7 +258,9 @@
 }
 
 
-/* PENDING */
+/* ==========================================================
+   PENDING
+========================================================== */
 
 .trackingStatus-iconPending {
     background: #fff7ed;
@@ -251,7 +269,9 @@
 }
 
 
-/* LOCATION */
+/* ==========================================================
+   LOCATION
+========================================================== */
 
 .trackingStatus-iconLocation {
     background: #f0fdf4;
@@ -260,7 +280,9 @@
 }
 
 
-/* WARNING */
+/* ==========================================================
+   WARNING
+========================================================== */
 
 .trackingStatus-iconWarning {
     background: #fff7ed;
@@ -269,7 +291,9 @@
 }
 
 
-/* UPDATE */
+/* ==========================================================
+   UPDATE
+========================================================== */
 
 .trackingStatus-iconUpdate {
     background: #f1f5f9;
@@ -296,9 +320,11 @@
 .trackingStatus-itemContent span {
     color: #94a3b8;
 
-    font-size: 7px;
+    font-size: 9px;
 
     font-weight: 500;
+
+    line-height: 1.3;
 }
 
 
@@ -307,9 +333,11 @@
 
     color: #334155;
 
-    font-size: 9px;
+    font-size: 11px;
 
     font-weight: 700;
+
+    line-height: 1.3;
 
     text-overflow: ellipsis;
 
@@ -380,7 +408,7 @@
 
     flex-shrink: 0;
 
-    margin-top: 3px;
+    margin-top: 4px;
 
     border-radius: 50%;
 }
@@ -437,18 +465,20 @@
 
     color: inherit;
 
-    font-size: 9px;
+    font-size: 10px;
 
     font-weight: 700;
+
+    line-height: 1.3;
 }
 
 
 .trackingStatus-message p {
-    margin: 3px 0 0;
+    margin: 4px 0 0;
 
     color: #64748b;
 
-    font-size: 7px;
+    font-size: 9px;
 
     line-height: 1.5;
 }
@@ -483,7 +513,7 @@
 .trackingStatus-coordinateHeader span {
     color: #64748b;
 
-    font-size: 8px;
+    font-size: 9px;
 
     font-weight: 700;
 
@@ -526,9 +556,11 @@
 .trackingStatus-coordinate span {
     color: #94a3b8;
 
-    font-size: 6px;
+    font-size: 8px;
 
     font-weight: 600;
+
+    line-height: 1.3;
 }
 
 
@@ -537,9 +569,11 @@
 
     font-family: monospace;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 600;
+
+    line-height: 1.3;
 }
 
 
@@ -556,8 +590,38 @@
     }
 
 
+    .trackingStatus-headerTitle h2 {
+        font-size: 14px;
+    }
+
+
+    .trackingStatus-headerTitle p {
+        font-size: 9px;
+    }
+
+
     .trackingStatus-grid {
         gap: 7px;
+    }
+
+
+    .trackingStatus-itemContent span {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-itemContent strong {
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-message strong {
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-message p {
+        font-size: 9px;
     }
 
 }
@@ -578,6 +642,8 @@
 
     .trackingStatus-header {
         padding-bottom: 12px;
+
+        gap: 10px;
     }
 
 
@@ -590,12 +656,24 @@
         width: 29px;
         height: 29px;
 
-        font-size: 10px;
+        font-size: 11px;
     }
 
 
     .trackingStatus-headerTitle h2 {
-        font-size: 12px;
+        font-size: 13px;
+    }
+
+
+    .trackingStatus-headerTitle p {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-mainBadge {
+        padding: 5px 8px;
+
+        font-size: 8px;
     }
 
 
@@ -611,8 +689,49 @@
     }
 
 
+    .trackingStatus-itemIcon {
+        width: 27px;
+        height: 27px;
+    }
+
+
+    .trackingStatus-itemContent span {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-itemContent strong {
+        font-size: 10px;
+    }
+
+
     .trackingStatus-message {
         padding: 10px;
+    }
+
+
+    .trackingStatus-message strong {
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-message p {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-coordinateHeader span {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-coordinate span {
+        font-size: 8px;
+    }
+
+
+    .trackingStatus-coordinate strong {
+        font-size: 10px;
     }
 
 }
@@ -624,6 +743,11 @@
 
 @media (max-width: 400px) {
 
+    .trackingStatus {
+        padding: 12px;
+    }
+
+
     .trackingStatus-coordinateValues {
         grid-template-columns: 1fr;
     }
@@ -632,7 +756,57 @@
     .trackingStatus-mainBadge {
         padding: 4px 7px;
 
-        font-size: 7px;
+        font-size: 8px;
+    }
+
+
+    .trackingStatus-headerTitle h2 {
+        font-size: 13px;
+    }
+
+
+    .trackingStatus-headerTitle p {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-item {
+        padding: 9px;
+    }
+
+
+    .trackingStatus-itemContent span {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-itemContent strong {
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-message strong {
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-message p {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-coordinateHeader span {
+        font-size: 9px;
+    }
+
+
+    .trackingStatus-coordinate span {
+        font-size: 8px;
+    }
+
+
+    .trackingStatus-coordinate strong {
+        font-size: 10px;
     }
 
 }

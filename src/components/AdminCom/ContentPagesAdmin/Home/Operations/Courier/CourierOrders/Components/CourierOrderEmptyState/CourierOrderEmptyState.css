@@ -47,7 +47,7 @@
 
     border-radius: 14px;
 
-    font-size: 19px;
+    font-size: 21px;
 }
 
 
@@ -101,18 +101,20 @@
 
     color: #1e293b;
 
-    font-size: 14px;
+    font-size: 17px;
 
     font-weight: 700;
+
+    line-height: 1.3;
 }
 
 
 .courierOrderEmptyState-content p {
-    margin: 6px 0 0;
+    margin: 7px 0 0;
 
     color: #94a3b8;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 500;
 
@@ -147,7 +149,7 @@
 
     font-family: inherit;
 
-    font-size: 8px;
+    font-size: 10px;
 
     font-weight: 600;
 
@@ -183,7 +185,7 @@
 
 
 .courierOrderEmptyState-action svg {
-    font-size: 7px;
+    font-size: 9px;
 }
 
 
@@ -204,7 +206,22 @@
         width: 48px;
         height: 48px;
 
-        font-size: 17px;
+        font-size: 19px;
+    }
+
+
+    .courierOrderEmptyState-content h3 {
+        font-size: 16px;
+    }
+
+
+    .courierOrderEmptyState-content p {
+        font-size: 10px;
+    }
+
+
+    .courierOrderEmptyState-action {
+        font-size: 9px;
     }
 
 }
@@ -233,19 +250,21 @@
 
         border-radius: 12px;
 
-        font-size: 16px;
+        font-size: 18px;
     }
 
 
     .courierOrderEmptyState-content h3 {
-        font-size: 12px;
+        font-size: 15px;
     }
 
 
     .courierOrderEmptyState-content p {
         max-width: 280px;
 
-        font-size: 7px;
+        font-size: 9px;
+
+        line-height: 1.55;
     }
 
 
@@ -254,7 +273,12 @@
 
         padding: 7px 10px;
 
-        font-size: 7px;
+        font-size: 9px;
+    }
+
+
+    .courierOrderEmptyState-action svg {
+        font-size: 8px;
     }
 
 }
@@ -277,19 +301,26 @@
         width: 40px;
         height: 40px;
 
-        font-size: 14px;
+        font-size: 16px;
     }
 
 
     .courierOrderEmptyState-content h3 {
-        font-size: 11px;
+        font-size: 14px;
     }
 
 
     .courierOrderEmptyState-content p {
-        font-size: 6px;
+        font-size: 9px;
 
         line-height: 1.5;
+    }
+
+
+    .courierOrderEmptyState-action {
+        font-size: 9px;
+
+        padding: 7px 10px;
     }
 
 }

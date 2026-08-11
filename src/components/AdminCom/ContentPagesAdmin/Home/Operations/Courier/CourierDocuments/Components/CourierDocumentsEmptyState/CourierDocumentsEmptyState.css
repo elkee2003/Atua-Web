@@ -1,0 +1,381 @@
+/* ==========================================================
+   COURIER DOCUMENTS EMPTY STATE
+========================================================== */
+
+.courierDocumentsEmptyState {
+    width: 100%;
+
+    min-height: 300px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 18px;
+
+    padding: 35px 25px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    text-align: left;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierDocumentsEmptyState-icon {
+    width: 68px;
+
+    height: 68px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    font-size: 27px;
+}
+
+
+/* ==========================================================
+   ERROR ICON
+========================================================== */
+
+.courierDocumentsEmptyState.error
+.courierDocumentsEmptyState-icon {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierDocumentsEmptyState-content {
+    min-width: 0;
+
+    max-width: 460px;
+}
+
+
+.courierDocumentsEmptyState-content h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierDocumentsEmptyState-content p {
+    margin: 6px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   ERROR TEXT
+========================================================== */
+
+.courierDocumentsEmptyState.error
+.courierDocumentsEmptyState-content h2 {
+    color: #b91c1c;
+}
+
+
+.courierDocumentsEmptyState.error
+.courierDocumentsEmptyState-content p {
+    color: #94a3b8;
+}
+
+
+/* ==========================================================
+   RETRY BUTTON
+========================================================== */
+
+.courierDocumentsEmptyState-retry {
+    min-height: 35px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.courierDocumentsEmptyState-retry:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #2563eb;
+
+    transform: translateY(-1px);
+}
+
+
+.courierDocumentsEmptyState-retry:active {
+    transform: translateY(0);
+}
+
+
+.courierDocumentsEmptyState-retry svg {
+    font-size: 9px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierDocumentsEmptyState {
+        min-height: 280px;
+
+        gap: 15px;
+
+        padding: 30px 20px;
+    }
+
+
+    .courierDocumentsEmptyState-icon {
+        width: 60px;
+
+        height: 60px;
+
+        border-radius: 14px;
+
+        font-size: 24px;
+    }
+
+
+    .courierDocumentsEmptyState-content h2 {
+        font-size: 16px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocumentsEmptyState {
+        min-height: 250px;
+
+        flex-direction: column;
+
+        gap: 12px;
+
+        padding: 28px 18px;
+
+        text-align: center;
+
+        border-radius: 10px;
+    }
+
+
+    .courierDocumentsEmptyState-icon {
+        width: 55px;
+
+        height: 55px;
+
+        border-radius: 13px;
+
+        font-size: 21px;
+    }
+
+
+    .courierDocumentsEmptyState-content {
+        max-width: 360px;
+    }
+
+
+    .courierDocumentsEmptyState-content h2 {
+        font-size: 15px;
+    }
+
+
+    .courierDocumentsEmptyState-content p {
+        margin-top: 5px;
+
+        font-size: 8px;
+
+        line-height: 1.55;
+    }
+
+
+    .courierDocumentsEmptyState-retry {
+        min-height: 33px;
+
+        margin-top: 12px;
+
+        padding: 0 12px;
+
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocumentsEmptyState {
+        min-height: 220px;
+
+        padding: 24px 14px;
+    }
+
+
+    .courierDocumentsEmptyState-icon {
+        width: 50px;
+
+        height: 50px;
+
+        border-radius: 12px;
+
+        font-size: 19px;
+    }
+
+
+    .courierDocumentsEmptyState-content h2 {
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsEmptyState-content p {
+        max-width: 290px;
+
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsEmptyState-retry {
+        min-height: 31px;
+
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsEmptyState-retry svg {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocumentsEmptyState {
+        min-height: 200px;
+
+        padding: 20px 10px;
+    }
+
+
+    .courierDocumentsEmptyState-icon {
+        width: 44px;
+
+        height: 44px;
+
+        border-radius: 10px;
+
+        font-size: 17px;
+    }
+
+
+    .courierDocumentsEmptyState-content h2 {
+        font-size: 12px;
+    }
+
+
+    .courierDocumentsEmptyState-content p {
+        max-width: 250px;
+
+        font-size: 6.5px;
+    }
+
+
+    .courierDocumentsEmptyState-retry {
+        min-height: 29px;
+
+        padding: 0 10px;
+
+        font-size: 6.5px;
+    }
+
+}

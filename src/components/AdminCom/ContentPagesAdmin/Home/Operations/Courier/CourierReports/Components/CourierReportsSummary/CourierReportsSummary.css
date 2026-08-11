@@ -1,0 +1,1374 @@
+/* ==========================================================
+   COURIER REPORTS SUMMARY
+========================================================== */
+
+.courierReportsSummary {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReportsSummary-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   TITLE ROW
+========================================================== */
+
+.courierReportsSummary-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   TITLE ICON
+========================================================== */
+
+.courierReportsSummary-titleIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 17px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReportsSummary-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierReportsSummary-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   TOTAL BADGE
+========================================================== */
+
+.courierReportsSummary-totalBadge {
+    min-width: 100px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding:
+        8px
+        12px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+.courierReportsSummary-totalBadge strong {
+    color: #1e293b;
+
+    font-size: 20px;
+
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+.courierReportsSummary-totalBadge span {
+    margin-top: 2px;
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+.courierReportsSummary-body {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding-top: 15px;
+}
+
+
+/* ==========================================================
+   OVERVIEW
+========================================================== */
+
+.courierReportsSummary-overview {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border: 1px solid #fed7aa;
+
+    border-radius: 10px;
+
+    background: #fffaf5;
+}
+
+
+/* ==========================================================
+   OVERVIEW ICON
+========================================================== */
+
+.courierReportsSummary-overviewIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #ffedd5;
+
+    color: #ea580c;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   OVERVIEW CONTENT
+========================================================== */
+
+.courierReportsSummary-overviewContent {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.courierReportsSummary-overviewContent > span {
+    color: #9a3412;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.courierReportsSummary-overviewContent strong {
+    color: #7c2d12;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1.1;
+}
+
+.courierReportsSummary-overviewContent p {
+    margin: 2px 0 0;
+
+    color: #9a3412;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================================
+   OVERVIEW RATE
+========================================================== */
+
+.courierReportsSummary-overviewRate {
+    min-width: 65px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding-left: 12px;
+
+    border-left: 1px solid #fed7aa;
+}
+
+.courierReportsSummary-overviewRate strong {
+    color: #c2410c;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+.courierReportsSummary-overviewRate span {
+    margin-top: 2px;
+
+    color: #9a3412;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+/* ==========================================================
+   RESOLUTION
+========================================================== */
+
+.courierReportsSummary-resolution {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding:
+        13px
+        14px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   RESOLUTION HEADER
+========================================================== */
+
+.courierReportsSummary-resolutionHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   RESOLUTION MAIN
+========================================================== */
+
+.courierReportsSummary-resolutionHeader > div:first-child {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.courierReportsSummary-resolutionHeader > div:first-child span {
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.courierReportsSummary-resolutionHeader > div:first-child strong {
+    color: #16a34a;
+
+    font-size: 18px;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   RESOLUTION COUNTS
+========================================================== */
+
+.courierReportsSummary-resolutionCounts {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.courierReportsSummary-resolutionCounts span + span {
+    padding-left: 8px;
+
+    border-left: 1px solid #e2e8f0;
+}
+
+
+/* ==========================================================
+   RESOLUTION TRACK
+========================================================== */
+
+.courierReportsSummary-resolutionTrack {
+    width: 100%;
+
+    height: 7px;
+
+    overflow: hidden;
+
+    margin-top: 10px;
+
+    border-radius: 999px;
+
+    background: #e2e8f0;
+}
+
+
+/* ==========================================================
+   RESOLUTION PROGRESS
+========================================================== */
+
+.courierReportsSummary-resolutionProgress {
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #22c55e;
+
+    transition:
+        width 0.35s ease;
+}
+
+
+/* ==========================================================
+   STATUS SECTION
+========================================================== */
+
+.courierReportsSummary-statusSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding-top: 1px;
+}
+
+
+/* ==========================================================
+   SECTION TITLE
+========================================================== */
+
+.courierReportsSummary-sectionTitle {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+.courierReportsSummary-sectionTitle h3 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    font-weight: 750;
+}
+
+.courierReportsSummary-sectionTitle span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 550;
+}
+
+
+/* ==========================================================
+   STATUS LIST
+========================================================== */
+
+.courierReportsSummary-statusList {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   STATUS ITEM
+========================================================== */
+
+.courierReportsSummary-statusItem {
+    width: 100%;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    box-sizing: border-box;
+
+    padding:
+        9px
+        10px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   STATUS ICON
+========================================================== */
+
+.courierReportsSummary-statusIcon {
+    width: 31px;
+
+    height: 31px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   STATUS MAIN
+========================================================== */
+
+.courierReportsSummary-statusMain {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+/* ==========================================================
+   STATUS TOP
+========================================================== */
+
+.courierReportsSummary-statusTop {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 5px;
+}
+
+.courierReportsSummary-statusTop span {
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.courierReportsSummary-statusTop strong {
+    color: #334155;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   STATUS TRACK
+========================================================== */
+
+.courierReportsSummary-statusTrack {
+    width: 100%;
+
+    height: 5px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #eef2f6;
+}
+
+
+/* ==========================================================
+   STATUS PROGRESS
+========================================================== */
+
+.courierReportsSummary-statusProgress {
+    width: 0;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    transition:
+        width 0.35s ease;
+}
+
+
+/* ==========================================================
+   STATUS PERCENTAGE
+========================================================== */
+
+.courierReportsSummary-statusPercentage {
+    width: 37px;
+
+    flex-shrink: 0;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-align: right;
+}
+
+
+/* ==========================================================
+   OPEN
+========================================================== */
+
+.courierReportsSummary-open
+.courierReportsSummary-statusIcon {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+.courierReportsSummary-open
+.courierReportsSummary-statusProgress {
+    background: #f97316;
+}
+
+
+/* ==========================================================
+   UNDER REVIEW
+========================================================== */
+
+.courierReportsSummary-underReview
+.courierReportsSummary-statusIcon {
+    background: #fefce8;
+
+    color: #ca8a04;
+}
+
+.courierReportsSummary-underReview
+.courierReportsSummary-statusProgress {
+    background: #eab308;
+}
+
+
+/* ==========================================================
+   RESOLVED
+========================================================== */
+
+.courierReportsSummary-resolved
+.courierReportsSummary-statusIcon {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+.courierReportsSummary-resolved
+.courierReportsSummary-statusProgress {
+    background: #22c55e;
+}
+
+
+/* ==========================================================
+   DISMISSED
+========================================================== */
+
+.courierReportsSummary-dismissed
+.courierReportsSummary-statusIcon {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+.courierReportsSummary-dismissed
+.courierReportsSummary-statusProgress {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   INSIGHT
+========================================================== */
+
+.courierReportsSummary-insight {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    box-sizing: border-box;
+
+    padding:
+        11px
+        12px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   INSIGHT ICON
+========================================================== */
+
+.courierReportsSummary-insightIcon {
+    width: 30px;
+
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #ea580c;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   INSIGHT TEXT
+========================================================== */
+
+.courierReportsSummary-insight strong {
+    display: block;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.courierReportsSummary-insight p {
+    margin:
+        3px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierReportsSummary-loadingTitle,
+.courierReportsSummary-loadingDescription,
+.courierReportsSummary-loadingCircle,
+.courierReportsSummary-loadingSmallTitle,
+.courierReportsSummary-loadingLargeValue,
+.courierReportsSummary-loadingSmallText,
+.courierReportsSummary-loadingStatusIcon,
+.courierReportsSummary-loadingStatusLabel,
+.courierReportsSummary-loadingStatusBar,
+.courierReportsSummary-loadingStatusValue {
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReportsSummarySkeleton
+        1.4s infinite;
+}
+
+
+/* ==========================================================
+   LOADING HEADER
+========================================================== */
+
+.courierReportsSummary-loadingHeader {
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+.courierReportsSummary-loadingTitle {
+    width: 175px;
+
+    height: 20px;
+
+    border-radius: 6px;
+}
+
+.courierReportsSummary-loadingDescription {
+    width: 310px;
+
+    max-width: 70vw;
+
+    height: 11px;
+
+    margin-top: 7px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   LOADING BODY
+========================================================== */
+
+.courierReportsSummary-loadingBody {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding-top: 15px;
+}
+
+
+/* ==========================================================
+   LOADING OVERVIEW
+========================================================== */
+
+.courierReportsSummary-loadingOverview {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+.courierReportsSummary-loadingCircle {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+}
+
+.courierReportsSummary-loadingOverviewContent {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.courierReportsSummary-loadingSmallTitle {
+    width: 170px;
+
+    height: 11px;
+
+    border-radius: 4px;
+}
+
+.courierReportsSummary-loadingLargeValue {
+    width: 55px;
+
+    height: 25px;
+
+    border-radius: 5px;
+}
+
+.courierReportsSummary-loadingSmallText {
+    width: 220px;
+
+    max-width: 70%;
+
+    height: 9px;
+
+    border-radius: 4px;
+}
+
+
+/* ==========================================================
+   LOADING STATUSES
+========================================================== */
+
+.courierReportsSummary-loadingStatuses {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.courierReportsSummary-loadingStatus {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px 10px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 8px;
+}
+
+.courierReportsSummary-loadingStatusIcon {
+    width: 31px;
+
+    height: 31px;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+}
+
+.courierReportsSummary-loadingStatusContent {
+    flex: 1;
+}
+
+.courierReportsSummary-loadingStatusLabel {
+    width: 75px;
+
+    height: 10px;
+
+    margin-bottom: 6px;
+
+    border-radius: 4px;
+}
+
+.courierReportsSummary-loadingStatusBar {
+    width: 100%;
+
+    height: 5px;
+
+    border-radius: 999px;
+}
+
+.courierReportsSummary-loadingStatusValue {
+    width: 28px;
+
+    height: 10px;
+
+    border-radius: 4px;
+}
+
+
+/* ==========================================================
+   SKELETON ANIMATION
+========================================================== */
+
+@keyframes courierReportsSummarySkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReportsSummary {
+        padding: 15px;
+    }
+
+    .courierReportsSummary-header h2 {
+        font-size: 18px;
+    }
+
+    .courierReportsSummary-header p {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReportsSummary {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReportsSummary-header {
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .courierReportsSummary-titleRow {
+        gap: 9px;
+    }
+
+    .courierReportsSummary-titleIcon {
+        width: 39px;
+
+        height: 39px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierReportsSummary-header h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsSummary-header p {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-totalBadge {
+        min-width: 82px;
+
+        padding:
+            7px
+            9px;
+    }
+
+    .courierReportsSummary-totalBadge strong {
+        font-size: 18px;
+    }
+
+    .courierReportsSummary-totalBadge span {
+        font-size: 8px;
+    }
+
+
+    /* ======================================================
+       OVERVIEW
+    ====================================================== */
+
+    .courierReportsSummary-overview {
+        gap: 9px;
+
+        padding: 11px;
+    }
+
+    .courierReportsSummary-overviewIcon {
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+    .courierReportsSummary-overviewContent > span {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-overviewContent strong {
+        font-size: 21px;
+    }
+
+    .courierReportsSummary-overviewContent p {
+        font-size: 9px;
+    }
+
+    .courierReportsSummary-overviewRate {
+        min-width: 52px;
+
+        padding-left: 9px;
+    }
+
+    .courierReportsSummary-overviewRate strong {
+        font-size: 16px;
+    }
+
+    .courierReportsSummary-overviewRate span {
+        font-size: 8px;
+    }
+
+
+    /* ======================================================
+       RESOLUTION
+    ====================================================== */
+
+    .courierReportsSummary-resolution {
+        padding:
+            11px;
+    }
+
+    .courierReportsSummary-resolutionHeader {
+        align-items: flex-start;
+    }
+
+    .courierReportsSummary-resolutionHeader > div:first-child {
+        gap: 7px;
+    }
+
+    .courierReportsSummary-resolutionHeader > div:first-child span {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-resolutionHeader > div:first-child strong {
+        font-size: 16px;
+    }
+
+    .courierReportsSummary-resolutionCounts {
+        font-size: 8px;
+    }
+
+
+    /* ======================================================
+       STATUS
+    ====================================================== */
+
+    .courierReportsSummary-sectionTitle h3 {
+        font-size: 13px;
+    }
+
+    .courierReportsSummary-sectionTitle span {
+        font-size: 9px;
+    }
+
+    .courierReportsSummary-statusItem {
+        padding:
+            8px
+            9px;
+    }
+
+    .courierReportsSummary-statusIcon {
+        width: 29px;
+
+        height: 29px;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+    }
+
+    .courierReportsSummary-statusTop span {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-statusTop strong {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-statusPercentage {
+        width: 32px;
+
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       INSIGHT
+    ====================================================== */
+
+    .courierReportsSummary-insight {
+        padding:
+            9px
+            10px;
+    }
+
+    .courierReportsSummary-insightIcon {
+        width: 27px;
+
+        height: 27px;
+
+        border-radius: 7px;
+
+        font-size: 11px;
+    }
+
+    .courierReportsSummary-insight strong {
+        font-size: 10px;
+    }
+
+    .courierReportsSummary-insight p {
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsSummary {
+        padding: 10px;
+    }
+
+    .courierReportsSummary-header {
+        flex-direction: column;
+    }
+
+    .courierReportsSummary-totalBadge {
+        width: 100%;
+
+        align-items: flex-start;
+    }
+
+    .courierReportsSummary-overview {
+        flex-wrap: wrap;
+    }
+
+    .courierReportsSummary-overviewRate {
+        width: 100%;
+
+        flex-direction: row;
+
+        justify-content: space-between;
+
+        padding:
+            8px
+            0
+            0;
+
+        border-top: 1px solid #fed7aa;
+
+        border-left: none;
+    }
+
+    .courierReportsSummary-overviewRate span {
+        margin-top: 0;
+    }
+
+    .courierReportsSummary-resolutionHeader {
+        flex-direction: column;
+
+        gap: 7px;
+    }
+
+    .courierReportsSummary-resolutionCounts {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsSummary {
+        padding: 9px;
+    }
+
+    .courierReportsSummary-titleIcon {
+        width: 35px;
+
+        height: 35px;
+    }
+
+    .courierReportsSummary-header h2 {
+        font-size: 16px;
+    }
+
+    .courierReportsSummary-header p {
+        font-size: 9px;
+    }
+
+    .courierReportsSummary-overviewContent strong {
+        font-size: 20px;
+    }
+
+    .courierReportsSummary-statusTop span,
+    .courierReportsSummary-statusTop strong {
+        font-size: 9px;
+    }
+
+    .courierReportsSummary-insight p {
+        font-size: 8px;
+    }
+
+}

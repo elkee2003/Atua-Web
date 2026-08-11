@@ -4,19 +4,23 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DataStore } from "aws-amplify/datastore";
 
+import { getUrl } from "aws-amplify/storage";
+
 import {
   FaArrowLeft,
-  FaChartLine,
-  FaClipboardList,
   FaExclamationTriangle,
   FaFileAlt,
-  FaMapMarkedAlt,
-  FaMoneyBillWave,
   FaRedo,
   FaStar,
-  FaWallet,
   FaUserShield,
-  FaFlag,
+  FaPhone,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaBriefcase,
+  FaIdCard,
+  FaUserFriends,
+  FaCamera,
+  FaImage,
 } from "react-icons/fa";
 
 import {
@@ -35,15 +39,10 @@ import { getSignedUrl } from "../../../../../../../utils/s3";
 import { useAuthContext } from "../../../../../../../../Providers/ClientProvider/AuthProvider";
 
 import CourierProfileHeader from "./Components/CourierProfileHeader/CourierProfileHeader";
-
 import CourierProfileStats from "./Components/CourierProfileStats/CourierProfileStats";
-
 import CourierQuickActions from "./Components/CourierQuickActions/CourierQuickActions";
-
 import CourierInformation from "./Components/CourierInformation/CourierInformation";
-
 import CourierVehicle from "./Components/CourierVehicle/CourierVehicle";
-
 import CourierActivity from "./Components/CourierActivity/CourierActivity";
 
 import "./CourierFullProfile.css";
@@ -75,7 +74,17 @@ function CourierFullProfile() {
 
   const [courier, setCourier] = useState(null);
 
+  /*
+  ==========================================================
+  IMAGE URLS
+  ==========================================================
+  */
+
   const [profileUrl, setProfileUrl] = useState(null);
+
+  const [courierNINImageUrl, setCourierNINImageUrl] = useState(null);
+
+  const [guarantorNINImageUrl, setGuarantorNINImageUrl] = useState(null);
 
   /*
   ==========================================================
@@ -110,6 +119,89 @@ function CourierFullProfile() {
   const [error, setError] = useState(null);
 
   const [approvalLoading, setApprovalLoading] = useState(false);
+
+  /*
+  ==========================================================
+  IMAGE URL HELPER
+  ==========================================================
+  */
+
+  const resolveImageUrl = useCallback(async (imagePath) => {
+    if (!imagePath) {
+      return null;
+    }
+
+    try {
+      const pathValue =
+        typeof imagePath === "string" ? imagePath.trim() : imagePath;
+
+      if (!pathValue) {
+        return null;
+      }
+
+      /*
+          ----------------------------------------------------
+          ALREADY A URL
+          ----------------------------------------------------
+          */
+
+      if (
+        typeof pathValue === "string" &&
+        (pathValue.startsWith("http://") ||
+          pathValue.startsWith("https://") ||
+          pathValue.startsWith("blob:"))
+      ) {
+        return pathValue;
+      }
+
+      /*
+          ----------------------------------------------------
+          AMPLIFY STORAGE
+          ----------------------------------------------------
+          */
+
+      try {
+        const result = await getUrl({
+          path: pathValue,
+
+          options: {
+            validateObjectExistence: true,
+          },
+        });
+
+        if (result?.url) {
+          return result.url.toString();
+        }
+      } catch (storageError) {
+        console.warn(
+          "Amplify Storage getUrl failed. Trying S3 helper:",
+          storageError,
+        );
+      }
+
+      /*
+          ----------------------------------------------------
+          CUSTOM S3 FALLBACK
+          ----------------------------------------------------
+          */
+
+      try {
+        const signedUrl = await getSignedUrl(pathValue);
+
+        if (signedUrl) {
+          return signedUrl.toString();
+        }
+      } catch (signedUrlError) {
+        console.error("Custom S3 image URL resolution failed:", signedUrlError);
+      }
+
+      return null;
+    } catch (imageError) {
+      console.error("Failed to resolve image:", imageError);
+
+      return null;
+    }
+  }, []);
 
   /*
   ==========================================================
@@ -155,19 +247,47 @@ function CourierFullProfile() {
           ----------------------------------------------------
           */
 
-      if (courierData.profilePic) {
-        try {
-          const signedUrl = await getSignedUrl(courierData.profilePic);
+      const resolvedProfileUrl = await resolveImageUrl(courierData.profilePic);
 
-          setProfileUrl(signedUrl || null);
-        } catch (imageError) {
-          console.error("Failed to load courier profile image:", imageError);
+      setProfileUrl(resolvedProfileUrl);
 
-          setProfileUrl(null);
-        }
-      } else {
-        setProfileUrl(null);
-      }
+      /*
+          ----------------------------------------------------
+          COURIER NIN IMAGE
+          ----------------------------------------------------
+
+          IMPORTANT:
+          The schema field is courierNINImage.
+          ----------------------------------------------------
+          */
+
+      const courierNINPath =
+        courierData.courierNINImage ||
+        courierData.ninImage ||
+        courierData.NINImage ||
+        courierData.ninPhoto ||
+        courierData.NINPhoto ||
+        null;
+
+      const resolvedCourierNINUrl = await resolveImageUrl(courierNINPath);
+
+      setCourierNINImageUrl(resolvedCourierNINUrl);
+
+      /*
+          ----------------------------------------------------
+          GUARANTOR NIN IMAGE
+          ----------------------------------------------------
+          */
+
+      const guarantorNINPath =
+        courierData.guarantorNINImage ||
+        courierData.guarantorNINPhoto ||
+        courierData.guarantorNinImage ||
+        null;
+
+      const resolvedGuarantorNINUrl = await resolveImageUrl(guarantorNINPath);
+
+      setGuarantorNINImageUrl(resolvedGuarantorNINUrl);
 
       /*
           ====================================================
@@ -200,12 +320,6 @@ function CourierFullProfile() {
           payout.courierID.eq(courierData.id),
         ),
       ]);
-
-      /*
-          ====================================================
-          SET RELATED DATA
-          ====================================================
-          */
 
       setOrders(courierOrders || []);
 
@@ -287,7 +401,7 @@ function CourierFullProfile() {
 
       setRefreshing(false);
     }
-  }, [id]);
+  }, [id, resolveImageUrl]);
 
   /*
   ==========================================================
@@ -314,6 +428,44 @@ function CourierFullProfile() {
       ({ opType, element }) => {
         if (["INSERT", "UPDATE"].includes(opType) && element) {
           setCourier(element);
+
+          /*
+              ------------------------------------------------
+              PROFILE IMAGE
+              ------------------------------------------------
+              */
+
+          resolveImageUrl(element.profilePic).then(setProfileUrl);
+
+          /*
+              ------------------------------------------------
+              COURIER NIN IMAGE
+              ------------------------------------------------
+              */
+
+          const courierNINPath =
+            element.courierNINImage ||
+            element.ninImage ||
+            element.NINImage ||
+            element.ninPhoto ||
+            element.NINPhoto ||
+            null;
+
+          resolveImageUrl(courierNINPath).then(setCourierNINImageUrl);
+
+          /*
+              ------------------------------------------------
+              GUARANTOR NIN IMAGE
+              ------------------------------------------------
+              */
+
+          const guarantorNINPath =
+            element.guarantorNINImage ||
+            element.guarantorNINPhoto ||
+            element.guarantorNinImage ||
+            null;
+
+          resolveImageUrl(guarantorNINPath).then(setGuarantorNINImageUrl);
         }
       },
     );
@@ -321,7 +473,7 @@ function CourierFullProfile() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [id]);
+  }, [id, resolveImageUrl]);
 
   /*
   ==========================================================
@@ -364,7 +516,7 @@ function CourierFullProfile() {
 
         /*
               ------------------------------------------------
-              UNAPPROVING MUST FORCE OFFLINE
+              UNAPPROVING FORCES OFFLINE
               ------------------------------------------------
               */
 
@@ -423,10 +575,10 @@ function CourierFullProfile() {
     ).length;
 
     /*
-      --------------------------------------------------------
-      EARNINGS
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        EARNINGS
+        ------------------------------------------------------
+        */
 
     const totalEarnings = orders.reduce(
       (total, order) => total + Number(order.courierEarnings || 0),
@@ -437,37 +589,37 @@ function CourierFullProfile() {
       deliveredOrders > 0 ? totalEarnings / deliveredOrders : 0;
 
     /*
-      --------------------------------------------------------
-      COMPLETION
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        COMPLETION
+        ------------------------------------------------------
+        */
 
     const completionRate =
       totalOrders > 0 ? (deliveredOrders / totalOrders) * 100 : 0;
 
     /*
-      --------------------------------------------------------
-      REVIEWS
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        REVIEWS
+        ------------------------------------------------------
+        */
 
     const rating = Number(courier?.averageRating || 0);
 
     const reviewCount = Number(courier?.reviewCount || reviews.length || 0);
 
     /*
-      --------------------------------------------------------
-      REPORTS
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        REPORTS
+        ------------------------------------------------------
+        */
 
     const reportCount = Number(courier?.totalReports || reports.length || 0);
 
     /*
-      --------------------------------------------------------
-      OFFERS
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        OFFERS
+        ------------------------------------------------------
+        */
 
     const acceptedOffers = offers.filter(
       (offer) => offer.status === "ACCEPTED",
@@ -482,10 +634,10 @@ function CourierFullProfile() {
     ).length;
 
     /*
-      --------------------------------------------------------
-      PAYOUTS
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        PAYOUTS
+        ------------------------------------------------------
+        */
 
     const totalPayouts = payouts.reduce(
       (total, payout) => total + Number(payout.amount || 0),
@@ -497,10 +649,10 @@ function CourierFullProfile() {
       .reduce((total, payout) => total + Number(payout.amount || 0), 0);
 
     /*
-      --------------------------------------------------------
-      WALLET
-      --------------------------------------------------------
-      */
+        ------------------------------------------------------
+        WALLET
+        ------------------------------------------------------
+        */
 
     const totalCredits = transactions
       .filter((transaction) => transaction.type === "CREDIT")
@@ -518,43 +670,24 @@ function CourierFullProfile() {
 
     return {
       totalOrders,
-
       deliveredOrders,
-
       cancelledOrders,
-
       disputedOrders,
-
       activeOrders,
-
       totalEarnings,
-
       averageOrderValue,
-
       completionRate,
-
       rating,
-
       reviewCount,
-
       reportCount,
-
       totalOffers: offers.length,
-
       acceptedOffers,
-
       rejectedOffers,
-
       activeOffers,
-
       totalPayouts,
-
       completedPayouts,
-
       totalCredits,
-
       totalDebits,
-
       walletBalance: wallet?.balance ?? totalCredits - totalDebits,
     };
   }, [
@@ -622,23 +755,23 @@ function CourierFullProfile() {
             <div className="courierFullProfile-loadingLines">
               <div
                 className="
-                courierFullProfile-skeletonLine
-                courierFullProfile-skeletonLineLarge
-              "
+                  courierFullProfile-skeletonLine
+                  courierFullProfile-skeletonLineLarge
+                "
               />
 
               <div
                 className="
-                courierFullProfile-skeletonLine
-                courierFullProfile-skeletonLineMedium
-              "
+                  courierFullProfile-skeletonLine
+                  courierFullProfile-skeletonLineMedium
+                "
               />
 
               <div
                 className="
-                courierFullProfile-skeletonLine
-                courierFullProfile-skeletonLineSmall
-              "
+                  courierFullProfile-skeletonLine
+                  courierFullProfile-skeletonLineSmall
+                "
               />
             </div>
           </div>
@@ -680,9 +813,7 @@ function CourierFullProfile() {
           <div className="courierFullProfile-errorActions">
             <button
               type="button"
-              className="
-                courierFullProfile-secondaryButton
-              "
+              className="courierFullProfile-secondaryButton"
               onClick={() => navigate("/admin/courier_dashboard")}
             >
               <FaArrowLeft />
@@ -692,9 +823,7 @@ function CourierFullProfile() {
 
             <button
               type="button"
-              className="
-                courierFullProfile-primaryButton
-              "
+              className="courierFullProfile-primaryButton"
               onClick={handleRefresh}
             >
               <FaRedo />
@@ -706,6 +835,44 @@ function CourierFullProfile() {
       </div>
     );
   }
+
+  /*
+  ==========================================================
+  GUARANTOR HELPERS
+  ==========================================================
+  */
+
+  const guarantorFullName = [courier.guarantorName, courier.guarantorLastName]
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  const hasGuarantorInformation = Boolean(
+    guarantorFullName ||
+    courier.guarantorProfession ||
+    courier.guarantorNumber ||
+    courier.guarantorRelationship ||
+    courier.guarantorAddress ||
+    courier.guarantorEmail ||
+    courier.guarantorNIN ||
+    guarantorNINImageUrl,
+  );
+
+  /*
+  ==========================================================
+  COURIER NIN
+  ==========================================================
+  */
+
+  const courierNIN =
+    courier.courierNIN ||
+    courier.nin ||
+    courier.NIN ||
+    courier.ninNumber ||
+    courier.NINNumber ||
+    courier.ninID ||
+    courier.ninId ||
+    null;
 
   /*
   ==========================================================
@@ -732,9 +899,7 @@ function CourierFullProfile() {
 
         <button
           type="button"
-          className="
-            courierFullProfile-refreshButton
-          "
+          className="courierFullProfile-refreshButton"
           onClick={handleRefresh}
           disabled={refreshing}
         >
@@ -776,6 +941,10 @@ function CourierFullProfile() {
         wallet={wallet}
       />
 
+      {/* ==================================================
+          QUICK ACTIONS
+      ================================================== */}
+
       <CourierQuickActions
         courier={courier}
         stats={courierStats}
@@ -800,6 +969,332 @@ function CourierFullProfile() {
 
         <div className="courierFullProfile-mainColumn">
           <CourierInformation courier={courier} />
+
+          {/* ==================================================
+              COURIER IDENTITY DOCUMENTS
+          ================================================== */}
+
+          <section className="courierFullProfile-identityDocuments">
+            <div className="courierFullProfile-sectionHeader">
+              <div className="courierFullProfile-sectionHeaderIcon">
+                <FaIdCard />
+              </div>
+
+              <div>
+                <h2>Courier Identity</h2>
+
+                <p>Courier identification and NIN information.</p>
+              </div>
+            </div>
+
+            <div className="courierFullProfile-identityDocumentGrid">
+              {/* ==================================================
+                  COURIER NIN NUMBER
+              ================================================== */}
+
+              <div className="courierFullProfile-ninDetails">
+                <div className="courierFullProfile-detailItem">
+                  <div className="courierFullProfile-detailIcon">
+                    <FaIdCard />
+                  </div>
+
+                  <div>
+                    <span>NIN Number</span>
+
+                    <strong>{courierNIN || "Not provided"}</strong>
+                  </div>
+                </div>
+
+                <div className="courierFullProfile-detailItem">
+                  <div className="courierFullProfile-detailIcon">
+                    <FaUserFriends />
+                  </div>
+
+                  <div>
+                    <span>Identification Status</span>
+
+                    <strong
+                      className={
+                        courierNIN
+                          ? "courierFullProfile-documentAvailable"
+                          : "courierFullProfile-documentMissing"
+                      }
+                    >
+                      {courierNIN ? "NIN Provided" : "NIN Not Provided"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* ==================================================
+                  COURIER NIN PHOTO
+              ================================================== */}
+
+              <div className="courierFullProfile-documentPhotoCard">
+                <div className="courierFullProfile-documentPhotoHeader">
+                  <div>
+                    <span>Courier NIN Photo</span>
+
+                    <strong>
+                      {courierNINImageUrl
+                        ? "NIN document uploaded"
+                        : "No NIN photo uploaded"}
+                    </strong>
+                  </div>
+
+                  <FaCamera />
+                </div>
+
+                <div className="courierFullProfile-documentPhoto">
+                  {courierNINImageUrl ? (
+                    <img
+                      src={courierNINImageUrl}
+                      alt="Courier NIN document"
+                      onError={() => setCourierNINImageUrl(null)}
+                    />
+                  ) : (
+                    <div className="courierFullProfile-noPhoto">
+                      <div className="courierFullProfile-noPhotoIcon">
+                        <FaImage />
+                      </div>
+
+                      <strong>No Photo</strong>
+
+                      <span>Courier NIN photo not available</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ==================================================
+              GUARANTOR INFORMATION
+          ================================================== */}
+
+          <section className="courierFullProfile-guarantorCard">
+            <div className="courierFullProfile-sectionHeader">
+              <div className="courierFullProfile-sectionHeaderIcon">
+                <FaUserShield />
+              </div>
+
+              <div>
+                <h2>Guarantor Information</h2>
+
+                <p>Registered guarantor details for this courier.</p>
+              </div>
+            </div>
+
+            {hasGuarantorInformation ? (
+              <div className="courierFullProfile-guarantorContent">
+                {/* ==================================================
+                    GUARANTOR IDENTITY
+                ================================================== */}
+
+                <div className="courierFullProfile-guarantorIdentity">
+                  <div className="courierFullProfile-guarantorAvatar">
+                    {guarantorFullName
+                      ? guarantorFullName
+                          .split(" ")
+                          .map((part) => part.charAt(0))
+                          .join("")
+                          .slice(0, 2)
+                          .toUpperCase()
+                      : "G"}
+                  </div>
+
+                  <div>
+                    <span>Guarantor</span>
+
+                    <strong>{guarantorFullName || "Name not provided"}</strong>
+                  </div>
+                </div>
+
+                {/* ==================================================
+                    GUARANTOR DETAILS
+                ================================================== */}
+
+                <div className="courierFullProfile-guarantorGrid">
+                  {/* RELATIONSHIP */}
+
+                  <div className="courierFullProfile-detailItem">
+                    <div className="courierFullProfile-detailIcon">
+                      <FaUserFriends />
+                    </div>
+
+                    <div>
+                      <span>Relationship</span>
+
+                      <strong>
+                        {courier.guarantorRelationship || "Not provided"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* PROFESSION */}
+
+                  <div className="courierFullProfile-detailItem">
+                    <div className="courierFullProfile-detailIcon">
+                      <FaBriefcase />
+                    </div>
+
+                    <div>
+                      <span>Profession</span>
+
+                      <strong>
+                        {courier.guarantorProfession || "Not provided"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* PHONE */}
+
+                  <div className="courierFullProfile-detailItem">
+                    <div className="courierFullProfile-detailIcon">
+                      <FaPhone />
+                    </div>
+
+                    <div>
+                      <span>Phone Number</span>
+
+                      <strong>
+                        {courier.guarantorNumber || "Not provided"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* EMAIL */}
+
+                  <div className="courierFullProfile-detailItem">
+                    <div className="courierFullProfile-detailIcon">
+                      <FaEnvelope />
+                    </div>
+
+                    <div>
+                      <span>Email</span>
+
+                      <strong>
+                        {courier.guarantorEmail || "Not provided"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* ADDRESS */}
+
+                  <div
+                    className="
+                      courierFullProfile-detailItem
+                      courierFullProfile-detailItemWide
+                    "
+                  >
+                    <div className="courierFullProfile-detailIcon">
+                      <FaMapMarkerAlt />
+                    </div>
+
+                    <div>
+                      <span>Address</span>
+
+                      <strong>
+                        {courier.guarantorAddress || "Not provided"}
+                      </strong>
+                    </div>
+                  </div>
+
+                  {/* GUARANTOR NIN */}
+
+                  <div className="courierFullProfile-detailItem">
+                    <div className="courierFullProfile-detailIcon">
+                      <FaIdCard />
+                    </div>
+
+                    <div>
+                      <span>NIN Number</span>
+
+                      <strong>{courier.guarantorNIN || "Not provided"}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* ==================================================
+                    GUARANTOR NIN PHOTO
+                ================================================== */}
+
+                <div className="courierFullProfile-guarantorNINPhotoSection">
+                  <div className="courierFullProfile-documentPhotoHeader">
+                    <div>
+                      <span>Guarantor NIN Photo</span>
+
+                      <strong>
+                        {guarantorNINImageUrl
+                          ? "NIN document uploaded"
+                          : "No NIN photo uploaded"}
+                      </strong>
+                    </div>
+
+                    <FaCamera />
+                  </div>
+
+                  <div className="courierFullProfile-documentPhoto">
+                    {guarantorNINImageUrl ? (
+                      <img
+                        src={guarantorNINImageUrl}
+                        alt="Guarantor NIN document"
+                        onError={() => setGuarantorNINImageUrl(null)}
+                      />
+                    ) : (
+                      <div className="courierFullProfile-noPhoto">
+                        <div className="courierFullProfile-noPhotoIcon">
+                          <FaImage />
+                        </div>
+
+                        <strong>No Photo</strong>
+
+                        <span>Guarantor NIN photo not available</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* ==================================================
+                    DOCUMENT ACTION
+                ================================================== */}
+
+                <div className="courierFullProfile-guarantorFooter">
+                  <div>
+                    <FaFileAlt />
+
+                    <span>
+                      {guarantorNINImageUrl
+                        ? "Guarantor NIN document available"
+                        : "Guarantor NIN document unavailable"}
+                    </span>
+                  </div>
+
+                  <button type="button" onClick={goToDocuments}>
+                    View Documents
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="courierFullProfile-guarantorEmpty">
+                <div className="courierFullProfile-guarantorEmptyIcon">
+                  <FaUserShield />
+                </div>
+
+                <div>
+                  <strong>No guarantor information</strong>
+
+                  <span>
+                    No guarantor details have been registered for this courier.
+                  </span>
+                </div>
+              </div>
+            )}
+          </section>
+
+          {/* ==================================================
+              VEHICLE INFORMATION
+          ================================================== */}
 
           <CourierVehicle courier={courier} />
         </div>
@@ -898,6 +1393,54 @@ function CourierFullProfile() {
                 </strong>
               </div>
             </div>
+          </section>
+
+          {/* ==================================================
+              DOCUMENT STATUS
+          ================================================== */}
+
+          <section className="courierFullProfile-documentStatusCard">
+            <div className="courierFullProfile-documentStatusIcon">
+              <FaFileAlt />
+            </div>
+
+            <div className="courierFullProfile-documentStatusContent">
+              <strong>Courier Documents</strong>
+
+              <span>
+                {courierNINImageUrl
+                  ? "Courier NIN photo available"
+                  : "Courier NIN photo not uploaded"}
+              </span>
+            </div>
+
+            <button type="button" onClick={goToDocuments}>
+              View
+            </button>
+          </section>
+
+          {/* ==================================================
+              GUARANTOR DOCUMENT STATUS
+          ================================================== */}
+
+          <section className="courierFullProfile-documentStatusCard">
+            <div className="courierFullProfile-documentStatusIcon">
+              <FaUserShield />
+            </div>
+
+            <div className="courierFullProfile-documentStatusContent">
+              <strong>Guarantor Documents</strong>
+
+              <span>
+                {guarantorNINImageUrl
+                  ? "Guarantor NIN photo available"
+                  : "Guarantor NIN photo not uploaded"}
+              </span>
+            </div>
+
+            <button type="button" onClick={goToDocuments}>
+              View
+            </button>
           </section>
         </aside>
       </div>

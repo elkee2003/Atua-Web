@@ -1,0 +1,493 @@
+/* ==========================================================
+   COURIER REVIEWS
+========================================================== */
+
+.courierReviews {
+    width: 100%;
+
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   SECTIONS
+========================================================== */
+
+.courierReviews-statsSection {
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+.courierReviews-summarySection {
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+.courierReviews-searchSection {
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+.courierReviews-filterSection {
+    width: 100%;
+
+    margin-top: 12px;
+}
+
+.courierReviews-listSection {
+    width: 100%;
+
+    margin-top: 14px;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierReviews-error {
+    width: 100%;
+
+    min-height: 420px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 35px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   ERROR ICON
+========================================================== */
+
+.courierReviews-errorIcon {
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 15px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 22px;
+}
+
+
+/* ==========================================================
+   ERROR TITLE
+========================================================== */
+
+.courierReviews-error h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   ERROR DESCRIPTION
+========================================================== */
+
+.courierReviews-error p {
+    max-width: 480px;
+
+    margin: 8px 0 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 1.7;
+}
+
+
+/* ==========================================================
+   ERROR ACTIONS
+========================================================== */
+
+.courierReviews-errorActions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+
+    margin-top: 20px;
+}
+
+
+/* ==========================================================
+   ERROR BUTTONS
+========================================================== */
+
+.courierReviews-errorBackButton,
+.courierReviews-errorRetryButton {
+    min-height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        14px;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* ==========================================================
+   BACK
+========================================================== */
+
+.courierReviews-errorBackButton {
+    border: 1px solid #dbe2ea;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+.courierReviews-errorBackButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   RETRY
+========================================================== */
+
+.courierReviews-errorRetryButton {
+    border: 1px solid #475569;
+
+    background: #475569;
+
+    color: #ffffff;
+}
+
+.courierReviews-errorRetryButton:hover {
+    border-color: #334155;
+
+    background: #334155;
+
+    box-shadow:
+        0 3px 9px rgba(
+            15,
+            23,
+            42,
+            0.12
+        );
+}
+
+
+/* ==========================================================
+   BUTTON ICONS
+========================================================== */
+
+.courierReviews-errorBackButton svg,
+.courierReviews-errorRetryButton svg {
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierReviews {
+        padding: 15px;
+    }
+
+    .courierReviews-statsSection,
+    .courierReviews-summarySection,
+    .courierReviews-searchSection,
+    .courierReviews-listSection {
+        margin-top: 13px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviews {
+        padding: 13px;
+    }
+
+    .courierReviews-filterSection {
+        margin-top: 10px;
+    }
+
+    .courierReviews-error {
+        min-height: 360px;
+
+        padding: 28px;
+    }
+
+    .courierReviews-error h2 {
+        font-size: 20px;
+    }
+
+    .courierReviews-error p {
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviews {
+        padding: 10px;
+    }
+
+
+    .courierReviews-statsSection,
+    .courierReviews-summarySection,
+    .courierReviews-searchSection,
+    .courierReviews-filterSection,
+    .courierReviews-listSection {
+        margin-top: 10px;
+    }
+
+
+    /* ======================================================
+       ERROR
+    ====================================================== */
+
+    .courierReviews-error {
+        min-height: 300px;
+
+        padding: 22px;
+
+        border-radius: 10px;
+    }
+
+    .courierReviews-errorIcon {
+        width: 50px;
+
+        height: 50px;
+
+        margin-bottom: 12px;
+
+        border-radius: 13px;
+
+        font-size: 19px;
+    }
+
+    .courierReviews-error h2 {
+        font-size: 18px;
+    }
+
+    .courierReviews-error p {
+        max-width: 360px;
+
+        margin-top: 7px;
+
+        font-size: 11px;
+
+        line-height: 1.65;
+    }
+
+
+    /* ======================================================
+       ACTIONS
+    ====================================================== */
+
+    .courierReviews-errorActions {
+        width: 100%;
+
+        margin-top: 16px;
+    }
+
+    .courierReviews-errorBackButton,
+    .courierReviews-errorRetryButton {
+        min-height: 38px;
+
+        padding:
+            0
+            12px;
+
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviews {
+        padding: 8px;
+    }
+
+    .courierReviews-error {
+        min-height: 270px;
+
+        padding: 19px;
+    }
+
+    .courierReviews-errorIcon {
+        width: 46px;
+
+        height: 46px;
+
+        font-size: 17px;
+    }
+
+    .courierReviews-error h2 {
+        font-size: 17px;
+    }
+
+    .courierReviews-error p {
+        font-size: 10px;
+    }
+
+    .courierReviews-errorBackButton,
+    .courierReviews-errorRetryButton {
+        min-height: 36px;
+
+        padding:
+            0
+            10px;
+
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviews {
+        padding: 7px;
+    }
+
+    .courierReviews-error {
+        min-height: 240px;
+
+        padding: 16px;
+    }
+
+    .courierReviews-errorIcon {
+        width: 42px;
+
+        height: 42px;
+
+        margin-bottom: 10px;
+
+        font-size: 15px;
+    }
+
+    .courierReviews-error h2 {
+        font-size: 16px;
+    }
+
+    .courierReviews-error p {
+        font-size: 9px;
+
+        line-height: 1.6;
+    }
+
+    .courierReviews-errorBackButton,
+    .courierReviews-errorRetryButton {
+        min-height: 34px;
+
+        padding:
+            0
+            9px;
+
+        font-size: 9px;
+    }
+
+}

@@ -1,48 +1,125 @@
-import React from "react";
-import { FaArrowLeft, FaRedo, FaMapMarkerAlt, FaCircle } from "react-icons/fa";
+import React, { useState } from "react";
+
+import {
+  FaArrowLeft,
+  FaRedo,
+  FaMapMarkerAlt,
+  FaCircle,
+  FaCheckCircle,
+} from "react-icons/fa";
 
 import "./TrackingHeader.css";
 
-function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
+function TrackingHeader({
+  courier,
+  profileUrl,
+  position,
+  refreshing = false,
+  onBack,
+  onRefresh,
+  onViewProfile,
+}) {
   /*
-    ==========================================================
-    COURIER NAME
-    ==========================================================
-    */
+  ==========================================================
+  COURIER NAME
+  ==========================================================
+  */
 
   const courierName =
     [courier?.firstName, courier?.lastName].filter(Boolean).join(" ") ||
     "Courier";
 
   /*
-    ==========================================================
-    COURIER STATUS
-    ==========================================================
-    */
+  ==========================================================
+  INITIALS
+  ==========================================================
+  */
+
+  const firstInitial = courier?.firstName?.charAt(0)?.toUpperCase() || "";
+
+  const lastInitial = courier?.lastName?.charAt(0)?.toUpperCase() || "";
+
+  const courierInitials = `${firstInitial}${lastInitial}` || "C";
+
+  /*
+  ==========================================================
+  COURIER STATUS
+  ==========================================================
+  */
 
   const isOnline = Boolean(courier?.isOnline);
 
   const isApproved = Boolean(courier?.isApproved);
 
   /*
-    ==========================================================
-    TRANSPORTATION TYPE
-    ==========================================================
-    */
+  ==========================================================
+  TRANSPORTATION TYPE
+  ==========================================================
+  */
 
-  const transportationType = courier?.transportationType || "Courier";
+  const transportationType =
+    courier?.transportationType || courier?.vehicleClass || "Courier";
 
   /*
-    ==========================================================
-    RENDER
-    ==========================================================
-    */
+  ==========================================================
+  IMAGE ERROR
+  ==========================================================
+  
+  If the signed URL expires or the image cannot be loaded,
+  we automatically show the courier initials instead.
+  
+  ==========================================================
+  */
+
+  const [imageError, setImageError] = useState(false);
+
+  /*
+  ==========================================================
+  IMAGE LOADED
+  ==========================================================
+  */
+
+  const handleImageLoad = () => {
+    setImageError(false);
+  };
+
+  /*
+  ==========================================================
+  IMAGE ERROR
+  ==========================================================
+  */
+
+  const handleImageError = () => {
+    console.error("Unable to display courier profile image:", profileUrl);
+
+    setImageError(true);
+  };
+
+  /*
+  ==========================================================
+  VIEW PROFILE
+  ==========================================================
+  */
+
+  const handleProfileClick = () => {
+    if (!onViewProfile) {
+      return;
+    }
+
+    onViewProfile();
+  };
+
+  /*
+  ==========================================================
+  RENDER
+  ==========================================================
+  */
 
   return (
     <div className="trackingHeader">
       {/* =================================================
-                LEFT SECTION
-            ================================================= */}
+          LEFT SECTION
+      ================================================= */}
 
       <div className="trackingHeader-left">
         {/* BACK BUTTON */}
@@ -52,6 +129,7 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
           className="trackingHeader-backButton"
           onClick={onBack}
           aria-label="Back to courier profile"
+          title="Back"
         >
           <FaArrowLeft />
 
@@ -62,7 +140,38 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
 
         <div className="trackingHeader-divider" />
 
-        {/* TITLE / COURIER INFORMATION */}
+        {/* =================================================
+            COURIER PROFILE IMAGE
+        ================================================= */}
+
+        <button
+          type="button"
+          className="trackingHeader-profile"
+          onClick={handleProfileClick}
+          disabled={!onViewProfile}
+          aria-label={`View ${courierName} profile`}
+          title={`View ${courierName} profile`}
+        >
+          <div className="trackingHeader-avatar">
+            {profileUrl && !imageError ? (
+              <img
+                src={profileUrl}
+                alt={courierName}
+                className="trackingHeader-avatarImage"
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+              />
+            ) : (
+              <span className="trackingHeader-avatarInitials">
+                {courierInitials}
+              </span>
+            )}
+          </div>
+        </button>
+
+        {/* =================================================
+            TITLE / COURIER INFORMATION
+        ================================================= */}
 
         <div className="trackingHeader-content">
           {/* TITLE */}
@@ -83,9 +192,10 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
             {/* ONLINE STATUS */}
 
             <span
-              className={`trackingHeader-onlineStatus ${
-                isOnline ? "trackingHeader-online" : "trackingHeader-offline"
-              }`}
+              className={`
+                trackingHeader-onlineStatus
+                ${isOnline ? "trackingHeader-online" : "trackingHeader-offline"}
+              `}
             >
               <FaCircle />
 
@@ -101,12 +211,17 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
             {/* APPROVAL STATUS */}
 
             <span
-              className={`trackingHeader-approvalStatus ${
-                isApproved
-                  ? "trackingHeader-approved"
-                  : "trackingHeader-pending"
-              }`}
+              className={`
+                trackingHeader-approvalStatus
+                ${
+                  isApproved
+                    ? "trackingHeader-approved"
+                    : "trackingHeader-pending"
+                }
+              `}
             >
+              {isApproved && <FaCheckCircle />}
+
               {isApproved ? "Approved" : "Pending Approval"}
             </span>
           </div>
@@ -114,8 +229,8 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
       </div>
 
       {/* =================================================
-                RIGHT SECTION
-            ================================================= */}
+          RIGHT SECTION
+      ================================================= */}
 
       <div className="trackingHeader-right">
         <button
@@ -124,11 +239,15 @@ function TrackingHeader({ courier, refreshing = false, onBack, onRefresh }) {
           onClick={onRefresh}
           disabled={refreshing}
           aria-label="Refresh courier tracking"
+          title="Refresh"
         >
           <FaRedo
             className={
               refreshing
-                ? "trackingHeader-refreshIcon trackingHeader-refreshSpinning"
+                ? `
+                    trackingHeader-refreshIcon
+                    trackingHeader-refreshSpinning
+                  `
                 : "trackingHeader-refreshIcon"
             }
           />

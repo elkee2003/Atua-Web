@@ -1,0 +1,946 @@
+/* ==========================================================
+   COURIER REVIEWS SUMMARY
+========================================================== */
+
+.courierReviewsSummary {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 18px;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReviewsSummary-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 20px;
+}
+
+.courierReviewsSummary-headerIcon {
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 17px;
+}
+
+.courierReviewsSummary-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReviewsSummary-header p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierReviewsSummary-content {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.25fr)
+        minmax(300px, 0.75fr);
+
+    gap: 18px;
+}
+
+
+/* ==========================================================
+   BREAKDOWN
+========================================================== */
+
+.courierReviewsSummary-breakdown {
+    min-width: 0;
+
+    padding: 17px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 11px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   BREAKDOWN HEADER
+========================================================== */
+
+.courierReviewsSummary-breakdownHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+.courierReviewsSummary-breakdownHeader h3 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 15px;
+
+    font-weight: 750;
+}
+
+.courierReviewsSummary-breakdownHeader span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   RATING LIST
+========================================================== */
+
+.courierReviewsSummary-ratingList {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+}
+
+
+/* ==========================================================
+   RATING ROW
+========================================================== */
+
+.courierReviewsSummary-ratingRow {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        38px
+        minmax(0, 1fr)
+        75px;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   RATING LABEL
+========================================================== */
+
+.courierReviewsSummary-ratingLabel {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+}
+
+.courierReviewsSummary-ratingLabel strong {
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 750;
+}
+
+.courierReviewsSummary-ratingLabel svg {
+    color: #f59e0b;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   BAR
+========================================================== */
+
+.courierReviewsSummary-barContainer {
+    width: 100%;
+}
+
+.courierReviewsSummary-barTrack {
+    width: 100%;
+
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #e9eef3;
+}
+
+.courierReviewsSummary-barFill {
+    height: 100%;
+
+    min-width: 0;
+
+    border-radius: inherit;
+
+    transition:
+        width 0.4s ease;
+}
+
+
+/* ==========================================================
+   BAR COLORS BY RATING
+========================================================== */
+
+.courierReviewsSummary-barFill-5 {
+    background: #22c55e;
+}
+
+.courierReviewsSummary-barFill-4 {
+    background: #84cc16;
+}
+
+.courierReviewsSummary-barFill-3 {
+    background: #f59e0b;
+}
+
+.courierReviewsSummary-barFill-2 {
+    background: #f97316;
+}
+
+.courierReviewsSummary-barFill-1 {
+    background: #ef4444;
+}
+
+
+/* ==========================================================
+   RATING COUNT
+========================================================== */
+
+.courierReviewsSummary-ratingCount {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 5px;
+}
+
+.courierReviewsSummary-ratingCount strong {
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.courierReviewsSummary-ratingCount span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   QUALITY
+========================================================== */
+
+.courierReviewsSummary-quality {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   QUALITY HEADER
+========================================================== */
+
+.courierReviewsSummary-qualityHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.courierReviewsSummary-qualityHeader svg {
+    color: #16a34a;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   QUALITY RATING
+========================================================== */
+
+.courierReviewsSummary-qualityRating {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: baseline;
+
+    gap: 7px;
+
+    margin-top: 17px;
+}
+
+.courierReviewsSummary-qualityRating strong {
+    color: #334155;
+
+    font-size: 32px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.courierReviewsSummary-qualityRating > span {
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   QUALITY STARS
+========================================================== */
+
+.courierReviewsSummary-qualityStars {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 7px;
+}
+
+.courierReviewsSummary-qualityStars svg {
+    font-size: 16px;
+}
+
+.courierReviewsSummary-starFilled {
+    color: #f59e0b;
+}
+
+.courierReviewsSummary-starEmpty {
+    color: #dbe2ea;
+}
+
+
+/* ==========================================================
+   QUALITY STATUS
+========================================================== */
+
+.courierReviewsSummary-qualityStatus {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 18px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+.courierReviewsSummary-qualityStatus strong {
+    color: #334155;
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+.courierReviewsSummary-qualityStatus p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.65;
+}
+
+
+/* ==========================================================
+   SENTIMENT STATS
+========================================================== */
+
+.courierReviewsSummary-sentimentStats {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-top: auto;
+
+    padding-top: 18px;
+}
+
+.courierReviewsSummary-sentimentItem {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.courierReviewsSummary-sentimentItem span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.courierReviewsSummary-sentimentItem strong {
+    color: #475569;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+.courierReviewsSummary-sentimentDivider {
+    width: 1px;
+
+    height: 38px;
+
+    background: #e7ebf0;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierReviewsSummary-loading {
+    width: 100%;
+
+    min-height: 300px;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+}
+
+.courierReviewsSummary-loadingHeader {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-bottom: 25px;
+}
+
+.courierReviewsSummary-loadingIcon {
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsSummarySkeleton
+        1.4s infinite;
+}
+
+.courierReviewsSummary-loadingTitle {
+    width: 180px;
+
+    height: 18px;
+
+    border-radius: 7px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsSummarySkeleton
+        1.4s infinite;
+}
+
+.courierReviewsSummary-loadingBody {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+.courierReviewsSummary-loadingRow {
+    display: grid;
+
+    grid-template-columns:
+        40px
+        minmax(0, 1fr)
+        60px;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.courierReviewsSummary-loadingSmall {
+    width: 30px;
+
+    height: 13px;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsSummarySkeleton
+        1.4s infinite;
+}
+
+.courierReviewsSummary-loadingBar {
+    width: 100%;
+
+    height: 9px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsSummarySkeleton
+        1.4s infinite;
+}
+
+.courierReviewsSummary-loadingCount {
+    width: 55px;
+
+    height: 12px;
+
+    justify-self: end;
+
+    border-radius: 5px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReviewsSummarySkeleton
+        1.4s infinite;
+}
+
+@keyframes courierReviewsSummarySkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 950px) {
+
+    .courierReviewsSummary-content {
+        grid-template-columns: 1fr;
+    }
+
+    .courierReviewsSummary-quality {
+        min-height: 280px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviewsSummary {
+        padding: 16px;
+    }
+
+    .courierReviewsSummary-header h2 {
+        font-size: 18px;
+    }
+
+    .courierReviewsSummary-header p {
+        font-size: 11px;
+    }
+
+    .courierReviewsSummary-breakdown,
+    .courierReviewsSummary-quality {
+        padding: 15px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewsSummary {
+        margin-bottom: 14px;
+
+        padding: 14px;
+
+        border-radius: 11px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReviewsSummary-header {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        margin-bottom: 15px;
+    }
+
+    .courierReviewsSummary-headerIcon {
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierReviewsSummary-header h2 {
+        font-size: 17px;
+    }
+
+    .courierReviewsSummary-header p {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       BREAKDOWN
+    ====================================================== */
+
+    .courierReviewsSummary-breakdown,
+    .courierReviewsSummary-quality {
+        padding: 14px;
+
+        border-radius: 10px;
+    }
+
+    .courierReviewsSummary-breakdownHeader h3 {
+        font-size: 14px;
+    }
+
+    .courierReviewsSummary-breakdownHeader span {
+        font-size: 10px;
+    }
+
+    .courierReviewsSummary-ratingList {
+        gap: 13px;
+    }
+
+    .courierReviewsSummary-ratingRow {
+        grid-template-columns:
+            36px
+            minmax(0, 1fr)
+            68px;
+
+        gap: 8px;
+    }
+
+    .courierReviewsSummary-ratingLabel strong {
+        font-size: 12px;
+    }
+
+    .courierReviewsSummary-ratingLabel svg {
+        font-size: 10px;
+    }
+
+    .courierReviewsSummary-barTrack {
+        height: 8px;
+    }
+
+    .courierReviewsSummary-ratingCount strong {
+        font-size: 11px;
+    }
+
+    .courierReviewsSummary-ratingCount span {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       QUALITY
+    ====================================================== */
+
+    .courierReviewsSummary-quality {
+        min-height: 250px;
+    }
+
+    .courierReviewsSummary-qualityHeader {
+        font-size: 10px;
+    }
+
+    .courierReviewsSummary-qualityRating {
+        margin-top: 15px;
+    }
+
+    .courierReviewsSummary-qualityRating strong {
+        font-size: 30px;
+    }
+
+    .courierReviewsSummary-qualityStars svg {
+        font-size: 15px;
+    }
+
+    .courierReviewsSummary-qualityStatus strong {
+        font-size: 15px;
+    }
+
+    .courierReviewsSummary-qualityStatus p {
+        font-size: 10px;
+    }
+
+    .courierReviewsSummary-sentimentItem strong {
+        font-size: 18px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviewsSummary {
+        padding: 12px;
+    }
+
+    .courierReviewsSummary-header h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsSummary-header p {
+        font-size: 10px;
+    }
+
+    .courierReviewsSummary-ratingRow {
+        grid-template-columns:
+            34px
+            minmax(0, 1fr)
+            62px;
+
+        gap: 7px;
+    }
+
+    .courierReviewsSummary-qualityRating strong {
+        font-size: 28px;
+    }
+
+    .courierReviewsSummary-qualityStatus strong {
+        font-size: 14px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewsSummary {
+        padding: 10px;
+    }
+
+    .courierReviewsSummary-breakdown,
+    .courierReviewsSummary-quality {
+        padding: 11px;
+    }
+
+    .courierReviewsSummary-ratingRow {
+        grid-template-columns:
+            30px
+            minmax(0, 1fr)
+            57px;
+
+        gap: 6px;
+    }
+
+    .courierReviewsSummary-ratingCount {
+        gap: 3px;
+    }
+
+    .courierReviewsSummary-ratingCount span {
+        display: none;
+    }
+
+}

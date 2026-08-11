@@ -1,0 +1,1227 @@
+/* ==========================================================
+   COURIER VEHICLE DOCUMENTS
+========================================================== */
+
+.courierVehicleDocuments {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierVehicleDocuments-header {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 17px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #ffffff;
+}
+
+
+.courierVehicleDocuments-headerIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 18px;
+}
+
+
+.courierVehicleDocuments-headerContent {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.courierVehicleDocuments-headerContent h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierVehicleDocuments-headerContent p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierVehicleDocuments-status {
+    min-height: 28px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.courierVehicleDocuments-status svg {
+    font-size: 11px;
+}
+
+
+.courierVehicleDocuments-status.complete {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierVehicleDocuments-status.incomplete {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierVehicleDocuments-content {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+}
+
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.courierVehicleDocuments-information {
+    width: 100%;
+
+    margin-bottom: 15px;
+}
+
+
+/* ==========================================================
+   VEHICLE TYPE CARD
+========================================================== */
+
+.courierVehicleDocuments-typeCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+
+.courierVehicleDocuments-typeIcon {
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 19px;
+}
+
+
+.courierVehicleDocuments-typeContent {
+    min-width: 0;
+}
+
+
+.courierVehicleDocuments-typeContent span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+.courierVehicleDocuments-typeContent h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierVehicleDocuments-typeContent p {
+    margin: 3px 0 0;
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   DETAILS GRID
+========================================================== */
+
+.courierVehicleDocuments-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   DETAIL
+========================================================== */
+
+.courierVehicleDocuments-detail {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 58px;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+}
+
+
+.courierVehicleDocuments-detailIcon {
+    width: 30px;
+
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+.courierVehicleDocuments-detail > div:last-child {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierVehicleDocuments-detail span {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 650;
+}
+
+
+.courierVehicleDocuments-detail strong {
+    color: #475569;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierVehicleDocuments-detail strong.available {
+    color: #475569;
+}
+
+
+.courierVehicleDocuments-detail strong.missing {
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   VEHICLE DESCRIPTION
+========================================================== */
+
+.courierVehicleDocuments-description {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    margin-top: 8px;
+
+    padding: 11px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+
+.courierVehicleDocuments-descriptionIcon {
+    width: 29px;
+
+    height: 29px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 11px;
+}
+
+
+.courierVehicleDocuments-description > div:last-child {
+    min-width: 0;
+}
+
+
+.courierVehicleDocuments-description span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 650;
+}
+
+
+.courierVehicleDocuments-description p {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    line-height: 1.55;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   PHOTOS SECTION
+========================================================== */
+
+.courierVehicleDocuments-photosSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   PHOTOS HEADER
+========================================================== */
+
+.courierVehicleDocuments-photosHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #fafbfc;
+}
+
+
+.courierVehicleDocuments-photosHeader h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.courierVehicleDocuments-photosHeader p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   PHOTO COUNT
+========================================================== */
+
+.courierVehicleDocuments-photoCount {
+    min-width: 32px;
+
+    height: 28px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 0 8px;
+
+    box-sizing: border-box;
+
+    border-radius: 7px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.courierVehicleDocuments-photoCount svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   PHOTO CONTAINER
+========================================================== */
+
+.courierVehicleDocuments-photoContainer {
+    width: 100%;
+
+    min-height: 180px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   PHOTO GRID
+========================================================== */
+
+.courierVehicleDocuments-photoGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 9px;
+
+    padding: 13px;
+}
+
+
+/* ==========================================================
+   PHOTO CARD
+========================================================== */
+
+.courierVehicleDocuments-photoCard {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #f8fafc;
+
+    cursor: pointer;
+}
+
+
+.courierVehicleDocuments-photoCard img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.25s ease;
+}
+
+
+.courierVehicleDocuments-photoCard:hover img {
+    transform: scale(1.04);
+}
+
+
+/* ==========================================================
+   PHOTO OVERLAY
+========================================================== */
+
+.courierVehicleDocuments-photoOverlay {
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    bottom: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    min-height: 32px;
+
+    padding: 5px;
+
+    box-sizing: border-box;
+
+    background: rgba(15, 23, 42, 0.72);
+
+    color: #ffffff;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.2s ease;
+}
+
+
+.courierVehicleDocuments-photoCard:hover
+.courierVehicleDocuments-photoOverlay {
+    opacity: 1;
+}
+
+
+.courierVehicleDocuments-photoOverlay svg {
+    font-size: 9px;
+}
+
+
+.courierVehicleDocuments-photoOverlay span {
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   NO PHOTOS
+========================================================== */
+
+.courierVehicleDocuments-noPhotos {
+    width: 100%;
+
+    min-height: 180px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+
+.courierVehicleDocuments-noPhotosIcon {
+    width: 50px;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 9px;
+
+    border-radius: 12px;
+
+    background: #eef2f7;
+
+    color: #94a3b8;
+
+    font-size: 20px;
+}
+
+
+.courierVehicleDocuments-noPhotos h4 {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.courierVehicleDocuments-noPhotos p {
+    max-width: 330px;
+
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierVehicleDocuments-loading {
+    width: 100%;
+
+    min-height: 180px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.courierVehicleDocuments-spinner {
+    width: 28px;
+
+    height: 28px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #ea580c;
+
+    border-radius: 50%;
+
+    animation:
+        courierVehicleDocumentsSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+@keyframes courierVehicleDocumentsSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierVehicleDocuments-content {
+        padding: 14px;
+    }
+
+
+    .courierVehicleDocuments-photoGrid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierVehicleDocuments {
+        margin-bottom: 10px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierVehicleDocuments-header {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        padding: 13px;
+    }
+
+
+    .courierVehicleDocuments-headerIcon {
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 8px;
+
+        font-size: 15px;
+    }
+
+
+    .courierVehicleDocuments-headerContent h2 {
+        font-size: 15px;
+    }
+
+
+    .courierVehicleDocuments-headerContent p {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-status {
+        min-height: 24px;
+
+        padding: 0 7px;
+
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-content {
+        padding: 11px;
+    }
+
+
+    .courierVehicleDocuments-typeCard {
+        gap: 9px;
+
+        padding: 11px;
+
+        margin-bottom: 8px;
+    }
+
+
+    .courierVehicleDocuments-typeIcon {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+
+    .courierVehicleDocuments-typeContent span {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-typeContent h3 {
+        font-size: 13px;
+    }
+
+
+    .courierVehicleDocuments-typeContent p {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-details {
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+
+    .courierVehicleDocuments-detail {
+        min-height: 52px;
+
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-detailIcon {
+        width: 28px;
+
+        height: 28px;
+
+        font-size: 11px;
+    }
+
+
+    .courierVehicleDocuments-detail span {
+        font-size: 7px;
+    }
+
+
+    .courierVehicleDocuments-detail strong {
+        font-size: 9px;
+    }
+
+
+    .courierVehicleDocuments-description {
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-descriptionIcon {
+        width: 27px;
+
+        height: 27px;
+
+        font-size: 10px;
+    }
+
+
+    .courierVehicleDocuments-description span {
+        font-size: 7px;
+    }
+
+
+    .courierVehicleDocuments-description p {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-photosHeader {
+        padding: 11px;
+    }
+
+
+    .courierVehicleDocuments-photosHeader h3 {
+        font-size: 11px;
+    }
+
+
+    .courierVehicleDocuments-photosHeader p {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-photoGrid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 7px;
+
+        padding: 11px;
+    }
+
+
+    .courierVehicleDocuments-photoOverlay {
+        opacity: 1;
+
+        min-height: 26px;
+    }
+
+
+    .courierVehicleDocuments-photoOverlay span {
+        font-size: 7px;
+    }
+
+
+    .courierVehicleDocuments-noPhotos,
+    .courierVehicleDocuments-loading,
+    .courierVehicleDocuments-photoContainer {
+        min-height: 170px;
+    }
+
+
+    .courierVehicleDocuments-noPhotosIcon {
+        width: 44px;
+
+        height: 44px;
+
+        font-size: 17px;
+    }
+
+
+    .courierVehicleDocuments-noPhotos h4 {
+        font-size: 11px;
+    }
+
+
+    .courierVehicleDocuments-noPhotos p {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierVehicleDocuments-header {
+        padding: 11px;
+    }
+
+
+    .courierVehicleDocuments-headerIcon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierVehicleDocuments-headerContent h2 {
+        font-size: 14px;
+    }
+
+
+    .courierVehicleDocuments-headerContent p {
+        font-size: 7px;
+    }
+
+
+    .courierVehicleDocuments-status span {
+        display: none;
+    }
+
+
+    .courierVehicleDocuments-status {
+        width: 25px;
+
+        height: 25px;
+
+        padding: 0;
+    }
+
+
+    .courierVehicleDocuments-status svg {
+        font-size: 11px;
+    }
+
+
+    .courierVehicleDocuments-typeCard {
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-typeIcon {
+        width: 40px;
+
+        height: 40px;
+
+        font-size: 15px;
+    }
+
+
+    .courierVehicleDocuments-typeContent h3 {
+        font-size: 12px;
+    }
+
+
+    .courierVehicleDocuments-photoGrid {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+
+    .courierVehicleDocuments-photoCard {
+        aspect-ratio: 16 / 10;
+    }
+
+
+    .courierVehicleDocuments-photoOverlay {
+        min-height: 29px;
+    }
+
+
+    .courierVehicleDocuments-photoOverlay span {
+        font-size: 8px;
+    }
+
+
+    .courierVehicleDocuments-noPhotos,
+    .courierVehicleDocuments-loading,
+    .courierVehicleDocuments-photoContainer {
+        min-height: 160px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierVehicleDocuments-content {
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-header {
+        padding: 10px;
+    }
+
+
+    .courierVehicleDocuments-headerIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierVehicleDocuments-headerContent h2 {
+        font-size: 13px;
+    }
+
+
+    .courierVehicleDocuments-headerContent p {
+        font-size: 6.5px;
+    }
+
+
+    .courierVehicleDocuments-typeCard {
+        padding: 8px;
+    }
+
+
+    .courierVehicleDocuments-typeIcon {
+        width: 36px;
+
+        height: 36px;
+
+        font-size: 13px;
+    }
+
+
+    .courierVehicleDocuments-typeContent h3 {
+        font-size: 11px;
+    }
+
+
+    .courierVehicleDocuments-detail {
+        padding: 8px;
+    }
+
+
+    .courierVehicleDocuments-description {
+        padding: 8px;
+    }
+
+
+    .courierVehicleDocuments-photosHeader {
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-photoGrid {
+        padding: 9px;
+    }
+
+
+    .courierVehicleDocuments-noPhotos,
+    .courierVehicleDocuments-loading,
+    .courierVehicleDocuments-photoContainer {
+        min-height: 145px;
+    }
+
+}

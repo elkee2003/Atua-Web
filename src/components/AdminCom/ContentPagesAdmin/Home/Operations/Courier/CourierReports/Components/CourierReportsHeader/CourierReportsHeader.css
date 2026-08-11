@@ -1,0 +1,1103 @@
+/* ==========================================================
+   COURIER REPORTS HEADER
+========================================================== */
+
+.courierReportsHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   TOP NAVIGATION
+========================================================== */
+
+.courierReportsHeader-top {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+/* ==========================================================
+   TOP ACTIONS
+========================================================== */
+
+.courierReportsHeader-topActions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   ICON BUTTON
+========================================================== */
+
+.courierReportsHeader-iconButton {
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 0;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReportsHeader-iconButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+
+    box-shadow:
+        0 2px 7px rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
+}
+
+.courierReportsHeader-iconButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.courierReportsHeader-iconButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   TRACK BUTTON
+========================================================== */
+
+.courierReportsHeader-trackButton {
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #bfdbfe;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReportsHeader-trackButton:hover {
+    border-color: #93c5fd;
+
+    background: #dbeafe;
+
+    color: #1d4ed8;
+
+    box-shadow:
+        0 2px 7px rgba(
+            37,
+            99,
+            235,
+            0.1
+        );
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierReportsHeader-refreshIcon.spinning {
+    animation:
+        courierReportsHeaderSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierReportsHeaderSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   COURIER PROFILE
+========================================================== */
+
+.courierReportsHeader-profile {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    box-sizing: border-box;
+
+    padding:
+        16px
+        0;
+
+    border-top: 1px solid #eef2f6;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierReportsHeader-avatar {
+    width: 68px;
+
+    height: 68px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 50%;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 23px;
+
+    font-weight: 800;
+}
+
+.courierReportsHeader-avatarImage {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.courierReportsHeader-initials {
+    display: block;
+}
+
+
+/* ==========================================================
+   INFO
+========================================================== */
+
+.courierReportsHeader-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   NAME ROW
+========================================================== */
+
+.courierReportsHeader-nameRow {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.courierReportsHeader-nameRow h1 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    line-height: 1.25;
+}
+
+
+/* ==========================================================
+   ONLINE BADGE
+========================================================== */
+
+.courierReportsHeader-onlineBadge {
+    min-height: 27px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        9px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.courierReportsHeader-onlineBadge > span {
+    width: 7px;
+
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+.courierReportsHeader-onlineBadge.online {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+.courierReportsHeader-onlineBadge.online > span {
+    background: #22c55e;
+}
+
+.courierReportsHeader-onlineBadge.offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+.courierReportsHeader-onlineBadge.offline > span {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   VEHICLE DETAILS
+========================================================== */
+
+.courierReportsHeader-details {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.courierReportsHeader-separator {
+    color: #cbd5e1;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   PHONE
+========================================================== */
+
+.courierReportsHeader-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.courierReportsHeader-phone svg {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   ACCOUNT
+========================================================== */
+
+.courierReportsHeader-account {
+    min-width: 130px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 5px;
+
+    margin-left: auto;
+
+    padding-left: 15px;
+
+    border-left: 1px solid #eef2f6;
+}
+
+.courierReportsHeader-account > span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+.courierReportsHeader-account strong {
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+.courierReportsHeader-account strong.approved {
+    color: #16a34a;
+}
+
+.courierReportsHeader-account strong.pending {
+    color: #d97706;
+}
+
+
+/* ==========================================================
+   PAGE TITLE
+========================================================== */
+
+.courierReportsHeader-pageTitle {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    padding-top: 17px;
+}
+
+.courierReportsHeader-pageTitleLeft {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   TITLE ICON
+========================================================== */
+
+.courierReportsHeader-titleIcon {
+    width: 46px;
+
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================================
+   TITLE ROW
+========================================================== */
+
+.courierReportsHeader-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+.courierReportsHeader-titleRow h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   REPORT COUNT
+========================================================== */
+
+.courierReportsHeader-reportCount {
+    min-height: 25px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 3px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        8px;
+
+    border-radius: 999px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.courierReportsHeader-reportCount span {
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   TITLE DESCRIPTION
+========================================================== */
+
+.courierReportsHeader-pageTitle p {
+    max-width: 720px;
+
+    margin:
+        4px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   LOADING PROFILE
+========================================================== */
+
+.courierReportsHeader-loadingAvatar,
+.courierReportsHeader-loadingName,
+.courierReportsHeader-loadingDetails,
+.courierReportsHeader-loadingPhone,
+.courierReportsHeader-loadingStatus,
+.courierReportsHeader-loadingTitleIcon,
+.courierReportsHeader-loadingTitle,
+.courierReportsHeader-loadingSubtitle {
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReportsHeaderSkeleton
+        1.4s infinite;
+}
+
+
+/* ==========================================================
+   LOADING AVATAR
+========================================================== */
+
+.courierReportsHeader-loadingAvatar {
+    width: 68px;
+
+    height: 68px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+
+/* ==========================================================
+   LOADING INFO
+========================================================== */
+
+.courierReportsHeader-loadingInfo {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.courierReportsHeader-loadingName {
+    width: 190px;
+
+    height: 22px;
+
+    border-radius: 6px;
+}
+
+.courierReportsHeader-loadingDetails {
+    width: 260px;
+
+    height: 12px;
+
+    border-radius: 5px;
+}
+
+.courierReportsHeader-loadingPhone {
+    width: 145px;
+
+    height: 11px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   LOADING STATUS
+========================================================== */
+
+.courierReportsHeader-loadingStatus {
+    width: 95px;
+
+    height: 36px;
+
+    border-radius: 8px;
+}
+
+
+/* ==========================================================
+   LOADING TITLE
+========================================================== */
+
+.courierReportsHeader-loadingTitleIcon {
+    width: 46px;
+
+    height: 46px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+}
+
+.courierReportsHeader-loadingTitle {
+    width: 180px;
+
+    height: 19px;
+
+    border-radius: 6px;
+}
+
+.courierReportsHeader-loadingSubtitle {
+    width: 350px;
+
+    max-width: 70vw;
+
+    height: 11px;
+
+    margin-top: 7px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   SKELETON ANIMATION
+========================================================== */
+
+@keyframes courierReportsHeaderSkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierReportsHeader {
+        padding: 16px;
+    }
+
+    .courierReportsHeader-nameRow h1 {
+        font-size: 20px;
+    }
+
+    .courierReportsHeader-account {
+        min-width: 115px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReportsHeader {
+        padding: 14px;
+    }
+
+    .courierReportsHeader-profile {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+    .courierReportsHeader-account {
+        width: 100%;
+
+        min-width: 0;
+
+        flex-direction: row;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin-left: 0;
+
+        padding:
+            10px
+            0
+            0;
+
+        border-top: 1px solid #eef2f6;
+
+        border-left: none;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReportsHeader {
+        padding: 12px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       TOP
+    ====================================================== */
+
+    .courierReportsHeader-top {
+        margin-bottom: 13px;
+    }
+
+    .courierReportsHeader-iconButton,
+    .courierReportsHeader-trackButton {
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
+    }
+
+
+    /* ======================================================
+       PROFILE
+    ====================================================== */
+
+    .courierReportsHeader-profile {
+        gap: 11px;
+
+        padding:
+            13px
+            0;
+    }
+
+    .courierReportsHeader-avatar {
+        width: 55px;
+
+        height: 55px;
+
+        font-size: 19px;
+    }
+
+    .courierReportsHeader-nameRow {
+        gap: 6px;
+    }
+
+    .courierReportsHeader-nameRow h1 {
+        font-size: 18px;
+    }
+
+    .courierReportsHeader-onlineBadge {
+        min-height: 24px;
+
+        padding:
+            0
+            7px;
+
+        font-size: 10px;
+    }
+
+    .courierReportsHeader-onlineBadge > span {
+        width: 6px;
+
+        height: 6px;
+    }
+
+    .courierReportsHeader-details {
+        gap: 5px;
+
+        font-size: 11px;
+    }
+
+    .courierReportsHeader-phone {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       ACCOUNT
+    ====================================================== */
+
+    .courierReportsHeader-account {
+        padding-top: 9px;
+    }
+
+    .courierReportsHeader-account > span {
+        font-size: 9px;
+    }
+
+    .courierReportsHeader-account strong {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       PAGE TITLE
+    ====================================================== */
+
+    .courierReportsHeader-pageTitle {
+        padding-top: 13px;
+    }
+
+    .courierReportsHeader-pageTitleLeft {
+        align-items: flex-start;
+
+        gap: 9px;
+    }
+
+    .courierReportsHeader-titleIcon {
+        width: 40px;
+
+        height: 40px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierReportsHeader-titleRow h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsHeader-reportCount {
+        min-height: 22px;
+
+        padding:
+            0
+            7px;
+
+        font-size: 10px;
+    }
+
+    .courierReportsHeader-pageTitle p {
+        margin-top: 4px;
+
+        font-size: 10px;
+
+        line-height: 1.55;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsHeader {
+        padding: 10px;
+    }
+
+    .courierReportsHeader-iconButton,
+    .courierReportsHeader-trackButton {
+        width: 36px;
+
+        height: 36px;
+    }
+
+    .courierReportsHeader-profile {
+        gap: 9px;
+    }
+
+    .courierReportsHeader-avatar {
+        width: 50px;
+
+        height: 50px;
+
+        font-size: 17px;
+    }
+
+    .courierReportsHeader-nameRow h1 {
+        font-size: 17px;
+    }
+
+    .courierReportsHeader-details {
+        font-size: 10px;
+    }
+
+    .courierReportsHeader-phone {
+        font-size: 10px;
+    }
+
+    .courierReportsHeader-titleIcon {
+        width: 37px;
+
+        height: 37px;
+    }
+
+    .courierReportsHeader-titleRow h2 {
+        font-size: 16px;
+    }
+
+    .courierReportsHeader-pageTitle p {
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsHeader {
+        padding: 9px;
+    }
+
+    .courierReportsHeader-topActions {
+        gap: 6px;
+    }
+
+    .courierReportsHeader-iconButton,
+    .courierReportsHeader-trackButton {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 12px;
+    }
+
+    .courierReportsHeader-avatar {
+        width: 46px;
+
+        height: 46px;
+
+        font-size: 16px;
+    }
+
+    .courierReportsHeader-nameRow h1 {
+        font-size: 16px;
+    }
+
+    .courierReportsHeader-onlineBadge {
+        font-size: 9px;
+    }
+
+    .courierReportsHeader-details,
+    .courierReportsHeader-phone {
+        font-size: 9px;
+    }
+
+    .courierReportsHeader-titleIcon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+    .courierReportsHeader-titleRow h2 {
+        font-size: 15px;
+    }
+
+    .courierReportsHeader-pageTitle p {
+        font-size: 9px;
+    }
+
+}

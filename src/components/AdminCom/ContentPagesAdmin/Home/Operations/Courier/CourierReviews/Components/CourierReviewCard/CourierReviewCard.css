@@ -1,0 +1,1215 @@
+/* ==========================================================
+   COURIER REVIEW CARD
+========================================================== */
+
+.courierReviewCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 8px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierReviewCard:hover {
+    border-color: #dbe2ea;
+
+    box-shadow:
+        0 5px 16px rgba(
+            15,
+            23,
+            42,
+            0.05
+        );
+}
+
+
+/* ==========================================================
+   FLAGGED CARD
+========================================================== */
+
+.courierReviewCard-flagged {
+    border-color: #fed7aa;
+
+    background: #fffdfa;
+}
+
+
+/* ==========================================================
+   TOP
+========================================================== */
+
+.courierReviewCard-top {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   CUSTOMER
+========================================================== */
+
+.courierReviewCard-customer {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierReviewCard-avatar {
+    width: 52px;
+
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 50%;
+
+    outline: none;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReviewCard-avatar:hover {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            100,
+            116,
+            139,
+            0.08
+        );
+}
+
+.courierReviewCard-avatar:disabled {
+    cursor: default;
+}
+
+.courierReviewCard-avatar img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* ==========================================================
+   CUSTOMER INFO
+========================================================== */
+
+.courierReviewCard-customerInfo {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+/* ==========================================================
+   NAME
+========================================================== */
+
+.courierReviewCard-nameRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.courierReviewCard-customerName {
+    max-width: 100%;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #334155;
+
+    font-family: inherit;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    text-align: left;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+}
+
+.courierReviewCard-customerName:hover {
+    color: #2563eb;
+}
+
+.courierReviewCard-customerName:disabled {
+    color: #334155;
+
+    cursor: default;
+}
+
+
+/* ==========================================================
+   VERIFIED
+========================================================== */
+
+.courierReviewCard-verified {
+    flex-shrink: 0;
+
+    color: #2563eb;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   CUSTOMER META
+========================================================== */
+
+.courierReviewCard-meta {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 550;
+}
+
+.courierReviewCard-meta span {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    min-width: 0;
+}
+
+.courierReviewCard-meta svg {
+    flex-shrink: 0;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   RATING
+========================================================== */
+
+.courierReviewCard-rating {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding:
+        8px
+        10px;
+
+    border: 1px solid #f1f5f9;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   STARS
+========================================================== */
+
+.courierReviewCard-stars {
+    display: flex;
+
+    align-items: center;
+
+    gap: 3px;
+}
+
+.courierReviewCard-stars svg {
+    font-size: 14px;
+}
+
+.courierReviewCard-starFilled {
+    color: #f59e0b;
+}
+
+.courierReviewCard-starEmpty {
+    color: #dbe2ea;
+}
+
+
+/* ==========================================================
+   RATING INFO
+========================================================== */
+
+.courierReviewCard-ratingInfo {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 1px;
+}
+
+.courierReviewCard-ratingInfo strong {
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+}
+
+.courierReviewCard-ratingInfo span {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   REVIEW BODY
+========================================================== */
+
+.courierReviewCard-body {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    margin-top: 16px;
+}
+
+.courierReviewCard-reviewIcon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+}
+
+.courierReviewCard-reviewContent {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.courierReviewCard-reviewLabel {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+
+/* ==========================================================
+   REVIEW TEXT
+========================================================== */
+
+.courierReviewCard-reviewText {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+.courierReviewCard-noComment {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-style: italic;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   ORDER
+========================================================== */
+
+.courierReviewCard-order {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    box-sizing: border-box;
+
+    margin-top: 16px;
+
+    padding:
+        11px
+        12px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+.courierReviewCard-orderIcon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.courierReviewCard-orderInfo {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.courierReviewCard-orderInfo span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+.courierReviewCard-orderInfo strong {
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   VIEW ORDER BUTTON
+========================================================== */
+
+.courierReviewCard-viewOrderButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding:
+        0
+        10px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReviewCard-viewOrderButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   RESPONSE
+========================================================== */
+
+.courierReviewCard-response {
+    margin-top: 14px;
+
+    padding:
+        12px
+        13px;
+
+    border-left: 3px solid #22c55e;
+
+    border-radius: 7px;
+
+    background: #f0fdf4;
+}
+
+.courierReviewCard-responseHeader {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-bottom: 6px;
+
+    color: #15803d;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.courierReviewCard-responseHeader svg {
+    font-size: 12px;
+}
+
+.courierReviewCard-response p {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   FLAG NOTICE
+========================================================== */
+
+.courierReviewCard-flagNotice {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding:
+        10px
+        12px;
+
+    border: 1px solid #fed7aa;
+
+    border-radius: 8px;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    line-height: 1.5;
+}
+
+.courierReviewCard-flagNotice svg {
+    flex-shrink: 0;
+
+    margin-top: 2px;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.courierReviewCard-footer {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-top: 16px;
+
+    padding-top: 13px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   FOOTER INFO
+========================================================== */
+
+.courierReviewCard-footerInfo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.courierReviewCard-footerInfo svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.courierReviewCard-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   ACTION BUTTON
+========================================================== */
+
+.courierReviewCard-actionButton {
+    min-height: 32px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        9px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReviewCard-actionButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReviewCard-actionButton:active {
+    transform: translateY(1px);
+}
+
+.courierReviewCard-actionButton svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   RESPOND BUTTON
+========================================================== */
+
+.courierReviewCard-respondButton:hover {
+    border-color: #bfdbfe;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+/* ==========================================================
+   FLAG BUTTON
+========================================================== */
+
+.courierReviewCard-flagButton:hover {
+    border-color: #fed7aa;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+.courierReviewCard-flagButton.active {
+    border-color: #fed7aa;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   REMOVE BUTTON
+========================================================== */
+
+.courierReviewCard-removeButton:hover {
+    border-color: #fecaca;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReviewCard {
+        padding: 16px;
+    }
+
+    .courierReviewCard-top {
+        gap: 15px;
+    }
+
+    .courierReviewCard-customerName {
+        font-size: 15px;
+    }
+
+    .courierReviewCard-reviewText {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierReviewCard-top {
+        flex-direction: column;
+    }
+
+    .courierReviewCard-rating {
+        align-self: flex-start;
+    }
+
+    .courierReviewCard-footer {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .courierReviewCard-actions {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewCard {
+        padding: 14px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       TOP
+    ====================================================== */
+
+    .courierReviewCard-top {
+        gap: 12px;
+
+        padding-bottom: 13px;
+    }
+
+    .courierReviewCard-avatar {
+        width: 46px;
+
+        height: 46px;
+
+        font-size: 16px;
+    }
+
+    .courierReviewCard-customer {
+        gap: 9px;
+    }
+
+    .courierReviewCard-customerName {
+        font-size: 14px;
+    }
+
+    .courierReviewCard-verified {
+        font-size: 12px;
+    }
+
+    .courierReviewCard-meta {
+        gap: 7px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewCard-meta svg {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       RATING
+    ====================================================== */
+
+    .courierReviewCard-rating {
+        width: 100%;
+
+        justify-content: space-between;
+
+        box-sizing: border-box;
+
+        padding:
+            8px
+            10px;
+    }
+
+    .courierReviewCard-stars svg {
+        font-size: 13px;
+    }
+
+    .courierReviewCard-ratingInfo {
+        flex-direction: row;
+
+        align-items: center;
+
+        gap: 6px;
+    }
+
+    .courierReviewCard-ratingInfo strong {
+        font-size: 14px;
+    }
+
+    .courierReviewCard-ratingInfo span {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       BODY
+    ====================================================== */
+
+    .courierReviewCard-body {
+        gap: 9px;
+
+        margin-top: 13px;
+    }
+
+    .courierReviewCard-reviewIcon {
+        width: 31px;
+
+        height: 31px;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+    }
+
+    .courierReviewCard-reviewLabel {
+        margin-bottom: 5px;
+
+        font-size: 9px;
+    }
+
+    .courierReviewCard-reviewText {
+        font-size: 13px;
+
+        line-height: 1.65;
+    }
+
+    .courierReviewCard-noComment {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       ORDER
+    ====================================================== */
+
+    .courierReviewCard-order {
+        margin-top: 13px;
+
+        padding:
+            9px
+            10px;
+    }
+
+    .courierReviewCard-orderIcon {
+        width: 31px;
+
+        height: 31px;
+    }
+
+    .courierReviewCard-orderInfo span {
+        font-size: 9px;
+    }
+
+    .courierReviewCard-orderInfo strong {
+        font-size: 11px;
+    }
+
+    .courierReviewCard-viewOrderButton {
+        min-height: 30px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       RESPONSE
+    ====================================================== */
+
+    .courierReviewCard-response {
+        margin-top: 12px;
+
+        padding:
+            10px
+            11px;
+    }
+
+    .courierReviewCard-responseHeader {
+        font-size: 10px;
+    }
+
+    .courierReviewCard-response p {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       FOOTER
+    ====================================================== */
+
+    .courierReviewCard-footer {
+        gap: 10px;
+
+        margin-top: 13px;
+
+        padding-top: 11px;
+    }
+
+    .courierReviewCard-footerInfo {
+        font-size: 9px;
+    }
+
+    .courierReviewCard-actions {
+        gap: 6px;
+    }
+
+    .courierReviewCard-actionButton {
+        min-height: 32px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierReviewCard {
+        padding: 12px;
+    }
+
+    .courierReviewCard-customerName {
+        max-width: 180px;
+
+        font-size: 13px;
+    }
+
+    .courierReviewCard-meta {
+        font-size: 9px;
+    }
+
+    .courierReviewCard-meta span:nth-child(2) {
+        display: none;
+    }
+
+    .courierReviewCard-reviewText {
+        font-size: 12px;
+    }
+
+    .courierReviewCard-actionButton span {
+        display: none;
+    }
+
+    .courierReviewCard-actionButton {
+        width: 33px;
+
+        height: 33px;
+
+        padding: 0;
+    }
+
+    .courierReviewCard-actionButton svg {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewCard {
+        padding: 10px;
+    }
+
+    .courierReviewCard-avatar {
+        width: 42px;
+
+        height: 42px;
+    }
+
+    .courierReviewCard-customerName {
+        max-width: 145px;
+
+        font-size: 12px;
+    }
+
+    .courierReviewCard-ratingInfo span {
+        display: none;
+    }
+
+    .courierReviewCard-reviewText {
+        font-size: 11px;
+    }
+
+}

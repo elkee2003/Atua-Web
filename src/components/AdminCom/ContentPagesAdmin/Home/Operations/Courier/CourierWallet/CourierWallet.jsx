@@ -4,14 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DataStore } from "aws-amplify/datastore";
 
+import { getUrl } from "aws-amplify/storage";
+
 import {
   Courier,
   Wallet,
   Transaction,
   Payout,
 } from "../../../../../../../models";
-
-import { getSignedUrl } from "../../../../../../../utils/s3";
 
 import { FaExclamationTriangle, FaWallet } from "react-icons/fa";
 
@@ -44,17 +44,41 @@ function CourierWallet() {
 
   /*
   ==========================================================
-  STATE
+  COURIER
   ==========================================================
   */
 
   const [courier, setCourier] = useState(null);
 
+  /*
+  ==========================================================
+  WALLET
+  ==========================================================
+  */
+
   const [wallet, setWallet] = useState(null);
+
+  /*
+  ==========================================================
+  TRANSACTIONS
+  ==========================================================
+  */
 
   const [transactions, setTransactions] = useState([]);
 
+  /*
+  ==========================================================
+  PAYOUTS
+  ==========================================================
+  */
+
   const [payouts, setPayouts] = useState([]);
+
+  /*
+  ==========================================================
+  PROFILE IMAGE URL
+  ==========================================================
+  */
 
   const [profileUrl, setProfileUrl] = useState(null);
 
@@ -101,16 +125,123 @@ function CourierWallet() {
       throw new Error("Courier ID is missing.");
     }
 
-    const result = await DataStore.query(Courier, courierId);
+    const courierData = await DataStore.query(Courier, courierId);
 
-    if (!result) {
+    if (!courierData) {
       throw new Error("Courier not found.");
     }
 
-    setCourier(result);
+    setCourier(courierData);
 
-    return result;
+    return courierData;
   }, [courierId]);
+
+  /*
+  ==========================================================
+  LOAD COURIER PROFILE IMAGE
+  ==========================================================
+  
+  THIS USES THE SAME METHOD THAT WORKS
+  IN YOUR MAINPROFILE COMPONENT.
+  
+  ==========================================================
+  */
+
+  const fetchProfileImage = useCallback(async (courierData) => {
+    /*
+        ------------------------------------------------------
+        RESET FIRST
+        ------------------------------------------------------
+        */
+
+    setProfileUrl(null);
+
+    /*
+        ------------------------------------------------------
+        NO COURIER
+        ------------------------------------------------------
+        */
+
+    if (!courierData) {
+      return;
+    }
+
+    /*
+        ------------------------------------------------------
+        NO PROFILE PICTURE
+        ------------------------------------------------------
+        */
+
+    if (!courierData.profilePic) {
+      console.log("Courier has no profilePic.");
+
+      return;
+    }
+
+    try {
+      /*
+          ----------------------------------------------------
+          GET STORAGE PATH
+          ----------------------------------------------------
+          */
+
+      const profilePath = courierData.profilePic;
+
+      console.log("Courier profile picture path:", profilePath);
+
+      /*
+          ----------------------------------------------------
+          IF IT IS ALREADY A FULL URL
+          ----------------------------------------------------
+          */
+
+      if (
+        typeof profilePath === "string" &&
+        (profilePath.startsWith("http://") ||
+          profilePath.startsWith("https://"))
+      ) {
+        setProfileUrl(profilePath);
+
+        return;
+      }
+
+      /*
+          ----------------------------------------------------
+          GET AMPLIFY STORAGE URL
+          ----------------------------------------------------
+          */
+
+      const result = await getUrl({
+        path: profilePath,
+
+        options: {
+          validateObjectExistence: true,
+        },
+      });
+
+      /*
+          ----------------------------------------------------
+          CHECK RESULT
+          ----------------------------------------------------
+          */
+
+      if (result?.url) {
+        const url = result.url.toString();
+
+        console.log("Courier profile image URL:", url);
+
+        setProfileUrl(url);
+      } else {
+        console.log("Amplify did not return a profile image URL.");
+
+        setProfileUrl(null);
+      }
+    } catch (imageError) {
+      console.error("Error fetching courier profile image:", imageError);
+
+      setProfileUrl(null);
+    }
+  }, []);
 
   /*
   ==========================================================
@@ -120,12 +251,6 @@ function CourierWallet() {
 
   const fetchWallet = useCallback(async (courierData) => {
     const walletId = courierData?.walletID;
-
-    /*
-      --------------------------------------------------------
-      Courier has no wallet
-      --------------------------------------------------------
-      */
 
     if (!walletId) {
       setWallet(null);
@@ -137,17 +262,11 @@ function CourierWallet() {
       return null;
     }
 
-    /*
-      --------------------------------------------------------
-      Query wallet directly by ID
-      --------------------------------------------------------
-      */
+    const walletData = await DataStore.query(Wallet, walletId);
 
-    const result = await DataStore.query(Wallet, walletId);
+    setWallet(walletData || null);
 
-    setWallet(result || null);
-
-    return result || null;
+    return walletData || null;
   }, []);
 
   /*
@@ -208,30 +327,6 @@ function CourierWallet() {
 
   /*
   ==========================================================
-  PROFILE IMAGE
-  ==========================================================
-  */
-
-  const fetchProfileImage = useCallback(async (courierData) => {
-    if (!courierData?.profilePic) {
-      setProfileUrl(null);
-
-      return;
-    }
-
-    try {
-      const url = await getSignedUrl(courierData.profilePic);
-
-      setProfileUrl(url || null);
-    } catch (imageError) {
-      console.error("Failed to load courier profile image:", imageError);
-
-      setProfileUrl(null);
-    }
-  }, []);
-
-  /*
-  ==========================================================
   FETCH EVERYTHING
   ==========================================================
   */
@@ -250,34 +345,34 @@ function CourierWallet() {
         setError(null);
 
         /*
-        ------------------------------------------------------
-        COURIER
-        ------------------------------------------------------
-        */
+          ----------------------------------------------------
+          FETCH COURIER
+          ----------------------------------------------------
+          */
 
         const courierData = await fetchCourier();
 
         /*
-        ------------------------------------------------------
-        PROFILE IMAGE
-        ------------------------------------------------------
-        */
+          ----------------------------------------------------
+          FETCH PROFILE IMAGE
+          ----------------------------------------------------
+          */
 
         await fetchProfileImage(courierData);
 
         /*
-        ------------------------------------------------------
-        WALLET
-        ------------------------------------------------------
-        */
+          ----------------------------------------------------
+          FETCH WALLET
+          ----------------------------------------------------
+          */
 
         const walletData = await fetchWallet(courierData);
 
         /*
-        ------------------------------------------------------
-        TRANSACTIONS + PAYOUTS
-        ------------------------------------------------------
-        */
+          ----------------------------------------------------
+          FETCH TRANSACTIONS + PAYOUTS
+          ----------------------------------------------------
+          */
 
         if (walletData) {
           await Promise.all([
@@ -302,10 +397,10 @@ function CourierWallet() {
     },
     [
       fetchCourier,
+      fetchProfileImage,
       fetchWallet,
       fetchTransactions,
       fetchPayouts,
-      fetchProfileImage,
     ],
   );
 
@@ -321,7 +416,7 @@ function CourierWallet() {
 
   /*
   ==========================================================
-  REAL-TIME OBSERVATION
+  REAL-TIME COURIER OBSERVER
   ==========================================================
   */
 
@@ -330,26 +425,30 @@ function CourierWallet() {
       return undefined;
     }
 
-    /*
-    --------------------------------------------------------
-    COURIER OBSERVER
-    --------------------------------------------------------
-    */
-
     const courierSubscription = DataStore.observe(Courier, courierId).subscribe(
-      () => {
-        fetchWalletData({
-          showLoading: false,
-          showRefreshing: false,
-        });
+      ({ element }) => {
+        if (!element) {
+          return;
+        }
+
+        setCourier(element);
+
+        /*
+            --------------------------------------------------
+            IMPORTANT:
+            RELOAD IMAGE WHEN COURIER CHANGES
+            --------------------------------------------------
+            */
+
+        fetchProfileImage(element);
       },
     );
 
     /*
-    --------------------------------------------------------
-    WALLET OBSERVER
-    --------------------------------------------------------
-    */
+      --------------------------------------------------------
+      WALLET OBSERVER
+      --------------------------------------------------------
+      */
 
     const walletSubscription = DataStore.observe(Wallet).subscribe(
       ({ opType }) => {
@@ -363,10 +462,10 @@ function CourierWallet() {
     );
 
     /*
-    --------------------------------------------------------
-    TRANSACTION OBSERVER
-    --------------------------------------------------------
-    */
+      --------------------------------------------------------
+      TRANSACTION OBSERVER
+      --------------------------------------------------------
+      */
 
     const transactionSubscription = DataStore.observe(Transaction).subscribe(
       ({ opType }) => {
@@ -380,10 +479,10 @@ function CourierWallet() {
     );
 
     /*
-    --------------------------------------------------------
-    PAYOUT OBSERVER
-    --------------------------------------------------------
-    */
+      --------------------------------------------------------
+      PAYOUT OBSERVER
+      --------------------------------------------------------
+      */
 
     const payoutSubscription = DataStore.observe(Payout).subscribe(
       ({ opType }) => {
@@ -397,10 +496,10 @@ function CourierWallet() {
     );
 
     /*
-    --------------------------------------------------------
-    CLEANUP
-    --------------------------------------------------------
-    */
+      --------------------------------------------------------
+      CLEANUP
+      --------------------------------------------------------
+      */
 
     return () => {
       courierSubscription.unsubscribe();
@@ -411,7 +510,7 @@ function CourierWallet() {
 
       payoutSubscription.unsubscribe();
     };
-  }, [courierId, fetchWalletData]);
+  }, [courierId, fetchWalletData, fetchProfileImage]);
 
   /*
   ==========================================================
@@ -428,7 +527,7 @@ function CourierWallet() {
 
   /*
   ==========================================================
-  RESET FILTERS
+  FILTER RESET
   ==========================================================
   */
 
@@ -442,7 +541,7 @@ function CourierWallet() {
 
   /*
   ==========================================================
-  HAS ACTIVE FILTERS
+  ACTIVE FILTERS
   ==========================================================
   */
 
@@ -514,7 +613,7 @@ function CourierWallet() {
       />
 
       {/* ==================================================
-          INITIAL LOADING
+          LOADING
       ================================================== */}
 
       {loading ? (
@@ -528,7 +627,7 @@ function CourierWallet() {
       ) : (
         <>
           {/* ==================================================
-              NO WALLET
+              WALLET EMPTY
           ================================================== */}
 
           {!wallet ? (
@@ -552,7 +651,7 @@ function CourierWallet() {
               <CourierWalletBalance wallet={wallet} />
 
               {/* ==================================================
-                  TRANSACTION CONTROLS
+                  TRANSACTION SECTION
               ================================================== */}
 
               <div className="courierWallet-transactionSection">

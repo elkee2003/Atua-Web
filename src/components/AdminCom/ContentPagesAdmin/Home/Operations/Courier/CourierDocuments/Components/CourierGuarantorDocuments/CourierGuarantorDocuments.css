@@ -1,0 +1,1204 @@
+/* ==========================================================
+   COURIER GUARANTOR DOCUMENTS
+========================================================== */
+
+.courierGuarantorDocuments {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierGuarantorDocuments-header {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 17px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #ffffff;
+}
+
+
+.courierGuarantorDocuments-headerIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #f5f3ff;
+
+    color: #7c3aed;
+
+    font-size: 18px;
+}
+
+
+.courierGuarantorDocuments-headerContent {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.courierGuarantorDocuments-headerContent h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierGuarantorDocuments-headerContent p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierGuarantorDocuments-status {
+    min-height: 28px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.courierGuarantorDocuments-status svg {
+    font-size: 11px;
+}
+
+
+.courierGuarantorDocuments-status.complete {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierGuarantorDocuments-status.incomplete {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierGuarantorDocuments-content {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+}
+
+
+/* ==========================================================
+   GUARANTOR INFORMATION
+========================================================== */
+
+.courierGuarantorDocuments-information {
+    width: 100%;
+
+    margin-bottom: 15px;
+}
+
+
+/* ==========================================================
+   NAME CARD
+========================================================== */
+
+.courierGuarantorDocuments-nameCard {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+
+.courierGuarantorDocuments-nameIcon {
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #f5f3ff;
+
+    color: #7c3aed;
+
+    font-size: 18px;
+}
+
+
+.courierGuarantorDocuments-nameCard span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+.courierGuarantorDocuments-nameCard h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   DETAILS GRID
+========================================================== */
+
+.courierGuarantorDocuments-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   DETAIL
+========================================================== */
+
+.courierGuarantorDocuments-detail {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 58px;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+}
+
+
+.courierGuarantorDocuments-detail.full {
+    grid-column: 1 / -1;
+}
+
+
+.courierGuarantorDocuments-detailIcon {
+    width: 30px;
+
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+.courierGuarantorDocuments-detail > div:last-child {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierGuarantorDocuments-detail span {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 650;
+}
+
+
+.courierGuarantorDocuments-detail strong {
+    color: #475569;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierGuarantorDocuments-detail strong.available {
+    color: #475569;
+}
+
+
+.courierGuarantorDocuments-detail strong.missing {
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   NIN SECTION
+========================================================== */
+
+.courierGuarantorDocuments-ninSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   SECTION HEADER
+========================================================== */
+
+.courierGuarantorDocuments-sectionHeader {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #fafbfc;
+}
+
+
+.courierGuarantorDocuments-sectionIcon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f5f3ff;
+
+    color: #7c3aed;
+
+    font-size: 14px;
+}
+
+
+.courierGuarantorDocuments-sectionHeader h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierGuarantorDocuments-sectionHeader p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   NIN VALUE
+========================================================== */
+
+.courierGuarantorDocuments-ninValue {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+}
+
+
+.courierGuarantorDocuments-ninValue span {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+.courierGuarantorDocuments-ninValue strong {
+    max-width: 65%;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierGuarantorDocuments-ninValue strong.provided {
+    color: #334155;
+}
+
+
+.courierGuarantorDocuments-ninValue strong.missing {
+    color: #dc2626;
+
+    font-size: 10px;
+
+    letter-spacing: 0;
+}
+
+
+/* ==========================================================
+   IMAGE SECTION
+========================================================== */
+
+.courierGuarantorDocuments-imageSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+}
+
+
+/* ==========================================================
+   IMAGE HEADER
+========================================================== */
+
+.courierGuarantorDocuments-imageHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 11px;
+}
+
+
+.courierGuarantorDocuments-imageHeader h4 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+.courierGuarantorDocuments-imageHeader p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierGuarantorDocuments-viewButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 10px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierGuarantorDocuments-viewButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #7c3aed;
+}
+
+
+.courierGuarantorDocuments-viewButton svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   IMAGE CONTAINER
+========================================================== */
+
+.courierGuarantorDocuments-imageContainer {
+    width: 100%;
+
+    min-height: 220px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   IMAGE WRAPPER
+========================================================== */
+
+.courierGuarantorDocuments-imageWrapper {
+    width: 100%;
+
+    min-height: 220px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    background: #f8fafc;
+}
+
+
+.courierGuarantorDocuments-imageWrapper img {
+    width: 100%;
+
+    max-height: 500px;
+
+    display: block;
+
+    object-fit: contain;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   NO IMAGE
+========================================================== */
+
+.courierGuarantorDocuments-noImage {
+    width: 100%;
+
+    min-height: 220px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+
+.courierGuarantorDocuments-noImageIcon {
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    background: #eef2f7;
+
+    color: #94a3b8;
+
+    font-size: 21px;
+}
+
+
+.courierGuarantorDocuments-noImage h4 {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.courierGuarantorDocuments-noImage p {
+    max-width: 330px;
+
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   IMAGE LOADING
+========================================================== */
+
+.courierGuarantorDocuments-imageLoading {
+    width: 100%;
+
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.courierGuarantorDocuments-spinner {
+    width: 28px;
+
+    height: 28px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #7c3aed;
+
+    border-radius: 50%;
+
+    animation:
+        courierGuarantorDocumentsSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+@keyframes courierGuarantorDocumentsSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierGuarantorDocuments-content {
+        padding: 14px;
+    }
+
+
+    .courierGuarantorDocuments-imageHeader {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .courierGuarantorDocuments-viewButton {
+        width: 100%;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierGuarantorDocuments {
+        margin-bottom: 10px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierGuarantorDocuments-header {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        padding: 13px;
+    }
+
+
+    .courierGuarantorDocuments-headerIcon {
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 8px;
+
+        font-size: 15px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent h2 {
+        font-size: 15px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent p {
+        font-size: 8px;
+    }
+
+
+    .courierGuarantorDocuments-status {
+        min-height: 24px;
+
+        padding: 0 7px;
+
+        font-size: 8px;
+    }
+
+
+    .courierGuarantorDocuments-content {
+        padding: 11px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard {
+        gap: 9px;
+
+        padding: 11px;
+
+        margin-bottom: 9px;
+    }
+
+
+    .courierGuarantorDocuments-nameIcon {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard span {
+        font-size: 8px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard h3 {
+        font-size: 13px;
+    }
+
+
+    .courierGuarantorDocuments-details {
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+
+    .courierGuarantorDocuments-detail.full {
+        grid-column: auto;
+    }
+
+
+    .courierGuarantorDocuments-detail {
+        min-height: 52px;
+
+        padding: 9px;
+    }
+
+
+    .courierGuarantorDocuments-detailIcon {
+        width: 28px;
+
+        height: 28px;
+
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-detail span {
+        font-size: 7px;
+    }
+
+
+    .courierGuarantorDocuments-detail strong {
+        font-size: 9px;
+    }
+
+
+    .courierGuarantorDocuments-sectionHeader {
+        padding: 11px;
+    }
+
+
+    .courierGuarantorDocuments-sectionIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierGuarantorDocuments-sectionHeader h3 {
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-sectionHeader p {
+        font-size: 8px;
+    }
+
+
+    .courierGuarantorDocuments-ninValue {
+        padding: 11px;
+    }
+
+
+    .courierGuarantorDocuments-ninValue span {
+        font-size: 9px;
+    }
+
+
+    .courierGuarantorDocuments-ninValue strong {
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-imageSection {
+        padding: 11px;
+    }
+
+
+    .courierGuarantorDocuments-imageHeader h4 {
+        font-size: 10px;
+    }
+
+
+    .courierGuarantorDocuments-imageHeader p {
+        font-size: 7px;
+    }
+
+
+    .courierGuarantorDocuments-viewButton {
+        min-height: 34px;
+
+        font-size: 8px;
+    }
+
+
+    .courierGuarantorDocuments-imageContainer,
+    .courierGuarantorDocuments-imageWrapper,
+    .courierGuarantorDocuments-noImage,
+    .courierGuarantorDocuments-imageLoading {
+        min-height: 190px;
+    }
+
+
+    .courierGuarantorDocuments-noImageIcon {
+        width: 45px;
+
+        height: 45px;
+
+        font-size: 18px;
+    }
+
+
+    .courierGuarantorDocuments-noImage h4 {
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-noImage p {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierGuarantorDocuments-header {
+        padding: 11px;
+    }
+
+
+    .courierGuarantorDocuments-headerIcon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent h2 {
+        font-size: 14px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent p {
+        font-size: 7px;
+    }
+
+
+    .courierGuarantorDocuments-status span {
+        display: none;
+    }
+
+
+    .courierGuarantorDocuments-status {
+        width: 25px;
+
+        height: 25px;
+
+        padding: 0;
+    }
+
+
+    .courierGuarantorDocuments-status svg {
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-nameIcon {
+        width: 40px;
+
+        height: 40px;
+
+        font-size: 15px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard h3 {
+        font-size: 12px;
+    }
+
+
+    .courierGuarantorDocuments-ninValue {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .courierGuarantorDocuments-ninValue strong {
+        max-width: 100%;
+
+        text-align: left;
+    }
+
+
+    .courierGuarantorDocuments-imageContainer,
+    .courierGuarantorDocuments-imageWrapper,
+    .courierGuarantorDocuments-noImage,
+    .courierGuarantorDocuments-imageLoading {
+        min-height: 170px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierGuarantorDocuments-content {
+        padding: 9px;
+    }
+
+
+    .courierGuarantorDocuments-header {
+        padding: 10px;
+    }
+
+
+    .courierGuarantorDocuments-headerIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent h2 {
+        font-size: 13px;
+    }
+
+
+    .courierGuarantorDocuments-headerContent p {
+        font-size: 6.5px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard {
+        padding: 9px;
+    }
+
+
+    .courierGuarantorDocuments-nameIcon {
+        width: 37px;
+
+        height: 37px;
+
+        font-size: 13px;
+    }
+
+
+    .courierGuarantorDocuments-nameCard h3 {
+        font-size: 11px;
+    }
+
+
+    .courierGuarantorDocuments-detail {
+        padding: 8px;
+    }
+
+
+    .courierGuarantorDocuments-sectionHeader {
+        padding: 9px;
+    }
+
+
+    .courierGuarantorDocuments-imageSection {
+        padding: 9px;
+    }
+
+
+    .courierGuarantorDocuments-imageContainer,
+    .courierGuarantorDocuments-imageWrapper,
+    .courierGuarantorDocuments-noImage,
+    .courierGuarantorDocuments-imageLoading {
+        min-height: 150px;
+    }
+
+}

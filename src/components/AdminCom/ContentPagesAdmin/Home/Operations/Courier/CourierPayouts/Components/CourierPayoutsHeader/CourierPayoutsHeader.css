@@ -1,0 +1,743 @@
+/* ==========================================================
+   COURIER PAYOUTS HEADER
+========================================================== */
+
+.courierPayoutsHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    margin-bottom: 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    box-shadow:
+        0 2px 8px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+
+/* ==========================================================
+   TOP ROW
+========================================================== */
+
+.courierPayoutsHeader-top {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.courierPayoutsHeader-left {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.courierPayoutsHeader-backButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayoutsHeader-backButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierPayoutsHeader-backButton svg {
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   TITLE AREA
+========================================================== */
+
+.courierPayoutsHeader-titleArea {
+    min-width: 0;
+}
+
+
+.courierPayoutsHeader-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierPayoutsHeader-icon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   HEADING
+========================================================== */
+
+.courierPayoutsHeader-heading {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierPayoutsHeader-titleLine {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+}
+
+
+.courierPayoutsHeader-titleLine h1 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.courierPayoutsHeader-approvedIcon {
+    flex-shrink: 0;
+
+    color: #2563eb;
+
+    font-size: 11px;
+}
+
+
+.courierPayoutsHeader-heading p {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.courierPayoutsHeader-refreshButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        12px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.courierPayoutsHeader-refreshButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierPayoutsHeader-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+.courierPayoutsHeader-refreshIcon {
+    font-size: 11px;
+}
+
+
+.courierPayoutsHeader-refreshIcon.spinning {
+    animation:
+        courierPayoutsHeaderSpin
+        0.8s linear infinite;
+}
+
+
+@keyframes courierPayoutsHeaderSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierPayoutsHeader-meta {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 14px;
+
+    padding-top: 11px;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+
+.courierPayoutsHeader-metaLabel {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 550;
+
+    line-height: 1.4;
+}
+
+
+.courierPayoutsHeader-metaValue {
+    color: #475569;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+.courierPayoutsHeader-divider {
+    color: #cbd5e1;
+
+    font-size: 8px;
+}
+
+
+.courierPayoutsHeader-phone {
+    color: #64748b;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================================
+   FOCUS
+========================================================== */
+
+.courierPayoutsHeader-backButton:focus-visible,
+.courierPayoutsHeader-refreshButton:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.2
+    );
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierPayoutsHeader {
+        padding: 14px;
+    }
+
+
+    .courierPayoutsHeader-titleLine h1 {
+        font-size: 16px;
+    }
+
+
+    .courierPayoutsHeader-heading p {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayoutsHeader-metaLabel {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-metaValue {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayoutsHeader-phone {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierPayoutsHeader {
+        padding: 12px;
+    }
+
+
+    .courierPayoutsHeader-top {
+        align-items: flex-start;
+    }
+
+
+    .courierPayoutsHeader-left {
+        gap: 10px;
+    }
+
+
+    .courierPayoutsHeader-backButton {
+        min-height: 31px;
+
+        padding:
+            0
+            9px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-backButton svg {
+        font-size: 10px;
+    }
+
+
+    .courierPayoutsHeader-icon {
+        width: 34px;
+        height: 34px;
+
+        font-size: 14px;
+    }
+
+
+    .courierPayoutsHeader-titleLine h1 {
+        font-size: 15px;
+    }
+
+
+    .courierPayoutsHeader-heading p {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-refreshButton {
+        min-height: 31px;
+
+        padding:
+            0
+            10px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-refreshIcon {
+        font-size: 10px;
+    }
+
+
+    .courierPayoutsHeader-meta {
+        margin-top: 12px;
+
+        padding-top: 10px;
+    }
+
+
+    .courierPayoutsHeader-metaLabel {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutsHeader-metaValue {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-divider {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutsHeader-phone {
+        font-size: 7.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+    .courierPayoutsHeader {
+        padding: 10px;
+
+        border-radius: 9px;
+    }
+
+
+    .courierPayoutsHeader-top {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .courierPayoutsHeader-left {
+        width: 100%;
+
+        gap: 8px;
+    }
+
+
+    .courierPayoutsHeader-backButton span {
+        display: none;
+    }
+
+
+    .courierPayoutsHeader-backButton {
+        width: 31px;
+
+        min-height: 31px;
+
+        padding: 0;
+    }
+
+
+    .courierPayoutsHeader-backButton svg {
+        font-size: 11px;
+    }
+
+
+    .courierPayoutsHeader-refreshButton {
+        width: 100%;
+
+        min-height: 32px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutsHeader-icon {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
+    }
+
+
+    .courierPayoutsHeader-titleRow {
+        gap: 6px;
+    }
+
+
+    .courierPayoutsHeader-titleLine h1 {
+        font-size: 14px;
+    }
+
+
+    .courierPayoutsHeader-approvedIcon {
+        font-size: 10px;
+    }
+
+
+    .courierPayoutsHeader-heading p {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutsHeader-meta {
+        margin-top: 10px;
+
+        padding-top: 9px;
+
+        gap: 6px;
+    }
+
+
+    .courierPayoutsHeader-metaLabel {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutsHeader-metaValue {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutsHeader-divider {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutsHeader-phone {
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+    .courierPayoutsHeader {
+        padding: 8px;
+    }
+
+
+    .courierPayoutsHeader-left {
+        gap: 7px;
+    }
+
+
+    .courierPayoutsHeader-backButton {
+        width: 30px;
+
+        min-height: 30px;
+    }
+
+
+    .courierPayoutsHeader-icon {
+        width: 30px;
+        height: 30px;
+
+        font-size: 12px;
+    }
+
+
+    .courierPayoutsHeader-titleLine h1 {
+        font-size: 13px;
+    }
+
+
+    .courierPayoutsHeader-heading p {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutsHeader-refreshButton {
+        min-height: 31px;
+
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutsHeader-meta {
+        margin-top: 9px;
+
+        padding-top: 8px;
+
+        gap: 5px;
+    }
+
+
+    .courierPayoutsHeader-metaLabel {
+        font-size: 6.5px;
+    }
+
+
+    .courierPayoutsHeader-metaValue {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutsHeader-divider {
+        font-size: 6.5px;
+    }
+
+
+    .courierPayoutsHeader-phone {
+        font-size: 6.5px;
+    }
+
+}

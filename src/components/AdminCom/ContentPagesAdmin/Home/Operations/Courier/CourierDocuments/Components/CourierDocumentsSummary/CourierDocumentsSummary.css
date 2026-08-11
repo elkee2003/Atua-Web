@@ -1,0 +1,712 @@
+/* ==========================================================
+   COURIER DOCUMENTS SUMMARY
+========================================================== */
+
+.courierDocumentsSummary {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    padding: 17px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierDocumentsSummary-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 16px;
+}
+
+
+.courierDocumentsSummary-headerIcon {
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 17px;
+}
+
+
+.courierDocumentsSummary-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierDocumentsSummary-header p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   SUMMARY GRID
+========================================================== */
+
+.courierDocumentsSummary-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   SUMMARY CARD
+========================================================== */
+
+.courierDocumentsSummary-card {
+    min-width: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   CARD HEADER
+========================================================== */
+
+.courierDocumentsSummary-cardHeader {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #fafbfc;
+}
+
+
+.courierDocumentsSummary-cardIcon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+}
+
+
+.courierDocumentsSummary-cardIcon.identity {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+.courierDocumentsSummary-cardIcon.guarantor {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+
+.courierDocumentsSummary-cardIcon.vehicle {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+
+/* ==========================================================
+   CARD TITLE
+========================================================== */
+
+.courierDocumentsSummary-cardTitle {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 4px;
+}
+
+
+.courierDocumentsSummary-cardTitle h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   STATUS BADGE
+========================================================== */
+
+.courierDocumentsSummary-status {
+    min-height: 21px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 0 7px;
+
+    border-radius: 20px;
+
+    font-size: 8px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+.courierDocumentsSummary-status svg {
+    font-size: 9px;
+}
+
+
+.courierDocumentsSummary-status.complete {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierDocumentsSummary-status.incomplete {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   ITEMS
+========================================================== */
+
+.courierDocumentsSummary-items {
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.courierDocumentsSummary-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    min-height: 43px;
+
+    padding: 8px 13px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+.courierDocumentsSummary-item:last-child {
+    border-bottom: none;
+}
+
+
+.courierDocumentsSummary-item span {
+    min-width: 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+}
+
+
+.courierDocumentsSummary-item strong {
+    min-width: 0;
+
+    max-width: 58%;
+
+    color: #475569;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierDocumentsSummary-item strong.available {
+    color: #059669;
+}
+
+
+.courierDocumentsSummary-item strong.missing {
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierDocumentsSummary-loadingTitle {
+    width: 230px;
+
+    height: 18px;
+
+    border-radius: 5px;
+
+    background: #e2e8f0;
+
+    animation:
+        courierDocumentsSummaryPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsSummary-loadingText {
+    width: 380px;
+
+    max-width: 70%;
+
+    height: 9px;
+
+    margin-top: 7px;
+
+    border-radius: 5px;
+
+    background: #f1f5f9;
+
+    animation:
+        courierDocumentsSummaryPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsSummary-loadingIcon {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    animation:
+        courierDocumentsSummaryPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsSummary-loadingBody {
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+.courierDocumentsSummary-loadingHeading {
+    width: 100px;
+
+    height: 12px;
+
+    border-radius: 5px;
+
+    background: #e2e8f0;
+
+    animation:
+        courierDocumentsSummaryPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsSummary-loadingLine {
+    width: 80%;
+
+    height: 8px;
+
+    border-radius: 4px;
+
+    background: #f1f5f9;
+
+    animation:
+        courierDocumentsSummaryPulse
+        1.4s
+        ease-in-out
+        infinite;
+}
+
+
+.courierDocumentsSummary-loadingLine.short {
+    width: 55%;
+}
+
+
+@keyframes courierDocumentsSummaryPulse {
+
+    0% {
+        opacity: 0.45;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.45;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1050px) {
+
+    .courierDocumentsSummary-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocumentsSummary {
+        margin-bottom: 10px;
+
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierDocumentsSummary-header {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .courierDocumentsSummary-headerIcon {
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+
+    .courierDocumentsSummary-header h2 {
+        font-size: 15px;
+    }
+
+
+    .courierDocumentsSummary-header p {
+        font-size: 9px;
+    }
+
+
+    .courierDocumentsSummary-grid {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+
+    .courierDocumentsSummary-cardHeader {
+        padding: 11px;
+    }
+
+
+    .courierDocumentsSummary-cardIcon {
+        width: 32px;
+
+        height: 32px;
+
+        border-radius: 7px;
+
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsSummary-cardTitle h3 {
+        font-size: 12px;
+    }
+
+
+    .courierDocumentsSummary-status {
+        min-height: 19px;
+
+        padding: 0 6px;
+
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsSummary-item {
+        min-height: 40px;
+
+        padding:
+            7px
+            11px;
+    }
+
+
+    .courierDocumentsSummary-item span {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsSummary-item strong {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocumentsSummary {
+        padding: 11px;
+    }
+
+
+    .courierDocumentsSummary-header h2 {
+        font-size: 14px;
+    }
+
+
+    .courierDocumentsSummary-header p {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsSummary-headerIcon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsSummary-cardHeader {
+        padding: 10px;
+    }
+
+
+    .courierDocumentsSummary-cardIcon {
+        width: 30px;
+
+        height: 30px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocumentsSummary-cardTitle h3 {
+        font-size: 11px;
+    }
+
+
+    .courierDocumentsSummary-item {
+        min-height: 38px;
+
+        padding:
+            6px
+            10px;
+    }
+
+
+    .courierDocumentsSummary-item span {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsSummary-item strong {
+        max-width: 55%;
+
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocumentsSummary {
+        padding: 9px;
+    }
+
+
+    .courierDocumentsSummary-header {
+        gap: 7px;
+    }
+
+
+    .courierDocumentsSummary-headerIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocumentsSummary-header h2 {
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsSummary-header p {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsSummary-cardHeader {
+        padding: 9px;
+    }
+
+
+    .courierDocumentsSummary-cardIcon {
+        width: 28px;
+
+        height: 28px;
+
+        font-size: 11px;
+    }
+
+
+    .courierDocumentsSummary-cardTitle h3 {
+        font-size: 10px;
+    }
+
+
+    .courierDocumentsSummary-item {
+        padding:
+            6px
+            9px;
+    }
+
+
+    .courierDocumentsSummary-item span,
+    .courierDocumentsSummary-item strong {
+        font-size: 7px;
+    }
+
+}

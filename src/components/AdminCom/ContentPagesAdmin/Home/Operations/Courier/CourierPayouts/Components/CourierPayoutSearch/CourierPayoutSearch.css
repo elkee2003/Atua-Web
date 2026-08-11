@@ -1,0 +1,314 @@
+/* ==========================================================
+   COURIER PAYOUT SEARCH
+========================================================== */
+
+.courierPayoutSearch {
+    width: 100%;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 10px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+/* ==========================================================
+   SEARCH ICON
+========================================================== */
+
+.courierPayoutSearch-icon {
+    width: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    pointer-events: none;
+}
+
+
+/* ==========================================================
+   INPUT
+========================================================== */
+
+.courierPayoutSearch-input {
+    width: 100%;
+
+    min-width: 0;
+
+    height: 36px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        36px
+        0
+        0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 550;
+
+    line-height: 1.4;
+}
+
+
+.courierPayoutSearch-input::placeholder {
+    color: #a8b2bf;
+
+    opacity: 1;
+}
+
+
+/* ==========================================================
+   FOCUS
+========================================================== */
+
+.courierPayoutSearch:focus-within {
+    border-color: #cbd5e1;
+
+    box-shadow:
+        0 0 0 2px rgba(
+            148,
+            163,
+            184,
+            0.08
+        );
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierPayoutSearch-clear {
+    width: 30px;
+    height: 30px;
+
+    position: absolute;
+
+    top: 50%;
+    right: 2px;
+
+    transform: translateY(-50%);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayoutSearch-clear:hover {
+    background: #f1f5f9;
+
+    color: #475569;
+}
+
+
+.courierPayoutSearch-clear:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.18
+    );
+
+    outline-offset: -1px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierPayoutSearch-input {
+        height: 35px;
+
+        font-size: 9px;
+    }
+
+
+    .courierPayoutSearch-icon {
+        width: 35px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierPayoutSearch {
+        margin-bottom: 9px;
+    }
+
+
+    .courierPayoutSearch-icon {
+        width: 33px;
+
+        font-size: 12px;
+    }
+
+
+    .courierPayoutSearch-input {
+        height: 34px;
+
+        font-size: 8.5px;
+
+        padding-right: 34px;
+    }
+
+
+    .courierPayoutSearch-clear {
+        width: 29px;
+        height: 29px;
+
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+    .courierPayoutSearch {
+        margin-bottom: 8px;
+
+        border-radius: 7px;
+    }
+
+
+    .courierPayoutSearch-icon {
+        width: 31px;
+
+        font-size: 11px;
+    }
+
+
+    .courierPayoutSearch-input {
+        height: 33px;
+
+        font-size: 8px;
+
+        padding-right: 32px;
+    }
+
+
+    .courierPayoutSearch-clear {
+        width: 28px;
+        height: 28px;
+
+        right: 1px;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+    .courierPayoutSearch {
+        margin-bottom: 7px;
+    }
+
+
+    .courierPayoutSearch-icon {
+        width: 29px;
+
+        font-size: 10px;
+    }
+
+
+    .courierPayoutSearch-input {
+        height: 32px;
+
+        font-size: 7.5px;
+
+        padding-right: 30px;
+    }
+
+
+    .courierPayoutSearch-clear {
+        width: 27px;
+        height: 27px;
+
+        font-size: 9px;
+    }
+
+}

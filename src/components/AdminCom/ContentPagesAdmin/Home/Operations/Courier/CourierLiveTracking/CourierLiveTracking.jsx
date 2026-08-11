@@ -4,25 +4,36 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { DataStore } from "aws-amplify/datastore";
 
+import { getUrl } from "aws-amplify/storage";
+
 import { Courier } from "../../../../../../../models";
 
 import TrackingHeader from "./Components/TrackingHeader/TrackingHeader";
+
 import TrackingMap from "./Components/TrackingMap/TrackingMap";
+
 import CourierTrackingInfo from "./Components/CourierTrackingInfo/CourierTrackingInfo";
+
 import TrackingStatus from "./Components/TrackingStatus/TrackingStatus";
 
 import "./CourierLiveTracking.css";
 
 function CourierLiveTracking() {
+  /*
+  ==========================================================
+  ROUTING
+  ==========================================================
+  */
+
   const { id } = useParams();
 
   const navigate = useNavigate();
 
   /*
-    ==========================================================
-    STATE
-    ==========================================================
-    */
+  ==========================================================
+  STATE
+  ==========================================================
+  */
 
   const [courier, setCourier] = useState(null);
 
@@ -37,16 +48,25 @@ function CourierLiveTracking() {
   const [lastUpdated, setLastUpdated] = useState(null);
 
   /*
-    ==========================================================
-    NORMALIZE LOCATION
-    ==========================================================
-    
-    Your schema stores lat/lng on Courier.
+  ==========================================================
+  PROFILE IMAGE
+  ==========================================================
+  */
 
-    We normalize them here so the child components don't have
-    to know anything about DataStore or the schema.
-    ==========================================================
-    */
+  const [profileUrl, setProfileUrl] = useState(null);
+
+  /*
+  ==========================================================
+  NORMALIZE LOCATION
+  ==========================================================
+  
+  Your Courier schema stores lat/lng on Courier.
+  
+  We normalize them here so the child components don't have
+  to know anything about DataStore or the schema.
+  
+  ==========================================================
+  */
 
   const getCourierPosition = useCallback((courierData) => {
     if (
@@ -73,45 +93,185 @@ function CourierLiveTracking() {
   }, []);
 
   /*
-    ==========================================================
-    APPLY COURIER DATA
-    ==========================================================
-    
-    This function keeps the Courier object and map position
-    synchronized.
-    ==========================================================
-    */
+  ==========================================================
+  LOAD COURIER PROFILE IMAGE
+  ==========================================================
+  
+  Courier.profilePic contains the Amplify Storage path.
+  
+  We convert that path into a temporary accessible URL
+  using getUrl().
+  
+  ==========================================================
+  */
+
+  const loadProfileImage = useCallback(async (courierData) => {
+    /*
+        ------------------------------------------------------
+        CLEAR PREVIOUS URL
+        ------------------------------------------------------
+        */
+
+    setProfileUrl(null);
+
+    /*
+        ------------------------------------------------------
+        NO COURIER
+        ------------------------------------------------------
+        */
+
+    if (!courierData) {
+      return;
+    }
+
+    /*
+        ------------------------------------------------------
+        PROFILE IMAGE PATH
+        ------------------------------------------------------
+        
+        Your main field should be profilePic.
+        
+        The additional fields make this component tolerant
+        if an older courier record uses another field.
+        
+        ------------------------------------------------------
+        */
+
+    const profilePath =
+      courierData.profilePic ||
+      courierData.profilePhoto ||
+      courierData.profileUrl ||
+      null;
+
+    /*
+        ------------------------------------------------------
+        NO PROFILE PHOTO
+        ------------------------------------------------------
+        */
+
+    if (!profilePath) {
+      console.log("Courier has no profile picture.");
+
+      return;
+    }
+
+    console.log("Courier tracking profile picture path:", profilePath);
+
+    /*
+        ------------------------------------------------------
+        IF ALREADY A FULL URL
+        ------------------------------------------------------
+        */
+
+    if (
+      typeof profilePath === "string" &&
+      (profilePath.startsWith("http://") ||
+        profilePath.startsWith("https://") ||
+        profilePath.startsWith("blob:"))
+    ) {
+      setProfileUrl(profilePath);
+
+      return;
+    }
+
+    /*
+        ------------------------------------------------------
+        GET AMPLIFY STORAGE URL
+        ------------------------------------------------------
+        */
+
+    try {
+      const result = await getUrl({
+        path: profilePath,
+
+        options: {
+          validateObjectExistence: true,
+        },
+      });
+
+      if (result?.url) {
+        const resolvedUrl = result.url.toString();
+
+        console.log("Courier tracking profile image URL:", resolvedUrl);
+
+        setProfileUrl(resolvedUrl);
+      } else {
+        console.warn("No profile image URL returned from Amplify Storage.");
+
+        setProfileUrl(null);
+      }
+    } catch (imageError) {
+      console.error("Error loading courier profile image:", imageError);
+
+      setProfileUrl(null);
+    }
+  }, []);
+
+  /*
+  ==========================================================
+  APPLY COURIER DATA
+  ==========================================================
+  
+  This keeps the Courier object, map position, profile image
+  and last-updated timestamp synchronized.
+  
+  ==========================================================
+  */
 
   const applyCourierData = useCallback(
-    (courierData) => {
+    async (courierData) => {
       if (!courierData) {
         setCourier(null);
+
         setPosition(null);
+
+        setProfileUrl(null);
+
         return;
       }
 
+      /*
+        ------------------------------------------------------
+        SAVE COURIER
+        ------------------------------------------------------
+        */
+
       setCourier(courierData);
+
+      /*
+        ------------------------------------------------------
+        UPDATE MAP POSITION
+        ------------------------------------------------------
+        */
 
       const newPosition = getCourierPosition(courierData);
 
       setPosition(newPosition);
 
       /*
-            ----------------------------------------------
-            LAST UPDATE
-            ----------------------------------------------
-            */
+        ------------------------------------------------------
+        LOAD PROFILE IMAGE
+        ------------------------------------------------------
+        */
+
+      await loadProfileImage(courierData);
+
+      /*
+        ------------------------------------------------------
+        LAST UPDATE
+        ------------------------------------------------------
+        */
 
       setLastUpdated(courierData.updatedAt || new Date().toISOString());
     },
-    [getCourierPosition],
+    [getCourierPosition, loadProfileImage],
   );
 
   /*
-    ==========================================================
-    FETCH COURIER
-    ==========================================================
-    */
+  ==========================================================
+  FETCH COURIER
+  ==========================================================
+  */
 
   const fetchCourier = useCallback(
     async ({ showRefreshing = false } = {}) => {
@@ -124,6 +284,12 @@ function CourierLiveTracking() {
       }
 
       try {
+        /*
+          ----------------------------------------------------
+          LOADING STATE
+          ----------------------------------------------------
+          */
+
         if (showRefreshing) {
           setRefreshing(true);
         } else {
@@ -132,19 +298,43 @@ function CourierLiveTracking() {
 
         setError("");
 
+        /*
+          ----------------------------------------------------
+          GET COURIER
+          ----------------------------------------------------
+          */
+
         const data = await DataStore.query(Courier, id);
+
+        /*
+          ----------------------------------------------------
+          COURIER NOT FOUND
+          ----------------------------------------------------
+          */
 
         if (!data) {
           setCourier(null);
 
           setPosition(null);
 
+          setProfileUrl(null);
+
           setError("Courier could not be found.");
 
           return;
         }
 
-        applyCourierData(data);
+        console.log("Courier loaded for live tracking:", data);
+
+        console.log("Courier profilePic:", data.profilePic);
+
+        /*
+          ----------------------------------------------------
+          APPLY COURIER DATA
+          ----------------------------------------------------
+          */
+
+        await applyCourierData(data);
       } catch (err) {
         console.error("Failed to fetch courier:", err);
 
@@ -159,78 +349,88 @@ function CourierLiveTracking() {
   );
 
   /*
-    ==========================================================
-    INITIAL FETCH
-    ==========================================================
-    */
+  ==========================================================
+  INITIAL FETCH
+  ==========================================================
+  */
 
   useEffect(() => {
     fetchCourier();
   }, [fetchCourier]);
 
   /*
-    ==========================================================
-    REAL-TIME COURIER SUBSCRIPTION
-    ==========================================================
-    
-    This is the important part.
-
-    Whenever the Courier record changes in DataStore,
-    the page receives the updated courier.
-
-    If lat/lng changes, position changes and TrackingMap
-    automatically pans to the new location.
-    ==========================================================
-    */
+  ==========================================================
+  REAL-TIME COURIER SUBSCRIPTION
+  ==========================================================
+  
+  Whenever the Courier record changes in DataStore,
+  the page receives the updated courier.
+  
+  If lat/lng changes, the position changes.
+  
+  If profilePic changes, the profile image is resolved again.
+  
+  ==========================================================
+  */
 
   useEffect(() => {
     if (!id) {
-      return;
+      return undefined;
     }
 
     let subscription;
 
     try {
-      subscription = DataStore.observe(Courier, id).subscribe((message) => {
-        if (!message) {
-          return;
-        }
-
-        /*
-                        ------------------------------------------
-                        UPDATE
-                        ------------------------------------------
-                        */
-
-        if (message.opType === "UPDATE" || message.opType === "INSERT") {
-          const updatedCourier = message.element;
-
-          if (!updatedCourier) {
+      subscription = DataStore.observe(Courier, id).subscribe(
+        async (message) => {
+          if (!message) {
             return;
           }
 
-          applyCourierData(updatedCourier);
-        }
+          /*
+              ------------------------------------------------
+              UPDATE / INSERT
+              ------------------------------------------------
+              */
 
-        /*
-                        ------------------------------------------
-                        DELETE
-                        ------------------------------------------
-                        */
+          if (message.opType === "UPDATE" || message.opType === "INSERT") {
+            const updatedCourier = message.element;
 
-        if (message.opType === "DELETE") {
-          setCourier(null);
+            if (!updatedCourier) {
+              return;
+            }
 
-          setPosition(null);
+            await applyCourierData(updatedCourier);
+          }
 
-          setError("This courier record is no longer available.");
-        }
-      });
+          /*
+              ------------------------------------------------
+              DELETE
+              ------------------------------------------------
+              */
+
+          if (message.opType === "DELETE") {
+            setCourier(null);
+
+            setPosition(null);
+
+            setProfileUrl(null);
+
+            setError("This courier record is no longer available.");
+          }
+        },
+      );
     } catch (err) {
       console.error("Courier tracking subscription error:", err);
 
       setError("Unable to establish live courier tracking.");
     }
+
+    /*
+      --------------------------------------------------------
+      CLEANUP
+      --------------------------------------------------------
+      */
 
     return () => {
       if (subscription) {
@@ -240,10 +440,10 @@ function CourierLiveTracking() {
   }, [id, applyCourierData]);
 
   /*
-    ==========================================================
-    REFRESH
-    ==========================================================
-    */
+  ==========================================================
+  REFRESH
+  ==========================================================
+  */
 
   const handleRefresh = async () => {
     await fetchCourier({
@@ -252,20 +452,20 @@ function CourierLiveTracking() {
   };
 
   /*
-    ==========================================================
-    BACK
-    ==========================================================
-    */
+  ==========================================================
+  BACK
+  ==========================================================
+  */
 
   const handleBack = () => {
     navigate(-1);
   };
 
   /*
-    ==========================================================
-    VIEW PROFILE
-    ==========================================================
-    */
+  ==========================================================
+  VIEW PROFILE
+  ==========================================================
+  */
 
   const handleViewProfile = () => {
     if (!courier?.id) {
@@ -276,10 +476,10 @@ function CourierLiveTracking() {
   };
 
   /*
-    ==========================================================
-    LOADING SCREEN
-    ==========================================================
-    */
+  ==========================================================
+  LOADING SCREEN
+  ==========================================================
+  */
 
   if (loading && !courier) {
     return (
@@ -296,10 +496,10 @@ function CourierLiveTracking() {
   }
 
   /*
-    ==========================================================
-    COURIER NOT FOUND
-    ==========================================================
-    */
+  ==========================================================
+  COURIER NOT FOUND
+  ==========================================================
+  */
 
   if (!courier) {
     return (
@@ -335,19 +535,20 @@ function CourierLiveTracking() {
   }
 
   /*
-    ==========================================================
-    RENDER
-    ==========================================================
-    */
+  ==========================================================
+  RENDER
+  ==========================================================
+  */
 
   return (
     <div className="courierLiveTracking">
       {/* ==================================================
-                PAGE HEADER
-            ================================================== */}
+          PAGE HEADER
+      ================================================== */}
 
       <TrackingHeader
         courier={courier}
+        profileUrl={profileUrl}
         position={position}
         onBack={handleBack}
         onRefresh={handleRefresh}
@@ -356,8 +557,8 @@ function CourierLiveTracking() {
       />
 
       {/* ==================================================
-                ERROR BANNER
-            ================================================== */}
+          ERROR BANNER
+      ================================================== */}
 
       {error && (
         <div className="courierLiveTracking-errorBanner">
@@ -376,21 +577,21 @@ function CourierLiveTracking() {
       )}
 
       {/* ==================================================
-                MAIN CONTENT
-            ================================================== */}
+          MAIN CONTENT
+      ================================================== */}
 
       <main className="courierLiveTracking-content">
         {/* ==================================================
-                    MAP AREA
-                ================================================== */}
+            MAP AREA
+        ================================================== */}
 
         <section className="courierLiveTracking-mapSection">
           <TrackingMap courier={courier} position={position} loading={false} />
         </section>
 
         {/* ==================================================
-                    RIGHT INFORMATION COLUMN
-                ================================================== */}
+            RIGHT INFORMATION COLUMN
+        ================================================== */}
 
         <aside className="courierLiveTracking-sidebar">
           <CourierTrackingInfo courier={courier} position={position} />
@@ -404,15 +605,16 @@ function CourierLiveTracking() {
       </main>
 
       {/* ==================================================
-                BOTTOM CONNECTION BAR
-            ================================================== */}
+          BOTTOM CONNECTION BAR
+      ================================================== */}
 
       <footer className="courierLiveTracking-footer">
         <div className="courierLiveTracking-footerStatus">
           <span
-            className={`courierLiveTracking-footerDot ${
-              courier.isOnline && position ? "active" : "inactive"
-            }`}
+            className={`
+              courierLiveTracking-footerDot
+              ${courier.isOnline && position ? "active" : "inactive"}
+            `}
           />
 
           <span>

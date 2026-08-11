@@ -1,0 +1,712 @@
+/* ==========================================================
+   COURIER DOCUMENT CARD
+========================================================== */
+
+.courierDocumentCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierDocumentCard-header {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierDocumentCard-icon {
+    width: 38px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   HEADING
+========================================================== */
+
+.courierDocumentCard-heading {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.courierDocumentCard-heading h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierDocumentCard-heading p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierDocumentCard-status {
+    min-height: 25px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 0 8px;
+
+    box-sizing: border-box;
+
+    border-radius: 20px;
+
+    font-size: 8px;
+
+    font-weight: 750;
+}
+
+
+.courierDocumentCard-status svg {
+    font-size: 9px;
+}
+
+
+.courierDocumentCard-status.complete {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierDocumentCard-status.pending {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+.courierDocumentCard-status.missing {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   DOCUMENT NUMBER
+========================================================== */
+
+.courierDocumentCard-number {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 11px 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #fafbfc;
+}
+
+
+.courierDocumentCard-number span {
+    color: #64748b;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+.courierDocumentCard-number strong {
+    max-width: 65%;
+
+    color: #334155;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.4px;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   DOCUMENT AREA
+========================================================== */
+
+.courierDocumentCard-documentArea {
+    width: 100%;
+
+    min-height: 190px;
+
+    box-sizing: border-box;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   IMAGE WRAPPER
+========================================================== */
+
+.courierDocumentCard-imageWrapper {
+    position: relative;
+
+    width: 100%;
+
+    min-height: 190px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px;
+
+    background: #f8fafc;
+}
+
+
+.courierDocumentCard-image {
+    width: 100%;
+
+    max-height: 420px;
+
+    display: block;
+
+    object-fit: contain;
+
+    border-radius: 6px;
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierDocumentCard-viewButton {
+    position: absolute;
+
+    right: 10px;
+
+    bottom: 10px;
+
+    min-height: 30px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    padding: 0 9px;
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: rgba(15, 23, 42, 0.78);
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.courierDocumentCard-viewButton:hover {
+    background: rgba(15, 23, 42, 0.92);
+
+    transform: translateY(-1px);
+}
+
+
+.courierDocumentCard-viewButton svg {
+    font-size: 9px;
+}
+
+
+/* ==========================================================
+   NO IMAGE
+========================================================== */
+
+.courierDocumentCard-noImage {
+    width: 100%;
+
+    min-height: 190px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+
+.courierDocumentCard-noImageIcon {
+    width: 48px;
+
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 9px;
+
+    border-radius: 11px;
+
+    background: #eef2f7;
+
+    color: #94a3b8;
+
+    font-size: 19px;
+}
+
+
+.courierDocumentCard-noImage h4 {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.courierDocumentCard-noImage p {
+    max-width: 300px;
+
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   EXTRA CONTENT
+========================================================== */
+
+.courierDocumentCard-extra {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 12px 13px;
+
+    border-top: 1px solid #edf1f5;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierDocumentCard-header {
+        padding: 12px;
+    }
+
+
+    .courierDocumentCard-status {
+        padding: 0 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocumentCard {
+        border-radius: 9px;
+    }
+
+
+    .courierDocumentCard-header {
+        align-items: flex-start;
+
+        gap: 8px;
+
+        padding: 11px;
+    }
+
+
+    .courierDocumentCard-icon {
+        width: 34px;
+
+        height: 34px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
+    }
+
+
+    .courierDocumentCard-heading h3 {
+        font-size: 12px;
+    }
+
+
+    .courierDocumentCard-heading p {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentCard-status {
+        min-height: 23px;
+
+        padding: 0 6px;
+
+        font-size: 7px;
+    }
+
+
+    .courierDocumentCard-status svg {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentCard-number {
+        padding: 10px 11px;
+    }
+
+
+    .courierDocumentCard-number span {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentCard-number strong {
+        font-size: 10px;
+    }
+
+
+    .courierDocumentCard-documentArea,
+    .courierDocumentCard-imageWrapper,
+    .courierDocumentCard-noImage {
+        min-height: 175px;
+    }
+
+
+    .courierDocumentCard-viewButton {
+        min-height: 29px;
+
+        right: 8px;
+
+        bottom: 8px;
+
+        padding: 0 8px;
+
+        font-size: 7px;
+    }
+
+
+    .courierDocumentCard-noImageIcon {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 17px;
+    }
+
+
+    .courierDocumentCard-noImage h4 {
+        font-size: 11px;
+    }
+
+
+    .courierDocumentCard-noImage p {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentCard-extra {
+        padding: 10px 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocumentCard-header {
+        padding: 10px;
+    }
+
+
+    .courierDocumentCard-icon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocumentCard-heading h3 {
+        font-size: 11px;
+    }
+
+
+    .courierDocumentCard-heading p {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentCard-status span {
+        display: none;
+    }
+
+
+    .courierDocumentCard-status {
+        width: 24px;
+
+        height: 24px;
+
+        padding: 0;
+    }
+
+
+    .courierDocumentCard-status svg {
+        font-size: 9px;
+    }
+
+
+    .courierDocumentCard-number {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .courierDocumentCard-number strong {
+        max-width: 100%;
+
+        text-align: left;
+    }
+
+
+    .courierDocumentCard-documentArea,
+    .courierDocumentCard-imageWrapper,
+    .courierDocumentCard-noImage {
+        min-height: 160px;
+    }
+
+
+    .courierDocumentCard-viewButton span {
+        display: none;
+    }
+
+
+    .courierDocumentCard-viewButton {
+        width: 30px;
+
+        height: 30px;
+
+        padding: 0;
+    }
+
+
+    .courierDocumentCard-viewButton svg {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocumentCard-header {
+        padding: 9px;
+    }
+
+
+    .courierDocumentCard-icon {
+        width: 29px;
+
+        height: 29px;
+
+        font-size: 11px;
+    }
+
+
+    .courierDocumentCard-heading h3 {
+        font-size: 10px;
+    }
+
+
+    .courierDocumentCard-heading p {
+        font-size: 6.5px;
+    }
+
+
+    .courierDocumentCard-number {
+        padding: 9px;
+    }
+
+
+    .courierDocumentCard-documentArea,
+    .courierDocumentCard-imageWrapper,
+    .courierDocumentCard-noImage {
+        min-height: 145px;
+    }
+
+
+    .courierDocumentCard-noImageIcon {
+        width: 39px;
+
+        height: 39px;
+
+        font-size: 15px;
+    }
+
+
+    .courierDocumentCard-noImage h4 {
+        font-size: 10px;
+    }
+
+
+    .courierDocumentCard-noImage p {
+        font-size: 6.5px;
+    }
+
+
+    .courierDocumentCard-extra {
+        padding: 9px;
+    }
+
+}

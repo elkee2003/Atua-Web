@@ -1,0 +1,722 @@
+/* ==========================================================
+   COURIER REVIEWS FILTERS
+========================================================== */
+
+.courierReviewsFilters {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    padding: 16px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReviewsFilters-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReviewsFilters-title {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.courierReviewsFilters-titleIcon {
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 15px;
+}
+
+.courierReviewsFilters-title h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReviewsFilters-title p {
+    margin: 4px 0 0;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierReviewsFilters-clearButton {
+    min-height: 36px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReviewsFilters-clearButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReviewsFilters-clearButton:active {
+    transform: translateY(1px);
+}
+
+.courierReviewsFilters-clearButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+.courierReviewsFilters-clearButton svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   FILTER CONTROLS
+========================================================== */
+
+.courierReviewsFilters-controls {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   FIELD
+========================================================== */
+
+.courierReviewsFilters-field {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierReviewsFilters-field label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.courierReviewsFilters-field label svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   SELECT WRAPPER
+========================================================== */
+
+.courierReviewsFilters-selectWrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+.courierReviewsFilters-selectWrapper::after {
+    content: "";
+
+    position: absolute;
+
+    top: 50%;
+
+    right: 13px;
+
+    width: 7px;
+
+    height: 7px;
+
+    border-right: 2px solid #94a3b8;
+
+    border-bottom: 2px solid #94a3b8;
+
+    pointer-events: none;
+
+    transform:
+        translateY(-65%)
+        rotate(45deg);
+}
+
+
+/* ==========================================================
+   SELECT
+========================================================== */
+
+.courierReviewsFilters-selectWrapper select {
+    width: 100%;
+
+    min-height: 45px;
+
+    box-sizing: border-box;
+
+    appearance: none;
+
+    padding:
+        0
+        38px
+        0
+        12px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.courierReviewsFilters-selectWrapper select:hover {
+    border-color: #cbd5e1;
+
+    background: #fafbfc;
+}
+
+.courierReviewsFilters-selectWrapper select:focus {
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            100,
+            116,
+            139,
+            0.08
+        );
+}
+
+.courierReviewsFilters-selectWrapper select:disabled {
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    cursor: not-allowed;
+
+    opacity: 0.75;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.courierReviewsFilters-footer {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   ACTIVE FILTER
+========================================================== */
+
+.courierReviewsFilters-active {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.courierReviewsFilters-active strong {
+    min-width: 23px;
+
+    height: 23px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        6px;
+
+    border-radius: 6px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierReviewsFilters-loading {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.courierReviewsFilters-spinner {
+    width: 14px;
+
+    height: 14px;
+
+    box-sizing: border-box;
+
+    border:
+        2px solid #e2e8f0;
+
+    border-top-color: #64748b;
+
+    border-radius: 50%;
+
+    animation:
+        courierReviewsFiltersSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierReviewsFiltersSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 850px) {
+
+    .courierReviewsFilters-controls {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .courierReviewsFilters-field:last-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviewsFilters {
+        padding: 14px;
+    }
+
+    .courierReviewsFilters-title h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsFilters-title p {
+        font-size: 11px;
+    }
+
+    .courierReviewsFilters-selectWrapper select {
+        min-height: 44px;
+
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewsFilters {
+        margin-bottom: 12px;
+
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReviewsFilters-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 13px;
+    }
+
+    .courierReviewsFilters-title {
+        align-items: flex-start;
+
+        gap: 8px;
+    }
+
+    .courierReviewsFilters-titleIcon {
+        width: 36px;
+
+        height: 36px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+    .courierReviewsFilters-title h2 {
+        font-size: 16px;
+    }
+
+    .courierReviewsFilters-title p {
+        margin-top: 3px;
+
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       CLEAR BUTTON
+    ====================================================== */
+
+    .courierReviewsFilters-clearButton {
+        min-height: 33px;
+
+        padding:
+            0
+            9px;
+
+        border-radius: 7px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsFilters-clearButton span {
+        display: none;
+    }
+
+    .courierReviewsFilters-clearButton svg {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       CONTROLS
+    ====================================================== */
+
+    .courierReviewsFilters-controls {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .courierReviewsFilters-field:last-child {
+        grid-column: auto;
+    }
+
+    .courierReviewsFilters-field {
+        gap: 6px;
+    }
+
+    .courierReviewsFilters-field label {
+        font-size: 11px;
+    }
+
+    .courierReviewsFilters-selectWrapper select {
+        min-height: 45px;
+
+        padding-left: 11px;
+
+        font-size: 12px;
+    }
+
+
+    /* ======================================================
+       FOOTER
+    ====================================================== */
+
+    .courierReviewsFilters-footer {
+        margin-top: 12px;
+
+        padding-top: 10px;
+    }
+
+    .courierReviewsFilters-active {
+        font-size: 10px;
+    }
+
+    .courierReviewsFilters-active strong {
+        min-width: 22px;
+
+        height: 22px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsFilters-loading {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviewsFilters {
+        padding: 11px;
+    }
+
+    .courierReviewsFilters-title h2 {
+        font-size: 15px;
+    }
+
+    .courierReviewsFilters-title p {
+        font-size: 10px;
+    }
+
+    .courierReviewsFilters-titleIcon {
+        width: 34px;
+
+        height: 34px;
+    }
+
+    .courierReviewsFilters-field label {
+        font-size: 10px;
+    }
+
+    .courierReviewsFilters-selectWrapper select {
+        min-height: 43px;
+
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewsFilters {
+        padding: 10px;
+    }
+
+    .courierReviewsFilters-title h2 {
+        font-size: 14px;
+    }
+
+    .courierReviewsFilters-title p {
+        font-size: 9px;
+    }
+
+    .courierReviewsFilters-titleIcon {
+        width: 32px;
+
+        height: 32px;
+
+        font-size: 12px;
+    }
+
+    .courierReviewsFilters-selectWrapper select {
+        min-height: 41px;
+
+        font-size: 10px;
+    }
+
+}

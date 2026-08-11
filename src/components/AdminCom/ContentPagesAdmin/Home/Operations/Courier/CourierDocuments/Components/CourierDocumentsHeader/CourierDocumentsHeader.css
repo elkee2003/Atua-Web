@@ -1,0 +1,1030 @@
+/* ==========================================================
+   COURIER DOCUMENTS HEADER
+========================================================== */
+
+.courierDocumentsHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin: 0 auto 14px;
+
+    padding: 0;
+
+    background: transparent;
+}
+
+
+/* ==========================================================
+   TOP NAVIGATION
+========================================================== */
+
+.courierDocumentsHeader-top {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+}
+
+
+/* ==========================================================
+   NAVIGATION BUTTONS
+========================================================== */
+
+.courierDocumentsHeader-backButton,
+.courierDocumentsHeader-refreshButton {
+    min-height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 14px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.courierDocumentsHeader-backButton:hover,
+.courierDocumentsHeader-refreshButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierDocumentsHeader-backButton:active,
+.courierDocumentsHeader-refreshButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+
+.courierDocumentsHeader-backButton svg,
+.courierDocumentsHeader-refreshButton svg {
+    flex-shrink: 0;
+
+    font-size: 14px;
+}
+
+
+.courierDocumentsHeader-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierDocumentsHeader-refreshIcon.spinning {
+    animation:
+        courierDocumentsHeaderSpin
+        0.9s
+        linear
+        infinite;
+}
+
+
+@keyframes courierDocumentsHeaderSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   COURIER PROFILE
+========================================================== */
+
+.courierDocumentsHeader-profile {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierDocumentsHeader-avatar {
+    width: 62px;
+
+    height: 62px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 50%;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+
+.courierDocumentsHeader-avatar img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.courierDocumentsHeader-avatar img[style*="display: none"] + span {
+    display: flex;
+}
+
+
+/* ==========================================================
+   COURIER INFORMATION
+========================================================== */
+
+.courierDocumentsHeader-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+/* ==========================================================
+   NAME ROW
+========================================================== */
+
+.courierDocumentsHeader-nameRow {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+
+.courierDocumentsHeader-nameRow h1 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   ONLINE BADGE
+========================================================== */
+
+.courierDocumentsHeader-onlineBadge {
+    min-height: 27px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 9px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+.courierDocumentsHeader-onlineBadge > span {
+    width: 7px;
+
+    height: 7px;
+
+    display: block;
+
+    border-radius: 50%;
+}
+
+
+.courierDocumentsHeader-onlineBadge.online {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierDocumentsHeader-onlineBadge.online > span {
+    background: #10b981;
+}
+
+
+.courierDocumentsHeader-onlineBadge.offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+.courierDocumentsHeader-onlineBadge.offline > span {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   COURIER DETAILS
+========================================================== */
+
+.courierDocumentsHeader-details {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 6px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+
+.courierDocumentsHeader-details span {
+    overflow-wrap: anywhere;
+}
+
+
+.courierDocumentsHeader-separator {
+    color: #cbd5e1;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   PHONE
+========================================================== */
+
+.courierDocumentsHeader-phone {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 7px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+.courierDocumentsHeader-phone svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   APPROVAL
+========================================================== */
+
+.courierDocumentsHeader-approval {
+    min-width: 125px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    justify-content: center;
+
+    gap: 4px;
+
+    padding-left: 16px;
+
+    border-left: 1px solid #edf1f5;
+
+    text-align: right;
+}
+
+
+.courierDocumentsHeader-approval > span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+.courierDocumentsHeader-approval strong {
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+.courierDocumentsHeader-approval strong.approved {
+    color: #059669;
+}
+
+
+.courierDocumentsHeader-approval strong.pending {
+    color: #d97706;
+}
+
+
+/* ==========================================================
+   PAGE TITLE
+========================================================== */
+
+.courierDocumentsHeader-pageTitle {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-top: 12px;
+
+    padding: 17px 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+
+.courierDocumentsHeader-pageTitleMain {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+/* ==========================================================
+   TITLE ICON
+========================================================== */
+
+.courierDocumentsHeader-titleIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================================
+   PAGE TITLE TEXT
+========================================================== */
+
+.courierDocumentsHeader-pageTitle h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierDocumentsHeader-pageTitle p {
+    max-width: 650px;
+
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   VERIFICATION
+========================================================== */
+
+.courierDocumentsHeader-verification {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px 11px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+
+.courierDocumentsHeader-verificationIcon {
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    font-size: 13px;
+}
+
+
+.courierDocumentsHeader-verification > div:last-child {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.courierDocumentsHeader-verification span {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 650;
+}
+
+
+.courierDocumentsHeader-verification strong {
+    color: #475569;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierDocumentsHeader-profile {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+
+    .courierDocumentsHeader-info {
+        min-width: 250px;
+    }
+
+
+    .courierDocumentsHeader-approval {
+        width: 100%;
+
+        min-width: 0;
+
+        align-items: flex-start;
+
+        padding:
+            12px
+            0
+            0;
+
+        border-top: 1px solid #edf1f5;
+
+        border-left: none;
+
+        text-align: left;
+    }
+
+
+    .courierDocumentsHeader-pageTitle {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .courierDocumentsHeader-verification {
+        width: 100%;
+
+        box-sizing: border-box;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocumentsHeader {
+        margin-bottom: 10px;
+    }
+
+
+    /* ======================================================
+       NAVIGATION
+    ====================================================== */
+
+    .courierDocumentsHeader-top {
+        margin-bottom: 9px;
+    }
+
+
+    .courierDocumentsHeader-backButton,
+    .courierDocumentsHeader-refreshButton {
+        width: 39px;
+
+        min-width: 39px;
+
+        height: 39px;
+
+        min-height: 39px;
+
+        padding: 0;
+
+        border-radius: 8px;
+    }
+
+
+    .courierDocumentsHeader-backButton span,
+    .courierDocumentsHeader-refreshButton span {
+        display: none;
+    }
+
+
+    .courierDocumentsHeader-backButton svg,
+    .courierDocumentsHeader-refreshButton svg {
+        font-size: 14px;
+    }
+
+
+    /* ======================================================
+       PROFILE
+    ====================================================== */
+
+    .courierDocumentsHeader-profile {
+        align-items: flex-start;
+
+        gap: 11px;
+
+        padding: 14px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierDocumentsHeader-avatar {
+        width: 52px;
+
+        height: 52px;
+
+        font-size: 19px;
+    }
+
+
+    .courierDocumentsHeader-info {
+        min-width: 0;
+    }
+
+
+    .courierDocumentsHeader-nameRow {
+        gap: 6px;
+    }
+
+
+    .courierDocumentsHeader-nameRow h1 {
+        font-size: 18px;
+    }
+
+
+    .courierDocumentsHeader-onlineBadge {
+        min-height: 23px;
+
+        padding: 0 7px;
+
+        font-size: 9px;
+    }
+
+
+    .courierDocumentsHeader-onlineBadge > span {
+        width: 6px;
+
+        height: 6px;
+    }
+
+
+    .courierDocumentsHeader-details {
+        gap: 4px;
+
+        margin-top: 5px;
+
+        font-size: 9px;
+
+        line-height: 1.45;
+    }
+
+
+    .courierDocumentsHeader-phone {
+        margin-top: 6px;
+
+        font-size: 9px;
+    }
+
+
+    .courierDocumentsHeader-phone svg {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       APPROVAL
+    ====================================================== */
+
+    .courierDocumentsHeader-approval {
+        padding-top: 10px;
+    }
+
+
+    .courierDocumentsHeader-approval > span {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsHeader-approval strong {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       PAGE TITLE
+    ====================================================== */
+
+    .courierDocumentsHeader-pageTitle {
+        gap: 11px;
+
+        margin-top: 9px;
+
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierDocumentsHeader-pageTitleMain {
+        gap: 9px;
+    }
+
+
+    .courierDocumentsHeader-titleIcon {
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 8px;
+
+        font-size: 15px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle h2 {
+        font-size: 15px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle p {
+        margin-top: 3px;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+    }
+
+
+    /* ======================================================
+       VERIFICATION
+    ====================================================== */
+
+    .courierDocumentsHeader-verification {
+        padding: 8px 9px;
+    }
+
+
+    .courierDocumentsHeader-verificationIcon {
+        width: 27px;
+
+        height: 27px;
+
+        font-size: 11px;
+    }
+
+
+    .courierDocumentsHeader-verification span {
+        font-size: 7px;
+    }
+
+
+    .courierDocumentsHeader-verification strong {
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocumentsHeader-profile {
+        display: grid;
+
+        grid-template-columns:
+            auto
+            minmax(0, 1fr);
+    }
+
+
+    .courierDocumentsHeader-avatar {
+        width: 48px;
+
+        height: 48px;
+    }
+
+
+    .courierDocumentsHeader-nameRow h1 {
+        font-size: 17px;
+    }
+
+
+    .courierDocumentsHeader-details {
+        display: block;
+
+        line-height: 1.7;
+    }
+
+
+    .courierDocumentsHeader-details span {
+        margin-right: 4px;
+    }
+
+
+    .courierDocumentsHeader-separator {
+        display: inline;
+    }
+
+
+    .courierDocumentsHeader-approval {
+        grid-column: 1 / -1;
+    }
+
+
+    .courierDocumentsHeader-pageTitle {
+        padding: 12px;
+    }
+
+
+    .courierDocumentsHeader-pageTitleMain {
+        align-items: flex-start;
+    }
+
+
+    .courierDocumentsHeader-titleIcon {
+        width: 35px;
+
+        height: 35px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle h2 {
+        font-size: 14px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle p {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocumentsHeader-backButton,
+    .courierDocumentsHeader-refreshButton {
+        width: 35px;
+
+        min-width: 35px;
+
+        height: 35px;
+
+        min-height: 35px;
+    }
+
+
+    .courierDocumentsHeader-profile {
+        padding: 11px;
+    }
+
+
+    .courierDocumentsHeader-avatar {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+
+    .courierDocumentsHeader-nameRow h1 {
+        font-size: 15px;
+    }
+
+
+    .courierDocumentsHeader-onlineBadge {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsHeader-details {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsHeader-phone {
+        font-size: 8px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle {
+        padding: 10px;
+    }
+
+
+    .courierDocumentsHeader-titleIcon {
+        width: 32px;
+
+        height: 32px;
+
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle h2 {
+        font-size: 13px;
+    }
+
+
+    .courierDocumentsHeader-pageTitle p {
+        font-size: 7px;
+    }
+
+}

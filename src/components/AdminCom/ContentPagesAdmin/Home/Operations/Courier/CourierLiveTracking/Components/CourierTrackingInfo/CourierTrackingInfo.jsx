@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
+import { getUrl } from "aws-amplify/storage";
+
 import {
   FaPhone,
   FaMotorcycle,
@@ -11,22 +14,38 @@ import {
 
 import "./CourierTrackingInfo.css";
 
-function CourierTrackingInfo({ courier, position }) {
+function CourierTrackingInfo({
+  courier,
+  position,
+  profileUrl: suppliedProfileUrl = null,
+}) {
   /*
-    ==========================================================
-    COURIER NAME
-    ==========================================================
-    */
+  ==========================================================
+  COURIER NAME
+  ==========================================================
+  */
 
   const courierName =
     [courier?.firstName, courier?.lastName].filter(Boolean).join(" ") ||
     "Courier";
 
   /*
-    ==========================================================
-    COURIER DATA
-    ==========================================================
-    */
+  ==========================================================
+  COURIER INITIALS
+  ==========================================================
+  */
+
+  const firstInitial = courier?.firstName?.charAt(0)?.toUpperCase() || "";
+
+  const lastInitial = courier?.lastName?.charAt(0)?.toUpperCase() || "";
+
+  const courierInitials = `${firstInitial}${lastInitial}` || "C";
+
+  /*
+  ==========================================================
+  COURIER DATA
+  ==========================================================
+  */
 
   const phoneNumber = courier?.phoneNumber || "Not available";
 
@@ -34,41 +53,240 @@ function CourierTrackingInfo({ courier, position }) {
 
   const vehicleClass = courier?.vehicleClass || "Not specified";
 
-  const plateNumber = courier?.plateNumber || "Not available";
+  const plateNumber =
+    courier?.plateNumber ||
+    courier?.vehicleRegistrationNumber ||
+    "Not available";
 
   /*
-    ==========================================================
-    STATUS
-    ==========================================================
-    */
+  ==========================================================
+  STATUS
+  ==========================================================
+  */
 
   const isOnline = Boolean(courier?.isOnline);
 
   const isApproved = Boolean(courier?.isApproved);
 
   /*
-    ==========================================================
-    POSITION
-    ==========================================================
-    */
+  ==========================================================
+  PROFILE IMAGE
+  ==========================================================
+  */
 
-  const hasPosition =
+  const [resolvedProfileUrl, setResolvedProfileUrl] = useState(
+    suppliedProfileUrl || null,
+  );
+
+  const [imageLoading, setImageLoading] = useState(
+    Boolean(courier?.profilePic && !suppliedProfileUrl),
+  );
+
+  const [imageError, setImageError] = useState(false);
+
+  /*
+  ==========================================================
+  RESOLVE PROFILE IMAGE
+  ==========================================================
+  */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const resolveProfileImage = async () => {
+      /*
+          ----------------------------------------------------
+          RESET
+          ----------------------------------------------------
+          */
+
+      setImageError(false);
+
+      /*
+          ----------------------------------------------------
+          USE URL SUPPLIED BY PARENT
+          ----------------------------------------------------
+          */
+
+      if (suppliedProfileUrl) {
+        setResolvedProfileUrl(suppliedProfileUrl);
+
+        setImageLoading(false);
+
+        return;
+      }
+
+      /*
+          ----------------------------------------------------
+          GET STORAGE PATH
+          ----------------------------------------------------
+          */
+
+      const profilePath =
+        courier?.profilePic ||
+        courier?.profilePhoto ||
+        courier?.profileImage ||
+        null;
+
+      /*
+          ----------------------------------------------------
+          NO IMAGE
+          ----------------------------------------------------
+          */
+
+      if (!profilePath) {
+        setResolvedProfileUrl(null);
+
+        setImageLoading(false);
+
+        return;
+      }
+
+      /*
+          ----------------------------------------------------
+          IF ALREADY A URL
+          ----------------------------------------------------
+          */
+
+      if (
+        typeof profilePath === "string" &&
+        (profilePath.startsWith("http://") ||
+          profilePath.startsWith("https://") ||
+          profilePath.startsWith("blob:") ||
+          profilePath.startsWith("data:"))
+      ) {
+        if (!cancelled) {
+          setResolvedProfileUrl(profilePath);
+
+          setImageLoading(false);
+        }
+
+        return;
+      }
+
+      /*
+          ----------------------------------------------------
+          LOAD FROM AMPLIFY STORAGE
+          ----------------------------------------------------
+          */
+
+      try {
+        setImageLoading(true);
+
+        console.log("CourierTrackingInfo profilePic:", profilePath);
+
+        const result = await getUrl({
+          path: profilePath,
+
+          options: {
+            validateObjectExistence: true,
+          },
+        });
+
+        if (cancelled) {
+          return;
+        }
+
+        if (result?.url) {
+          const url = result.url.toString();
+
+          console.log("CourierTrackingInfo resolved profile URL:", url);
+
+          setResolvedProfileUrl(url);
+
+          setImageError(false);
+        } else {
+          console.warn("Amplify Storage returned no profile image URL.");
+
+          setResolvedProfileUrl(null);
+
+          setImageError(true);
+        }
+      } catch (error) {
+        if (cancelled) {
+          return;
+        }
+
+        console.error(
+          "CourierTrackingInfo could not load profile image:",
+          error,
+        );
+
+        setResolvedProfileUrl(null);
+
+        setImageError(true);
+      } finally {
+        if (!cancelled) {
+          setImageLoading(false);
+        }
+      }
+    };
+
+    resolveProfileImage();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    courier?.profilePic,
+    courier?.profilePhoto,
+    courier?.profileImage,
+    suppliedProfileUrl,
+  ]);
+
+  /*
+  ==========================================================
+  IMAGE ERROR
+  ==========================================================
+  */
+
+  const handleImageError = (event) => {
+    console.error(
+      "CourierTrackingInfo image failed:",
+      event?.currentTarget?.src,
+    );
+
+    setImageError(true);
+
+    setResolvedProfileUrl(null);
+  };
+
+  /*
+  ==========================================================
+  IMAGE LOADED
+  ==========================================================
+  */
+
+  const handleImageLoad = () => {
+    setImageError(false);
+
+    setImageLoading(false);
+  };
+
+  /*
+  ==========================================================
+  POSITION
+  ==========================================================
+  */
+
+  const hasPosition = Boolean(
     position &&
     Number.isFinite(Number(position.lat)) &&
-    Number.isFinite(Number(position.lng));
+    Number.isFinite(Number(position.lng)),
+  );
 
   const latitude = hasPosition ? Number(position.lat).toFixed(5) : null;
 
   const longitude = hasPosition ? Number(position.lng).toFixed(5) : null;
 
   /*
-    ==========================================================
-    VEHICLE ICON
-    ==========================================================
-    */
+  ==========================================================
+  VEHICLE ICON
+  ==========================================================
+  */
 
   const getVehicleIcon = () => {
-    const type = transportationType.toLowerCase();
+    const type = String(transportationType).toLowerCase();
 
     if (type.includes("micro")) {
       return <FaMotorcycle />;
@@ -86,16 +304,16 @@ function CourierTrackingInfo({ courier, position }) {
   };
 
   /*
-    ==========================================================
-    RENDER
-    ==========================================================
-    */
+  ==========================================================
+  RENDER
+  ==========================================================
+  */
 
   return (
     <aside className="courierTrackingInfo">
-      {/* =================================================
-                HEADER
-            ================================================= */}
+      {/* ==================================================
+          HEADER
+      ================================================== */}
 
       <div className="courierTrackingInfo-header">
         <div className="courierTrackingInfo-headerTitle">
@@ -111,16 +329,28 @@ function CourierTrackingInfo({ courier, position }) {
         </div>
       </div>
 
-      {/* =================================================
-                COURIER IDENTITY
-            ================================================= */}
+      {/* ==================================================
+          COURIER IDENTITY
+      ================================================== */}
 
       <div className="courierTrackingInfo-identity">
         <div className="courierTrackingInfo-avatar">
-          {courier?.profilePic ? (
-            <img src={courier.profilePic} alt={courierName} />
+          {resolvedProfileUrl && !imageError ? (
+            <img
+              src={resolvedProfileUrl}
+              alt={courierName}
+              className="courierTrackingInfo-avatarImage"
+              onLoad={handleImageLoad}
+              onError={handleImageError}
+            />
+          ) : imageLoading ? (
+            <span className="courierTrackingInfo-avatarLoading">
+              <span />
+            </span>
           ) : (
-            <span>{courier?.firstName?.charAt(0)?.toUpperCase() || "C"}</span>
+            <span className="courierTrackingInfo-avatarInitials">
+              {courierInitials}
+            </span>
           )}
         </div>
 
@@ -131,11 +361,14 @@ function CourierTrackingInfo({ courier, position }) {
         </div>
 
         <div
-          className={`courierTrackingInfo-onlineBadge ${
-            isOnline
-              ? "courierTrackingInfo-online"
-              : "courierTrackingInfo-offline"
-          }`}
+          className={`
+            courierTrackingInfo-onlineBadge
+            ${
+              isOnline
+                ? "courierTrackingInfo-online"
+                : "courierTrackingInfo-offline"
+            }
+          `}
         >
           <span />
 
@@ -143,9 +376,9 @@ function CourierTrackingInfo({ courier, position }) {
         </div>
       </div>
 
-      {/* =================================================
-                APPROVAL STATUS
-            ================================================= */}
+      {/* ==================================================
+          APPROVAL STATUS
+      ================================================== */}
 
       <div className="courierTrackingInfo-approval">
         <div className="courierTrackingInfo-approvalIcon">
@@ -167,9 +400,9 @@ function CourierTrackingInfo({ courier, position }) {
         </div>
       </div>
 
-      {/* =================================================
-                INFORMATION LIST
-            ================================================= */}
+      {/* ==================================================
+          COURIER DETAILS
+      ================================================== */}
 
       <div className="courierTrackingInfo-section">
         <h4>Courier Details</h4>
@@ -231,9 +464,9 @@ function CourierTrackingInfo({ courier, position }) {
         </div>
       </div>
 
-      {/* =================================================
-                CURRENT LOCATION
-            ================================================= */}
+      {/* ==================================================
+          CURRENT LOCATION
+      ================================================== */}
 
       <div className="courierTrackingInfo-locationSection">
         <div className="courierTrackingInfo-sectionHeading">
@@ -276,16 +509,19 @@ function CourierTrackingInfo({ courier, position }) {
         )}
       </div>
 
-      {/* =================================================
-                LIVE LOCATION STATUS
-            ================================================= */}
+      {/* ==================================================
+          LIVE LOCATION STATUS
+      ================================================== */}
 
       <div
-        className={`courierTrackingInfo-locationStatus ${
-          hasPosition
-            ? "courierTrackingInfo-locationActive"
-            : "courierTrackingInfo-locationInactive"
-        }`}
+        className={`
+          courierTrackingInfo-locationStatus
+          ${
+            hasPosition
+              ? "courierTrackingInfo-locationActive"
+              : "courierTrackingInfo-locationInactive"
+          }
+        `}
       >
         <span className="courierTrackingInfo-locationStatusDot" />
 

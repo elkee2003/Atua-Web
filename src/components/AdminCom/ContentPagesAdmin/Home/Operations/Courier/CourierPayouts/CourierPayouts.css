@@ -1,0 +1,672 @@
+/* ==========================================================
+   COURIER PAYOUTS
+========================================================== */
+
+.courierPayouts {
+    width: 100%;
+
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierPayouts-loading {
+    width: 100%;
+
+    min-height: 260px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 11px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 550;
+
+    line-height: 1.5;
+}
+
+
+.courierPayouts-loadingIcon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    font-size: 17px;
+
+    animation:
+        courierPayoutsPulse
+        1.4s ease-in-out infinite;
+}
+
+
+@keyframes courierPayoutsPulse {
+
+    0%,
+    100% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   CONTROLS
+========================================================== */
+
+.courierPayouts-controls {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+
+    margin-bottom: 11px;
+}
+
+
+/* ==========================================================
+   TRANSACTIONS
+========================================================== */
+
+.courierPayouts-transactions {
+    width: 100%;
+}
+
+
+/* ==========================================================
+   RESULTS SUMMARY
+========================================================== */
+
+.courierPayouts-resultsSummary {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 9px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+}
+
+
+.courierPayouts-resultsSummary-left {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+.courierPayouts-resultsSummary-left svg {
+    flex-shrink: 0;
+
+    margin-right: 3px;
+
+    color: #059669;
+
+    font-size: 11px;
+}
+
+
+.courierPayouts-resultsSummary-left strong {
+    color: #475569;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+/* ==========================================================
+   CLEAR RESULTS
+========================================================== */
+
+.courierPayouts-clearResults {
+    flex-shrink: 0;
+
+    padding: 0;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease;
+}
+
+
+.courierPayouts-clearResults:hover {
+    color: #334155;
+}
+
+
+.courierPayouts-clearResults:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.15
+    );
+
+    outline-offset: 3px;
+
+    border-radius: 3px;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierPayouts-error {
+    width: 100%;
+
+    min-height: 320px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   ERROR ICON
+========================================================== */
+
+.courierPayouts-errorIcon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 13px;
+
+    border-radius: 12px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 19px;
+}
+
+
+/* ==========================================================
+   ERROR TITLE
+========================================================== */
+
+.courierPayouts-error h2 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 17px;
+
+    font-weight: 750;
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   ERROR DESCRIPTION
+========================================================== */
+
+.courierPayouts-error p {
+    max-width: 420px;
+
+    margin: 9px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   ERROR BUTTON
+========================================================== */
+
+.courierPayouts-errorButton {
+    min-height: 35px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-top: 17px;
+
+    padding: 0 15px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayouts-errorButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierPayouts-errorButton svg {
+    font-size: 10px;
+}
+
+
+.courierPayouts-errorButton:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.15
+    );
+
+    outline-offset: 3px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierPayouts {
+        padding: 13px;
+    }
+
+
+    .courierPayouts-loading {
+        font-size: 10.5px;
+    }
+
+
+    .courierPayouts-error h2 {
+        font-size: 16px;
+    }
+
+
+    .courierPayouts-error p {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierPayouts {
+        padding: 11px;
+    }
+
+
+    .courierPayouts-resultsSummary {
+        padding:
+            9px
+            11px;
+    }
+
+
+    .courierPayouts-resultsSummary-left {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayouts-resultsSummary-left strong {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayouts-clearResults {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayouts-error h2 {
+        font-size: 15px;
+    }
+
+
+    .courierPayouts-error p {
+        font-size: 9.5px;
+    }
+
+
+    .courierPayouts-errorButton {
+        font-size: 8.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+    .courierPayouts {
+        padding: 9px;
+    }
+
+
+    .courierPayouts-controls {
+        gap: 7px;
+
+        margin-bottom: 9px;
+    }
+
+
+    .courierPayouts-loading {
+        min-height: 220px;
+
+        gap: 10px;
+
+        border-radius: 9px;
+
+        font-size: 10px;
+    }
+
+
+    .courierPayouts-loadingIcon {
+        width: 40px;
+        height: 40px;
+
+        border-radius: 10px;
+
+        font-size: 15px;
+    }
+
+
+    .courierPayouts-resultsSummary {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 7px;
+
+        margin-top: 8px;
+
+        padding: 9px;
+
+        border-radius: 7px;
+    }
+
+
+    .courierPayouts-resultsSummary-left {
+        font-size: 8px;
+    }
+
+
+    .courierPayouts-resultsSummary-left strong {
+        font-size: 8px;
+    }
+
+
+    .courierPayouts-resultsSummary-left svg {
+        font-size: 10px;
+    }
+
+
+    .courierPayouts-clearResults {
+        font-size: 8px;
+    }
+
+
+    .courierPayouts-error {
+        min-height: 260px;
+
+        padding: 22px;
+
+        border-radius: 9px;
+    }
+
+
+    .courierPayouts-errorIcon {
+        width: 46px;
+        height: 46px;
+
+        margin-bottom: 12px;
+
+        border-radius: 11px;
+
+        font-size: 17px;
+    }
+
+
+    .courierPayouts-error h2 {
+        font-size: 14px;
+    }
+
+
+    .courierPayouts-error p {
+        font-size: 9px;
+    }
+
+
+    .courierPayouts-errorButton {
+        min-height: 33px;
+
+        margin-top: 15px;
+
+        font-size: 8.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+    .courierPayouts {
+        padding: 7px;
+    }
+
+
+    .courierPayouts-loading {
+        min-height: 190px;
+
+        font-size: 9.5px;
+    }
+
+
+    .courierPayouts-loadingIcon {
+        width: 37px;
+        height: 37px;
+
+        font-size: 14px;
+    }
+
+
+    .courierPayouts-resultsSummary {
+        padding: 8px;
+    }
+
+
+    .courierPayouts-resultsSummary-left {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayouts-resultsSummary-left strong {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayouts-clearResults {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayouts-error {
+        min-height: 220px;
+
+        padding: 18px;
+    }
+
+
+    .courierPayouts-errorIcon {
+        width: 43px;
+        height: 43px;
+
+        font-size: 16px;
+    }
+
+
+    .courierPayouts-error h2 {
+        font-size: 13px;
+    }
+
+
+    .courierPayouts-error p {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayouts-errorButton {
+        min-height: 32px;
+
+        font-size: 8px;
+    }
+
+}

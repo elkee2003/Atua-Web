@@ -1,0 +1,959 @@
+/* ==========================================================
+   COURIER REVIEWS HEADER
+========================================================== */
+
+.courierReviewsHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 18px;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   TOP NAVIGATION
+========================================================== */
+
+.courierReviewsHeader-top {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================================
+   ICON BUTTON
+========================================================== */
+
+.courierReviewsHeader-iconButton {
+    width: 40px;
+
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierReviewsHeader-iconButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+
+    box-shadow:
+        0 2px 8px rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
+}
+
+.courierReviewsHeader-iconButton:active {
+    transform: translateY(1px);
+}
+
+.courierReviewsHeader-iconButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+
+    box-shadow: none;
+}
+
+.courierReviewsHeader-iconButton svg {
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierReviewsHeader-refreshSpinning {
+    animation:
+        courierReviewsHeaderSpin
+        0.9s linear infinite;
+}
+
+@keyframes courierReviewsHeaderSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   COURIER PROFILE
+========================================================== */
+
+.courierReviewsHeader-profile {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 16px;
+
+    box-sizing: border-box;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierReviewsHeader-avatar {
+    width: 76px;
+
+    height: 76px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 15px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+.courierReviewsHeader-avatarImage {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+.courierReviewsHeader-initials {
+    color: #475569;
+
+    font-size: 22px;
+
+    font-weight: 750;
+
+    line-height: 1;
+}
+
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.courierReviewsHeader-info {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   NAME ROW
+========================================================== */
+
+.courierReviewsHeader-nameRow {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.courierReviewsHeader-nameRow h1 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    line-height: 1.25;
+
+    word-break: break-word;
+}
+
+
+/* ==========================================================
+   APPROVAL ICONS
+========================================================== */
+
+.courierReviewsHeader-approvedIcon {
+    flex-shrink: 0;
+
+    color: #16a34a;
+
+    font-size: 16px;
+}
+
+.courierReviewsHeader-pendingIcon {
+    flex-shrink: 0;
+
+    color: #f59e0b;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   ONLINE BADGE
+========================================================== */
+
+.courierReviewsHeader-onlineBadge {
+    min-height: 27px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    padding: 0 9px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+.courierReviewsHeader-onlineBadge > span {
+    width: 7px;
+
+    height: 7px;
+
+    display: block;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+.courierReviewsHeader-online {
+    background: #ecfdf3;
+
+    color: #15803d;
+}
+
+.courierReviewsHeader-online > span {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 3px #dcfce7;
+}
+
+.courierReviewsHeader-offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+.courierReviewsHeader-offline > span {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   COURIER DETAILS
+========================================================== */
+
+.courierReviewsHeader-details {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+.courierReviewsHeader-details span {
+    word-break: break-word;
+}
+
+.courierReviewsHeader-separator {
+    color: #cbd5e1;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   PHONE
+========================================================== */
+
+.courierReviewsHeader-phone {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.courierReviewsHeader-phone svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   LOCATION
+========================================================== */
+
+.courierReviewsHeader-location {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.5;
+}
+
+.courierReviewsHeader-location svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.courierReviewsHeader-location span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   RATING
+========================================================== */
+
+.courierReviewsHeader-rating {
+    min-width: 145px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    padding-left: 18px;
+
+    border-left: 1px solid #eef2f6;
+}
+
+.courierReviewsHeader-ratingLabel {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.courierReviewsHeader-ratingValue {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+.courierReviewsHeader-ratingValue svg {
+    color: #f59e0b;
+
+    font-size: 17px;
+}
+
+.courierReviewsHeader-ratingValue strong {
+    color: #334155;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.courierReviewsHeader-reviewCount {
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 550;
+}
+
+
+/* ==========================================================
+   PAGE TITLE
+========================================================== */
+
+.courierReviewsHeader-pageTitle {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding-top: 18px;
+}
+
+.courierReviewsHeader-pageTitleIcon {
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fef3c7;
+
+    color: #d97706;
+
+    font-size: 17px;
+}
+
+.courierReviewsHeader-pageTitleContent {
+    min-width: 0;
+}
+
+.courierReviewsHeader-pageTitleContent h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReviewsHeader-pageTitleContent p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.55;
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierReviewsHeader {
+        padding: 16px;
+    }
+
+    .courierReviewsHeader-profile {
+        grid-template-columns:
+            auto
+            minmax(0, 1fr);
+    }
+
+    .courierReviewsHeader-rating {
+        grid-column: 1 / -1;
+
+        align-items: flex-start;
+
+        padding-top: 14px;
+
+        padding-left: 0;
+
+        border-top: 1px solid #eef2f6;
+
+        border-left: none;
+    }
+
+    .courierReviewsHeader-ratingValue {
+        margin-top: 1px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierReviewsHeader {
+        padding: 14px;
+
+        border-radius: 11px;
+    }
+
+    .courierReviewsHeader-profile {
+        gap: 13px;
+    }
+
+    .courierReviewsHeader-avatar {
+        width: 64px;
+
+        height: 64px;
+
+        border-radius: 13px;
+    }
+
+    .courierReviewsHeader-initials {
+        font-size: 19px;
+    }
+
+    .courierReviewsHeader-nameRow h1 {
+        font-size: 20px;
+    }
+
+    .courierReviewsHeader-details,
+    .courierReviewsHeader-phone,
+    .courierReviewsHeader-location {
+        font-size: 11px;
+    }
+
+    .courierReviewsHeader-pageTitleContent h2 {
+        font-size: 18px;
+    }
+
+    .courierReviewsHeader-pageTitleContent p {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReviewsHeader {
+        padding: 13px;
+
+        margin-bottom: 14px;
+    }
+
+
+    /* ======================================================
+       ICON-ONLY NAVIGATION
+    ====================================================== */
+
+    .courierReviewsHeader-top {
+        width: 100%;
+
+        flex-direction: row;
+
+        justify-content: space-between;
+
+        gap: 8px;
+
+        margin-bottom: 15px;
+    }
+
+    .courierReviewsHeader-iconButton {
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 8px;
+
+        font-size: 14px;
+    }
+
+    .courierReviewsHeader-iconButton svg {
+        font-size: 14px;
+    }
+
+
+    /* ======================================================
+       PROFILE
+    ====================================================== */
+
+    .courierReviewsHeader-profile {
+        grid-template-columns:
+            auto
+            minmax(0, 1fr);
+
+        align-items: start;
+
+        gap: 11px;
+
+        padding-bottom: 15px;
+    }
+
+    .courierReviewsHeader-avatar {
+        width: 58px;
+
+        height: 58px;
+
+        border-radius: 11px;
+    }
+
+    .courierReviewsHeader-initials {
+        font-size: 17px;
+    }
+
+    .courierReviewsHeader-info {
+        gap: 6px;
+    }
+
+    .courierReviewsHeader-nameRow {
+        gap: 6px;
+    }
+
+    .courierReviewsHeader-nameRow h1 {
+        font-size: 18px;
+
+        line-height: 1.3;
+    }
+
+    .courierReviewsHeader-approvedIcon,
+    .courierReviewsHeader-pendingIcon {
+        font-size: 14px;
+    }
+
+    .courierReviewsHeader-onlineBadge {
+        min-height: 24px;
+
+        padding: 0 7px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsHeader-onlineBadge > span {
+        width: 6px;
+
+        height: 6px;
+    }
+
+    .courierReviewsHeader-details {
+        gap: 5px;
+
+        font-size: 10px;
+
+        line-height: 1.45;
+    }
+
+    .courierReviewsHeader-separator {
+        font-size: 10px;
+    }
+
+    .courierReviewsHeader-phone,
+    .courierReviewsHeader-location {
+        gap: 6px;
+
+        font-size: 10px;
+    }
+
+    .courierReviewsHeader-phone svg,
+    .courierReviewsHeader-location svg {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       RATING
+    ====================================================== */
+
+    .courierReviewsHeader-rating {
+        grid-column: 1 / -1;
+
+        width: 100%;
+
+        align-items: flex-start;
+
+        padding-top: 13px;
+
+        padding-left: 0;
+    }
+
+    .courierReviewsHeader-ratingLabel {
+        font-size: 10px;
+    }
+
+    .courierReviewsHeader-ratingValue {
+        gap: 6px;
+    }
+
+    .courierReviewsHeader-ratingValue svg {
+        font-size: 15px;
+    }
+
+    .courierReviewsHeader-ratingValue strong {
+        font-size: 21px;
+    }
+
+    .courierReviewsHeader-reviewCount {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       PAGE TITLE
+    ====================================================== */
+
+    .courierReviewsHeader-pageTitle {
+        gap: 10px;
+
+        padding-top: 15px;
+    }
+
+    .courierReviewsHeader-pageTitleIcon {
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierReviewsHeader-pageTitleContent h2 {
+        font-size: 17px;
+    }
+
+    .courierReviewsHeader-pageTitleContent p {
+        margin-top: 3px;
+
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReviewsHeader {
+        padding: 11px;
+    }
+
+    .courierReviewsHeader-iconButton {
+        width: 36px;
+
+        height: 36px;
+    }
+
+    .courierReviewsHeader-profile {
+        gap: 9px;
+    }
+
+    .courierReviewsHeader-avatar {
+        width: 52px;
+
+        height: 52px;
+    }
+
+    .courierReviewsHeader-nameRow h1 {
+        font-size: 17px;
+    }
+
+    .courierReviewsHeader-details {
+        display: block;
+
+        line-height: 1.65;
+    }
+
+    .courierReviewsHeader-details .courierReviewsHeader-separator {
+        margin: 0 4px;
+    }
+
+    .courierReviewsHeader-pageTitleContent h2 {
+        font-size: 16px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReviewsHeader {
+        padding: 9px;
+    }
+
+    .courierReviewsHeader-iconButton {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+    .courierReviewsHeader-iconButton svg {
+        font-size: 13px;
+    }
+
+    .courierReviewsHeader-avatar {
+        width: 48px;
+
+        height: 48px;
+    }
+
+    .courierReviewsHeader-nameRow h1 {
+        font-size: 16px;
+    }
+
+    .courierReviewsHeader-onlineBadge {
+        font-size: 9px;
+    }
+
+    .courierReviewsHeader-pageTitleContent h2 {
+        font-size: 15px;
+    }
+
+}

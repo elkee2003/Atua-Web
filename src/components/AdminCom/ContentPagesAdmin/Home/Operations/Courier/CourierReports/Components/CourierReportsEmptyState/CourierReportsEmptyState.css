@@ -1,0 +1,433 @@
+/* ==========================================================
+   COURIER REPORTS EMPTY STATE
+========================================================== */
+
+.courierReportsEmptyState {
+    width: 100%;
+
+    min-height: 300px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 35px 25px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierReportsEmptyState-icon {
+    width: 62px;
+
+    height: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 15px;
+
+    background: #f8fafc;
+
+    color: #94a3b8;
+
+    font-size: 23px;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierReportsEmptyState-content {
+    width: 100%;
+
+    max-width: 450px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReportsEmptyState-content h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   MESSAGE
+========================================================== */
+
+.courierReportsEmptyState-content p {
+    max-width: 420px;
+
+    margin:
+        7px
+        auto
+        0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.65;
+}
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.courierReportsEmptyState-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   PRIMARY BUTTON
+========================================================== */
+
+.courierReportsEmptyState-primaryButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #475569;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierReportsEmptyState-primaryButton:hover:not(:disabled) {
+    background: #334155;
+
+    border-color: #334155;
+}
+
+.courierReportsEmptyState-primaryButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+
+/* ==========================================================
+   SECONDARY BUTTON
+========================================================== */
+
+.courierReportsEmptyState-secondaryButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        13px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsEmptyState-secondaryButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   DISABLED
+========================================================== */
+
+.courierReportsEmptyState-actions button:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   SPINNING
+========================================================== */
+
+.courierReportsEmptyState-spinning {
+    animation:
+        courierReportsEmptyStateSpin
+        0.9s linear infinite;
+}
+
+
+@keyframes courierReportsEmptyStateSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReportsEmptyState {
+        min-height: 280px;
+
+        padding: 30px 22px;
+    }
+
+    .courierReportsEmptyState-content h2 {
+        font-size: 18px;
+    }
+
+    .courierReportsEmptyState-content p {
+        font-size: 11px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReportsEmptyState {
+        min-height: 250px;
+
+        padding:
+            25px
+            18px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       ICON
+    ====================================================== */
+
+    .courierReportsEmptyState-icon {
+        width: 54px;
+
+        height: 54px;
+
+        margin-bottom: 12px;
+
+        border-radius: 13px;
+
+        font-size: 20px;
+    }
+
+
+    /* ======================================================
+       CONTENT
+    ====================================================== */
+
+    .courierReportsEmptyState-content h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsEmptyState-content p {
+        max-width: 340px;
+
+        margin-top: 6px;
+
+        font-size: 10px;
+
+        line-height: 1.6;
+    }
+
+
+    /* ======================================================
+       ACTIONS
+    ====================================================== */
+
+    .courierReportsEmptyState-actions {
+        width: 100%;
+
+        flex-direction: column;
+
+        margin-top: 15px;
+    }
+
+    .courierReportsEmptyState-actions button {
+        width: 100%;
+
+        min-height: 38px;
+
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsEmptyState {
+        min-height: 220px;
+
+        padding:
+            20px
+            14px;
+    }
+
+    .courierReportsEmptyState-icon {
+        width: 48px;
+
+        height: 48px;
+
+        border-radius: 11px;
+
+        font-size: 18px;
+    }
+
+    .courierReportsEmptyState-content h2 {
+        font-size: 16px;
+    }
+
+    .courierReportsEmptyState-content p {
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsEmptyState {
+        min-height: 200px;
+
+        padding:
+            18px
+            11px;
+    }
+
+    .courierReportsEmptyState-icon {
+        width: 44px;
+
+        height: 44px;
+
+        font-size: 16px;
+    }
+
+    .courierReportsEmptyState-content h2 {
+        font-size: 15px;
+    }
+
+    .courierReportsEmptyState-content p {
+        font-size: 8px;
+    }
+
+}

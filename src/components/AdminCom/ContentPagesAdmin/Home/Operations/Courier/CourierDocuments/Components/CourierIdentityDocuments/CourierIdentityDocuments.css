@@ -1,0 +1,1102 @@
+/* ==========================================================
+   COURIER IDENTITY DOCUMENTS
+========================================================== */
+
+.courierIdentityDocuments {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierIdentityDocuments-header {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 17px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #ffffff;
+}
+
+
+.courierIdentityDocuments-headerIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 18px;
+}
+
+
+.courierIdentityDocuments-headerContent {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.courierIdentityDocuments-headerContent h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierIdentityDocuments-headerContent p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierIdentityDocuments-status {
+    min-height: 28px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 9px;
+
+    border-radius: 20px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+}
+
+
+.courierIdentityDocuments-status svg {
+    font-size: 11px;
+}
+
+
+.courierIdentityDocuments-status.complete {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+
+.courierIdentityDocuments-status.incomplete {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierIdentityDocuments-content {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+}
+
+
+/* ==========================================================
+   PROFILE CARD
+========================================================== */
+
+.courierIdentityDocuments-profileCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 13px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   PROFILE PHOTO
+========================================================== */
+
+.courierIdentityDocuments-profilePhoto {
+    width: 58px;
+
+    height: 58px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 50%;
+
+    background: #ffffff;
+}
+
+
+.courierIdentityDocuments-profilePhoto img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.courierIdentityDocuments-noProfilePhoto {
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 3px;
+
+    color: #94a3b8;
+}
+
+
+.courierIdentityDocuments-noProfilePhoto svg {
+    font-size: 17px;
+}
+
+
+.courierIdentityDocuments-noProfilePhoto span {
+    font-size: 7px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   PROFILE INFORMATION
+========================================================== */
+
+.courierIdentityDocuments-profileInfo {
+    min-width: 0;
+}
+
+
+.courierIdentityDocuments-profileInfo span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+}
+
+
+.courierIdentityDocuments-profileInfo h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierIdentityDocuments-profileInfo p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   NIN SECTION
+========================================================== */
+
+.courierIdentityDocuments-ninSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+
+/* ==========================================================
+   SECTION TITLE
+========================================================== */
+
+.courierIdentityDocuments-sectionTitle {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background: #fafbfc;
+}
+
+
+.courierIdentityDocuments-sectionTitle > div:first-child {
+    width: 34px;
+
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 14px;
+}
+
+
+.courierIdentityDocuments-sectionTitle h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+.courierIdentityDocuments-sectionTitle p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   NIN VALUE
+========================================================== */
+
+.courierIdentityDocuments-ninValue {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px;
+
+    border-bottom: 1px solid #edf1f5;
+}
+
+
+.courierIdentityDocuments-ninValue span {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+.courierIdentityDocuments-ninValue strong {
+    max-width: 65%;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-align: right;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierIdentityDocuments-ninValue strong.provided {
+    color: #334155;
+}
+
+
+.courierIdentityDocuments-ninValue strong.missing {
+    color: #dc2626;
+
+    font-size: 10px;
+
+    letter-spacing: 0;
+}
+
+
+/* ==========================================================
+   DOCUMENT SECTION
+========================================================== */
+
+.courierIdentityDocuments-documentSection {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+}
+
+
+/* ==========================================================
+   DOCUMENT HEADER
+========================================================== */
+
+.courierIdentityDocuments-documentHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 11px;
+}
+
+
+.courierIdentityDocuments-documentHeader h4 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+.courierIdentityDocuments-documentHeader p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierIdentityDocuments-viewButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 0 10px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierIdentityDocuments-viewButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #2563eb;
+}
+
+
+.courierIdentityDocuments-viewButton svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   IMAGE CONTAINER
+========================================================== */
+
+.courierIdentityDocuments-imageContainer {
+    width: 100%;
+
+    min-height: 220px;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   IMAGE WRAPPER
+========================================================== */
+
+.courierIdentityDocuments-imageWrapper {
+    width: 100%;
+
+    min-height: 220px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 10px;
+
+    box-sizing: border-box;
+
+    background: #f8fafc;
+}
+
+
+.courierIdentityDocuments-imageWrapper img {
+    width: 100%;
+
+    max-height: 500px;
+
+    display: block;
+
+    object-fit: contain;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   NO IMAGE
+========================================================== */
+
+.courierIdentityDocuments-noImage {
+    width: 100%;
+
+    min-height: 220px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    text-align: center;
+}
+
+
+.courierIdentityDocuments-noImageIcon {
+    width: 52px;
+
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    background: #eef2f7;
+
+    color: #94a3b8;
+
+    font-size: 21px;
+}
+
+
+.courierIdentityDocuments-noImage h4 {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+.courierIdentityDocuments-noImage p {
+    max-width: 330px;
+
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   IMAGE LOADING
+========================================================== */
+
+.courierIdentityDocuments-imageLoading {
+    width: 100%;
+
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+.courierIdentityDocuments-spinner {
+    width: 28px;
+
+    height: 28px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #64748b;
+
+    border-radius: 50%;
+
+    animation:
+        courierIdentityDocumentsSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+@keyframes courierIdentityDocumentsSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierIdentityDocuments-content {
+        padding: 14px;
+    }
+
+
+    .courierIdentityDocuments-documentHeader {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .courierIdentityDocuments-viewButton {
+        width: 100%;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierIdentityDocuments {
+        margin-bottom: 10px;
+
+        border-radius: 10px;
+    }
+
+
+    .courierIdentityDocuments-header {
+        align-items: flex-start;
+
+        gap: 9px;
+
+        padding: 13px;
+    }
+
+
+    .courierIdentityDocuments-headerIcon {
+        width: 37px;
+
+        height: 37px;
+
+        border-radius: 8px;
+
+        font-size: 15px;
+    }
+
+
+    .courierIdentityDocuments-headerContent h2 {
+        font-size: 15px;
+    }
+
+
+    .courierIdentityDocuments-headerContent p {
+        font-size: 8px;
+    }
+
+
+    .courierIdentityDocuments-status {
+        min-height: 24px;
+
+        padding: 0 7px;
+
+        font-size: 8px;
+    }
+
+
+    .courierIdentityDocuments-content {
+        padding: 11px;
+    }
+
+
+    .courierIdentityDocuments-profileCard {
+        gap: 10px;
+
+        padding: 11px;
+
+        margin-bottom: 11px;
+    }
+
+
+    .courierIdentityDocuments-profilePhoto {
+        width: 50px;
+
+        height: 50px;
+    }
+
+
+    .courierIdentityDocuments-profileInfo h3 {
+        font-size: 13px;
+    }
+
+
+    .courierIdentityDocuments-profileInfo span,
+    .courierIdentityDocuments-profileInfo p {
+        font-size: 8px;
+    }
+
+
+    .courierIdentityDocuments-sectionTitle {
+        padding: 11px;
+    }
+
+
+    .courierIdentityDocuments-sectionTitle > div:first-child {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierIdentityDocuments-sectionTitle h3 {
+        font-size: 11px;
+    }
+
+
+    .courierIdentityDocuments-sectionTitle p {
+        font-size: 8px;
+    }
+
+
+    .courierIdentityDocuments-ninValue {
+        padding: 11px;
+    }
+
+
+    .courierIdentityDocuments-ninValue span {
+        font-size: 9px;
+    }
+
+
+    .courierIdentityDocuments-ninValue strong {
+        font-size: 11px;
+    }
+
+
+    .courierIdentityDocuments-documentSection {
+        padding: 11px;
+    }
+
+
+    .courierIdentityDocuments-documentHeader h4 {
+        font-size: 10px;
+    }
+
+
+    .courierIdentityDocuments-documentHeader p {
+        font-size: 7px;
+    }
+
+
+    .courierIdentityDocuments-viewButton {
+        min-height: 34px;
+
+        font-size: 8px;
+    }
+
+
+    .courierIdentityDocuments-imageContainer,
+    .courierIdentityDocuments-imageWrapper,
+    .courierIdentityDocuments-noImage,
+    .courierIdentityDocuments-imageLoading {
+        min-height: 190px;
+    }
+
+
+    .courierIdentityDocuments-noImageIcon {
+        width: 45px;
+
+        height: 45px;
+
+        font-size: 18px;
+    }
+
+
+    .courierIdentityDocuments-noImage h4 {
+        font-size: 11px;
+    }
+
+
+    .courierIdentityDocuments-noImage p {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierIdentityDocuments-header {
+        padding: 11px;
+    }
+
+
+    .courierIdentityDocuments-headerIcon {
+        width: 34px;
+
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierIdentityDocuments-headerContent h2 {
+        font-size: 14px;
+    }
+
+
+    .courierIdentityDocuments-headerContent p {
+        font-size: 7px;
+    }
+
+
+    .courierIdentityDocuments-status span {
+        display: none;
+    }
+
+
+    .courierIdentityDocuments-status {
+        width: 25px;
+
+        height: 25px;
+
+        padding: 0;
+    }
+
+
+    .courierIdentityDocuments-status svg {
+        font-size: 11px;
+    }
+
+
+    .courierIdentityDocuments-profilePhoto {
+        width: 46px;
+
+        height: 46px;
+    }
+
+
+    .courierIdentityDocuments-profileInfo h3 {
+        font-size: 12px;
+    }
+
+
+    .courierIdentityDocuments-ninValue {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .courierIdentityDocuments-ninValue strong {
+        max-width: 100%;
+
+        text-align: left;
+    }
+
+
+    .courierIdentityDocuments-documentHeader {
+        gap: 8px;
+    }
+
+
+    .courierIdentityDocuments-imageContainer,
+    .courierIdentityDocuments-imageWrapper,
+    .courierIdentityDocuments-noImage,
+    .courierIdentityDocuments-imageLoading {
+        min-height: 170px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierIdentityDocuments-content {
+        padding: 9px;
+    }
+
+
+    .courierIdentityDocuments-header {
+        padding: 10px;
+    }
+
+
+    .courierIdentityDocuments-headerIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+
+    .courierIdentityDocuments-headerContent h2 {
+        font-size: 13px;
+    }
+
+
+    .courierIdentityDocuments-headerContent p {
+        font-size: 6.5px;
+    }
+
+
+    .courierIdentityDocuments-profileCard {
+        padding: 9px;
+    }
+
+
+    .courierIdentityDocuments-profilePhoto {
+        width: 42px;
+
+        height: 42px;
+    }
+
+
+    .courierIdentityDocuments-profileInfo h3 {
+        font-size: 11px;
+    }
+
+
+    .courierIdentityDocuments-sectionTitle {
+        padding: 9px;
+    }
+
+
+    .courierIdentityDocuments-documentSection {
+        padding: 9px;
+    }
+
+
+    .courierIdentityDocuments-imageContainer,
+    .courierIdentityDocuments-imageWrapper,
+    .courierIdentityDocuments-noImage,
+    .courierIdentityDocuments-imageLoading {
+        min-height: 150px;
+    }
+
+}

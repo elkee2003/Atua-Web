@@ -1,36 +1,70 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { FaArrowLeft, FaSyncAlt } from "react-icons/fa";
+import {
+  FaArrowLeft,
+  FaExclamationTriangle,
+  FaRedo,
+  FaSyncAlt,
+} from "react-icons/fa";
 
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DataStore } from "aws-amplify/datastore";
 
-import { Order } from "../../../../../../../models";
+import { getUrl } from "aws-amplify/storage";
+
+import { Courier, Order } from "../../../../../../../models";
+
+import { getSignedUrl } from "../../../../../../../utils/s3";
 
 import CourierOrdersHeader from "./Components/CourierOrdersHeader/CourierOrdersHeader";
+
 import CourierOrderStats from "./Components/CourierOrderStats/CourierOrderStats";
+
 import CourierOrderSearch from "./Components/CourierOrderSearch/CourierOrderSearch";
+
 import CourierOrderFilters from "./Components/CourierOrderFilters/CourierOrderFilters";
+
 import CourierOrderCard from "./Components/CourierOrderCard/CourierOrderCard";
+
 import CourierOrderEmptyState from "./Components/CourierOrderEmptyState/CourierOrderEmptyState";
 
 import "./CourierOrders.css";
 
 function CourierOrders() {
+  /*
+  ==========================================================
+  ROUTER
+  ==========================================================
+  */
+
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  const { id: courierId } = useParams();
 
   /*
-    ==========================================================
-    STATE
-    ==========================================================
-    */
+  ==========================================================
+  COURIER
+  ==========================================================
+  */
 
   const [courier, setCourier] = useState(null);
 
+  const [profileUrl, setProfileUrl] = useState(null);
+
+  /*
+  ==========================================================
+  ORDERS
+  ==========================================================
+  */
+
   const [orders, setOrders] = useState([]);
+
+  /*
+  ==========================================================
+  LOADING / ERROR
+  ==========================================================
+  */
 
   const [loading, setLoading] = useState(true);
 
@@ -38,77 +72,352 @@ function CourierOrders() {
 
   const [error, setError] = useState(null);
 
+  /*
+  ==========================================================
+  SEARCH
+  ==========================================================
+  */
+
   const [searchQuery, setSearchQuery] = useState("");
+
+  /*
+  ==========================================================
+  STATUS FILTER
+  ==========================================================
+  */
 
   const [statusFilter, setStatusFilter] = useState("ALL");
 
   /*
-    ==========================================================
-    FETCH ORDERS
-    ==========================================================
-    */
+  ==========================================================
+  IMAGE URL RESOLVER
+  ==========================================================
+  */
 
-  const fetchOrders = useCallback(async () => {
-    if (!id) {
-      setOrders([]);
-      setLoading(false);
-      return;
+  const resolveImageUrl = useCallback(async (imagePath) => {
+    if (!imagePath) {
+      return null;
     }
 
     try {
-      setError(null);
+      const pathValue =
+        typeof imagePath === "string" ? imagePath.trim() : imagePath;
 
+      if (!pathValue) {
+        return null;
+      }
+
+      /*
+          ----------------------------------------------------
+          ALREADY A URL
+          ----------------------------------------------------
+          */
+
+      if (
+        typeof pathValue === "string" &&
+        (pathValue.startsWith("http://") ||
+          pathValue.startsWith("https://") ||
+          pathValue.startsWith("blob:"))
+      ) {
+        return pathValue;
+      }
+
+      /*
+          ----------------------------------------------------
+          AMPLIFY STORAGE
+          ----------------------------------------------------
+          */
+
+      try {
+        const result = await getUrl({
+          path: pathValue,
+
+          options: {
+            validateObjectExistence: true,
+          },
+        });
+
+        if (result?.url) {
+          return result.url.toString();
+        }
+      } catch (storageError) {
+        console.warn(
+          "Amplify Storage getUrl failed. Trying S3 helper:",
+          storageError,
+        );
+      }
+
+      /*
+          ----------------------------------------------------
+          CUSTOM S3 FALLBACK
+          ----------------------------------------------------
+          */
+
+      try {
+        const signedUrl = await getSignedUrl(pathValue);
+
+        if (signedUrl) {
+          return signedUrl.toString();
+        }
+      } catch (signedUrlError) {
+        console.error("Custom S3 image URL resolution failed:", signedUrlError);
+      }
+
+      return null;
+    } catch (imageError) {
+      console.error("Failed to resolve courier profile image:", imageError);
+
+      return null;
+    }
+  }, []);
+
+  /*
+  ==========================================================
+  FETCH COURIER
+  ==========================================================
+  */
+
+  const fetchCourier = useCallback(async () => {
+    if (!courierId) {
+      setCourier(null);
+
+      return null;
+    }
+
+    try {
+      const courierData = await DataStore.query(Courier, courierId);
+
+      if (!courierData) {
+        throw new Error("Courier not found.");
+      }
+
+      setCourier(courierData);
+
+      return courierData;
+    } catch (err) {
+      console.error("Failed to fetch courier:", err);
+
+      setCourier(null);
+
+      throw err;
+    }
+  }, [courierId]);
+
+  /*
+  ==========================================================
+  FETCH PROFILE IMAGE
+  ==========================================================
+  */
+
+  const fetchProfileImage = useCallback(
+    async (courierData) => {
+      if (!courierData?.profilePic) {
+        setProfileUrl(null);
+
+        return;
+      }
+
+      try {
+        const resolvedUrl = await resolveImageUrl(courierData.profilePic);
+
+        setProfileUrl(resolvedUrl);
+      } catch (imageError) {
+        console.error("Failed to load courier profile image:", imageError);
+
+        setProfileUrl(null);
+      }
+    },
+    [resolveImageUrl],
+  );
+
+  /*
+  ==========================================================
+  FETCH ORDERS
+  ==========================================================
+  */
+
+  const fetchOrders = useCallback(async () => {
+    if (!courierId) {
+      setOrders([]);
+
+      return [];
+    }
+
+    try {
       const data = await DataStore.query(Order, (order) =>
-        order.assignedCourierId.eq(id),
+        order.assignedCourierId.eq(courierId),
       );
 
       const sortedOrders = [...data].sort(
-        (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+        (a, b) => new Date(b?.createdAt || 0) - new Date(a?.createdAt || 0),
       );
 
       setOrders(sortedOrders);
+
+      return sortedOrders;
     } catch (err) {
       console.error("Failed to fetch courier orders:", err);
 
-      setError("Unable to load this courier's orders.");
-    } finally {
-      setLoading(false);
-
-      setRefreshing(false);
+      throw err;
     }
-  }, [id]);
+  }, [courierId]);
 
   /*
-    ==========================================================
-    INITIAL LOAD
-    ==========================================================
-    */
+  ==========================================================
+  FETCH EVERYTHING
+  ==========================================================
+  */
 
-  useEffect(() => {
-    setLoading(true);
+  const fetchCourierOrders = useCallback(
+    async ({ showLoading = true, showRefreshing = false } = {}) => {
+      if (!courierId) {
+        setCourier(null);
 
-    fetchOrders();
-  }, [fetchOrders]);
+        setOrders([]);
+
+        setLoading(false);
+
+        setError("No courier was selected.");
+
+        return;
+      }
+
+      try {
+        if (showLoading) {
+          setLoading(true);
+        }
+
+        if (showRefreshing) {
+          setRefreshing(true);
+        }
+
+        setError(null);
+
+        /*
+          ----------------------------------------------------
+          FETCH COURIER
+          ----------------------------------------------------
+          */
+
+        const courierData = await fetchCourier();
+
+        /*
+          ----------------------------------------------------
+          FETCH PROFILE IMAGE
+          ----------------------------------------------------
+          */
+
+        await fetchProfileImage(courierData);
+
+        /*
+          ----------------------------------------------------
+          FETCH ORDERS
+          ----------------------------------------------------
+          */
+
+        await fetchOrders();
+      } catch (err) {
+        console.error("Failed to load courier orders:", err);
+
+        setError(
+          err?.message === "Courier not found."
+            ? "The selected courier could not be found."
+            : "Unable to load this courier's orders.",
+        );
+      } finally {
+        setLoading(false);
+
+        setRefreshing(false);
+      }
+    },
+    [courierId, fetchCourier, fetchProfileImage, fetchOrders],
+  );
 
   /*
-    ==========================================================
-    REALTIME ORDER OBSERVATION
-    ==========================================================
-    */
+  ==========================================================
+  INITIAL LOAD
+  ==========================================================
+  */
 
   useEffect(() => {
-    if (!id) {
-      return;
+    fetchCourierOrders({
+      showLoading: true,
+      showRefreshing: false,
+    });
+  }, [fetchCourierOrders]);
+
+  /*
+  ==========================================================
+  REAL-TIME COURIER OBSERVATION
+  ==========================================================
+  */
+
+  useEffect(() => {
+    if (!courierId) {
+      return undefined;
+    }
+
+    const courierSubscription = DataStore.observe(Courier, courierId).subscribe(
+      ({ element }) => {
+        if (!element) {
+          return;
+        }
+
+        /*
+            --------------------------------------------------
+            UPDATE COURIER
+            --------------------------------------------------
+            */
+
+        setCourier(element);
+
+        /*
+            --------------------------------------------------
+            UPDATE PROFILE IMAGE
+            --------------------------------------------------
+            */
+
+        fetchProfileImage(element);
+      },
+    );
+
+    return () => {
+      courierSubscription.unsubscribe();
+    };
+  }, [courierId, fetchProfileImage]);
+
+  /*
+  ==========================================================
+  REAL-TIME ORDER OBSERVATION
+  ==========================================================
+  */
+
+  useEffect(() => {
+    if (!courierId) {
+      return undefined;
     }
 
     const subscription = DataStore.observe(Order).subscribe(
       ({ opType, element }) => {
         /*
-                    Only refresh when the affected order
-                    belongs to this courier.
-                    */
+            --------------------------------------------------
+            INSERT / UPDATE
+            --------------------------------------------------
+            */
 
-        if (element?.assignedCourierId === id || opType === "DELETE") {
+        if (element?.assignedCourierId === courierId) {
+          fetchOrders();
+
+          return;
+        }
+
+        /*
+            --------------------------------------------------
+            DELETE
+            --------------------------------------------------
+            */
+
+        if (opType === "DELETE") {
           fetchOrders();
         }
       },
@@ -117,43 +426,44 @@ function CourierOrders() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [id, fetchOrders]);
+  }, [courierId, fetchOrders]);
 
   /*
-    ==========================================================
-    REFRESH
-    ==========================================================
-    */
+  ==========================================================
+  REFRESH
+  ==========================================================
+  */
 
   const handleRefresh = async () => {
-    if (refreshing) {
+    if (refreshing || loading) {
       return;
     }
 
-    setRefreshing(true);
-
-    await fetchOrders();
+    await fetchCourierOrders({
+      showLoading: false,
+      showRefreshing: true,
+    });
   };
 
   /*
-    ==========================================================
-    NORMALIZE STATUS
-    ==========================================================
-    */
+  ==========================================================
+  NORMALIZE STATUS
+  ==========================================================
+  */
 
-  const normalizeStatus = (status) => {
+  const normalizeStatus = useCallback((status) => {
     if (!status) {
       return "";
     }
 
     return String(status).trim().toUpperCase().replace(/\s+/g, "_");
-  };
+  }, []);
 
   /*
-    ==========================================================
-    ORDER STATISTICS
-    ==========================================================
-    */
+  ==========================================================
+  ORDER STATISTICS
+  ==========================================================
+  */
 
   const orderStats = useMemo(() => {
     const total = orders.length;
@@ -196,21 +506,21 @@ function CourierOrders() {
       delivered,
       cancelled,
     };
-  }, [orders]);
+  }, [orders, normalizeStatus]);
 
   /*
-    ==========================================================
-    SEARCH + STATUS FILTER
-    ==========================================================
-    */
+  ==========================================================
+  SEARCH + STATUS FILTER
+  ==========================================================
+  */
 
   const filteredOrders = useMemo(() => {
     let result = [...orders];
 
     /*
-        ======================================================
+        ------------------------------------------------------
         SEARCH
-        ======================================================
+        ------------------------------------------------------
         */
 
     const query = searchQuery.trim().toLowerCase();
@@ -246,9 +556,9 @@ function CourierOrders() {
     }
 
     /*
-        ======================================================
+        ------------------------------------------------------
         STATUS
-        ======================================================
+        ------------------------------------------------------
         */
 
     if (statusFilter !== "ALL") {
@@ -284,17 +594,19 @@ function CourierOrders() {
     }
 
     return result;
-  }, [orders, searchQuery, statusFilter]);
+  }, [orders, searchQuery, statusFilter, normalizeStatus]);
 
   /*
-    ==========================================================
-    DETERMINE EMPTY STATE
-    ==========================================================
-    */
+  ==========================================================
+  EMPTY STATE TYPE
+  ==========================================================
+  */
 
   const emptyStateType = useMemo(() => {
     /*
-        No orders exist for this courier.
+        ------------------------------------------------------
+        NO ORDERS
+        ------------------------------------------------------
         */
 
     if (orders.length === 0) {
@@ -302,12 +614,20 @@ function CourierOrders() {
     }
 
     /*
-        Orders exist but search/filter produced nothing.
+        ------------------------------------------------------
+        SEARCH
+        ------------------------------------------------------
         */
 
     if (searchQuery.trim()) {
       return "NO_SEARCH_RESULTS";
     }
+
+    /*
+        ------------------------------------------------------
+        FILTER
+        ------------------------------------------------------
+        */
 
     if (statusFilter !== "ALL") {
       return "NO_FILTER_RESULTS";
@@ -317,10 +637,10 @@ function CourierOrders() {
   }, [orders.length, searchQuery, statusFilter]);
 
   /*
-    ==========================================================
-    EMPTY STATE ACTION
-    ==========================================================
-    */
+  ==========================================================
+  EMPTY STATE ACTION
+  ==========================================================
+  */
 
   const handleEmptyStateAction = () => {
     if (emptyStateType === "NO_SEARCH_RESULTS") {
@@ -331,16 +651,26 @@ function CourierOrders() {
 
     if (emptyStateType === "NO_FILTER_RESULTS") {
       setStatusFilter("ALL");
-
-      return;
     }
   };
 
   /*
-    ==========================================================
-    VIEW ORDER
-    ==========================================================
-    */
+  ==========================================================
+  CLEAR ALL SEARCH / FILTERS
+  ==========================================================
+  */
+
+  const handleClearAll = () => {
+    setSearchQuery("");
+
+    setStatusFilter("ALL");
+  };
+
+  /*
+  ==========================================================
+  VIEW ORDER
+  ==========================================================
+  */
 
   const handleViewOrder = (order) => {
     if (!order?.id) {
@@ -351,26 +681,104 @@ function CourierOrders() {
   };
 
   /*
-    ==========================================================
-    BACK
-    ==========================================================
-    */
+  ==========================================================
+  BACK
+  ==========================================================
+  */
 
   const handleBack = () => {
     navigate(-1);
   };
 
   /*
-    ==========================================================
-    RENDER
-    ==========================================================
-    */
+  ==========================================================
+  LIVE TRACKING
+  ==========================================================
+  */
+
+  const handleTrack = () => {
+    if (!courierId) {
+      return;
+    }
+
+    navigate(`/courier_tracking/${courierId}`);
+  };
+
+  /*
+  ==========================================================
+  NO COURIER ID
+  ==========================================================
+  */
+
+  if (!courierId) {
+    return (
+      <div className="courierOrders">
+        <div className="courierOrders-error">
+          <div className="courierOrders-errorIcon">
+            <FaExclamationTriangle />
+          </div>
+
+          <strong>Courier ID Missing</strong>
+
+          <span>No courier was specified for this page.</span>
+
+          <button type="button" onClick={handleBack}>
+            <FaArrowLeft />
+
+            <span>Go Back</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /*
+  ==========================================================
+  ERROR STATE
+  ==========================================================
+  */
+
+  if (error && !loading && !courier) {
+    return (
+      <div className="courierOrders">
+        <div className="courierOrders-error">
+          <div className="courierOrders-errorIcon">
+            <FaExclamationTriangle />
+          </div>
+
+          <strong>Unable to Load Courier</strong>
+
+          <span>{error}</span>
+
+          <button
+            type="button"
+            onClick={() =>
+              fetchCourierOrders({
+                showLoading: true,
+                showRefreshing: false,
+              })
+            }
+          >
+            <FaRedo />
+
+            <span>Try Again</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /*
+  ==========================================================
+  RENDER
+  ==========================================================
+  */
 
   return (
     <div className="courierOrders">
       {/* ==================================================
-                PAGE HEADER
-            ================================================== */}
+          PAGE HEADER
+      ================================================== */}
 
       <div className="courierOrders-pageHeader">
         <button
@@ -402,46 +810,31 @@ function CourierOrders() {
       </div>
 
       {/* ==================================================
-                COURIER HEADER
-            ================================================== */}
+          COURIER HEADER
+      ================================================== */}
 
-      <CourierOrdersHeader courier={courier} courierId={id} />
-
-      {/* ==================================================
-                STATISTICS
-            ================================================== */}
-
-      <CourierOrderStats
-        stats={orderStats}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
+      <CourierOrdersHeader
+        courier={courier}
+        profileUrl={profileUrl}
+        courierId={courierId}
+        onBack={handleBack}
+        onTrack={handleTrack}
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
       />
 
       {/* ==================================================
-                SEARCH
-            ================================================== */}
+          ERROR
+      ================================================== */}
 
-      <CourierOrderSearch
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-      />
-
-      {/* ==================================================
-                FILTERS
-            ================================================== */}
-
-      <CourierOrderFilters
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-      />
-
-      {/* ==================================================
-                ERROR
-            ================================================== */}
-
-      {error && (
-        <div className="courierOrders-error">
-          <strong>Something went wrong</strong>
+      {error && courier && (
+        <div
+          className="
+              courierOrders-error
+              courierOrders-error-inline
+            "
+        >
+          <FaExclamationTriangle />
 
           <span>{error}</span>
 
@@ -452,8 +845,36 @@ function CourierOrders() {
       )}
 
       {/* ==================================================
-                ORDER CONTENT
-            ================================================== */}
+          STATISTICS
+      ================================================== */}
+
+      <CourierOrderStats
+        stats={orderStats}
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+      />
+
+      {/* ==================================================
+          SEARCH
+      ================================================== */}
+
+      <CourierOrderSearch
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+
+      {/* ==================================================
+          FILTERS
+      ================================================== */}
+
+      <CourierOrderFilters
+        statusFilter={statusFilter}
+        setStatusFilter={setStatusFilter}
+      />
+
+      {/* ==================================================
+          ORDER CONTENT
+      ================================================== */}
 
       <section className="courierOrders-content">
         <div className="courierOrders-contentHeader">
@@ -468,11 +889,23 @@ function CourierOrders() {
                   } shown`}
             </p>
           </div>
+
+          {!loading &&
+            orders.length > 0 &&
+            (searchQuery || statusFilter !== "ALL") && (
+              <button
+                type="button"
+                className="courierOrders-clearButton"
+                onClick={handleClearAll}
+              >
+                Clear
+              </button>
+            )}
         </div>
 
         {/* ==================================================
-                    LOADING
-                ================================================== */}
+            LOADING
+        ================================================== */}
 
         {loading ? (
           <div className="courierOrders-loading">
@@ -482,8 +915,8 @@ function CourierOrders() {
           </div>
         ) : filteredOrders.length === 0 ? (
           /* ==================================================
-                       EMPTY
-                    ================================================== */
+             EMPTY
+          ================================================== */
 
           <CourierOrderEmptyState
             type={emptyStateType}
@@ -496,8 +929,8 @@ function CourierOrders() {
           />
         ) : (
           /* ==================================================
-                       ORDER LIST
-                    ================================================== */
+             ORDER LIST
+          ================================================== */
 
           <div className="courierOrders-list">
             {filteredOrders.map((order) => (

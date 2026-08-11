@@ -1,0 +1,728 @@
+/* ==========================================================
+   COURIER DOCUMENTS
+========================================================== */
+
+.courierDocuments {
+    width: 100%;
+
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    background: #f8fafc;
+}
+
+
+/* ==========================================================
+   TOP BAR
+========================================================== */
+
+.courierDocuments-topBar {
+    width: 100%;
+
+    min-height: 52px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+}
+
+
+/* ==========================================================
+   ICON BUTTON
+========================================================== */
+
+.courierDocuments-iconButton {
+    width: 36px;
+
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dfe5eb;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.courierDocuments-iconButton:hover {
+    background: #f1f5f9;
+
+    border-color: #cbd5e1;
+
+    color: #2563eb;
+}
+
+
+.courierDocuments-iconButton:active {
+    transform: scale(0.96);
+}
+
+
+.courierDocuments-iconButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   TOP BAR CENTER
+========================================================== */
+
+.courierDocuments-topBarCenter {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    text-align: center;
+}
+
+
+.courierDocuments-pageIcon {
+    width: 35px;
+
+    height: 35px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 14px;
+}
+
+
+.courierDocuments-topBarCenter h1 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+.courierDocuments-topBarCenter p {
+    margin: 2px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   REFRESH
+========================================================== */
+
+.courierDocuments-refresh {
+    display: block;
+
+    font-size: 12px;
+}
+
+
+.courierDocuments-refresh.spinning {
+    animation:
+        courierDocumentsSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+@keyframes courierDocumentsSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   COURIER SUMMARY
+========================================================== */
+
+.courierDocuments-summary {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 14px;
+
+    margin-bottom: 13px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================================
+   SUMMARY IDENTITY
+========================================================== */
+
+.courierDocuments-summaryIdentity {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+.courierDocuments-avatar {
+    width: 48px;
+
+    height: 48px;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 50%;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+
+.courierDocuments-avatar img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+.courierDocuments-summaryInfo {
+    min-width: 0;
+}
+
+
+.courierDocuments-summaryInfo h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 14px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+
+    overflow-wrap: anywhere;
+}
+
+
+.courierDocuments-summaryInfo p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   SUMMARY STATUS
+========================================================== */
+
+.courierDocuments-summaryStatus {
+    flex-shrink: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 3px;
+}
+
+
+.courierDocuments-summaryStatus span {
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 600;
+}
+
+
+.courierDocuments-summaryStatus strong {
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierDocuments-content {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0;
+}
+
+
+/* ==========================================================
+   LOADING PAGE
+========================================================== */
+
+.courierDocuments-loadingPage {
+    width: 100%;
+
+    min-height: 400px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+.courierDocuments-loadingSpinner {
+    width: 32px;
+
+    height: 32px;
+
+    margin-bottom: 13px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #2563eb;
+
+    border-radius: 50%;
+
+    animation:
+        courierDocumentsSpin
+        0.8s
+        linear
+        infinite;
+}
+
+
+.courierDocuments-loadingPage h2 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+
+.courierDocuments-loadingPage p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierDocuments {
+        padding: 13px;
+    }
+
+
+    .courierDocuments-topBarCenter h1 {
+        font-size: 16px;
+    }
+
+
+    .courierDocuments-summary {
+        padding: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierDocuments {
+        padding: 10px;
+    }
+
+
+    .courierDocuments-topBar {
+        min-height: 43px;
+
+        margin-bottom: 9px;
+    }
+
+
+    .courierDocuments-iconButton {
+        width: 34px;
+
+        height: 34px;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocuments-topBarCenter {
+        gap: 7px;
+    }
+
+
+    .courierDocuments-pageIcon {
+        width: 31px;
+
+        height: 31px;
+
+        border-radius: 7px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocuments-topBarCenter h1 {
+        font-size: 14px;
+    }
+
+
+    .courierDocuments-topBarCenter p {
+        font-size: 7px;
+    }
+
+
+    .courierDocuments-summary {
+        align-items: flex-start;
+
+        padding: 10px;
+
+        border-radius: 9px;
+    }
+
+
+    .courierDocuments-avatar {
+        width: 43px;
+
+        height: 43px;
+
+        font-size: 14px;
+    }
+
+
+    .courierDocuments-summaryInfo h2 {
+        font-size: 12px;
+    }
+
+
+    .courierDocuments-summaryInfo p {
+        font-size: 7px;
+    }
+
+
+    .courierDocuments-summaryStatus span {
+        font-size: 7px;
+    }
+
+
+    .courierDocuments-summaryStatus strong {
+        font-size: 11px;
+    }
+
+
+    .courierDocuments-loadingPage {
+        min-height: 300px;
+
+        padding: 25px;
+    }
+
+
+    .courierDocuments-loadingSpinner {
+        width: 28px;
+
+        height: 28px;
+    }
+
+
+    .courierDocuments-loadingPage h2 {
+        font-size: 14px;
+    }
+
+
+    .courierDocuments-loadingPage p {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+
+    .courierDocuments {
+        padding: 8px;
+    }
+
+
+    .courierDocuments-topBar {
+        gap: 6px;
+    }
+
+
+    .courierDocuments-iconButton {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 11px;
+    }
+
+
+    .courierDocuments-pageIcon {
+        width: 28px;
+
+        height: 28px;
+
+        font-size: 11px;
+    }
+
+
+    .courierDocuments-topBarCenter h1 {
+        font-size: 12px;
+    }
+
+
+    .courierDocuments-topBarCenter p {
+        display: none;
+    }
+
+
+    .courierDocuments-summary {
+        gap: 8px;
+
+        padding: 9px;
+    }
+
+
+    .courierDocuments-avatar {
+        width: 39px;
+
+        height: 39px;
+
+        font-size: 12px;
+    }
+
+
+    .courierDocuments-summaryInfo h2 {
+        font-size: 11px;
+    }
+
+
+    .courierDocuments-summaryInfo p {
+        font-size: 6.5px;
+    }
+
+
+    .courierDocuments-summaryStatus span {
+        font-size: 6.5px;
+    }
+
+
+    .courierDocuments-summaryStatus strong {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierDocuments {
+        padding: 7px;
+    }
+
+
+    .courierDocuments-iconButton {
+        width: 29px;
+
+        height: 29px;
+
+        font-size: 10px;
+    }
+
+
+    .courierDocuments-pageIcon {
+        width: 26px;
+
+        height: 26px;
+
+        font-size: 10px;
+    }
+
+
+    .courierDocuments-topBarCenter h1 {
+        font-size: 11px;
+    }
+
+
+    .courierDocuments-summary {
+        padding: 8px;
+    }
+
+
+    .courierDocuments-avatar {
+        width: 36px;
+
+        height: 36px;
+    }
+
+
+    .courierDocuments-summaryInfo h2 {
+        font-size: 10px;
+    }
+
+
+    .courierDocuments-summaryStatus strong {
+        font-size: 9px;
+    }
+
+}

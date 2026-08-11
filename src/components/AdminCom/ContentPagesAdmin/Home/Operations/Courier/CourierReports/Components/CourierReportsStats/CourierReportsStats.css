@@ -1,0 +1,734 @@
+/* ==========================================================
+   COURIER REPORTS STATS
+========================================================== */
+
+.courierReportsStats {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReportsStats-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   HEADER TITLE
+========================================================== */
+
+.courierReportsStats-header h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   HEADER DESCRIPTION
+========================================================== */
+
+.courierReportsStats-header p {
+    margin:
+        5px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   COURIER LABEL
+========================================================== */
+
+.courierReportsStats-courierLabel {
+    min-width: 125px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 4px;
+
+    padding-left: 15px;
+
+    border-left: 1px solid #eef2f6;
+}
+
+.courierReportsStats-courierLabel span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+.courierReportsStats-courierLabel strong {
+    max-width: 180px;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   STAT GRID
+========================================================== */
+
+.courierReportsStats-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   STAT CARD
+========================================================== */
+
+.courierReportsStats-card {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    box-sizing: border-box;
+
+    padding: 14px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierReportsStats-card:hover {
+    border-color: #dbe2ea;
+
+    box-shadow:
+        0 4px 12px rgba(
+            15,
+            23,
+            42,
+            0.055
+        );
+
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================================
+   CARD ICON
+========================================================== */
+
+.courierReportsStats-cardIcon {
+    width: 39px;
+
+    height: 39px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   CARD CONTENT
+========================================================== */
+
+.courierReportsStats-cardContent {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierReportsStats-label {
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    line-height: 1.3;
+}
+
+
+/* ==========================================================
+   VALUE
+========================================================== */
+
+.courierReportsStats-value {
+    color: #1e293b;
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1.15;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierReportsStats-description {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   TOTAL
+========================================================== */
+
+.courierReportsStats-total {
+    background: #f8fafc;
+}
+
+.courierReportsStats-total
+.courierReportsStats-cardIcon {
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+
+/* ==========================================================
+   OPEN
+========================================================== */
+
+.courierReportsStats-open {
+    background: #fffaf5;
+}
+
+.courierReportsStats-open
+.courierReportsStats-cardIcon {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+
+/* ==========================================================
+   UNDER REVIEW
+========================================================== */
+
+.courierReportsStats-underReview {
+    background: #fffdf5;
+}
+
+.courierReportsStats-underReview
+.courierReportsStats-cardIcon {
+    background: #fefce8;
+
+    color: #ca8a04;
+}
+
+
+/* ==========================================================
+   RESOLVED
+========================================================== */
+
+.courierReportsStats-resolved {
+    background: #f7fdf9;
+}
+
+.courierReportsStats-resolved
+.courierReportsStats-cardIcon {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+
+/* ==========================================================
+   DISMISSED
+========================================================== */
+
+.courierReportsStats-dismissed {
+    background: #fafafa;
+}
+
+.courierReportsStats-dismissed
+.courierReportsStats-cardIcon {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierReportsStats-loadingTitle,
+.courierReportsStats-loadingSubtitle,
+.courierReportsStats-loadingIcon,
+.courierReportsStats-loadingLabel,
+.courierReportsStats-loadingValue,
+.courierReportsStats-loadingDescription {
+    background:
+        linear-gradient(
+            90deg,
+            #f1f5f9 25%,
+            #e2e8f0 50%,
+            #f1f5f9 75%
+        );
+
+    background-size: 200% 100%;
+
+    animation:
+        courierReportsStatsSkeleton
+        1.4s infinite;
+}
+
+
+/* ==========================================================
+   LOADING TITLE
+========================================================== */
+
+.courierReportsStats-loadingTitle {
+    width: 175px;
+
+    height: 20px;
+
+    border-radius: 6px;
+}
+
+.courierReportsStats-loadingSubtitle {
+    width: 300px;
+
+    max-width: 70vw;
+
+    height: 11px;
+
+    margin-top: 7px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   LOADING CARD
+========================================================== */
+
+.courierReportsStats-loadingCard {
+    min-height: 116px;
+}
+
+.courierReportsStats-loadingIcon {
+    width: 39px;
+
+    height: 39px;
+
+    flex-shrink: 0;
+
+    border-radius: 9px;
+}
+
+.courierReportsStats-loadingCard
+.courierReportsStats-cardContent {
+    flex: 1;
+}
+
+
+/* ==========================================================
+   LOADING LABEL
+========================================================== */
+
+.courierReportsStats-loadingLabel {
+    width: 80px;
+
+    height: 11px;
+
+    border-radius: 4px;
+}
+
+
+/* ==========================================================
+   LOADING VALUE
+========================================================== */
+
+.courierReportsStats-loadingValue {
+    width: 55px;
+
+    height: 25px;
+
+    margin-top: 3px;
+
+    border-radius: 5px;
+}
+
+
+/* ==========================================================
+   LOADING DESCRIPTION
+========================================================== */
+
+.courierReportsStats-loadingDescription {
+    width: 90px;
+
+    height: 9px;
+
+    margin-top: 3px;
+
+    border-radius: 4px;
+}
+
+
+/* ==========================================================
+   SKELETON ANIMATION
+========================================================== */
+
+@keyframes courierReportsStatsSkeleton {
+
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 1100px) {
+
+    .courierReportsStats-grid {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReportsStats {
+        padding: 15px;
+    }
+
+    .courierReportsStats-header h2 {
+        font-size: 18px;
+    }
+
+    .courierReportsStats-header p {
+        font-size: 11px;
+    }
+
+    .courierReportsStats-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 550px) {
+
+    .courierReportsStats {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReportsStats-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        margin-bottom: 13px;
+    }
+
+    .courierReportsStats-header h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsStats-header p {
+        margin-top: 4px;
+
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       COURIER LABEL
+    ====================================================== */
+
+    .courierReportsStats-courierLabel {
+        width: 100%;
+
+        min-width: 0;
+
+        align-items: flex-start;
+
+        padding:
+            8px
+            0
+            0;
+
+        border-top: 1px solid #eef2f6;
+
+        border-left: none;
+    }
+
+    .courierReportsStats-courierLabel span {
+        font-size: 9px;
+    }
+
+    .courierReportsStats-courierLabel strong {
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       GRID
+    ====================================================== */
+
+    .courierReportsStats-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+    }
+
+
+    /* ======================================================
+       CARD
+    ====================================================== */
+
+    .courierReportsStats-card {
+        gap: 9px;
+
+        padding: 11px;
+
+        border-radius: 9px;
+    }
+
+    .courierReportsStats-cardIcon {
+        width: 34px;
+
+        height: 34px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
+    }
+
+    .courierReportsStats-label {
+        font-size: 10px;
+    }
+
+    .courierReportsStats-value {
+        font-size: 21px;
+    }
+
+    .courierReportsStats-description {
+        font-size: 8px;
+    }
+
+
+    /* ======================================================
+       LOADING
+    ====================================================== */
+
+    .courierReportsStats-loadingCard {
+        min-height: 100px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsStats {
+        padding: 10px;
+    }
+
+    .courierReportsStats-grid {
+        gap: 7px;
+    }
+
+    .courierReportsStats-card {
+        gap: 7px;
+
+        padding: 9px;
+    }
+
+    .courierReportsStats-cardIcon {
+        width: 31px;
+
+        height: 31px;
+
+        font-size: 12px;
+    }
+
+    .courierReportsStats-label {
+        font-size: 9px;
+    }
+
+    .courierReportsStats-value {
+        font-size: 19px;
+    }
+
+    .courierReportsStats-description {
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsStats {
+        padding: 9px;
+    }
+
+    .courierReportsStats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .courierReportsStats-card {
+        min-height: 0;
+    }
+
+    .courierReportsStats-value {
+        font-size: 20px;
+    }
+
+}

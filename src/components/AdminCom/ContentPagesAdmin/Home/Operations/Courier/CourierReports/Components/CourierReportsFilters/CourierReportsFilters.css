@@ -1,0 +1,704 @@
+/* ==========================================================
+   COURIER REPORTS FILTERS
+========================================================== */
+
+.courierReportsFilters {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReportsFilters-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierReportsFilters-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   TITLE ICON
+========================================================== */
+
+.courierReportsFilters-titleIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   TITLE TEXT
+========================================================== */
+
+.courierReportsFilters-title h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+}
+
+.courierReportsFilters-title p {
+    margin:
+        4px
+        0
+        0;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   RESULTS
+========================================================== */
+
+.courierReportsFilters-results {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 4px;
+
+    box-sizing: border-box;
+
+    padding:
+        7px
+        10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    white-space: nowrap;
+}
+
+.courierReportsFilters-results strong {
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+.courierReportsFilters-results span {
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   CONTROLS
+========================================================== */
+
+.courierReportsFilters-controls {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    gap: 10px;
+
+    box-sizing: border-box;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   FIELD
+========================================================== */
+
+.courierReportsFilters-field {
+    min-width: 190px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierReportsFilters-field label {
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   SELECT
+========================================================== */
+
+.courierReportsFilters-field select {
+    width: 100%;
+
+    min-height: 43px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        34px
+        0
+        11px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background-color: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.courierReportsFilters-field select:hover:not(:disabled) {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+}
+
+.courierReportsFilters-field select:focus {
+    border-color: #94a3b8;
+
+    box-shadow:
+        0 0 0 3px rgba(
+            148,
+            163,
+            184,
+            0.12
+        );
+}
+
+.courierReportsFilters-field select:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierReportsFilters-clearButton {
+    min-height: 43px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        13px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #fffafa;
+
+    color: #dc2626;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsFilters-clearButton:hover:not(:disabled) {
+    background: #fef2f2;
+
+    border-color: #fca5a5;
+
+    color: #b91c1c;
+}
+
+.courierReportsFilters-clearButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.courierReportsFilters-footer {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 11px;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+
+/* ==========================================================
+   ACTIVE FILTER
+========================================================== */
+
+.courierReportsFilters-active {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 550;
+}
+
+.courierReportsFilters-active strong {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+.courierReportsFilters-divider {
+    color: #cbd5e1;
+
+    margin:
+        0
+        2px;
+}
+
+
+/* ==========================================================
+   RESET BUTTON
+========================================================== */
+
+.courierReportsFilters-resetButton {
+    min-height: 31px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+    padding:
+        0
+        9px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportsFilters-resetButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReportsFilters-resetButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 850px) {
+
+    .courierReportsFilters {
+        padding: 15px;
+    }
+
+    .courierReportsFilters-title h2 {
+        font-size: 18px;
+    }
+
+    .courierReportsFilters-title p {
+        font-size: 11px;
+    }
+
+    .courierReportsFilters-controls {
+        flex-wrap: wrap;
+    }
+
+    .courierReportsFilters-field {
+        flex: 1;
+
+        min-width: 180px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierReportsFilters {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReportsFilters-header {
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .courierReportsFilters-title {
+        gap: 9px;
+    }
+
+    .courierReportsFilters-titleIcon {
+        width: 39px;
+
+        height: 39px;
+
+        border-radius: 9px;
+
+        font-size: 14px;
+    }
+
+    .courierReportsFilters-title h2 {
+        font-size: 17px;
+    }
+
+    .courierReportsFilters-title p {
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       RESULTS
+    ====================================================== */
+
+    .courierReportsFilters-results {
+        padding:
+            6px
+            8px;
+    }
+
+    .courierReportsFilters-results strong {
+        font-size: 14px;
+    }
+
+    .courierReportsFilters-results span {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       CONTROLS
+    ====================================================== */
+
+    .courierReportsFilters-controls {
+        align-items: stretch;
+
+        flex-direction: column;
+
+        gap: 9px;
+    }
+
+    .courierReportsFilters-field {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+    .courierReportsFilters-field label {
+        font-size: 10px;
+    }
+
+    .courierReportsFilters-field select {
+        min-height: 43px;
+
+        font-size: 12px;
+    }
+
+    .courierReportsFilters-clearButton {
+        width: 100%;
+
+        min-height: 42px;
+
+        font-size: 11px;
+    }
+
+
+    /* ======================================================
+       FOOTER
+    ====================================================== */
+
+    .courierReportsFilters-footer {
+        align-items: flex-start;
+
+        gap: 8px;
+    }
+
+    .courierReportsFilters-active {
+        font-size: 9px;
+    }
+
+    .courierReportsFilters-active strong {
+        font-size: 9px;
+    }
+
+    .courierReportsFilters-resetButton {
+        min-height: 29px;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierReportsFilters {
+        padding: 10px;
+    }
+
+    .courierReportsFilters-header {
+        flex-direction: column;
+    }
+
+    .courierReportsFilters-results {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+    .courierReportsFilters-title h2 {
+        font-size: 16px;
+    }
+
+    .courierReportsFilters-title p {
+        font-size: 9px;
+    }
+
+    .courierReportsFilters-field label {
+        font-size: 9px;
+    }
+
+    .courierReportsFilters-field select {
+        font-size: 11px;
+    }
+
+    .courierReportsFilters-active {
+        font-size: 8px;
+    }
+
+    .courierReportsFilters-active strong {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportsFilters {
+        padding: 9px;
+    }
+
+    .courierReportsFilters-titleIcon {
+        width: 35px;
+
+        height: 35px;
+
+        font-size: 13px;
+    }
+
+    .courierReportsFilters-title h2 {
+        font-size: 15px;
+    }
+
+    .courierReportsFilters-title p {
+        font-size: 9px;
+    }
+
+    .courierReportsFilters-field select {
+        min-height: 41px;
+
+        font-size: 10px;
+    }
+
+    .courierReportsFilters-clearButton {
+        min-height: 40px;
+
+        font-size: 10px;
+    }
+
+}

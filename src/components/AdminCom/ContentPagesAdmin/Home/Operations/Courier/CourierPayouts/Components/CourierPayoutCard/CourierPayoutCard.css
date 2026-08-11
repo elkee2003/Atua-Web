@@ -1,0 +1,766 @@
+/* ==========================================================
+   COURIER PAYOUT CARD
+========================================================== */
+
+.courierPayoutCard {
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+    padding: 12px;
+
+    border: 1px solid #e8edf3;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.courierPayoutCard:hover {
+    border-color: #dbe2ea;
+
+    background: #fcfdfe;
+
+    box-shadow:
+        0 3px 10px rgba(
+            15,
+            23,
+            42,
+            0.03
+        );
+}
+
+
+/* ==========================================================
+   MAIN
+========================================================== */
+
+.courierPayoutCard-main {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   PAYOUT ICON
+========================================================== */
+
+.courierPayoutCard-icon {
+    width: 35px;
+    height: 35px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #ecfdf5;
+    color: #059669;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   STATUS-BASED ICON COLORS
+========================================================== */
+
+.courierPayoutCard-pending
+.courierPayoutCard-icon {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+
+.courierPayoutCard-processing
+.courierPayoutCard-icon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+
+.courierPayoutCard-paid
+.courierPayoutCard-icon {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+
+.courierPayoutCard-failed
+.courierPayoutCard-icon {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.courierPayoutCard-information {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* ==========================================================
+   REFERENCE ROW
+========================================================== */
+
+.courierPayoutCard-referenceRow {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.courierPayoutCard-referenceLabel {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 550;
+
+    line-height: 1.3;
+}
+
+
+.courierPayoutCard-reference {
+    min-width: 0;
+
+    max-width: 220px;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   COPY BUTTON
+========================================================== */
+
+.courierPayoutCard-copyButton {
+    width: 22px;
+    height: 22px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border: none;
+    border-radius: 5px;
+
+    outline: none;
+
+    background: transparent;
+    color: #94a3b8;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayoutCard-copyButton:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+
+.courierPayoutCard-copyButton:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.15
+    );
+
+    outline-offset: 1px;
+}
+
+
+/* ==========================================================
+   BANK
+========================================================== */
+
+.courierPayoutCard-bank {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+.courierPayoutCard-bank > svg {
+    flex-shrink: 0;
+
+    color: #64748b;
+
+    font-size: 10px;
+}
+
+
+.courierPayoutCard-account {
+    color: #64748b;
+
+    font-weight: 650;
+}
+
+
+/* ==========================================================
+   SIDE
+========================================================== */
+
+.courierPayoutCard-side {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   AMOUNT
+========================================================== */
+
+.courierPayoutCard-amount {
+    color: #334155;
+
+    font-size: 15px;
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierPayoutCard-status {
+    min-height: 26px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    padding:
+        0
+        9px;
+
+    border: 1px solid transparent;
+    border-radius: 6px;
+
+    font-size: 8px;
+    font-weight: 650;
+
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   PENDING
+========================================================== */
+
+.courierPayoutCard-status-pending {
+    border-color: #fde68a;
+
+    background: #fffbeb;
+
+    color: #b45309;
+}
+
+
+/* ==========================================================
+   PROCESSING
+========================================================== */
+
+.courierPayoutCard-status-processing {
+    border-color: #bfdbfe;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+/* ==========================================================
+   PAID
+========================================================== */
+
+.courierPayoutCard-status-paid {
+    border-color: #a7f3d0;
+
+    background: #ecfdf5;
+
+    color: #047857;
+}
+
+
+/* ==========================================================
+   FAILED
+========================================================== */
+
+.courierPayoutCard-status-failed {
+    border-color: #fecaca;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   PROCESSING SPINNER
+========================================================== */
+
+.courierPayoutCard-statusSpinner {
+    animation:
+        courierPayoutCardSpin
+        1s linear infinite;
+}
+
+
+@keyframes courierPayoutCardSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierPayoutCard-viewButton {
+    min-height: 28px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    padding:
+        0
+        10px;
+
+    border: 1px solid #dbe2ea;
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #ffffff;
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 8px;
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierPayoutCard-viewButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierPayoutCard-viewButton svg {
+    font-size: 9px;
+}
+
+
+.courierPayoutCard-viewButton:focus-visible {
+    outline: 2px solid rgba(
+        37,
+        99,
+        235,
+        0.15
+    );
+
+    outline-offset: 1px;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierPayoutCard {
+        gap: 10px;
+    }
+
+
+    .courierPayoutCard-side {
+        gap: 8px;
+    }
+
+
+    .courierPayoutCard-amount {
+        font-size: 14px;
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierPayoutCard {
+        align-items: flex-start;
+
+        padding: 11px;
+    }
+
+
+    .courierPayoutCard-main {
+        align-items: flex-start;
+
+        gap: 9px;
+    }
+
+
+    .courierPayoutCard-side {
+        flex-direction: column;
+
+        align-items: flex-end;
+
+        gap: 6px;
+    }
+
+
+    .courierPayoutCard-icon {
+        width: 34px;
+        height: 34px;
+
+        font-size: 13px;
+    }
+
+
+    .courierPayoutCard-referenceLabel {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutCard-reference {
+        font-size: 8.5px;
+    }
+
+
+    .courierPayoutCard-bank {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutCard-amount {
+        font-size: 13px;
+    }
+
+
+    .courierPayoutCard-status {
+        min-height: 25px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutCard-viewButton {
+        min-height: 27px;
+
+        padding:
+            0
+            9px;
+
+        font-size: 7.5px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+    .courierPayoutCard {
+        flex-direction: column;
+
+        align-items: stretch;
+
+        gap: 10px;
+
+        padding: 10px;
+
+        border-radius: 8px;
+    }
+
+
+    .courierPayoutCard-main {
+        width: 100%;
+
+        align-items: center;
+    }
+
+
+    .courierPayoutCard-side {
+        width: 100%;
+
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: space-between;
+
+        padding-top: 9px;
+
+        border-top: 1px solid #f1f5f9;
+    }
+
+
+    .courierPayoutCard-icon {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 7px;
+
+        font-size: 13px;
+    }
+
+
+    .courierPayoutCard-information {
+        gap: 5px;
+    }
+
+
+    .courierPayoutCard-referenceLabel {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutCard-reference {
+        max-width: 180px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutCard-copyButton {
+        width: 21px;
+        height: 21px;
+
+        font-size: 8px;
+    }
+
+
+    .courierPayoutCard-bank {
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutCard-bank > svg {
+        font-size: 9px;
+    }
+
+
+    .courierPayoutCard-amount {
+        font-size: 13px;
+    }
+
+
+    .courierPayoutCard-status {
+        min-height: 24px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 7px;
+    }
+
+
+    .courierPayoutCard-viewButton {
+        min-height: 25px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 7px;
+    }
+
+
+    .courierPayoutCard-viewButton svg {
+        font-size: 8px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+    .courierPayoutCard {
+        padding: 9px;
+    }
+
+
+    .courierPayoutCard-main {
+        gap: 8px;
+    }
+
+
+    .courierPayoutCard-icon {
+        width: 30px;
+        height: 30px;
+
+        font-size: 12px;
+    }
+
+
+    .courierPayoutCard-information {
+        gap: 4px;
+    }
+
+
+    .courierPayoutCard-referenceLabel {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutCard-reference {
+        max-width: 140px;
+
+        font-size: 7.5px;
+    }
+
+
+    .courierPayoutCard-bank {
+        font-size: 7px;
+    }
+
+
+    .courierPayoutCard-bank > svg {
+        font-size: 8px;
+    }
+
+
+    .courierPayoutCard-amount {
+        font-size: 12px;
+    }
+
+
+    .courierPayoutCard-status {
+        min-height: 23px;
+
+        padding:
+            0
+            7px;
+
+        font-size: 6.8px;
+    }
+
+
+    .courierPayoutCard-viewButton {
+        min-height: 24px;
+
+        padding:
+            0
+            7px;
+
+        font-size: 6.8px;
+    }
+
+}

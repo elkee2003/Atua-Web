@@ -37,20 +37,22 @@
 
     align-items: center;
 
-    gap: 5px;
+    gap: 6px;
 
     color: #64748b;
 
-    font-size: 7px;
+    font-size: 10px;
 
     font-weight: 600;
+
+    line-height: 1.3;
 }
 
 
 .courierOrderFilters-title svg {
     color: #94a3b8;
 
-    font-size: 8px;
+    font-size: 11px;
 }
 
 
@@ -77,9 +79,11 @@
 
     font-family: inherit;
 
-    font-size: 6px;
+    font-size: 9px;
 
     font-weight: 600;
+
+    line-height: 1.3;
 
     cursor: pointer;
 
@@ -97,7 +101,7 @@
 
 
 .courierOrderFilters-clear svg {
-    font-size: 6px;
+    font-size: 9px;
 }
 
 
@@ -156,9 +160,11 @@
 
     font-family: inherit;
 
-    font-size: 7px;
+    font-size: 10px;
 
     font-weight: 600;
+
+    line-height: 1.2;
 
     white-space: nowrap;
 
@@ -199,8 +205,8 @@
 ========================================================== */
 
 .courierOrderFilters-icon {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
 
     display: flex;
 
@@ -214,7 +220,7 @@
 
     color: #64748b;
 
-    font-size: 7px;
+    font-size: 9px;
 
     transition:
         background 0.2s ease,
@@ -227,7 +233,7 @@
 ========================================================== */
 
 .courierOrderFilters-label {
-    line-height: 1;
+    line-height: 1.2;
 
     white-space: nowrap;
 }
@@ -374,13 +380,25 @@
 
         padding: 6px 9px;
 
-        font-size: 7px;
+        font-size: 10px;
     }
 
 
     .courierOrderFilters-icon {
-        width: 17px;
-        height: 17px;
+        width: 18px;
+        height: 18px;
+
+        font-size: 9px;
+    }
+
+
+    .courierOrderFilters-title {
+        font-size: 10px;
+    }
+
+
+    .courierOrderFilters-clear {
+        font-size: 9px;
     }
 
 }
@@ -398,17 +416,17 @@
 
 
     .courierOrderFilters-title {
-        font-size: 6px;
+        font-size: 9px;
     }
 
 
     .courierOrderFilters-title svg {
-        font-size: 7px;
+        font-size: 10px;
     }
 
 
     .courierOrderFilters-option {
-        min-height: 28px;
+        min-height: 29px;
 
         padding: 5px 8px;
 
@@ -416,22 +434,27 @@
 
         border-radius: 7px;
 
-        font-size: 6px;
+        font-size: 9px;
     }
 
 
     .courierOrderFilters-icon {
-        width: 16px;
-        height: 16px;
+        width: 17px;
+        height: 17px;
 
-        font-size: 6px;
+        font-size: 8px;
     }
 
 
     .courierOrderFilters-clear {
         padding: 4px 6px;
 
-        font-size: 6px;
+        font-size: 8px;
+    }
+
+
+    .courierOrderFilters-clear svg {
+        font-size: 8px;
     }
 
 }
@@ -444,19 +467,34 @@
 @media (max-width: 400px) {
 
     .courierOrderFilters-option {
-        min-height: 26px;
+        min-height: 28px;
 
         padding: 5px 7px;
 
-        font-size: 5px;
+        font-size: 9px;
     }
 
 
     .courierOrderFilters-icon {
-        width: 15px;
-        height: 15px;
+        width: 16px;
+        height: 16px;
 
-        font-size: 5px;
+        font-size: 8px;
+    }
+
+
+    .courierOrderFilters-title {
+        font-size: 9px;
+    }
+
+
+    .courierOrderFilters-clear {
+        font-size: 8px;
+    }
+
+
+    .courierOrderFilters-clear svg {
+        font-size: 8px;
     }
 
 }

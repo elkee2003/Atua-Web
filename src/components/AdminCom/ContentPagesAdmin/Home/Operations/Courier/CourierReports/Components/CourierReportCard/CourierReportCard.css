@@ -1,0 +1,1198 @@
+/* ==========================================================
+   COURIER REPORT CARD
+========================================================== */
+
+.courierReportCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 17px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 9px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierReportCard:hover {
+    border-color: #dbe2ea;
+
+    box-shadow:
+        0 5px 15px rgba(
+            15,
+            23,
+            42,
+            0.045
+        );
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierReportCard-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   HEADER MAIN
+========================================================== */
+
+.courierReportCard-headerMain {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+}
+
+
+/* ==========================================================
+   REPORT ICON
+========================================================== */
+
+.courierReportCard-reportIcon {
+    width: 43px;
+
+    height: 43px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   TITLE AREA
+========================================================== */
+
+.courierReportCard-titleArea {
+    min-width: 0;
+}
+
+
+/* ==========================================================
+   TITLE ROW
+========================================================== */
+
+.courierReportCard-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   REPORT TITLE
+========================================================== */
+
+.courierReportCard-titleRow h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierReportCard-status {
+    min-height: 25px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        8px;
+
+    border: 1px solid transparent;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   STATUS - OPEN
+========================================================== */
+
+.courierReportCard-status.courierReportCard-open {
+    border-color: #fed7aa;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   STATUS - UNDER REVIEW
+========================================================== */
+
+.courierReportCard-status.courierReportCard-underReview {
+    border-color: #fde68a;
+
+    background: #fefce8;
+
+    color: #a16207;
+}
+
+
+/* ==========================================================
+   STATUS - RESOLVED
+========================================================== */
+
+.courierReportCard-status.courierReportCard-resolved {
+    border-color: #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+
+/* ==========================================================
+   STATUS - DISMISSED
+========================================================== */
+
+.courierReportCard-status.courierReportCard-dismissed {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   UNKNOWN
+========================================================== */
+
+.courierReportCard-status.courierReportCard-unknown {
+    border-color: #e2e8f0;
+
+    background: #f8fafc;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierReportCard-meta {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 5px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 550;
+}
+
+.courierReportCard-meta strong {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.courierReportCard-metaDivider {
+    color: #cbd5e1;
+
+    margin:
+        0
+        2px;
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierReportCard-viewButton {
+    min-height: 36px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        10px;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportCard-viewButton svg:last-child {
+    font-size: 8px;
+}
+
+.courierReportCard-viewButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReportCard-viewButton:disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   SECTION LABEL
+========================================================== */
+
+.courierReportCard-sectionLabel {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 750;
+}
+
+.courierReportCard-sectionLabel svg {
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   DESCRIPTION SECTION
+========================================================== */
+
+.courierReportCard-descriptionSection {
+    padding:
+        13px
+        0;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierReportCard-description {
+    margin:
+        7px
+        0
+        0;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.65;
+
+    white-space: pre-wrap;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   EMPTY DESCRIPTION
+========================================================== */
+
+.courierReportCard-descriptionEmpty {
+    color: #94a3b8;
+
+    font-style: italic;
+}
+
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.courierReportCard-information {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 9px;
+
+    padding:
+        12px
+        0;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   INFORMATION ITEM
+========================================================== */
+
+.courierReportCard-informationItem {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    box-sizing: border-box;
+
+    padding:
+        9px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 8px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   INFORMATION ICON
+========================================================== */
+
+.courierReportCard-informationIcon {
+    width: 32px;
+
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   INFORMATION CONTENT
+========================================================== */
+
+.courierReportCard-informationContent {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.courierReportCard-informationContent span {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.courierReportCard-informationContent strong {
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierReportCard-informationContent small {
+    overflow: hidden;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   SMALL ACTION
+========================================================== */
+
+.courierReportCard-smallAction {
+    width: 27px;
+
+    height: 27px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 0;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 6px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportCard-smallAction:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+.courierReportCard-smallAction:disabled {
+    opacity: 0.4;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   EVIDENCE
+========================================================== */
+
+.courierReportCard-evidence {
+    padding:
+        12px
+        0;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   EVIDENCE ITEMS
+========================================================== */
+
+.courierReportCard-evidenceItems {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 8px;
+}
+
+
+/* ==========================================================
+   EVIDENCE ITEM
+========================================================== */
+
+.courierReportCard-evidenceItem {
+    min-width: 95px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    box-sizing: border-box;
+
+    padding:
+        8px
+        10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #94a3b8;
+}
+
+.courierReportCard-evidenceItem > svg {
+    font-size: 13px;
+}
+
+.courierReportCard-evidenceItem > div {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 4px;
+}
+
+.courierReportCard-evidenceItem strong {
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+.courierReportCard-evidenceItem span {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   HAS EVIDENCE
+========================================================== */
+
+.courierReportCard-evidenceItem.hasEvidence {
+    border-color: #dbe2ea;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+.courierReportCard-evidenceItem.hasEvidence strong {
+    color: #334155;
+}
+
+.courierReportCard-evidenceItem.hasEvidence span {
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   PHOTO PREVIEW
+========================================================== */
+
+.courierReportCard-photoPreview {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(
+                0,
+                1fr
+            )
+        );
+
+    gap: 6px;
+
+    margin-top: 9px;
+}
+
+
+/* ==========================================================
+   PHOTO
+========================================================== */
+
+.courierReportCard-photo {
+    position: relative;
+
+    width: 100%;
+
+    height: 75px;
+
+    overflow: hidden;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 7px;
+
+    background: #f1f5f9;
+}
+
+.courierReportCard-photo img {
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+}
+
+
+/* ==========================================================
+   ADMIN COMMENT
+========================================================== */
+
+.courierReportCard-adminComment {
+    padding:
+        12px
+        0;
+
+    border-bottom: 1px solid #eef2f6;
+}
+
+
+/* ==========================================================
+   ADMIN COMMENT TEXT
+========================================================== */
+
+.courierReportCard-adminComment p {
+    margin:
+        7px
+        0
+        0;
+
+    padding:
+        9px
+        10px;
+
+    border-left: 3px solid #cbd5e1;
+
+    border-radius: 0 7px 7px 0;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+}
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.courierReportCard-actions {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    padding-top: 12px;
+}
+
+
+/* ==========================================================
+   ACTION BASE
+========================================================== */
+
+.courierReportCard-actions button {
+    min-height: 35px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    box-sizing: border-box;
+
+    padding:
+        0
+        11px;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierReportCard-actions button:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   REVIEW
+========================================================== */
+
+.courierReportCard-reviewButton {
+    border: 1px solid #fde68a;
+
+    background: #fefce8;
+
+    color: #a16207;
+}
+
+.courierReportCard-reviewButton:hover:not(:disabled) {
+    border-color: #facc15;
+
+    background: #fef9c3;
+
+    color: #854d0e;
+}
+
+
+/* ==========================================================
+   RESOLVE
+========================================================== */
+
+.courierReportCard-resolveButton {
+    border: 1px solid #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+.courierReportCard-resolveButton:hover:not(:disabled) {
+    border-color: #86efac;
+
+    background: #dcfce7;
+
+    color: #166534;
+}
+
+
+/* ==========================================================
+   DISMISS
+========================================================== */
+
+.courierReportCard-dismissButton {
+    border: 1px solid #fecaca;
+
+    background: #fffafa;
+
+    color: #dc2626;
+}
+
+.courierReportCard-dismissButton:hover:not(:disabled) {
+    border-color: #fca5a5;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierReportCard {
+        padding: 15px;
+    }
+
+    .courierReportCard-titleRow h3 {
+        font-size: 16px;
+    }
+
+    .courierReportCard-description {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierReportCard {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+
+    /* ======================================================
+       HEADER
+    ====================================================== */
+
+    .courierReportCard-header {
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+    .courierReportCard-headerMain {
+        width: 100%;
+    }
+
+    .courierReportCard-reportIcon {
+        width: 39px;
+
+        height: 39px;
+
+        border-radius: 9px;
+
+        font-size: 14px;
+    }
+
+    .courierReportCard-titleRow h3 {
+        font-size: 15px;
+    }
+
+    .courierReportCard-status {
+        min-height: 23px;
+
+        padding:
+            0
+            7px;
+
+        font-size: 8px;
+    }
+
+    .courierReportCard-meta {
+        font-size: 9px;
+    }
+
+    .courierReportCard-meta strong {
+        font-size: 9px;
+    }
+
+
+    /* ======================================================
+       VIEW BUTTON
+    ====================================================== */
+
+    .courierReportCard-viewButton {
+        width: 100%;
+
+        min-height: 36px;
+
+        font-size: 10px;
+    }
+
+
+    /* ======================================================
+       INFORMATION
+    ====================================================== */
+
+    .courierReportCard-information {
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+
+    /* ======================================================
+       EVIDENCE
+    ====================================================== */
+
+    .courierReportCard-evidenceItem {
+        flex: 1;
+
+        min-width: 0;
+    }
+
+    .courierReportCard-photoPreview {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+    .courierReportCard-photo {
+        height: 70px;
+    }
+
+
+    /* ======================================================
+       ACTIONS
+    ====================================================== */
+
+    .courierReportCard-actions {
+        justify-content: stretch;
+    }
+
+    .courierReportCard-actions button {
+        flex: 1;
+
+        min-width: 0;
+
+        font-size: 9px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierReportCard {
+        padding: 10px;
+    }
+
+    .courierReportCard-headerMain {
+        gap: 8px;
+    }
+
+    .courierReportCard-reportIcon {
+        width: 35px;
+
+        height: 35px;
+
+        font-size: 13px;
+    }
+
+    .courierReportCard-titleRow h3 {
+        font-size: 14px;
+    }
+
+    .courierReportCard-description {
+        font-size: 9px;
+    }
+
+    .courierReportCard-informationContent strong {
+        font-size: 10px;
+    }
+
+    .courierReportCard-informationContent span,
+    .courierReportCard-informationContent small {
+        font-size: 8px;
+    }
+
+    .courierReportCard-photoPreview {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            );
+    }
+
+    .courierReportCard-photo {
+        height: 85px;
+    }
+
+    .courierReportCard-actions {
+        flex-direction: column;
+    }
+
+    .courierReportCard-actions button {
+        width: 100%;
+
+        flex: none;
+    }
+
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+
+    .courierReportCard {
+        padding: 9px;
+    }
+
+    .courierReportCard-titleRow h3 {
+        font-size: 13px;
+    }
+
+    .courierReportCard-description {
+        font-size: 8px;
+    }
+
+    .courierReportCard-evidenceItem {
+        padding:
+            7px
+            8px;
+    }
+
+    .courierReportCard-evidenceItem strong {
+        font-size: 10px;
+    }
+
+    .courierReportCard-evidenceItem span {
+        font-size: 8px;
+    }
+
+}
