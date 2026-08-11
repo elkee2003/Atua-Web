@@ -1,148 +1,282 @@
-.client-sidebar {
-    width: 20vw;
-    height: 100vh;
-    gap:50px;
-    color: #0b0431;
+/* ==========================================================
+   GLOBAL VARIABLES
+========================================================== */
+
+:root {
+    --admin-sidebar-width: 270px;
+    --admin-bottom-nav-height: 85px;
+
+    --admin-primary-text: #0C0533;
+    --admin-hover-color: #26E600;
+    --admin-sidebar-bg: #FFFFFF;
+
+    --admin-shadow: 2px 0 8px rgba(0,0,0,.08);
+}
+
+/* ==========================================================
+   DESKTOP SIDEBAR
+========================================================== */
+
+.admin-sidebar {
+
     position: fixed;
+
     top: 0;
     left: 0;
-    padding: 20px;
+
+    width: var(--admin-sidebar-width);
+    min-width: var(--admin-sidebar-width);
+    max-width: var(--admin-sidebar-width);
+
+    height: 100vh;
+
+    padding: 24px;
+
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1); 
-  }
+    gap: 50px;
 
-  .client-logoClickClient {
-    cursor: pointer;
-  }
-  
-  /* Dashboard heading */
-  /* .sidebar h2 {
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-    color: #040842;
-    text-align: center;
-  } */
-  
-  /* Navigation links */
-  .client-sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  
-  .client-sidebar nav ul li {
-    margin: 15px 0;
-  }
+    background: var(--admin-sidebar-bg);
 
-  .client-nav-container {
-    display: flex;
-    position: relative;
-    align-items: center;
-    gap:0.5rem;
-  }
+    color: var(--admin-primary-text);
 
-  .clientNotification-badge {
-    background-color: red;
-    color: white;
-    font-size: 0.75rem;
-    font-weight: bold;
-    padding: 2px 6px;
-    border-radius: 999px;
-    position: absolute;
-    top: -4px;
-    right: -10px;
-    min-width: 20px;
-    height: 20px;
+    box-shadow: var(--admin-shadow);
+
+    z-index: 100;
+
+}
+
+.admin-logoClick {
+
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1;
-  }
-  
-  .client-sidebar nav ul li a {
-    text-decoration: none;
-    color: #0c0533;
-    font-size: 1.2rem;
-    padding: 10px;
-    display: block;
-    border-radius: 5px;
-    transition: background 0.3s ease, color 0.3s ease;
-  }
-  
-  .client-sidebar nav ul li a:hover {
-    font-size: 1.3rem;
-    background-color: #f0f0f0; 
-    color: #26e600; 
-  }
 
-  .client-sidebar nav ul li a svg {
-    font-size: 1.8rem;
-  }
+    cursor: pointer;
 
-  /* Bottom tab navigator (hidden by default) */
-.client-bottom-nav {
-    display: none;
-    position: fixed;
-    z-index: 200;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: #fff;
-    color: #0b0431;
-    justify-content: space-around;
-    padding: 15px 0;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.3);
-  }
-
-  .client-bottom-nav a svg {
-    font-size: 1.5rem; 
 }
-  
-  .client-bottom-nav a {
+
+.admin-logoClick img {
+
+    width: 150px;
+    height: auto;
+
+}
+
+/* ==========================================================
+   NAVIGATION
+========================================================== */
+
+.admin-sidebar nav {
+
+    width: 100%;
+
+}
+
+.admin-sidebar nav ul {
+
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+}
+
+.admin-sidebar nav ul li {
+
+    margin-bottom: 16px;
+
+}
+
+.admin-sidebar nav ul li:last-child {
+
+    margin-bottom: 0;
+
+}
+
+.admin-sidebar nav ul li a {
+
+    display: block;
+
+    padding: 12px 15px;
+
+    text-decoration: none;
+
+    color: var(--admin-primary-text);
+
+    border-radius: 10px;
+
+    transition: .25s ease;
+
+}
+
+.admin-sidebar nav ul li a:hover {
+
+    background: #F5F5F5;
+
+    color: var(--admin-hover-color);
+
+}
+
+.admin-nav-container {
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    position: relative;
+
+}
+
+.admin-nav-container svg {
+
+    font-size: 24px;
+
+}
+
+/* ==========================================================
+   ACTIVE LINK
+========================================================== */
+
+.active-link {
+
+    background: #F4F4F4;
+
+    color: var(--admin-hover-color) !important;
+
+    font-weight: 600;
+
+}
+
+/* ==========================================================
+   NOTIFICATION BADGE
+========================================================== */
+
+.adminNotification-badge {
+
+    position: absolute;
+
+    top: -5px;
+    right: -10px;
+
+    min-width: 20px;
+    height: 20px;
+
+    padding: 2px 6px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 999px;
+
+    background: #FF2D2D;
+
+    color: #FFFFFF;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    z-index: 2;
+
+}
+
+/* ==========================================================
+   MOBILE BOTTOM NAVIGATION
+========================================================== */
+
+.admin-bottom-nav {
+
+    display: none;
+
+    position: fixed;
+
+    left: 0;
+    bottom: 0;
+
+    width: 100%;
+    height: var(--admin-bottom-nav-height);
+
+    background: #FFFFFF;
+
+    box-shadow: 0 -2px 10px rgba(0,0,0,.12);
+
+    z-index: 500;
+
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.admin-bottom-nav a {
+
+    flex: 1;
+
+    height: 100%;
+
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
+
+    gap: 4px;
+
     text-decoration: none;
-    color: #0c0533;
-    font-size: 1rem;
-    transition: color 0.3s;
-  }
-  
-  .client-bottom-nav a:hover {
-    color: #26e600;
-  }
 
-  .client-active-link {
-    font-weight: bold; /* Make the active link bold */
-    border-radius: 5px;
-  }
-  
-  /* Media query for max-width: 900px */
-    @media (max-width: 900px) {
-        .client-sidebar {
-            display: none;
-        }
-    
-        /* .content {
-            margin-left: 0; 
-        } */
-    
-        .client-bottom-nav {
-            display: flex; 
-        }
+    color: var(--admin-primary-text);
 
-        .clientBottomNavBellCon {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          align-items: center;
-        }
+    font-size: 14px;
 
-        .clientNotification-badge {
-          top: -8px;
-          right: -3px;
-          min-width: 20px;
-          height: 20px;
-        }
+    transition: .25s ease;
+
+}
+
+.admin-bottom-nav a:hover {
+
+    color: var(--admin-hover-color);
+
+}
+
+.admin-bottom-nav a svg {
+
+    font-size: 22px;
+
+}
+
+.adminBottomNavBellCon {
+
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width:900px){
+
+    .admin-sidebar{
+
+        display:none;
+
     }
+
+    .admin-bottom-nav{
+
+        display:flex;
+
+    }
+
+    .adminNotification-badge{
+
+        top:-6px;
+        right:-5px;
+
+    }
+
+}

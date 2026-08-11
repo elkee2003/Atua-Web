@@ -1,143 +1,116 @@
 import React, { createContext, useContext, useState } from "react";
-// This is converted already to be compatible to web app
 
 const OrderContext = createContext({});
 
-const initialState = {
-  // BASIC
-  recipientName: "",
-  recipientNumber: "",
-  recipientNumber2: "",
-  orderDetails: "",
-  transportationType: "",
-  vehicleClass: "",
-  orders: [],
-  orderError: "",
+const OrderProvider = ({ children }) => {
+  // BASIC INFO
+  const [recipientName, setRecipientName] = useState("");
+  const [recipientNumber, setRecipientNumber] = useState("");
+  const [recipientNumber2, setRecipientNumber2] = useState("");
+  const [orderDetails, setOrderDetails] = useState("");
+  const [transportationType, setTransportationType] = useState("");
+  const [vehicleClass, setVehicleClass] = useState("");
+  const [orders, setOrders] = useState("");
+  const [orderError, setOrderError] = useState("");
 
   // PRICING
-  estimatedMinPrice: null,
-  estimatedMaxPrice: null,
-  initialOfferPrice: null,
-  currentOfferPrice: null,
-  lastOfferBy: "",
-  loadingFee: null,
-  unloadingFee: null,
-  floorSurcharge: null,
-  fragileSurcharge: null,
-  extrasTotal: null,
-  totalPrice: null,
-  operationalFare: null,
-  courierEarnings: null,
-  commissionAmount: null,
-  platformFee: null,
-  platformServiceRevenue: null,
-  vatAmount: null,
-  platformNetRevenue: null,
+  const [estimatedMinPrice, setEstimatedMinPrice] = useState(null);
+  const [estimatedMaxPrice, setEstimatedMaxPrice] = useState(null);
+  const [initialOfferPrice, setInitialOfferPrice] = useState(null);
+  const [currentOfferPrice, setCurrentOfferPrice] = useState(null);
+  const [lastOfferBy, setLastOfferBy] = useState("");
+  const [loadingFee, setLoadingFee] = useState(null);
+  const [unloadingFee, setUnloadingFee] = useState(null);
+  const [floorSurcharge, setFloorSurcharge] = useState(null);
+  const [fragileSurcharge, setFragileSurcharge] = useState(null);
+  const [extrasTotal, setExtrasTotal] = useState(null);
+  const [totalPrice, setTotalPrice] = useState();
+  const [operationalFare, setOperationalFare] = useState();
+  const [courierEarnings, setCourierEarnings] = useState(null);
+  const [commissionAmount, setCommissionAmount] = useState(null);
+  const [platformFee, setPlatformFee] = useState(null);
+  const [platformServiceRevenue, setPlatformServiceRevenue] = useState(null);
+  const [vatAmount, setVatAmount] = useState(null);
+  const [platformNetRevenue, setPlatformNetRevenue] = useState(null);
 
   // VERIFICATION
-  deliveryVerificationCode: "",
+  const [deliveryVerificationCode, setDeliveryVerificationCode] = useState("");
 
   // WEIGHT
-  loadCategory: null,
-  declaredWeightBracket: "",
+  const [loadCategory, setLoadCategory] = useState(null);
+  const [declaredWeightBracket, setDeclaredWeightBracket] = useState("");
 
-  // MEDIA
-  senderPreTransferPhotos: [],
-  senderPreTransferVideo: "",
-  senderPreTransferRecordedAt: "",
-  courierPreTransferPhotos: [],
-  courierPreTransferVideo: "",
-  courierPreTransferRecordedAt: "",
-  dropoffArrivalPhotos: [],
-  dropoffArrivalVideo: "",
-  postDeliveryPhotos: [],
-  postDeliveryVideo: "",
+  // CUSTODY EVIDENCE
+  const [senderPreTransferPhotos, setSenderPreTransferPhotos] = useState([]);
+  const [senderPreTransferVideo, setSenderPreTransferVideo] = useState("");
+  const [senderPreTransferRecordedAt, setSenderPreTransferRecordedAt] =
+    useState("");
+  const [courierPreTransferPhotos, setCourierPreTransferPhotos] = useState([]);
+  const [courierPreTransferVideo, setCourierPreTransferVideo] = useState("");
+  const [courierPreTransferRecordedAt, setCourierPreTransferRecordedAt] =
+    useState("");
+  const [dropoffArrivalPhotos, setDropoffArrivalPhotos] = useState([]);
+  const [dropoffArrivalVideo, setDropoffArrivalVideo] = useState("");
+  const [postDeliveryPhotos, setPostDeliveryPhotos] = useState([]);
+  const [postDeliveryVideo, setPostDeliveryVideo] = useState("");
 
-  // LOADING
-  pickupLoadingResponsibility: "",
-  pickupFloorLevel: "",
-  pickupFloorLevelPrice: null,
-  pickupHasElevator: false,
-  dropoffUnloadingResponsibility: "",
-  dropoffFloorLevel: "",
-  dropoffFloorLevelPrice: null,
-  dropoffHasElevator: false,
+  // LOADING DETAILS
+  const [pickupLoadingResponsibility, setPickupLoadingResponsibility] =
+    useState("");
+  const [pickupFloorLevel, setPickupFloorLevel] = useState("");
+  const [pickupFloorLevelPrice, setPickupFloorLevelPrice] = useState(null);
+  const [pickupHasElevator, setPickupHasElevator] = useState(false);
+  const [dropoffUnloadingResponsibility, setDropoffUnloadingResponsibility] =
+    useState("");
+  const [dropoffFloorLevel, setDropoffFloorLevel] = useState("");
+  const [dropoffFloorLevelPrice, setDropoffFloorLevelPrice] = useState(null);
+  const [dropoffHasElevator, setDropoffHasElevator] = useState(false);
 
-  // LOGISTICS
-  logisticsCompanyId: "",
-  waybillNumber: "",
-  waybillPhoto: "",
-  logisticsTrackingCode: "",
-  logisticsTrackingStatus: "",
-};
+  // LOGISTICS COMPANY
+  const [logisticsCompanyId, setLogisticsCompanyId] = useState("");
+  const [waybillNumber, setWaybillNumber] = useState("");
+  const [waybillPhoto, setWaybillPhoto] = useState("");
+  const [logisticsTrackingCode, setLogisticsTrackingCode] = useState("");
+  const [logisticsTrackingStatus, setLogisticsTrackingStatus] = useState("");
+  // const [handedOverToLogisticsAt, setHandedOverToLogisticsAt] = useState('');
+  // const [logisticsIntakeConfirmedAt, setLogisticsIntakeConfirmedAt] = useState('');
 
-const OrderProvider = ({ children }) => {
-  const [orderState, setOrderState] = useState(initialState);
-
-  // ---------------- GENERIC SETTER ----------------
-  const updateField = (field, value) => {
-    setOrderState((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // ---------------- CREATE ORDER ----------------
-  const createOrder = (newOrder) => {
-    setOrderState((prev) => ({
-      ...prev,
-      orders: [...prev.orders, newOrder],
-    }));
-  };
-
-  // ---------------- REMOVE ORDER ----------------
-  const removeOrder = (orderId) => {
-    setOrderState((prev) => ({
-      ...prev,
-      orders: prev.orders.filter((o) => o.id !== orderId),
-    }));
-  };
-
-  // ---------------- RESETS ----------------
+  // Function to reset Micro and Moto
   const resetFreightFields = () => {
-    setOrderState((prev) => ({
-      ...prev,
-      estimatedMinPrice: null,
-      estimatedMaxPrice: null,
-      initialOfferPrice: null,
-      currentOfferPrice: null,
-      lastOfferBy: "",
-      loadingFee: null,
-      unloadingFee: null,
-      floorSurcharge: null,
-      fragileSurcharge: null,
-      extrasTotal: null,
-      pickupLoadingResponsibility: "",
-      pickupFloorLevel: "",
-      pickupFloorLevelPrice: null,
-      pickupHasElevator: false,
-      dropoffUnloadingResponsibility: "",
-      dropoffFloorLevel: "",
-      dropoffFloorLevelPrice: null,
-      dropoffHasElevator: false,
-      loadCategory: null,
-      declaredWeightBracket: "",
-    }));
+    setEstimatedMinPrice(null);
+    setEstimatedMaxPrice(null);
+    setInitialOfferPrice(null);
+    setCurrentOfferPrice(null);
+    setLastOfferBy("");
+    setLoadingFee(null);
+    setUnloadingFee(null);
+    setFloorSurcharge(null);
+    setFragileSurcharge(null);
+    setExtrasTotal(null);
+    setPickupLoadingResponsibility("");
+    setPickupFloorLevel("");
+    setPickupFloorLevelPrice(null);
+    setPickupHasElevator(false);
+    setDropoffUnloadingResponsibility("");
+    setDropoffFloorLevel("");
+    setDropoffFloorLevelPrice(null);
+    setDropoffHasElevator(false);
+    setLoadCategory(null);
+    setDeclaredWeightBracket("");
   };
 
+  // Function to reset Maxi
   const resetInstantFields = () => {
-    setOrderState((prev) => ({
-      ...prev,
-      totalPrice: null,
-      courierEarnings: null,
-      commissionAmount: null,
-      platformFee: null,
-      platformServiceRevenue: null,
-      vatAmount: null,
-      platformNetRevenue: null,
-    }));
+    setTotalPrice(0);
+    setCourierEarnings(null);
+    setCommissionAmount(null);
+    setPlatformFee(null);
+    setPlatformServiceRevenue(null);
+    setVatAmount(null);
+    setPlatformNetRevenue(null);
   };
 
+  // Function to reset based on transport type
   const resetOrderByTransportType = (type) => {
     if (type === "MAXI") {
       resetInstantFields();
@@ -146,17 +119,188 @@ const OrderProvider = ({ children }) => {
     }
   };
 
+  // Function to reset all fields:
   const resetAllOrderFields = () => {
-    setOrderState(initialState);
+    // BASIC INFO
+    setRecipientName("");
+    setRecipientNumber("");
+    setRecipientNumber2("");
+    setOrderDetails("");
+    setTransportationType("");
+    setVehicleClass("");
+    setOrders("");
+    setOrderError("");
+
+    // PRICING
+    setEstimatedMinPrice(null);
+    setEstimatedMaxPrice(null);
+    setInitialOfferPrice(null);
+    setCurrentOfferPrice(null);
+    setLastOfferBy("");
+    setLoadingFee(null);
+    setUnloadingFee(null);
+    setFloorSurcharge(null);
+    setFragileSurcharge(null);
+    setExtrasTotal(null);
+    setOperationalFare(null);
+    setTotalPrice(null);
+    setCourierEarnings(null);
+    setCommissionAmount(null);
+    setPlatformFee(null);
+    setPlatformServiceRevenue(null);
+    setVatAmount(null);
+    setPlatformNetRevenue(null);
+
+    // VERIFICATION
+    setDeliveryVerificationCode("");
+
+    // WEIGHT
+    setLoadCategory(null);
+    setDeclaredWeightBracket("");
+
+    // CUSTODY
+    setSenderPreTransferPhotos([]);
+    setSenderPreTransferVideo("");
+    setSenderPreTransferRecordedAt("");
+    setCourierPreTransferPhotos([]);
+    setCourierPreTransferVideo("");
+    setCourierPreTransferRecordedAt("");
+    setDropoffArrivalPhotos([]);
+    setDropoffArrivalVideo("");
+    setPostDeliveryPhotos([]);
+    setPostDeliveryVideo("");
+
+    // LOADING DETAILS
+    setPickupLoadingResponsibility("");
+    setPickupFloorLevel("");
+    setPickupFloorLevelPrice(null);
+    setPickupHasElevator(false);
+    setDropoffUnloadingResponsibility("");
+    setDropoffFloorLevel("");
+    setDropoffFloorLevelPrice(null);
+    setDropoffHasElevator(false);
+
+    // LOGISTICS
+    setLogisticsCompanyId("");
+    setWaybillNumber("");
+    setWaybillPhoto("");
+    setLogisticsTrackingCode("");
+    setLogisticsTrackingStatus("");
   };
+
+  const removeOrder = [];
+
+  const createOrder = [];
 
   return (
     <OrderContext.Provider
       value={{
-        orderState,
-        updateField,
-        createOrder,
+        recipientName,
+        recipientNumber,
+        recipientNumber2,
+        orderDetails,
+        setRecipientName,
+        setRecipientNumber,
+        setRecipientNumber2,
+        setOrderDetails,
+        transportationType,
+        setTransportationType,
+        vehicleClass,
+        setVehicleClass,
+        orders,
+        setOrders,
+        estimatedMinPrice,
+        setEstimatedMinPrice,
+        estimatedMaxPrice,
+        setEstimatedMaxPrice,
+        initialOfferPrice,
+        setInitialOfferPrice,
+        currentOfferPrice,
+        setCurrentOfferPrice,
+        lastOfferBy,
+        setLastOfferBy,
+        loadingFee,
+        setLoadingFee,
+        unloadingFee,
+        setUnloadingFee,
+        floorSurcharge,
+        setFloorSurcharge,
+        fragileSurcharge,
+        setFragileSurcharge,
+        extrasTotal,
+        setExtrasTotal,
+        operationalFare,
+        setOperationalFare,
+        totalPrice,
+        setTotalPrice,
+        courierEarnings,
+        setCourierEarnings,
+        commissionAmount,
+        setCommissionAmount,
+        platformFee,
+        setPlatformFee,
+        platformServiceRevenue,
+        setPlatformServiceRevenue,
+        vatAmount,
+        setVatAmount,
+        platformNetRevenue,
+        setPlatformNetRevenue,
+        deliveryVerificationCode,
+        setDeliveryVerificationCode,
+        loadCategory,
+        setLoadCategory,
+        declaredWeightBracket,
+        setDeclaredWeightBracket,
+        senderPreTransferPhotos,
+        setSenderPreTransferPhotos,
+        senderPreTransferVideo,
+        setSenderPreTransferVideo,
+        senderPreTransferRecordedAt,
+        setSenderPreTransferRecordedAt,
+        courierPreTransferPhotos,
+        setCourierPreTransferPhotos,
+        courierPreTransferVideo,
+        setCourierPreTransferVideo,
+        courierPreTransferRecordedAt,
+        setCourierPreTransferRecordedAt,
+        dropoffArrivalPhotos,
+        setDropoffArrivalPhotos,
+        dropoffArrivalVideo,
+        setDropoffArrivalVideo,
+        postDeliveryPhotos,
+        setPostDeliveryPhotos,
+        postDeliveryVideo,
+        setPostDeliveryVideo,
+        pickupLoadingResponsibility,
+        setPickupLoadingResponsibility,
+        pickupFloorLevel,
+        setPickupFloorLevel,
+        pickupFloorLevelPrice,
+        setPickupFloorLevelPrice,
+        pickupHasElevator,
+        setPickupHasElevator,
+        dropoffUnloadingResponsibility,
+        setDropoffUnloadingResponsibility,
+        dropoffFloorLevel,
+        setDropoffFloorLevel,
+        dropoffFloorLevelPrice,
+        setDropoffFloorLevelPrice,
+        dropoffHasElevator,
+        setDropoffHasElevator,
+        logisticsCompanyId,
+        setLogisticsCompanyId,
+        waybillNumber,
+        setWaybillNumber,
+        waybillPhoto,
+        setWaybillPhoto,
+        logisticsTrackingCode,
+        setLogisticsTrackingCode,
+        logisticsTrackingStatus,
+        setLogisticsTrackingStatus,
         removeOrder,
+        createOrder,
+        orderError,
+        setOrderError,
         resetOrderByTransportType,
         resetAllOrderFields,
       }}
@@ -167,4 +311,5 @@ const OrderProvider = ({ children }) => {
 };
 
 export default OrderProvider;
+
 export const useOrderContext = () => useContext(OrderContext);

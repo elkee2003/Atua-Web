@@ -1,24 +1,58 @@
-/* Layout container */
-.client-layoutCon {
+/* ==========================================
+   Admin Layout
+========================================== */
+
+:root {
+    --admin-sidebar-width: 270px;
+    --admin-bottom-nav-height: 85px;
+}
+
+/* ==========================================
+   Layout Container
+========================================== */
+
+.admin-layoutCon {
     display: flex;
-}
-  
-/* Main content area */
-.client-main-content {
-    margin-left: 270px; /* Same as sidebar width + 20px for padding */
-    /* padding: 20px; */
+    width: 100%;
     min-height: 100vh;
-    max-width: 100%;
-    /* width: 100vw; */
-    overflow: hidden;
-    color: #333;
-    /* background-color: rgb(0, 153, 255); */
+
+    background: #ffffff;
 }
-  
-/* Responsive adjustments */
+
+/* ==========================================
+   Main Content
+========================================== */
+
+.admin-main-content {
+    margin-left: var(--admin-sidebar-width);
+    width: calc(100% - var(--admin-sidebar-width));
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+    color: #333333;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    transition:
+        margin-left 0.25s ease,
+        width 0.25s ease;
+}
+
+/* ==========================================
+   Tablet & Mobile
+========================================== */
+
 @media (max-width: 900px) {
-    .client-main-content {
-      margin-left: 0; 
-      padding: 30;
+
+    .admin-main-content {
+        margin-left: 0;
+        width: 100%;
+
+        /* Prevent content from hiding behind bottom navigation */
+        padding-bottom: var(--admin-bottom-nav-height);
     }
+
 }

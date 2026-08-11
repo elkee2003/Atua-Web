@@ -1,0 +1,58 @@
+/* =====================================================
+   PAYMENT PAGE
+===================================================== */
+
+.paymentContainer {
+    width: 100%;
+    max-width: 760px;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+
+    background: #F8F9FB;
+}
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.paymentContent {
+    flex: 1;
+
+    padding: 20px 18px 30px;
+
+    box-sizing: border-box;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .paymentContainer {
+
+        max-width: 100%;
+
+        min-height: auto;
+    }
+
+    .paymentContent {
+
+        padding: 20px 16px 25px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .paymentContent {
+
+        padding: 18px 14px 20px;
+    }
+
+}

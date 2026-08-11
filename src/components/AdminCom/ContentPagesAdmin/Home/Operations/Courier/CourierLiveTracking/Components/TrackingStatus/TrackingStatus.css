@@ -1,0 +1,638 @@
+/* ==========================================================
+   TRACKING STATUS
+========================================================== */
+
+.trackingStatus {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.trackingStatus-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 14px;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+
+.trackingStatus-headerTitle {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   HEADER ICON
+========================================================== */
+
+.trackingStatus-headerIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 11px;
+}
+
+
+.trackingStatus-headerTitle h2 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.trackingStatus-headerTitle p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   MAIN STATUS BADGE
+========================================================== */
+
+.trackingStatus-mainBadge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.04em;
+}
+
+
+.trackingStatus-mainBadge svg {
+    font-size: 5px;
+}
+
+
+/* ACTIVE */
+
+.trackingStatus-mainBadgeActive {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+
+/* INACTIVE */
+
+.trackingStatus-mainBadgeInactive {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   STATUS GRID
+========================================================== */
+
+.trackingStatus-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+
+/* ==========================================================
+   STATUS ITEM
+========================================================== */
+
+.trackingStatus-item {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 10px;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 10px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   ITEM ICON
+========================================================== */
+
+.trackingStatus-itemIcon {
+    width: 27px;
+    height: 27px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+}
+
+
+.trackingStatus-itemIcon svg {
+    font-size: 9px;
+}
+
+
+/* ONLINE */
+
+.trackingStatus-iconOnline {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+
+.trackingStatus-iconOnline svg {
+    font-size: 6px;
+}
+
+
+/* OFFLINE */
+
+.trackingStatus-iconOffline {
+    background: #f1f5f9;
+
+    color: #94a3b8;
+}
+
+
+.trackingStatus-iconOffline svg {
+    font-size: 6px;
+}
+
+
+/* APPROVED */
+
+.trackingStatus-iconApproved {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+/* PENDING */
+
+.trackingStatus-iconPending {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* LOCATION */
+
+.trackingStatus-iconLocation {
+    background: #f0fdf4;
+
+    color: #16a34a;
+}
+
+
+/* WARNING */
+
+.trackingStatus-iconWarning {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+
+/* UPDATE */
+
+.trackingStatus-iconUpdate {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   ITEM CONTENT
+========================================================== */
+
+.trackingStatus-itemContent {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.trackingStatus-itemContent span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.trackingStatus-itemContent strong {
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   STATUS VALUES
+========================================================== */
+
+.trackingStatus-valueOnline {
+    color: #16a34a !important;
+}
+
+
+.trackingStatus-valueOffline {
+    color: #64748b !important;
+}
+
+
+.trackingStatus-valueApproved {
+    color: #2563eb !important;
+}
+
+
+.trackingStatus-valuePending {
+    color: #c2410c !important;
+}
+
+
+.trackingStatus-valueLocation {
+    color: #16a34a !important;
+}
+
+
+.trackingStatus-valueWarning {
+    color: #ea580c !important;
+}
+
+
+/* ==========================================================
+   TRACKING MESSAGE
+========================================================== */
+
+.trackingStatus-message {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    margin-top: 12px;
+
+    padding: 11px;
+
+    border-radius: 10px;
+}
+
+
+/* ==========================================================
+   MESSAGE DOT
+========================================================== */
+
+.trackingStatus-messageDot {
+    width: 6px;
+    height: 6px;
+
+    flex-shrink: 0;
+
+    margin-top: 3px;
+
+    border-radius: 50%;
+}
+
+
+/* ==========================================================
+   ACTIVE MESSAGE
+========================================================== */
+
+.trackingStatus-messageActive {
+    background: #f0fdf4;
+
+    color: #166534;
+}
+
+
+.trackingStatus-messageActive
+.trackingStatus-messageDot {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+
+/* ==========================================================
+   INACTIVE MESSAGE
+========================================================== */
+
+.trackingStatus-messageInactive {
+    background: #f8fafc;
+
+    color: #475569;
+}
+
+
+.trackingStatus-messageInactive
+.trackingStatus-messageDot {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   MESSAGE TEXT
+========================================================== */
+
+.trackingStatus-message div {
+    min-width: 0;
+}
+
+
+.trackingStatus-message strong {
+    display: block;
+
+    color: inherit;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.trackingStatus-message p {
+    margin: 3px 0 0;
+
+    color: #64748b;
+
+    font-size: 7px;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   COORDINATES
+========================================================== */
+
+.trackingStatus-coordinates {
+    margin-top: 12px;
+
+    padding: 11px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 10px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   COORDINATE HEADER
+========================================================== */
+
+.trackingStatus-coordinateHeader {
+    margin-bottom: 8px;
+}
+
+
+.trackingStatus-coordinateHeader span {
+    color: #64748b;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+
+/* ==========================================================
+   COORDINATE VALUES
+========================================================== */
+
+.trackingStatus-coordinateValues {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+}
+
+
+.trackingStatus-coordinate {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    padding: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 8px;
+}
+
+
+.trackingStatus-coordinate span {
+    color: #94a3b8;
+
+    font-size: 6px;
+
+    font-weight: 600;
+}
+
+
+.trackingStatus-coordinate strong {
+    color: #334155;
+
+    font-family: monospace;
+
+    font-size: 8px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .trackingStatus {
+        padding: 16px;
+
+        border-radius: 14px;
+    }
+
+
+    .trackingStatus-grid {
+        gap: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .trackingStatus {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .trackingStatus-header {
+        padding-bottom: 12px;
+    }
+
+
+    .trackingStatus-headerTitle {
+        gap: 8px;
+    }
+
+
+    .trackingStatus-headerIcon {
+        width: 29px;
+        height: 29px;
+
+        font-size: 10px;
+    }
+
+
+    .trackingStatus-headerTitle h2 {
+        font-size: 12px;
+    }
+
+
+    .trackingStatus-grid {
+        grid-template-columns: 1fr;
+
+        gap: 7px;
+    }
+
+
+    .trackingStatus-item {
+        padding: 9px;
+    }
+
+
+    .trackingStatus-message {
+        padding: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .trackingStatus-coordinateValues {
+        grid-template-columns: 1fr;
+    }
+
+
+    .trackingStatus-mainBadge {
+        padding: 4px 7px;
+
+        font-size: 7px;
+    }
+
+}

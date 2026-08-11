@@ -1,0 +1,776 @@
+/* ==========================================================
+   COURIER TRACKING INFORMATION
+========================================================== */
+
+.courierTrackingInfo {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierTrackingInfo-header {
+    padding: 16px 18px;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+
+.courierTrackingInfo-headerTitle {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.courierTrackingInfo-headerIcon {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 12px;
+}
+
+
+.courierTrackingInfo-headerTitle h2 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-headerTitle p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   COURIER IDENTITY
+========================================================== */
+
+.courierTrackingInfo-identity {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 16px 18px;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierTrackingInfo-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #1e293b;
+
+    color: #ffffff;
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* ==========================================================
+   IDENTITY TEXT
+========================================================== */
+
+.courierTrackingInfo-identityText {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierTrackingInfo-identityText h3 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.courierTrackingInfo-identityText p {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #64748b;
+
+    font-size: 8px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ONLINE BADGE
+========================================================== */
+
+.courierTrackingInfo-onlineBadge {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 4px 7px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-onlineBadge > span {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+}
+
+
+/* ONLINE */
+
+.courierTrackingInfo-online {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+
+.courierTrackingInfo-online > span {
+    background: #22c55e;
+}
+
+
+/* OFFLINE */
+
+.courierTrackingInfo-offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+.courierTrackingInfo-offline > span {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   APPROVAL
+========================================================== */
+
+.courierTrackingInfo-approval {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin: 14px 18px 0;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+
+.courierTrackingInfo-approvalIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    font-size: 11px;
+}
+
+
+.courierTrackingInfo-approvalText {
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.courierTrackingInfo-approvalText span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.courierTrackingInfo-approvalText strong {
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-statusApproved {
+    color: #2563eb;
+}
+
+
+.courierTrackingInfo-statusPending {
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   DETAILS SECTION
+========================================================== */
+
+.courierTrackingInfo-section {
+    padding: 16px 18px 4px;
+}
+
+
+.courierTrackingInfo-section h4 {
+    margin: 0 0 10px;
+
+    color: #334155;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+
+/* ==========================================================
+   DETAIL ROW
+========================================================== */
+
+.courierTrackingInfo-detail {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+.courierTrackingInfo-detail:last-child {
+    border-bottom: none;
+}
+
+
+/* ==========================================================
+   DETAIL ICON
+========================================================== */
+
+.courierTrackingInfo-detailIcon {
+    width: 28px;
+    height: 28px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   DETAIL CONTENT
+========================================================== */
+
+.courierTrackingInfo-detailContent {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.courierTrackingInfo-detailContent span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.courierTrackingInfo-detailContent strong {
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 9px;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   LOCATION SECTION
+========================================================== */
+
+.courierTrackingInfo-locationSection {
+    margin: 12px 18px 0;
+
+    padding: 13px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 11px;
+
+    background: #fafbfc;
+}
+
+
+/* ==========================================================
+   LOCATION HEADING
+========================================================== */
+
+.courierTrackingInfo-sectionHeading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.courierTrackingInfo-sectionHeading h4 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+
+/* ==========================================================
+   LIVE LABEL
+========================================================== */
+
+.courierTrackingInfo-liveLabel {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 4px;
+
+    color: #16a34a;
+
+    font-size: 7px;
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-liveLabel svg {
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   COORDINATES
+========================================================== */
+
+.courierTrackingInfo-coordinates {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+}
+
+
+.courierTrackingInfo-coordinate {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    padding: 9px;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #edf0f4;
+}
+
+
+.courierTrackingInfo-coordinate span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.courierTrackingInfo-coordinate strong {
+    color: #334155;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   NO LOCATION
+========================================================== */
+
+.courierTrackingInfo-noLocation {
+    display: flex;
+    align-items: flex-start;
+
+    gap: 9px;
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    border: 1px solid #edf0f4;
+
+    color: #94a3b8;
+}
+
+
+.courierTrackingInfo-noLocation > svg {
+    flex-shrink: 0;
+
+    margin-top: 1px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+.courierTrackingInfo-noLocation > div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierTrackingInfo-noLocation strong {
+    color: #64748b;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.courierTrackingInfo-noLocation span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================================
+   LOCATION STATUS
+========================================================== */
+
+.courierTrackingInfo-locationStatus {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin: 12px 18px 16px;
+
+    padding: 8px 9px;
+
+    border-radius: 8px;
+
+    font-size: 7px;
+
+    font-weight: 600;
+}
+
+
+/* STATUS DOT */
+
+.courierTrackingInfo-locationStatusDot {
+    width: 5px;
+    height: 5px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+}
+
+
+/* ACTIVE */
+
+.courierTrackingInfo-locationActive {
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+
+.courierTrackingInfo-locationActive
+.courierTrackingInfo-locationStatusDot {
+    background: #22c55e;
+}
+
+
+/* INACTIVE */
+
+.courierTrackingInfo-locationInactive {
+    background: #f8fafc;
+
+    color: #64748b;
+}
+
+
+.courierTrackingInfo-locationInactive
+.courierTrackingInfo-locationStatusDot {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierTrackingInfo {
+        border-radius: 14px;
+    }
+
+    .courierTrackingInfo-header {
+        padding: 14px 16px;
+    }
+
+    .courierTrackingInfo-identity {
+        padding: 14px 16px;
+    }
+
+    .courierTrackingInfo-section {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .courierTrackingInfo-approval {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .courierTrackingInfo-locationSection {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+    .courierTrackingInfo-locationStatus {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierTrackingInfo {
+        border-radius: 12px;
+    }
+
+
+    .courierTrackingInfo-header {
+        padding: 13px 14px;
+    }
+
+
+    .courierTrackingInfo-identity {
+        padding: 13px 14px;
+    }
+
+
+    .courierTrackingInfo-avatar {
+        width: 38px;
+        height: 38px;
+
+        font-size: 13px;
+    }
+
+
+    .courierTrackingInfo-onlineBadge {
+        padding: 4px 6px;
+
+        font-size: 6px;
+    }
+
+
+    .courierTrackingInfo-section {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+
+    .courierTrackingInfo-approval {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+
+    .courierTrackingInfo-locationSection {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+
+    .courierTrackingInfo-locationStatus {
+        margin-left: 14px;
+        margin-right: 14px;
+        margin-bottom: 14px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierTrackingInfo-coordinates {
+        grid-template-columns: 1fr;
+    }
+
+
+    .courierTrackingInfo-onlineBadge {
+        display: none;
+    }
+
+}

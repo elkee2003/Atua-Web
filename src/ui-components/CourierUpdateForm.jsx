@@ -231,6 +231,9 @@ export default function CourierUpdateForm(props) {
     currentExpressCount: "",
     currentMaxiCount: "",
     lastBatchAssignedAt: "",
+    averageRating: "",
+    reviewCount: "",
+    totalReports: "",
     statusKey: "",
   };
   const [sub, setSub] = React.useState(initialValues.sub);
@@ -320,6 +323,15 @@ export default function CourierUpdateForm(props) {
   const [lastBatchAssignedAt, setLastBatchAssignedAt] = React.useState(
     initialValues.lastBatchAssignedAt
   );
+  const [averageRating, setAverageRating] = React.useState(
+    initialValues.averageRating
+  );
+  const [reviewCount, setReviewCount] = React.useState(
+    initialValues.reviewCount
+  );
+  const [totalReports, setTotalReports] = React.useState(
+    initialValues.totalReports
+  );
   const [statusKey, setStatusKey] = React.useState(initialValues.statusKey);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -368,6 +380,9 @@ export default function CourierUpdateForm(props) {
     setCurrentExpressCount(cleanValues.currentExpressCount);
     setCurrentMaxiCount(cleanValues.currentMaxiCount);
     setLastBatchAssignedAt(cleanValues.lastBatchAssignedAt);
+    setAverageRating(cleanValues.averageRating);
+    setReviewCount(cleanValues.reviewCount);
+    setTotalReports(cleanValues.totalReports);
     setStatusKey(cleanValues.statusKey);
     setErrors({});
   };
@@ -427,6 +442,9 @@ export default function CourierUpdateForm(props) {
     currentExpressCount: [],
     currentMaxiCount: [],
     lastBatchAssignedAt: [],
+    averageRating: [],
+    reviewCount: [],
+    totalReports: [],
     statusKey: [],
   };
   const runValidationTasks = async (
@@ -513,6 +531,9 @@ export default function CourierUpdateForm(props) {
           currentExpressCount,
           currentMaxiCount,
           lastBatchAssignedAt,
+          averageRating,
+          reviewCount,
+          totalReports,
           statusKey,
         };
         const validationResponses = await Promise.all(
@@ -610,6 +631,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -675,6 +699,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -740,6 +767,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -805,6 +835,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -870,6 +903,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -935,6 +971,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1000,6 +1039,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1065,6 +1107,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1130,6 +1175,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1195,6 +1243,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1260,6 +1311,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1325,6 +1379,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1390,6 +1447,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1455,6 +1515,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1520,6 +1583,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1585,6 +1651,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1652,6 +1721,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1717,6 +1789,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1782,6 +1857,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1847,6 +1925,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -1908,6 +1989,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2000,6 +2084,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2065,6 +2152,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2130,6 +2220,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2197,6 +2290,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2264,6 +2360,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2329,6 +2428,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2396,6 +2498,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2461,6 +2566,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2526,6 +2634,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2591,6 +2702,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2662,6 +2776,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2731,6 +2848,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2800,6 +2920,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2865,6 +2988,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2930,6 +3056,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -2995,6 +3124,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -3064,6 +3196,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -3135,6 +3270,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount: value,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -3206,6 +3344,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount: value,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -3275,6 +3416,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt: value,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey,
             };
             const result = onChange(modelFields);
@@ -3291,6 +3435,222 @@ export default function CourierUpdateForm(props) {
         errorMessage={errors.lastBatchAssignedAt?.errorMessage}
         hasError={errors.lastBatchAssignedAt?.hasError}
         {...getOverrideProps(overrides, "lastBatchAssignedAt")}
+      ></TextField>
+      <TextField
+        label="Average rating"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={averageRating}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              averageRating: value,
+              reviewCount,
+              totalReports,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.averageRating ?? value;
+          }
+          if (errors.averageRating?.hasError) {
+            runValidationTasks("averageRating", value);
+          }
+          setAverageRating(value);
+        }}
+        onBlur={() => runValidationTasks("averageRating", averageRating)}
+        errorMessage={errors.averageRating?.errorMessage}
+        hasError={errors.averageRating?.hasError}
+        {...getOverrideProps(overrides, "averageRating")}
+      ></TextField>
+      <TextField
+        label="Review count"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={reviewCount}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              averageRating,
+              reviewCount: value,
+              totalReports,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.reviewCount ?? value;
+          }
+          if (errors.reviewCount?.hasError) {
+            runValidationTasks("reviewCount", value);
+          }
+          setReviewCount(value);
+        }}
+        onBlur={() => runValidationTasks("reviewCount", reviewCount)}
+        errorMessage={errors.reviewCount?.errorMessage}
+        hasError={errors.reviewCount?.hasError}
+        {...getOverrideProps(overrides, "reviewCount")}
+      ></TextField>
+      <TextField
+        label="Total reports"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={totalReports}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports: value,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.totalReports ?? value;
+          }
+          if (errors.totalReports?.hasError) {
+            runValidationTasks("totalReports", value);
+          }
+          setTotalReports(value);
+        }}
+        onBlur={() => runValidationTasks("totalReports", totalReports)}
+        errorMessage={errors.totalReports?.errorMessage}
+        hasError={errors.totalReports?.hasError}
+        {...getOverrideProps(overrides, "totalReports")}
       ></TextField>
       <TextField
         label="Status key"
@@ -3342,6 +3702,9 @@ export default function CourierUpdateForm(props) {
               currentExpressCount,
               currentMaxiCount,
               lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
               statusKey: value,
             };
             const result = onChange(modelFields);

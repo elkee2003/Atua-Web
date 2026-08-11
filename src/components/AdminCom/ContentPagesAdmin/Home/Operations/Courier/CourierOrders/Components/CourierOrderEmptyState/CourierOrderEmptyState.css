@@ -1,0 +1,295 @@
+/* ==========================================================
+   COURIER ORDER EMPTY STATE
+========================================================== */
+
+.courierOrderEmptyState {
+    width: 100%;
+
+    min-height: 250px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 35px 20px;
+
+    border: 1px dashed #dce2e9;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierOrderEmptyState-icon {
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 13px;
+
+    border-radius: 14px;
+
+    font-size: 19px;
+}
+
+
+/* ==========================================================
+   NO ORDERS
+========================================================== */
+
+.courierOrderEmptyState-noOrders
+.courierOrderEmptyState-icon {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+.courierOrderEmptyState-search
+.courierOrderEmptyState-icon {
+    background: #eff6ff;
+
+    color: #3b82f6;
+}
+
+
+/* ==========================================================
+   FILTER
+========================================================== */
+
+.courierOrderEmptyState-filter
+.courierOrderEmptyState-icon {
+    background: #fff7ed;
+
+    color: #f97316;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierOrderEmptyState-content {
+    max-width: 360px;
+}
+
+
+.courierOrderEmptyState-content h3 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+.courierOrderEmptyState-content p {
+    margin: 6px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   ACTION
+========================================================== */
+
+.courierOrderEmptyState-action {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    margin-top: 16px;
+
+    padding: 8px 12px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierOrderEmptyState-action:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+}
+
+
+.courierOrderEmptyState-action:active {
+    transform: translateY(1px);
+}
+
+
+.courierOrderEmptyState-action:focus-visible {
+    outline: 2px solid #64748b;
+
+    outline-offset: 2px;
+}
+
+
+.courierOrderEmptyState-action svg {
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierOrderEmptyState {
+        min-height: 230px;
+
+        padding: 30px 18px;
+    }
+
+
+    .courierOrderEmptyState-icon {
+        width: 48px;
+        height: 48px;
+
+        font-size: 17px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierOrderEmptyState {
+        min-height: 210px;
+
+        padding: 28px 16px;
+
+        border-radius: 12px;
+    }
+
+
+    .courierOrderEmptyState-icon {
+        width: 44px;
+        height: 44px;
+
+        margin-bottom: 11px;
+
+        border-radius: 12px;
+
+        font-size: 16px;
+    }
+
+
+    .courierOrderEmptyState-content h3 {
+        font-size: 12px;
+    }
+
+
+    .courierOrderEmptyState-content p {
+        max-width: 280px;
+
+        font-size: 7px;
+    }
+
+
+    .courierOrderEmptyState-action {
+        margin-top: 13px;
+
+        padding: 7px 10px;
+
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierOrderEmptyState {
+        min-height: 190px;
+
+        padding: 24px 12px;
+    }
+
+
+    .courierOrderEmptyState-icon {
+        width: 40px;
+        height: 40px;
+
+        font-size: 14px;
+    }
+
+
+    .courierOrderEmptyState-content h3 {
+        font-size: 11px;
+    }
+
+
+    .courierOrderEmptyState-content p {
+        font-size: 6px;
+
+        line-height: 1.5;
+    }
+
+}

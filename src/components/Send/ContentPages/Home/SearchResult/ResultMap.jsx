@@ -1,203 +1,365 @@
-import React, { useEffect, useState, useMemo } from "react";
-import { GoogleMap, Marker, DirectionsRenderer } from "@react-google-maps/api";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import {
+  GoogleMap,
+  Marker,
+  DirectionsRenderer,
+  DirectionsService,
+} from "@react-google-maps/api";
+
+import { DataStore } from "aws-amplify/datastore";
+import { Courier } from "../../../../../models";
+
 import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
-import holidays from '../../../../../assets/holiday';
-import { DataStore } from 'aws-amplify/datastore';
-import {Courier} from  '../../../../../models'
 
-// ✅ Transport type images (web version)
-const getImage = (type) => {
-  if (type === "Micro X") return "/Bicycle.png";
-  if (type === "Moto X") return "/Bike.jpg";
-  if (type === "Maxi Batch") return "/top-UberXL.png";
-  if (type === "Maxi") return "/Deliverybicycle.png";
-  return "/Walk.png";
-};
+import "../SendStyles/ResultMap.css";
 
-const ResultMap = ({
-  setTotalMins,
-  setTotalKm,
-  setIsPeakHour,
-  setIsWeekend,
-  setIsNightTime,
-  setIsHoliday,
-}) => {
-    const [couriers, setCouriers] = useState([]);
-    const [directions, setDirections] = useState(null);
-    const [location, setLocation] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [currentDateTime, setCurrentDateTime] = useState(new Date());
+const ResultMap = () => {
+  /*
+  ========================================================
+  MAP
+  ========================================================
+  */
 
-    // ✅ Origin & Destination from context (like in RN)
-    const {
-        originPlace,
-        destinationPlace,
-        originPlaceLat,
-        originPlaceLng,
-        destinationPlaceLat,
-        destinationPlaceLng
-    } = useLocationContext();
+  const mapRef = useRef(null);
 
-    const origin = useMemo(
-        () => ({
-            lat: originPlaceLat || 4.8089763,
-            lng: originPlaceLng || 7.0220555,
-        }),
-        [originPlaceLat, originPlaceLng]
-    );
+  /*
+  ========================================================
+  STATE
+  ========================================================
+  */
 
-    const destination = useMemo(
-        () => ({
-            lat: destinationPlaceLat || 6.5243793,
-            lng: destinationPlaceLng || 3.3792057,
-        }),
-        [destinationPlaceLat, destinationPlaceLng]
-    );
+  const [currentLocation, setCurrentLocation] = useState(null);
 
-    // ✅ Check if today is a holiday
-    const checkIfHoliday = (date) => {
-        const month = date.getMonth() + 1;
-        const day = date.getDate();
-        const formattedDate = `${month.toString().padStart(2, "0")}-${day
-        .toString()
-        .padStart(2, "0")}`;
-        return holidays.includes(formattedDate);
-    };
+  const [couriers, setCouriers] = useState([]);
 
-    // ✅ Fetch couriers who are online
-    const fetchCouriers = async () => {
-        try {
-        const onlineCouriers = await DataStore.query(
-            Courier,
-            (c) => c.isOnline.eq(true)
-        );
-        setCouriers(onlineCouriers);
-        } catch (e) {
-        console.error("Error fetching couriers:", e);
-        setErrorMsg(e.message);
-        }
-    };
+  const [directions, setDirections] = useState(null);
 
-    // ✅ Update time-based conditions
-    const updateTimeDependentStates = () => {
-        const currentHour = currentDateTime.getHours();
-        const currentDay = currentDateTime.getDay();
-        const today = new Date(currentDateTime);
+  /*
+  ========================================================
+  LOCATION CONTEXT
+  ========================================================
+  */
 
-        setIsPeakHour(currentHour >= 17 && currentHour <= 20);
-        setIsNightTime(currentHour >= 22 || currentHour < 5);
-        setIsWeekend(currentDay === 0 || currentDay === 6);
-        setIsHoliday(checkIfHoliday(today));
-    };
+  const {
+    originAddress,
+    destinationAddress,
 
-    // ✅ Update states when time changes
-    useEffect(() => {
-        updateTimeDependentStates();
-    }, [currentDateTime]);
+    setTotalKm,
+    setTotalMins,
+    setIsRouteReady,
+  } = useLocationContext();
 
-    // ✅ Fetch couriers initially and subscribe for changes
-    useEffect(() => {
-        fetchCouriers();
-        const subscription = DataStore.observe(Courier).subscribe(({ opType }) => {
-        if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
-            fetchCouriers();
-        }
+  /*
+  ========================================================
+  CURRENT LOCATION
+  ========================================================
+  */
+
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      setCurrentLocation({
+        lat: 4.8089763,
+        lng: 7.0220555,
+      });
+
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setCurrentLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
         });
-        return () => subscription.unsubscribe();
-    }, []);
+      },
 
-    // ✅ Get browser location
-    useEffect(() => {
-        if (!navigator.geolocation) {
-        setErrorMsg("Geolocation not supported");
-        return;
-        }
+      () => {
+        setCurrentLocation({
+          lat: 4.8089763,
+          lng: 7.0220555,
+        });
+      },
 
-        navigator.geolocation.getCurrentPosition(
-        (pos) => {
-            setLocation({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-            });
-        },
-        (err) => {
-            console.error("Error getting location:", err);
-            setErrorMsg("Failed to get location");
-            setLocation(origin); // fallback
-        },
-        { enableHighAccuracy: true }
-        );
-    }, []);
+      {
+        enableHighAccuracy: true,
+      },
+    );
+  }, []);
 
-    // ✅ Calculate directions
-    useEffect(() => {
-        if (!window.google || !origin || !destination) return;
+  /*
+  ========================================================
+  ORIGIN
+  ========================================================
+  */
 
-        const directionsService = new window.google.maps.DirectionsService();
-        directionsService.route(
-        {
-            origin,
-            destination,
-            travelMode: window.google.maps.TravelMode.DRIVING,
-        },
-        (result, status) => {
-            if (status === "OK" && result) {
-            setDirections(result);
-            const leg = result.routes[0].legs[0];
-            const totalKm = leg.distance.value / 1000;
-            const totalMins = leg.duration.value / 60;
-            setTotalKm(totalKm);
-            setTotalMins(totalMins);
-            } else {
-            console.error("Directions request failed:", status);
-            }
-        }
-        );
-    }, [origin, destination]);
+  const originLocation = {
+    lat:
+      originAddress?.details?.geometry?.location?.lat ??
+      currentLocation?.lat ??
+      4.8089763,
 
-    if (errorMsg) {
-        return <p style={{ color: "red" }}>{errorMsg}</p>;
+    lng:
+      originAddress?.details?.geometry?.location?.lng ??
+      currentLocation?.lng ??
+      7.0220555,
+  };
+
+  /*
+  ========================================================
+  DESTINATION
+  ========================================================
+  */
+
+  const destinationLocation = {
+    lat:
+      destinationAddress?.details?.geometry?.location?.lat ??
+      originLocation.lat,
+
+    lng:
+      destinationAddress?.details?.geometry?.location?.lng ??
+      originLocation.lng,
+  };
+
+  /*
+  ========================================================
+  COURIER ICON
+  ========================================================
+  */
+
+  const getCourierImage = (type) => {
+    switch (type) {
+      case "Micro X":
+        return "/AtuaMicroX.png";
+
+      case "Micro Batch":
+        return "/AtuaMicroBatch.png";
+
+      case "Moto X":
+        return "/AtuaMotoX.png";
+
+      case "Moto Batch":
+        return "/AtuaMotoBatch.png";
+
+      case "Maxi":
+        return "/AtuaMaxi.png";
+
+      default:
+        return "/AtuaMicroBatch.png";
     }
+  };
 
-    if (!location) {
-        return <p>Loading map...</p>;
+  /*
+  ========================================================
+  FETCH COURIERS
+  ========================================================
+  */
+
+  const fetchCouriers = useCallback(async () => {
+    try {
+      const onlineCouriers = await DataStore.query(Courier, (c) =>
+        c.isOnline.eq(true),
+      );
+
+      setCouriers(onlineCouriers);
+    } catch (error) {
+      console.error("Failed to fetch couriers:", error);
     }
+  }, []);
+
+  /*
+  ========================================================
+  OBSERVE COURIERS
+  ========================================================
+  */
+
+  useEffect(() => {
+    fetchCouriers();
+
+    const subscription = DataStore.observe(Courier).subscribe(({ opType }) => {
+      if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
+        fetchCouriers();
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [fetchCouriers]);
+  /*
+  ========================================================
+  RESET ROUTE WHEN LOCATIONS CHANGE
+  ========================================================
+  */
+
+  useEffect(() => {
+    setDirections(null);
+
+    setIsRouteReady(false);
+  }, [originAddress, destinationAddress, setIsRouteReady]);
+
+  /*
+  ========================================================
+  DIRECTIONS CALLBACK
+  ========================================================
+  */
+
+  const directionsCallback = useCallback(
+    (result) => {
+      if (!result) return;
+
+      if (result.status !== "OK") return;
+
+      setDirections(result);
+
+      const leg = result.routes[0].legs[0];
+
+      setTotalKm(Number(leg.distance.value / 1000).toFixed(2));
+
+      setTotalMins(Math.round(leg.duration.value / 60));
+
+      setIsRouteReady(true);
+
+      /*
+      ======================================
+      Fit route inside map
+      ======================================
+      */
+
+      if (mapRef.current && window.google) {
+        const bounds = new window.google.maps.LatLngBounds();
+
+        result.routes[0].overview_path.forEach((point) => {
+          bounds.extend(point);
+        });
+
+        mapRef.current.fitBounds(bounds);
+      }
+    },
+    [setTotalKm, setTotalMins, setIsRouteReady],
+  );
+
+  /*
+  ========================================================
+  MAP LOAD
+  ========================================================
+  */
+
+  const handleMapLoad = useCallback((map) => {
+    mapRef.current = map;
+  }, []);
+
+  /*
+  ========================================================
+  MAP UNMOUNT
+  ========================================================
+  */
+
+  const handleMapUnmount = useCallback(() => {
+    mapRef.current = null;
+  }, []);
+
+  /*
+  ========================================================
+  LOADING
+  ========================================================
+  */
+
+  if (!currentLocation) {
+    return <div className="resultMapLoading">Loading map...</div>;
+  }
+
+  /*
+  ========================================================
+  READY TO RENDER
+  ========================================================
+  */
 
   return (
-    <div>
-        <GoogleMap
-            mapContainerClassName="map-container"
-            center={origin}
-            zoom={7}
+    <div className="resultMapContainer">
+      <GoogleMap
+        mapContainerStyle={{
+          width: "100%",
+          height: "100%",
+        }}
+        center={originLocation}
+        zoom={14}
+        onLoad={handleMapLoad}
+        onUnmount={handleMapUnmount}
+        options={{
+          fullscreenControl: false,
+          streetViewControl: false,
+          mapTypeControl: false,
+          zoomControl: true,
+          clickableIcons: false,
+        }}
+      >
+        {/* ======================================
+            ROUTE
+        ====================================== */}
+
+        {!directions && originAddress && destinationAddress && (
+          <DirectionsService
             options={{
-                mapTypeControl: false,
-                streetViewControl: false,
-                fullscreenControl: false,
+              origin: originLocation,
+              destination: destinationLocation,
+              travelMode: window.google.maps.TravelMode.DRIVING,
             }}
-        >
-            {/* ✅ Directions line */}
-            {directions && <DirectionsRenderer directions={directions} />}
+            callback={directionsCallback}
+          />
+        )}
 
-            {/* ✅ Origin marker */}
-            <Marker position={origin} label="Origin" />
+        {directions && (
+          <DirectionsRenderer
+            directions={directions}
+            options={{
+              suppressMarkers: true,
+              polylineOptions: {
+                strokeColor: "#FF3B30",
+                strokeOpacity: 0.9,
+                strokeWeight: 5,
+              },
+            }}
+          />
+        )}
 
-            {/* ✅ Destination marker */}
-            <Marker position={destination} label="Dest" />
+        {/* ======================================
+            ORIGIN
+        ====================================== */}
 
-            {/* ✅ Courier markers */}
-            {couriers
-            .filter((c) => c?.lat != null && c?.lng != null)
-            .map((courier) => (
-                <Marker
-                key={courier.id}
-                position={{ lat: courier.lat, lng: courier.lng }}
-                icon={{
-                    url: getImage(courier.transportationType),
-                    scaledSize: new window.google.maps.Size(45, 45),
-                }}
-                />
-            ))}
-        </GoogleMap>
+        <Marker position={originLocation} title="Pickup Location" />
+
+        {/* ======================================
+            DESTINATION
+        ====================================== */}
+
+        {destinationAddress && (
+          <Marker position={destinationLocation} title="Destination" />
+        )}
+
+        {/* ======================================
+            ONLINE COURIERS
+        ====================================== */}
+
+        {couriers
+          .filter((courier) => courier.lat != null && courier.lng != null)
+          .map((courier) => (
+            <Marker
+              key={courier.id}
+              position={{
+                lat: courier.lat,
+                lng: courier.lng,
+              }}
+              icon={{
+                url: getCourierImage(courier.transportationType),
+                scaledSize: new window.google.maps.Size(42, 52),
+              }}
+              title={
+                courier.firstName
+                  ? `${courier.firstName} ${courier.lastName ?? ""}`
+                  : "Courier"
+              }
+            />
+          ))}
+      </GoogleMap>
     </div>
   );
 };

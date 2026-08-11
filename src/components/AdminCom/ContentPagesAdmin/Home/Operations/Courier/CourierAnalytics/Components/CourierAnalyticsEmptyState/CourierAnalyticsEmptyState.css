@@ -1,0 +1,341 @@
+/* ==========================================================
+   COURIER ANALYTICS EMPTY STATE
+========================================================== */
+
+.courierAnalyticsEmptyState {
+    width: 100%;
+
+    min-height: 280px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 50px 30px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+
+    text-align: center;
+
+    box-shadow:
+        0 3px 14px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierAnalyticsEmptyState-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 16px;
+
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    font-size: 24px;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierAnalyticsEmptyState-content {
+    max-width: 520px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+}
+
+.courierAnalyticsEmptyState-content h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 20px;
+
+    font-weight: 700;
+
+    line-height: 1.35;
+}
+
+.courierAnalyticsEmptyState-content p {
+    max-width: 480px;
+
+    margin: 9px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
+.courierAnalyticsEmptyState-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 40px;
+
+    margin-top: 20px;
+
+    padding:
+        0
+        15px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierAnalyticsEmptyState-button svg {
+    font-size: 15px;
+}
+
+.courierAnalyticsEmptyState-button:hover {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+
+    color: #1e293b;
+
+    transform: translateY(-1px);
+}
+
+.courierAnalyticsEmptyState-button:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================================
+   COMPACT VERSION
+========================================================== */
+
+.courierAnalyticsEmptyState.compact {
+    min-height: 190px;
+
+    padding: 35px 25px;
+
+    border-radius: 12px;
+}
+
+.courierAnalyticsEmptyState.compact
+.courierAnalyticsEmptyState-icon {
+    width: 50px;
+    height: 50px;
+
+    margin-bottom: 13px;
+
+    border-radius: 13px;
+
+    font-size: 19px;
+}
+
+.courierAnalyticsEmptyState.compact
+.courierAnalyticsEmptyState-content h3 {
+    font-size: 16px;
+}
+
+.courierAnalyticsEmptyState.compact
+.courierAnalyticsEmptyState-content p {
+    font-size: 11px;
+}
+
+
+/* ==========================================================
+   FILTER EMPTY STATE
+========================================================== */
+
+.courierAnalyticsEmptyState.filterEmpty
+.courierAnalyticsEmptyState-icon {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierAnalyticsEmptyState {
+        min-height: 250px;
+
+        padding: 45px 25px;
+    }
+
+    .courierAnalyticsEmptyState-content h3 {
+        font-size: 18px;
+    }
+
+    .courierAnalyticsEmptyState-content p {
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierAnalyticsEmptyState {
+        min-height: 220px;
+
+        padding: 38px 18px;
+
+        border-radius: 12px;
+    }
+
+    .courierAnalyticsEmptyState-icon {
+        width: 56px;
+        height: 56px;
+
+        margin-bottom: 15px;
+
+        border-radius: 14px;
+
+        font-size: 21px;
+    }
+
+    .courierAnalyticsEmptyState-content {
+        max-width: 380px;
+    }
+
+    .courierAnalyticsEmptyState-content h3 {
+        font-size: 17px;
+    }
+
+    .courierAnalyticsEmptyState-content p {
+        max-width: 340px;
+
+        margin-top: 8px;
+
+        font-size: 11px;
+    }
+
+    .courierAnalyticsEmptyState-button {
+        min-height: 38px;
+
+        margin-top: 16px;
+
+        padding: 0 13px;
+
+        font-size: 11px;
+    }
+
+    .courierAnalyticsEmptyState-button svg {
+        font-size: 14px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierAnalyticsEmptyState {
+        min-height: 200px;
+
+        padding: 32px 14px;
+    }
+
+    .courierAnalyticsEmptyState-icon {
+        width: 50px;
+        height: 50px;
+
+        margin-bottom: 13px;
+
+        border-radius: 13px;
+
+        font-size: 19px;
+    }
+
+    .courierAnalyticsEmptyState-content h3 {
+        font-size: 16px;
+    }
+
+    .courierAnalyticsEmptyState-content p {
+        max-width: 300px;
+
+        font-size: 10px;
+    }
+
+    .courierAnalyticsEmptyState-button {
+        min-height: 36px;
+
+        padding: 0 12px;
+
+        font-size: 10px;
+    }
+
+}

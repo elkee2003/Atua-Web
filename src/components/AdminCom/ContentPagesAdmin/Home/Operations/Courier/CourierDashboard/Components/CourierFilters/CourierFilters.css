@@ -1,0 +1,282 @@
+/* ==========================================================
+   COURIER FILTERS
+========================================================== */
+
+.courierFilters {
+    width: 100%;
+
+    margin-bottom: 24px;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #e8ebef;
+
+    border-radius: 14px;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierFilters-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 14px;
+}
+
+.courierFilters-heading {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.courierFilters-title {
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.courierFilters-description {
+    color: #8a919d;
+
+    font-size: 12px;
+}
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+.courierFilters-reset {
+    padding: 7px 12px;
+
+    border: 1px solid #e1e5eb;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #4b5563;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierFilters-reset:hover {
+    background: #f7f8fa;
+
+    border-color: #d1d5db;
+
+    color: #111827;
+}
+
+/* ==========================================================
+   FILTER LIST
+========================================================== */
+
+.courierFilters-list {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    overflow-x: auto;
+
+    padding-bottom: 2px;
+
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+}
+
+.courierFilters-list::-webkit-scrollbar {
+    height: 5px;
+}
+
+.courierFilters-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.courierFilters-list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+
+    border-radius: 999px;
+}
+
+/* ==========================================================
+   FILTER BUTTON
+========================================================== */
+
+.courierFilters-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+
+    padding: 9px 13px;
+
+    border: 1px solid #e2e6eb;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #5f6672;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierFilters-button:hover {
+    background: #f7f8fa;
+
+    border-color: #d1d5db;
+
+    color: #111827;
+}
+
+.courierFilters-button:active {
+    transform: scale(0.97);
+}
+
+/* ==========================================================
+   ACTIVE FILTER
+========================================================== */
+
+.courierFilters-buttonActive {
+    background: #111827;
+
+    border-color: #111827;
+
+    color: #ffffff;
+}
+
+.courierFilters-buttonActive:hover {
+    background: #111827;
+
+    border-color: #111827;
+
+    color: #ffffff;
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierFilters-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+}
+
+.courierFilters-buttonActive
+.courierFilters-icon {
+    color: #ffffff;
+}
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierFilters-label {
+    line-height: 1;
+}
+
+/* ==========================================================
+   ACCESSIBILITY
+========================================================== */
+
+.courierFilters-button:focus-visible,
+.courierFilters-reset:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.22);
+
+    outline-offset: 2px;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierFilters {
+        padding: 16px;
+    }
+
+    .courierFilters-header {
+        align-items: flex-start;
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierFilters {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+    .courierFilters-header {
+        margin-bottom: 12px;
+    }
+
+    .courierFilters-title {
+        font-size: 13px;
+    }
+
+    .courierFilters-description {
+        font-size: 11px;
+    }
+
+    .courierFilters-reset {
+        padding: 6px 10px;
+
+        font-size: 11px;
+    }
+
+    .courierFilters-button {
+        padding: 8px 11px;
+
+        font-size: 11px;
+    }
+
+}

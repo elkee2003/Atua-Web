@@ -1,0 +1,100 @@
+/* =========================================================
+   PAYMENT HEADER
+========================================================= */
+
+.paymentHeader {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 16px;
+
+    background: #FFFFFF;
+
+    border-bottom: 1px solid #E5E7EB;
+
+    box-sizing: border-box;
+
+    position: sticky;
+    top: 0;
+
+    z-index: 20;
+}
+
+.paymentHeaderButton {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+.paymentHeaderButton:hover {
+    background: #F3F4F6;
+}
+
+.paymentHeaderButton:disabled {
+    cursor: default;
+    opacity: .55;
+}
+
+.paymentHeaderButton svg {
+    font-size: 18px;
+    color: #111827;
+}
+
+.paymentHeaderTitle {
+    flex: 1;
+
+    margin: 0;
+
+    text-align: center;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.paymentHeaderSpacer {
+    width: 40px;
+    height: 40px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .paymentHeader {
+        padding: 0 14px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .paymentHeader {
+        height: 56px;
+    }
+
+    .paymentHeaderTitle {
+        font-size: 16px;
+    }
+
+}

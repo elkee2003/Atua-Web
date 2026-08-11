@@ -63,6 +63,9 @@ export declare type CourierCreateFormInputValues = {
     currentExpressCount?: number;
     currentMaxiCount?: number;
     lastBatchAssignedAt?: string;
+    averageRating?: number;
+    reviewCount?: number;
+    totalReports?: number;
     statusKey?: string;
 };
 export declare type CourierCreateFormValidationValues = {
@@ -107,6 +110,9 @@ export declare type CourierCreateFormValidationValues = {
     currentExpressCount?: ValidationFunction<number>;
     currentMaxiCount?: ValidationFunction<number>;
     lastBatchAssignedAt?: ValidationFunction<string>;
+    averageRating?: ValidationFunction<number>;
+    reviewCount?: ValidationFunction<number>;
+    totalReports?: ValidationFunction<number>;
     statusKey?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -153,6 +159,9 @@ export declare type CourierCreateFormOverridesProps = {
     currentExpressCount?: PrimitiveOverrideProps<TextFieldProps>;
     currentMaxiCount?: PrimitiveOverrideProps<TextFieldProps>;
     lastBatchAssignedAt?: PrimitiveOverrideProps<TextFieldProps>;
+    averageRating?: PrimitiveOverrideProps<TextFieldProps>;
+    reviewCount?: PrimitiveOverrideProps<TextFieldProps>;
+    totalReports?: PrimitiveOverrideProps<TextFieldProps>;
     statusKey?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type CourierCreateFormProps = React.PropsWithChildren<{

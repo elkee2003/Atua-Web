@@ -1,0 +1,322 @@
+
+/* ==========================================================
+   COURIER WALLET EMPTY STATE
+========================================================== */
+
+.courierWalletEmptyState {
+  width: 100%;
+  min-height: 220px;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 32px 24px;
+
+  border: 1px dashed #dfe5ec;
+  border-radius: 12px;
+
+  background: #fafbfc;
+
+  text-align: center;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierWalletEmptyState-icon {
+  width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 14px;
+
+  border-radius: 14px;
+
+  background: #f1f5f9;
+  color: #94a3b8;
+
+  font-size: 19px;
+}
+
+
+/* ==========================================================
+   WALLET
+========================================================== */
+
+.courierWalletEmptyState-wallet
+.courierWalletEmptyState-icon {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+
+/* ==========================================================
+   TRANSACTIONS
+========================================================== */
+
+.courierWalletEmptyState-transactions
+.courierWalletEmptyState-icon {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+
+/* ==========================================================
+   SEARCH
+========================================================== */
+
+.courierWalletEmptyState-search
+.courierWalletEmptyState-icon {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+
+/* ==========================================================
+   FILTER
+========================================================== */
+
+.courierWalletEmptyState-filter
+.courierWalletEmptyState-icon {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierWalletEmptyState-error
+.courierWalletEmptyState-icon {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierWalletEmptyState-content {
+  max-width: 420px;
+}
+
+.courierWalletEmptyState-content h3 {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.courierWalletEmptyState-content p {
+  margin: 8px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+
+/* ==========================================================
+   ACTION
+========================================================== */
+
+.courierWalletEmptyState-action {
+  min-height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-top: 18px;
+  padding: 0 16px;
+
+  border: 1px solid #dbe2ea;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courierWalletEmptyState-action:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+
+  transform: translateY(-1px);
+}
+
+.courierWalletEmptyState-action:active {
+  transform: translateY(0);
+}
+
+.courierWalletEmptyState-action:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+  .courierWalletEmptyState {
+    min-height: 195px;
+    padding: 28px 20px;
+  }
+
+  .courierWalletEmptyState-icon {
+    width: 48px;
+    height: 48px;
+
+    margin-bottom: 12px;
+
+    border-radius: 13px;
+
+    font-size: 17px;
+  }
+
+  .courierWalletEmptyState-content {
+    max-width: 360px;
+  }
+
+  .courierWalletEmptyState-content h3 {
+    font-size: 17px;
+  }
+
+  .courierWalletEmptyState-content p {
+    margin-top: 7px;
+    font-size: 12px;
+  }
+
+  .courierWalletEmptyState-action {
+    min-height: 36px;
+
+    margin-top: 16px;
+    padding: 0 15px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+  .courierWalletEmptyState {
+    min-height: 180px;
+
+    padding: 24px 16px;
+
+    border-radius: 10px;
+  }
+
+  .courierWalletEmptyState-icon {
+    width: 44px;
+    height: 44px;
+
+    margin-bottom: 11px;
+
+    border-radius: 11px;
+
+    font-size: 16px;
+  }
+
+  .courierWalletEmptyState-content {
+    max-width: 320px;
+  }
+
+  .courierWalletEmptyState-content h3 {
+    font-size: 16px;
+  }
+
+  .courierWalletEmptyState-content p {
+    margin-top: 6px;
+
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .courierWalletEmptyState-action {
+    min-height: 35px;
+
+    margin-top: 14px;
+    padding: 0 14px;
+
+    font-size: 11px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+  .courierWalletEmptyState {
+    min-height: 170px;
+
+    padding: 22px 14px;
+  }
+
+  .courierWalletEmptyState-icon {
+    width: 42px;
+    height: 42px;
+
+    margin-bottom: 10px;
+
+    font-size: 15px;
+  }
+
+  .courierWalletEmptyState-content {
+    max-width: 280px;
+  }
+
+  .courierWalletEmptyState-content h3 {
+    font-size: 15px;
+  }
+
+  .courierWalletEmptyState-content p {
+    font-size: 10.5px;
+  }
+
+  .courierWalletEmptyState-action {
+    min-height: 34px;
+
+    font-size: 11px;
+  }
+}
+

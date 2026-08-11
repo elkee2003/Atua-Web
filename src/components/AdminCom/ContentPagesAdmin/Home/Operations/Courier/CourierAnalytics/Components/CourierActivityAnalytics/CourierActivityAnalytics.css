@@ -1,0 +1,1215 @@
+/* ==========================================================
+   COURIER ACTIVITY ANALYTICS
+   CourierActivityAnalytics answers:
+   "How is the courier actually operating?"
+========================================================== */
+
+.courierActivityAnalytics {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 24px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierActivityAnalytics-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.courierActivityAnalytics-heading {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.courierActivityAnalytics-titleIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 16px;
+}
+
+.courierActivityAnalytics-heading h2 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+}
+
+.courierActivityAnalytics-heading p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   PERIOD SELECTOR
+========================================================== */
+
+.courierActivityAnalytics-periods {
+    display: flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 4px;
+
+    border: 1px solid #e5eaf0;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+.courierActivityAnalytics-periods button {
+    min-height: 34px;
+
+    border: none;
+
+    outline: none;
+
+    padding:
+        0
+        12px;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierActivityAnalytics-periods button:hover {
+    color: #475569;
+}
+
+.courierActivityAnalytics-periods button.active {
+    background: #ffffff;
+
+    color: #1e293b;
+
+    box-shadow:
+        0 1px 4px rgba(
+            15,
+            23,
+            42,
+            0.08
+        );
+}
+
+
+/* ==========================================================
+   SUMMARY
+========================================================== */
+
+.courierActivityAnalytics-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.courierActivityAnalytics-summaryCard {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 9px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+.courierActivityAnalytics-summaryIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 14px;
+}
+
+.courierActivityAnalytics-summaryIcon.activity {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+.courierActivityAnalytics-summaryIcon.completed {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+.courierActivityAnalytics-summaryIcon.active {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.courierActivityAnalytics-summaryIcon.time {
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+.courierActivityAnalytics-summaryCard span {
+    display: block;
+
+    overflow: hidden;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierActivityAnalytics-summaryCard strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #1e293b;
+
+    font-size: 19px;
+
+    font-weight: 750;
+
+    line-height: 1.2;
+}
+
+.courierActivityAnalytics-summaryCard small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   MAIN GRID
+========================================================== */
+
+.courierActivityAnalytics-main {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.7fr)
+        minmax(280px, 0.9fr);
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.courierActivityAnalytics-card {
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 10px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+
+/* ==========================================================
+   CARD HEADER
+========================================================== */
+
+.courierActivityAnalytics-cardHeader {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 16px;
+}
+
+.courierActivityAnalytics-cardHeader h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    line-height: 1.35;
+}
+
+.courierActivityAnalytics-cardHeader p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+.courierActivityAnalytics-cardHeader > svg {
+    color: #94a3b8;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================================
+   DAILY ACTIVITY CHART
+========================================================== */
+
+.courierActivityAnalytics-chart {
+    width: 100%;
+
+    height: 190px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.courierActivityAnalytics-yAxis {
+    width: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    padding-bottom: 23px;
+
+    color: #cbd5e1;
+
+    font-size: 10px;
+
+    text-align: right;
+}
+
+.courierActivityAnalytics-bars {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: stretch;
+
+    gap: 5px;
+
+    border-bottom: 1px solid #e8edf3;
+
+    background-image:
+        linear-gradient(
+            to bottom,
+            transparent 24.5%,
+            #f1f5f9 25%,
+            transparent 25.5%,
+            transparent 49.5%,
+            #f1f5f9 50%,
+            transparent 50.5%,
+            transparent 74.5%,
+            #f1f5f9 75%,
+            transparent 75.5%
+        );
+}
+
+.courierActivityAnalytics-barGroup {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: flex-end;
+}
+
+.courierActivityAnalytics-barArea {
+    width: 100%;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: center;
+}
+
+.courierActivityAnalytics-bar {
+    width: min(
+        70%,
+        28px
+    );
+
+    min-height: 0;
+
+    border-radius:
+        6px 6px 0 0;
+
+    background: #ea580c;
+
+    transition:
+        height 0.3s ease,
+        opacity 0.2s ease;
+}
+
+.courierActivityAnalytics-bar:hover {
+    opacity: 0.75;
+}
+
+.courierActivityAnalytics-barGroup > span {
+    height: 24px;
+
+    padding-top: 7px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   LEGEND
+========================================================== */
+
+.courierActivityAnalytics-legend {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 12px;
+}
+
+.courierActivityAnalytics-legend span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.courierActivityAnalytics-legend i {
+    width: 8px;
+    height: 8px;
+
+    display: block;
+
+    border-radius: 50%;
+}
+
+.courierActivityAnalytics-legend i.orders {
+    background: #ea580c;
+}
+
+.courierActivityAnalytics-legend i.completed {
+    background: #15803d;
+}
+
+
+/* ==========================================================
+   TIMING
+========================================================== */
+
+.courierActivityAnalytics-timing {
+    display: flex;
+
+    flex-direction: column;
+}
+
+.courierActivityAnalytics-timingRow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.courierActivityAnalytics-timingRow:first-child {
+    padding-top: 0;
+}
+
+.courierActivityAnalytics-timingRow:last-child {
+    padding-bottom: 0;
+
+    border-bottom: none;
+}
+
+.courierActivityAnalytics-timingRow > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+.courierActivityAnalytics-timingRow > div > span {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+.courierActivityAnalytics-timingRow > div > span.blue {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.courierActivityAnalytics-timingRow > div > span.orange {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+.courierActivityAnalytics-timingRow > div > span.purple {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+.courierActivityAnalytics-timingRow > div > span.green {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+.courierActivityAnalytics-timingRow strong {
+    display: block;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    line-height: 1.3;
+}
+
+.courierActivityAnalytics-timingRow small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+.courierActivityAnalytics-timingRow > b {
+    flex-shrink: 0;
+
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 750;
+}
+
+
+/* ==========================================================
+   PEAK DAY
+========================================================== */
+
+.courierActivityAnalytics-peak {
+    padding: 6px 10px;
+
+    border-radius: 7px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+
+/* ==========================================================
+   WEEKDAY CHART
+========================================================== */
+
+.courierActivityAnalytics-weekdays {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            7,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    height: 165px;
+}
+
+.courierActivityAnalytics-weekday {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: flex-end;
+}
+
+.courierActivityAnalytics-weekdayChart {
+    width: 100%;
+
+    max-width: 38px;
+
+    height: 110px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: center;
+
+    border-bottom: 1px solid #e8edf3;
+}
+
+.courierActivityAnalytics-weekdayBar {
+    width: 65%;
+
+    min-height: 0;
+
+    border-radius:
+        6px 6px 0 0;
+
+    background: #ea580c;
+
+    transition:
+        height 0.25s ease;
+}
+
+.courierActivityAnalytics-weekday strong {
+    margin-top: 9px;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+.courierActivityAnalytics-weekday > span {
+    margin-top: 4px;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   TRANSPORTATION GRID
+========================================================== */
+
+.courierActivityAnalytics-transportGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                220px,
+                1fr
+            )
+        );
+
+    gap: 12px;
+}
+
+.courierActivityAnalytics-transportItem {
+    padding: 14px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 10px;
+
+    background: #fafbfc;
+}
+
+.courierActivityAnalytics-transportTop {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 10px;
+}
+
+.courierActivityAnalytics-transportTop strong {
+    display: block;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.courierActivityAnalytics-transportTop small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.courierActivityAnalytics-transportTop > span {
+    color: #15803d;
+
+    font-size: 12px;
+
+    font-weight: 750;
+}
+
+.courierActivityAnalytics-transportTrack {
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #e2e8f0;
+}
+
+.courierActivityAnalytics-transportTrack span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #ea580c;
+}
+
+.courierActivityAnalytics-transportCompleted {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   EMPTY
+========================================================== */
+
+.courierActivityAnalytics-empty {
+    padding: 35px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   CURRENT STATE
+========================================================== */
+
+.courierActivityAnalytics-currentState {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-top: 4px;
+
+    padding: 15px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+}
+
+.courierActivityAnalytics-currentState > div {
+    min-width: 0;
+
+    padding-right: 12px;
+
+    border-right: 1px solid #eef2f6;
+}
+
+.courierActivityAnalytics-currentState > div:last-child {
+    padding-right: 0;
+
+    border-right: none;
+}
+
+.courierActivityAnalytics-currentState span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.courierActivityAnalytics-currentState strong {
+    display: block;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1050px) {
+
+    .courierActivityAnalytics-main {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierActivityAnalytics-summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .courierActivityAnalytics-card {
+        padding: 15px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierActivityAnalytics-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .courierActivityAnalytics-heading {
+        gap: 10px;
+    }
+
+    .courierActivityAnalytics-titleIcon {
+        width: 36px;
+        height: 36px;
+
+        font-size: 14px;
+    }
+
+    .courierActivityAnalytics-heading h2 {
+        font-size: 17px;
+    }
+
+    .courierActivityAnalytics-heading p {
+        font-size: 11px;
+    }
+
+    .courierActivityAnalytics-periods {
+        width: 100%;
+    }
+
+    .courierActivityAnalytics-periods button {
+        flex: 1;
+
+        min-height: 36px;
+
+        font-size: 11px;
+    }
+
+    .courierActivityAnalytics-summary {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+    }
+
+    .courierActivityAnalytics-summaryCard {
+        gap: 9px;
+
+        padding: 12px;
+    }
+
+    .courierActivityAnalytics-summaryIcon {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 8px;
+
+        font-size: 12px;
+    }
+
+    .courierActivityAnalytics-summaryCard span {
+        font-size: 10px;
+    }
+
+    .courierActivityAnalytics-summaryCard strong {
+        font-size: 16px;
+    }
+
+    .courierActivityAnalytics-summaryCard small {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-card {
+        padding: 13px;
+
+        border-radius: 10px;
+    }
+
+    .courierActivityAnalytics-cardHeader h3 {
+        font-size: 14px;
+    }
+
+    .courierActivityAnalytics-cardHeader p {
+        font-size: 10px;
+    }
+
+    .courierActivityAnalytics-chart {
+        height: 155px;
+    }
+
+    .courierActivityAnalytics-yAxis {
+        width: 26px;
+
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-barGroup > span {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-legend span {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-weekdays {
+        gap: 5px;
+
+        height: 145px;
+    }
+
+    .courierActivityAnalytics-weekdayChart {
+        height: 95px;
+    }
+
+    .courierActivityAnalytics-weekday strong {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-weekday > span {
+        font-size: 8px;
+    }
+
+    .courierActivityAnalytics-currentState {
+        grid-template-columns:
+            minmax(0, 1fr);
+
+        gap: 0;
+
+        padding: 13px;
+    }
+
+    .courierActivityAnalytics-currentState > div {
+        padding-right: 0;
+
+        padding-bottom: 11px;
+
+        margin-bottom: 11px;
+
+        border-right: none;
+
+        border-bottom: 1px solid #eef2f6;
+    }
+
+    .courierActivityAnalytics-currentState > div:last-child {
+        padding-bottom: 0;
+
+        margin-bottom: 0;
+
+        border-bottom: none;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierActivityAnalytics-summaryCard {
+        padding: 10px;
+
+        gap: 7px;
+    }
+
+    .courierActivityAnalytics-summaryIcon {
+        width: 29px;
+        height: 29px;
+
+        font-size: 11px;
+    }
+
+    .courierActivityAnalytics-summaryCard span {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-summaryCard strong {
+        font-size: 14px;
+    }
+
+    .courierActivityAnalytics-summaryCard small {
+        font-size: 8px;
+    }
+
+    .courierActivityAnalytics-timingRow > div > span {
+        width: 28px;
+        height: 28px;
+
+        font-size: 10px;
+    }
+
+    .courierActivityAnalytics-timingRow strong {
+        font-size: 11px;
+    }
+
+    .courierActivityAnalytics-timingRow small {
+        font-size: 9px;
+    }
+
+    .courierActivityAnalytics-timingRow > b {
+        font-size: 12px;
+    }
+
+    .courierActivityAnalytics-transportGrid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+}

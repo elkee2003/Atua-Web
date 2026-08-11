@@ -1,0 +1,574 @@
+
+/* ==========================================================
+   COURIER WALLET BALANCE
+========================================================== */
+
+.courierWalletBalance {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 16px;
+  padding: 18px;
+
+  border: 1px solid #e7ebf0;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.025);
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierWalletBalance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.courierWalletBalance-heading {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+}
+
+.courierWalletBalance-headingIcon {
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #f1f5f9;
+  color: #475569;
+
+  font-size: 16px;
+}
+
+.courierWalletBalance-heading h2 {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.courierWalletBalance-heading p {
+  margin: 4px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
+/* ==========================================================
+   UPDATED
+========================================================== */
+
+.courierWalletBalance-updated {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.courierWalletBalance-updated svg {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+
+
+/* ==========================================================
+   MAIN BALANCE
+========================================================== */
+
+.courierWalletBalance-main {
+  padding: 22px;
+
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  text-align: center;
+}
+
+.courierWalletBalance-mainLabel {
+  margin-bottom: 7px;
+
+  color: #64748b;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.courierWalletBalance-mainAmount {
+  color: #1e293b;
+
+  font-size: 30px;
+  font-weight: 800;
+
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.courierWalletBalance-mainDescription {
+  margin-top: 7px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
+/* ==========================================================
+   BREAKDOWN
+========================================================== */
+
+.courierWalletBalance-breakdown {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+
+  margin-top: 18px;
+  padding-bottom: 17px;
+
+  border-bottom: 1px solid #edf1f5;
+}
+
+.courierWalletBalance-breakdownItem {
+  min-width: 0;
+}
+
+
+/* ==========================================================
+   ITEM HEADER
+========================================================== */
+
+.courierWalletBalance-itemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 8px;
+}
+
+.courierWalletBalance-itemLabel {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.courierWalletBalance-itemHeader strong {
+  color: #475569;
+
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   DOTS
+========================================================== */
+
+.availableDot,
+.pendingDot {
+  width: 8px;
+  height: 8px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+}
+
+.availableDot {
+  background: #16a34a;
+}
+
+.pendingDot {
+  background: #f59e0b;
+}
+
+
+/* ==========================================================
+   PROGRESS
+========================================================== */
+
+.courierWalletBalance-progress {
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #edf1f5;
+}
+
+.courierWalletBalance-progressAvailable,
+.courierWalletBalance-progressPending {
+  height: 100%;
+
+  min-width: 0;
+
+  border-radius: inherit;
+
+  transition: width 0.4s ease;
+}
+
+.courierWalletBalance-progressAvailable {
+  background: #16a34a;
+}
+
+.courierWalletBalance-progressPending {
+  background: #f59e0b;
+}
+
+
+/* ==========================================================
+   SUMMARY
+========================================================== */
+
+.courierWalletBalance-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 10px;
+
+  padding-top: 16px;
+}
+
+
+/* ==========================================================
+   SUMMARY ITEM
+========================================================== */
+
+.courierWalletBalance-summaryItem {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 11px;
+
+  border: 1px solid #edf1f5;
+  border-radius: 9px;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   SUMMARY ICON
+========================================================== */
+
+.courierWalletBalance-summaryIcon {
+  width: 30px;
+  height: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+.courierWalletBalance-summaryIcon.pending {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.courierWalletBalance-summaryIcon.position {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.courierWalletBalance-summaryIcon.earnings {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+
+/* ==========================================================
+   SUMMARY CONTENT
+========================================================== */
+
+.courierWalletBalance-summaryContent {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.courierWalletBalance-summaryContent span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courierWalletBalance-summaryContent strong {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+  .courierWalletBalance {
+    padding: 16px;
+  }
+
+  .courierWalletBalance-heading h2 {
+    font-size: 15px;
+  }
+
+  .courierWalletBalance-heading p {
+    font-size: 11px;
+  }
+
+  .courierWalletBalance-main {
+    padding: 20px;
+  }
+
+  .courierWalletBalance-mainAmount {
+    font-size: 28px;
+  }
+
+  .courierWalletBalance-itemLabel {
+    font-size: 11px;
+  }
+
+  .courierWalletBalance-itemHeader strong {
+    font-size: 12px;
+  }
+
+  .courierWalletBalance-summaryContent span {
+    font-size: 10px;
+  }
+
+  .courierWalletBalance-summaryContent strong {
+    font-size: 13px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+  .courierWalletBalance {
+    padding: 14px;
+
+    border-radius: 10px;
+  }
+
+  .courierWalletBalance-header {
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .courierWalletBalance-heading {
+    gap: 9px;
+  }
+
+  .courierWalletBalance-headingIcon {
+    width: 32px;
+    height: 32px;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+  }
+
+  .courierWalletBalance-heading h2 {
+    font-size: 14px;
+  }
+
+  .courierWalletBalance-heading p {
+    font-size: 10px;
+  }
+
+  .courierWalletBalance-updated {
+    display: none;
+  }
+
+  .courierWalletBalance-main {
+    padding: 18px;
+  }
+
+  .courierWalletBalance-mainLabel {
+    font-size: 12px;
+  }
+
+  .courierWalletBalance-mainAmount {
+    font-size: 26px;
+  }
+
+  .courierWalletBalance-mainDescription {
+    font-size: 10px;
+  }
+
+  .courierWalletBalance-breakdown {
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    gap: 13px;
+
+    margin-top: 16px;
+    padding-bottom: 15px;
+  }
+
+  .courierWalletBalance-itemLabel {
+    font-size: 11px;
+  }
+
+  .courierWalletBalance-itemHeader strong {
+    font-size: 12px;
+  }
+
+  .courierWalletBalance-summary {
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    gap: 8px;
+  }
+
+  .courierWalletBalance-summaryItem {
+    padding: 10px;
+  }
+
+  .courierWalletBalance-summaryContent span {
+    font-size: 10px;
+  }
+
+  .courierWalletBalance-summaryContent strong {
+    font-size: 13px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+  .courierWalletBalance {
+    padding: 12px;
+  }
+
+  .courierWalletBalance-heading h2 {
+    font-size: 13px;
+  }
+
+  .courierWalletBalance-heading p {
+    font-size: 9px;
+  }
+
+  .courierWalletBalance-main {
+    padding: 16px;
+  }
+
+  .courierWalletBalance-mainLabel {
+    font-size: 11px;
+  }
+
+  .courierWalletBalance-mainAmount {
+    font-size: 24px;
+  }
+
+  .courierWalletBalance-mainDescription {
+    font-size: 9px;
+  }
+
+  .courierWalletBalance-itemLabel {
+    font-size: 10px;
+  }
+
+  .courierWalletBalance-itemHeader strong {
+    font-size: 11px;
+  }
+
+  .courierWalletBalance-summaryContent span {
+    font-size: 9px;
+  }
+
+  .courierWalletBalance-summaryContent strong {
+    font-size: 12px;
+  }
+}

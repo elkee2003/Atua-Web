@@ -1,75 +1,366 @@
-.atuaTypeContainer {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #f3f1f1;
-  cursor: pointer;
+/*
+========================================================
+ATUA TYPES
+========================================================
+*/
+
+.atuaTypesContainer {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+    min-height: 0;
+
+    overflow: hidden;
+
+    background: #f8f9fb;
 }
 
-.atuaTypeContainer.selected {
-  background-color: #e9e7e7;
+/*
+========================================================
+HEADER
+========================================================
+*/
+
+.atuaTypesHeader {
+    flex-shrink: 0;
+
+    padding: 18px 20px;
+
+    background: #ffffff;
+
+    border-bottom: 1px solid #ececec;
 }
+
+.distanceText {
+    font-size: 14px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+/*
+========================================================
+LIST
+========================================================
+*/
+
+.atuaTypesList {
+    flex: 1;
+    min-height: 0;
+
+    overflow-y: auto;
+
+    padding: 16px;
+}
+
+.atuaTypesList::-webkit-scrollbar {
+    width: 8px;
+}
+
+.atuaTypesList::-webkit-scrollbar-thumb {
+    background: #d8d8d8;
+    border-radius: 100px;
+}
+
+.atuaTypesList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/*
+========================================================
+CARD
+========================================================
+*/
+
+.atuaTypeCard {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    width: 100%;
+
+    padding: 16px;
+
+    margin-bottom: 14px;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 2px solid transparent;
+
+    border-radius: 18px;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+
+    box-shadow: 0 6px 18px rgba(0,0,0,.06);
+}
+
+.atuaTypeCard:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 24px rgba(0,0,0,.10);
+}
+
+.atuaTypeCard.selected {
+    border-color: #00e65a;
+
+    background: #defde8;
+}
+
+/*
+========================================================
+IMAGE
+========================================================
+*/
 
 .atuaTypeImage {
-  height: 70px;
-  width: 80px;
-  object-fit: contain;
+    width: 64px;
+    height: 54px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
 }
 
-.atuaTypeMiddle {
-  flex: 1;
-  margin: 0 10px;
-  text-align: center;
+/*
+========================================================
+CONTENT
+========================================================
+*/
+
+.atuaTypeContent {
+    flex: 1;
+    min-width: 0;
 }
 
-.atuaTypeInfoRow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.atuaTypeTitleRow {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-bottom: 6px;
 }
 
-.atuaTypeInfoIcon {
-  font-size: 20px;
-  margin-left: 5px;
+.atuaTypeTitle {
+    margin: 0;
+
+    flex: 1;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #111827;
+
+    line-height: 1.2;
+
+    word-break: break-word;
 }
 
-.atuaTypeRight {
-  width: 100px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+.atuaTypeSubtitle {
+    margin: 0;
+
+    font-size: 13px;
+    line-height: 1.3;
+
+    color: #6b7280;
 }
 
-.atuaTypeLabel {
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 5px;
+/*
+========================================================
+INFO BUTTON
+========================================================
+*/
+
+.infoButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 2px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #6b7280;
+
+    cursor: pointer;
+
+    font-size: 16px;
+
+    flex-shrink: 0;
+
+    transition: .2s;
 }
 
-.atuaTypeTime {
-  color: #5d5d5d;
+.infoButton:hover {
+    color: #16a34a;
+
+    transform: scale(1.1);
 }
+
+/*
+========================================================
+PRICE
+========================================================
+*/
 
 .atuaTypePrice {
-  font-weight: bold;
-  font-size: 18px;
-  margin-left: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    min-width: 72px;
 }
 
-.confirmBtn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
-  border-radius: 20px;
-  background-color: #01a70f;
-  margin: 0 20px 30px;
-  cursor: pointer;
+.price {
+    font-size: 17px;
+    font-weight: 700;
+
+    color: #111827;
+
+    text-align: right;
 }
 
-.confirmBtnText {
-  text-align: center;
-  font-size: 25px;
-  font-weight: bold;
-  color: white;
+.priceTag {
+    margin-top: 3px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    color: #16a34a;
+}
+
+/*
+========================================================
+TABLET
+========================================================
+*/
+
+@media (max-width: 1000px) {
+
+    .atuaTypesList {
+        padding: 14px;
+    }
+
+    .atuaTypeCard {
+        gap: 12px;
+
+        padding: 14px;
+
+        border-radius: 16px;
+    }
+
+    .atuaTypeImage {
+        width: 56px;
+        height: 48px;
+    }
+
+    .atuaTypeTitle {
+        font-size: 16px;
+    }
+
+    .atuaTypeSubtitle {
+        font-size: 12px;
+    }
+
+    .atuaTypePrice {
+        min-width: 64px;
+    }
+
+    .price {
+        font-size: 15px;
+    }
+
+    .priceTag {
+        font-size: 10px;
+    }
+
+}
+
+/*
+========================================================
+PHONE
+========================================================
+*/
+
+@media (max-width: 650px) {
+
+    .atuaTypesHeader {
+        padding: 16px;
+    }
+
+    .atuaTypesList {
+        padding: 12px;
+    }
+
+    .atuaTypeCard {
+        gap: 10px;
+
+        padding: 14px;
+
+        margin-bottom: 12px;
+    }
+
+    .atuaTypeImage {
+        width: 52px;
+        height: 44px;
+    }
+
+    .atuaTypeTitle {
+        font-size: 15px;
+    }
+
+    .atuaTypeSubtitle {
+        font-size: 12px;
+    }
+
+    .atuaTypePrice {
+        min-width: 60px;
+    }
+
+    .price {
+        font-size: 15px;
+    }
+
+}
+
+/*
+========================================================
+SMALL PHONES
+========================================================
+*/
+
+@media (max-width: 420px) {
+
+    .atuaTypeCard {
+        padding: 12px;
+    }
+
+    .atuaTypeImage {
+        width: 46px;
+        height: 40px;
+    }
+
+    .atuaTypeTitle {
+        font-size: 14px;
+    }
+
+    .price {
+        font-size: 14px;
+    }
+
+    .priceTag {
+        font-size: 9px;
+    }
+
 }

@@ -1,0 +1,209 @@
+/* ==========================================================
+   COURIER SEARCH
+========================================================== */
+
+.courierSearch {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+/* ==========================================================
+   INPUT WRAPPER
+========================================================== */
+
+.courierSearch-inputWrapper {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #e1e5eb;
+
+    border-radius: 12px;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierSearch-inputWrapper:focus-within {
+    border-color: #111827;
+
+    box-shadow:
+        0 0 0 3px rgba(17, 24, 39, 0.08);
+}
+
+/* ==========================================================
+   SEARCH ICON
+========================================================== */
+
+.courierSearch-searchIcon {
+    position: absolute;
+
+    left: 16px;
+
+    color: #8a919d;
+
+    font-size: 16px;
+
+    pointer-events: none;
+}
+
+/* ==========================================================
+   INPUT
+========================================================== */
+
+.courierSearch-input {
+    width: 100%;
+
+    height: 50px;
+
+    padding: 0 48px;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
+
+    color: #111827;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+.courierSearch-input::placeholder {
+    color: #9ca3af;
+}
+
+.courierSearch-input:focus {
+    outline: none;
+}
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierSearch-clearButton {
+    position: absolute;
+
+    right: 12px;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f1f3f5;
+
+    color: #6b7280;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.courierSearch-clearButton:hover {
+    background: #e5e7eb;
+
+    color: #111827;
+}
+
+.courierSearch-clearButton:active {
+    transform: scale(0.95);
+}
+
+.courierSearch-clearButton svg {
+    font-size: 12px;
+}
+
+/* ==========================================================
+   RESULT INFORMATION
+========================================================== */
+
+.courierSearch-resultInfo {
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    padding-left: 4px;
+
+    font-size: 12px;
+
+    color: #8a919d;
+}
+
+.courierSearch-resultInfo strong {
+    color: #4b5563;
+
+    font-weight: 600;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierSearch-input {
+        height: 48px;
+
+        font-size: 14px;
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierSearch {
+        margin-bottom: 16px;
+    }
+
+    .courierSearch-input {
+        height: 48px;
+
+        padding-left: 44px;
+        padding-right: 44px;
+
+        font-size: 13px;
+    }
+
+    .courierSearch-searchIcon {
+        left: 14px;
+
+        font-size: 15px;
+    }
+
+    .courierSearch-clearButton {
+        right: 9px;
+
+        width: 28px;
+        height: 28px;
+    }
+
+    .courierSearch-resultInfo {
+        font-size: 11px;
+    }
+
+}

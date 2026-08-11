@@ -1,0 +1,1070 @@
+
+/* ==========================================================
+   COURIER PERFORMANCE
+========================================================== */
+
+.courierPerformance {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 24px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierPerformance-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 18px;
+}
+
+.courierPerformance-heading {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+.courierPerformance-titleIcon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #eef2ff;
+  color: #4f46e5;
+
+  font-size: 18px;
+}
+
+.courierPerformance-heading h2 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.courierPerformance-heading p {
+  margin: 5px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   PERIOD SELECTOR
+========================================================== */
+
+.courierPerformance-periods {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  padding: 4px;
+
+  border: 1px solid #e5eaf0;
+  border-radius: 9px;
+
+  background: #f8fafc;
+}
+
+.courierPerformance-periods button {
+  min-height: 36px;
+
+  border: 0;
+  outline: 0;
+
+  padding: 0 13px;
+
+  border-radius: 7px;
+
+  background: transparent;
+  color: #94a3b8;
+
+  font-family: inherit;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.courierPerformance-periods button:hover {
+  color: #475569;
+}
+
+.courierPerformance-periods button.active {
+  background: #ffffff;
+  color: #1e293b;
+
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
+}
+
+
+/* ==========================================================
+   SUMMARY
+========================================================== */
+
+.courierPerformance-summary {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   SUMMARY CARD
+========================================================== */
+
+.courierPerformance-summaryCard {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 9px rgba(15, 23, 42, 0.025);
+}
+
+
+/* ==========================================================
+   SUMMARY ICON
+========================================================== */
+
+.courierPerformance-summaryIcon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 16px;
+}
+
+.courierPerformance-summaryIcon.completion {
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+.courierPerformance-summaryIcon.earnings {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.courierPerformance-summaryIcon.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.courierPerformance-summaryIcon.rating {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+
+/* ==========================================================
+   SUMMARY CONTENT
+========================================================== */
+
+.courierPerformance-summaryContent {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.courierPerformance-summaryContent span {
+  overflow: hidden;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courierPerformance-summaryContent strong {
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  color: #1e293b;
+
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.2;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.courierPerformance-summaryContent small {
+  margin-top: 4px;
+
+  overflow: hidden;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   MAIN
+========================================================== */
+
+.courierPerformance-main {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.8fr)
+    minmax(280px, 0.9fr);
+
+  gap: 14px;
+
+  margin-bottom: 14px;
+}
+
+
+/* ==========================================================
+   COMMON CARD
+========================================================== */
+
+.courierPerformance-chartCard,
+.courierPerformance-outcomeCard,
+.courierPerformance-earningsCard {
+  min-width: 0;
+  box-sizing: border-box;
+
+  padding: 18px;
+
+  border: 1px solid #e8edf3;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.025);
+}
+
+
+/* ==========================================================
+   CARD HEADER
+========================================================== */
+
+.courierPerformance-cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+}
+
+.courierPerformance-cardHeader h3 {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.courierPerformance-cardHeader p {
+  margin: 5px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   CHART LEGEND
+========================================================== */
+
+.courierPerformance-chartLegend {
+  flex-shrink: 0;
+}
+
+.courierPerformance-chartLegend span {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.deliveredDot {
+  width: 8px;
+  height: 8px;
+
+  display: block;
+
+  border-radius: 50%;
+
+  background: #4f46e5;
+}
+
+
+/* ==========================================================
+   DELIVERY CHART
+========================================================== */
+
+.courierPerformance-chart {
+  width: 100%;
+  height: 220px;
+
+  display: flex;
+
+  gap: 10px;
+}
+
+
+/* ==========================================================
+   Y AXIS
+========================================================== */
+
+.courierPerformance-yAxis {
+  width: 30px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding-bottom: 24px;
+
+  color: #cbd5e1;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  text-align: right;
+}
+
+
+/* ==========================================================
+   BARS AREA
+========================================================== */
+
+.courierPerformance-bars {
+  position: relative;
+
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  align-items: stretch;
+
+  gap: 6px;
+
+  border-bottom: 1px solid #e8edf3;
+
+  background-image:
+    linear-gradient(
+      to bottom,
+      transparent 24.5%,
+      #f1f5f9 25%,
+      transparent 25.5%,
+      transparent 49.5%,
+      #f1f5f9 50%,
+      transparent 50.5%,
+      transparent 74.5%,
+      #f1f5f9 75%,
+      transparent 75.5%
+    );
+}
+
+
+/* ==========================================================
+   BAR GROUP
+========================================================== */
+
+.courierPerformance-barGroup {
+  flex: 1;
+
+  min-width: 0;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+/* ==========================================================
+   BAR AREA
+========================================================== */
+
+.courierPerformance-barArea {
+  width: 100%;
+
+  flex: 1;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  min-height: 0;
+}
+
+
+/* ==========================================================
+   BAR
+========================================================== */
+
+.courierPerformance-bar {
+  width: min(70%, 24px);
+
+  min-height: 0;
+
+  border-radius: 5px 5px 0 0;
+
+  background: #4f46e5;
+
+  transition:
+    height 0.3s ease,
+    opacity 0.2s ease;
+}
+
+.courierPerformance-bar:hover {
+  opacity: 0.75;
+}
+
+.courierPerformance-barGroup > span {
+  height: 24px;
+
+  padding-top: 7px;
+
+  color: transparent;
+
+  font-size: 10px;
+  font-weight: 500;
+
+  white-space: nowrap;
+}
+
+.courierPerformance-barGroup > span.visible {
+  color: #94a3b8;
+}
+
+
+/* ==========================================================
+   OUTCOME
+========================================================== */
+
+.courierPerformance-outcomes {
+  display: flex;
+  flex-direction: column;
+
+  gap: 11px;
+}
+
+.courierPerformance-outcome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 14px;
+}
+
+.courierPerformance-outcomeLabel {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.courierPerformance-outcome > strong {
+  color: #475569;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.outcomeIcon {
+  width: 26px;
+  height: 26px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 7px;
+
+  font-size: 12px;
+}
+
+.outcomeIcon.delivered {
+  background: #ecfdf5;
+  color: #16a34a;
+}
+
+.outcomeIcon.cancelled {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.outcomeIcon.disputed {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+
+/* ==========================================================
+   PROGRESS
+========================================================== */
+
+.courierPerformance-progress {
+  width: 100%;
+  height: 6px;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #f1f5f9;
+}
+
+.courierPerformance-progress span {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #16a34a;
+
+  transition: width 0.3s ease;
+}
+
+.courierPerformance-progress.cancelled span {
+  background: #e11d48;
+}
+
+.courierPerformance-progress.disputed span {
+  background: #ea580c;
+}
+
+
+/* ==========================================================
+   TOTAL ORDERS
+========================================================== */
+
+.courierPerformance-totalOrders {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 14px;
+
+  margin-top: 18px;
+  padding-top: 13px;
+
+  border-top: 1px solid #eef2f6;
+}
+
+.courierPerformance-totalOrders span {
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.courierPerformance-totalOrders strong {
+  color: #334155;
+
+  font-size: 15px;
+  font-weight: 700;
+}
+
+
+/* ==========================================================
+   EARNINGS CARD
+========================================================== */
+
+.courierPerformance-earningsCard {
+  margin-bottom: 14px;
+}
+
+.courierPerformance-earningsTotal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  flex-shrink: 0;
+}
+
+.courierPerformance-earningsTotal span {
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.courierPerformance-earningsTotal strong {
+  margin-top: 3px;
+
+  color: #15803d;
+
+  font-size: 18px;
+  font-weight: 750;
+}
+
+
+/* ==========================================================
+   EARNINGS LIST
+========================================================== */
+
+.courierPerformance-earningsList {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.courierPerformance-earningsRow {
+  display: grid;
+
+  grid-template-columns:
+    55px
+    minmax(0, 1fr)
+    85px;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.courierPerformance-earningsDate {
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.courierPerformance-earningsTrack {
+  height: 7px;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  background: #f1f5f9;
+}
+
+.courierPerformance-earningsTrack span {
+  display: block;
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #16a34a;
+
+  transition: width 0.3s ease;
+}
+
+.courierPerformance-earningsRow strong {
+  color: #475569;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  text-align: right;
+}
+
+
+/* ==========================================================
+   EMPTY
+========================================================== */
+
+.courierPerformance-empty {
+  padding: 28px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+
+  text-align: center;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.courierPerformance-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 20px;
+
+  padding: 11px 14px;
+
+  border: 1px solid #eef2f6;
+  border-radius: 9px;
+
+  background: #fafbfc;
+}
+
+.courierPerformance-footer > div {
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #64748b;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.courierPerformance-footer svg {
+  font-size: 14px;
+
+  color: #16a34a;
+}
+
+.courierPerformance-footer > div:nth-child(2) svg {
+  color: #94a3b8;
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 1100px) {
+  .courierPerformance-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .courierPerformance-main {
+    grid-template-columns:
+      minmax(0, 1fr);
+  }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 750px) {
+  .courierPerformance-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 14px;
+  }
+
+  .courierPerformance-periods {
+    width: 100%;
+  }
+
+  .courierPerformance-periods button {
+    flex: 1;
+  }
+
+  .courierPerformance-summary {
+    gap: 10px;
+  }
+
+  .courierPerformance-chart {
+    height: 190px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+  .courierPerformance {
+    margin-bottom: 18px;
+  }
+
+  .courierPerformance-heading {
+    gap: 9px;
+  }
+
+  .courierPerformance-titleIcon {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+  }
+
+  .courierPerformance-heading h2 {
+    font-size: 17px;
+  }
+
+  .courierPerformance-heading p {
+    font-size: 11px;
+  }
+
+  .courierPerformance-periods {
+    width: 100%;
+
+    padding: 3px;
+  }
+
+  .courierPerformance-periods button {
+    min-height: 34px;
+
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+
+  .courierPerformance-summary {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .courierPerformance-summaryCard {
+    gap: 9px;
+
+    padding: 12px;
+
+    border-radius: 9px;
+  }
+
+  .courierPerformance-summaryIcon {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+  }
+
+  .courierPerformance-summaryContent span {
+    font-size: 10px;
+  }
+
+  .courierPerformance-summaryContent strong {
+    font-size: 16px;
+  }
+
+  .courierPerformance-summaryContent small {
+    font-size: 9px;
+  }
+
+  .courierPerformance-chartCard,
+  .courierPerformance-outcomeCard,
+  .courierPerformance-earningsCard {
+    padding: 14px;
+
+    border-radius: 10px;
+  }
+
+  .courierPerformance-cardHeader h3 {
+    font-size: 14px;
+  }
+
+  .courierPerformance-cardHeader p {
+    font-size: 10px;
+  }
+
+  .courierPerformance-chart {
+    height: 165px;
+
+    gap: 6px;
+  }
+
+  .courierPerformance-yAxis {
+    width: 25px;
+
+    font-size: 9px;
+  }
+
+  .courierPerformance-bar {
+    width: 65%;
+
+    border-radius: 4px 4px 0 0;
+  }
+
+  .courierPerformance-barGroup > span {
+    font-size: 9px;
+  }
+
+  .courierPerformance-outcomeLabel {
+    font-size: 11px;
+  }
+
+  .courierPerformance-outcome > strong {
+    font-size: 12px;
+  }
+
+  .courierPerformance-earningsTotal strong {
+    font-size: 16px;
+  }
+
+  .courierPerformance-earningsRow {
+    grid-template-columns:
+      45px
+      minmax(0, 1fr)
+      70px;
+
+    gap: 7px;
+  }
+
+  .courierPerformance-earningsDate {
+    font-size: 10px;
+  }
+
+  .courierPerformance-earningsRow strong {
+    font-size: 11px;
+  }
+
+  .courierPerformance-footer {
+    gap: 10px;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .courierPerformance-footer > div {
+    font-size: 10px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 360px) {
+  .courierPerformance-summaryCard {
+    padding: 10px;
+  }
+
+  .courierPerformance-summaryIcon {
+    width: 28px;
+    height: 28px;
+
+    font-size: 12px;
+  }
+
+  .courierPerformance-summaryContent span {
+    font-size: 9px;
+  }
+
+  .courierPerformance-summaryContent strong {
+    font-size: 15px;
+  }
+
+  .courierPerformance-chart {
+    height: 145px;
+  }
+
+  .courierPerformance-earningsRow {
+    grid-template-columns:
+      38px
+      minmax(0, 1fr)
+      62px;
+
+    gap: 6px;
+  }
+
+  .courierPerformance-earningsDate {
+    font-size: 9px;
+  }
+
+  .courierPerformance-earningsRow strong {
+    font-size: 10px;
+  }
+}
+

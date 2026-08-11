@@ -1,0 +1,354 @@
+
+/* ==========================================================
+   COURIER WALLET SEARCH
+========================================================== */
+
+.courierWalletSearch {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  border: 1px solid #e8edf3;
+  border-radius: 11px;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   HEADING
+========================================================== */
+
+.courierWalletSearch-heading {
+  flex-shrink: 0;
+
+  color: #475569;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   SEARCH BOX
+========================================================== */
+
+.courierWalletSearch-box {
+  position: relative;
+
+  flex: 1;
+  min-width: 0;
+
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+}
+
+
+/* ==========================================================
+   SEARCH ICON
+========================================================== */
+
+.courierWalletSearch-searchIcon {
+  position: absolute;
+
+  left: 13px;
+
+  z-index: 1;
+
+  color: #94a3b8;
+
+  font-size: 17px;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================
+   INPUT
+========================================================== */
+
+.courierWalletSearch-box input {
+  width: 100%;
+  height: 100%;
+
+  box-sizing: border-box;
+
+  padding: 0 42px 0 40px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #334155;
+
+  font-family: inherit;
+
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.courierWalletSearch-box input::placeholder {
+  color: #a8b1bd;
+  opacity: 1;
+}
+
+.courierWalletSearch-box input:hover {
+  border-color: #cbd5e1;
+  background: #fcfdff;
+}
+
+.courierWalletSearch-box input:focus {
+  border-color: #94a3b8;
+
+  background: #ffffff;
+
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.12);
+}
+
+
+/* ==========================================================
+   CLEAR BUTTON
+========================================================== */
+
+.courierWalletSearch-clear {
+  position: absolute;
+
+  right: 9px;
+
+  width: 26px;
+  height: 26px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 6px;
+
+  outline: none;
+
+  background: transparent;
+  color: #94a3b8;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.courierWalletSearch-clear svg {
+  font-size: 14px;
+}
+
+.courierWalletSearch-clear:hover {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.courierWalletSearch-clear:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 1px;
+}
+
+
+/* ==========================================================
+   KEYBOARD SHORTCUT
+========================================================== */
+
+.courierWalletSearch-shortcut {
+  position: absolute;
+
+  right: 12px;
+
+  width: 25px;
+  height: 25px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+
+  background: #f8fafc;
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1;
+
+  pointer-events: none;
+}
+
+
+/* ==========================================================
+   RESULT COUNT
+========================================================== */
+
+.courierWalletSearch-resultCount {
+  flex-shrink: 0;
+
+  min-width: 85px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.3;
+
+  text-align: right;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+  .courierWalletSearch {
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    padding: 13px 14px;
+  }
+
+  .courierWalletSearch-heading {
+    width: 100%;
+
+    font-size: 13px;
+  }
+
+  .courierWalletSearch-box {
+    flex: 1;
+
+    min-width: 220px;
+  }
+
+  .courierWalletSearch-resultCount {
+    min-width: auto;
+
+    font-size: 11px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+  .courierWalletSearch {
+    padding: 12px;
+
+    gap: 9px;
+
+    border-radius: 10px;
+  }
+
+  .courierWalletSearch-heading {
+    font-size: 13px;
+  }
+
+  .courierWalletSearch-box {
+    width: 100%;
+
+    flex: none;
+
+    height: 40px;
+  }
+
+  .courierWalletSearch-box input {
+    padding-left: 38px;
+    padding-right: 40px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletSearch-searchIcon {
+    left: 12px;
+
+    font-size: 16px;
+  }
+
+  .courierWalletSearch-resultCount {
+    width: 100%;
+
+    min-width: 0;
+
+    font-size: 11px;
+
+    text-align: left;
+  }
+
+  .courierWalletSearch-clear {
+    right: 8px;
+
+    width: 25px;
+    height: 25px;
+  }
+
+  .courierWalletSearch-shortcut {
+    display: none;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 360px) {
+  .courierWalletSearch {
+    padding: 11px;
+  }
+
+  .courierWalletSearch-heading {
+    font-size: 12px;
+  }
+
+  .courierWalletSearch-box {
+    height: 39px;
+  }
+
+  .courierWalletSearch-box input {
+    padding-left: 36px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletSearch-searchIcon {
+    left: 11px;
+
+    font-size: 15px;
+  }
+
+  .courierWalletSearch-resultCount {
+    font-size: 10px;
+  }
+}

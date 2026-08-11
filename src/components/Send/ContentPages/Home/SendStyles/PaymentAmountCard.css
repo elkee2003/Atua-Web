@@ -1,0 +1,123 @@
+/* =========================================================
+   PAYMENT AMOUNT CARD
+========================================================= */
+
+.paymentAmountCard {
+    width: 100%;
+
+    background: #111827;
+
+    border-radius: 20px;
+
+    padding: 26px 22px;
+
+    margin-bottom: 18px;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.paymentAmountLabel {
+    margin: 0 0 8px;
+
+    font-size: 13px;
+    font-weight: 400;
+
+    color: #D1D5DB;
+}
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.paymentAmountValue {
+    margin: 0;
+
+    font-size: 34px;
+    font-weight: 800;
+
+    color: #FFFFFF;
+
+    letter-spacing: -0.5px;
+
+    line-height: 1.15;
+
+    word-break: break-word;
+}
+
+/* =========================================================
+   ORDER REFERENCE
+========================================================= */
+
+.paymentOrderReferenceContainer {
+    margin-top: 22px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #374151;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.paymentOrderReferenceLabel {
+    font-size: 12px;
+    font-weight: 400;
+
+    color: #9CA3AF;
+
+    white-space: nowrap;
+}
+
+.paymentOrderReference {
+    flex: 1;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #E5E7EB;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .paymentAmountCard {
+        padding: 24px 20px;
+    }
+
+    .paymentAmountValue {
+        font-size: 31px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .paymentAmountCard {
+        padding: 22px 18px;
+
+        border-radius: 18px;
+    }
+
+    .paymentAmountValue {
+        font-size: 28px;
+    }
+
+    .paymentOrderReferenceContainer {
+        margin-top: 18px;
+        padding-top: 14px;
+    }
+
+}

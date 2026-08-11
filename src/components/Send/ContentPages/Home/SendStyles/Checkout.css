@@ -1,78 +1,356 @@
-.checkoutContainer {
-  width: 75vw;
-  margin: 40px auto;
-  padding: 25px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
+/* =========================================================
+   CHECKOUT PAGE
+========================================================= */
+
+.checkoutPage {
+    min-height: 100vh;
+
+    background: #f9fafb;
+
+    padding: 32px;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.checkoutHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.checkoutBackButton {
+    width: 46px;
+    height: 46px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: #ffffff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    cursor: pointer;
+
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    transition: 0.25s ease;
+}
+
+.checkoutBackButton:hover {
+    background: #f3f4f6;
+}
+
+.checkoutBackButton svg {
+    font-size: 22px;
+    color: #111827;
 }
 
 .checkoutTitle {
-  font-size: 22px;
-  font-weight: 700;
-  color: #222;
-  margin-bottom: 20px;
-  text-align: center;
+    margin: 0;
+
+    font-size: 28px;
+    font-weight: 700;
+
+    color: #111827;
 }
 
-.checkoutScroll {
-  overflow-y: auto;
-  max-height: 400px;
-  margin-bottom: 20px;
+.checkoutSubtitle {
+    margin-top: 6px;
+
+    color: #6b7280;
+
+    font-size: 15px;
 }
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.checkoutContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    padding-bottom: 160px;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.checkoutCard {
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.checkoutSectionTitle {
+    margin: 0 0 20px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+/* =========================================================
+   ROWS
+========================================================= */
 
 .checkoutRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-  font-size: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    gap: 20px;
+
+    margin-bottom: 14px;
 }
 
-.checkoutRow strong {
-  color: #444;
+.checkoutRow:last-child {
+    margin-bottom: 0;
 }
 
-.checkoutRow span {
-  color: #666;
-  text-align: right;
-  max-width: 60%;
-  word-wrap: break-word;
+.checkoutLabel {
+    color: #6b7280;
+
+    font-size: 14px;
 }
 
-.checkoutBtn {
-  background-color: #04e43c;
-  color: white;
-  padding: 14px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+.checkoutValue {
+    max-width: 60%;
+
+    text-align: right;
+
+    color: #111827;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    word-break: break-word;
 }
 
-.checkoutBtn:hover {
-  background-color: #05c234;
+/* =========================================================
+   PACKAGE DETAILS
+========================================================= */
+
+.checkoutDetailsText {
+    color: #374151;
+
+    font-size: 14px;
+
+    line-height: 1.7;
 }
 
-@media (max-width: 1300px) {
-  
+/* =========================================================
+   ROUTE
+========================================================= */
+
+.checkoutLocationRow {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
 }
+
+.checkoutLocationText {
+    flex: 1;
+
+    color: #111827;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.checkoutLocationDot {
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+.checkoutLocationDot.pickup {
+    background: #10b981;
+}
+
+.checkoutLocationDot.destination {
+    background: #ef4444;
+}
+
+.checkoutVerticalLine {
+    width: 2px;
+    height: 30px;
+
+    margin: 8px 0 8px 5px;
+
+    background: #e5e7eb;
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.checkoutDivider {
+    height: 1px;
+
+    background: #e5e7eb;
+
+    margin: 18px 0;
+}
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.checkoutTotalLabel {
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.checkoutTotalValue {
+    color: #111827;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.checkoutFooter {
+    position: fixed;
+
+    left: 270px;
+    right: 0;
+    bottom: 0;
+
+    padding: 20px 32px;
+
+    background: #ffffff;
+
+    border-top: 1px solid #e5e7eb;
+
+    z-index: 20;
+}
+
+.checkoutButton {
+    width: 100%;
+    height: 56px;
+
+    border: none;
+    border-radius: 16px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.checkoutButton:hover:not(:disabled) {
+    background: #1f2937;
+}
+
+.checkoutButton:disabled {
+    cursor: not-allowed;
+
+    opacity: 0.7;
+}
+
+.checkoutButton svg {
+    font-size: 18px;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
 @media (max-width: 900px) {
-  .checkoutContainer {
-    width: 100vw;
-  }
 
-  .checkoutBtn {
-    margin-bottom: 4rem;
-  }
+    .checkoutPage {
+        padding: 20px;
+    }
 
+    .checkoutHeader {
+        gap: 16px;
+    }
+
+    .checkoutTitle {
+        font-size: 24px;
+    }
+
+    .checkoutSubtitle {
+        font-size: 14px;
+    }
+
+    .checkoutValue {
+        max-width: 55%;
+    }
+
+    .checkoutFooter {
+        left: 0;
+        padding: 18px 20px calc(18px + 85px);
+    }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 600px) {
+
+    .checkoutPage {
+        padding: 16px;
+    }
+
+    .checkoutCard {
+        padding: 18px;
+    }
+
+    .checkoutRow {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .checkoutValue {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .checkoutButton {
+        font-size: 15px;
+    }
 }

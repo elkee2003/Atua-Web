@@ -52,6 +52,27 @@ const OfferStatus = {
   "REJECTED": "REJECTED"
 };
 
+const CourierPreTransferUploadStatus = {
+  "PENDING": "PENDING",
+  "UPLOADING": "UPLOADING",
+  "COMPLETE": "COMPLETE",
+  "FAILED": "FAILED"
+};
+
+const CourierPostLoadingUploadStatus = {
+  "PENDING": "PENDING",
+  "UPLOADING": "UPLOADING",
+  "COMPLETE": "COMPLETE",
+  "FAILED": "FAILED"
+};
+
+const DropoffUploadStatus = {
+  "PENDING": "PENDING",
+  "UPLOADING": "UPLOADING",
+  "COMPLETE": "COMPLETE",
+  "FAILED": "FAILED"
+};
+
 const MediaUploadStatus = {
   "PENDING": "PENDING",
   "UPLOADING": "UPLOADING",
@@ -76,7 +97,14 @@ const OrderStatus = {
   "DISPUTED": "DISPUTED"
 };
 
-const { CompanyVehicle, CourierCompany, Payout, Transaction, Wallet, Payment, Offer, Order, Courier, User } = initSchema(schema);
+const CourierReportStatus = {
+  "OPEN": "OPEN",
+  "UNDER_REVIEW": "UNDER_REVIEW",
+  "RESOLVED": "RESOLVED",
+  "DISMISSED": "DISMISSED"
+};
+
+const { CompanyVehicle, CourierCompany, Payout, Transaction, Wallet, Payment, Offer, Order, CourierReport, CourierReview, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails } = initSchema(schema);
 
 export {
   CompanyVehicle,
@@ -87,6 +115,8 @@ export {
   Payment,
   Offer,
   Order,
+  CourierReport,
+  CourierReview,
   Courier,
   User,
   FundsStatus,
@@ -98,6 +128,12 @@ export {
   PayoutStatus,
   OwnerType,
   OfferStatus,
+  CourierPreTransferUploadStatus,
+  CourierPostLoadingUploadStatus,
+  DropoffUploadStatus,
   MediaUploadStatus,
-  OrderStatus
+  OrderStatus,
+  CourierReportStatus,
+  VerifyAtuaPaymentResult,
+  VerifiedPaymentDetails
 };

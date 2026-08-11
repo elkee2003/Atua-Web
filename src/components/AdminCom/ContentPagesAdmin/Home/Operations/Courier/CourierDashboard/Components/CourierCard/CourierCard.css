@@ -1,0 +1,747 @@
+/* ==========================================================
+   COURIER CARD
+========================================================== */
+
+.courierCard {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 18px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease;
+}
+
+.courierCard:hover {
+    transform: translateY(-4px);
+
+    border-color: #d9dee7;
+
+    box-shadow:
+        0 14px 35px rgba(15, 23, 42, 0.08);
+}
+
+.courierCard:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+
+    outline-offset: 2px;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierCard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+.courierCard-identity {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.courierCard-avatar {
+    position: relative;
+
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: visible;
+
+    border-radius: 50%;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.courierCard-avatar img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+.courierCard-onlineIndicator {
+    position: absolute;
+
+    right: 0;
+    bottom: 1px;
+
+    width: 12px;
+    height: 12px;
+
+    border: 2px solid #ffffff;
+
+    border-radius: 50%;
+}
+
+.courierCard-online {
+    background: #16a34a;
+}
+
+.courierCard-offline {
+    background: #9ca3af;
+}
+
+.courierCard-identityInfo {
+    min-width: 0;
+}
+
+.courierCard-name {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.courierCard-phone {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 5px;
+
+    color: #7b8492;
+
+    font-size: 12px;
+}
+
+.courierCard-phone svg {
+    font-size: 10px;
+}
+
+/* ==========================================================
+   ONLINE / OFFLINE STATUS
+========================================================== */
+
+.courierCard-status {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.35px;
+}
+
+.courierCard-statusOnline {
+    background: #ecfdf3;
+
+    color: #15803d;
+}
+
+.courierCard-statusOffline {
+    background: #f3f4f6;
+
+    color: #6b7280;
+}
+
+.courierCard-statusDot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+/* ==========================================================
+   TRANSPORT + RATING
+========================================================== */
+
+.courierCard-transportRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 17px;
+}
+
+.courierCard-transportBadge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    background: #eef2ff;
+
+    color: #3730a3;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.courierCard-transportBadge svg {
+    font-size: 11px;
+
+    flex-shrink: 0;
+}
+
+.courierCard-rating {
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+.courierCard-rating svg {
+    color: #f59e0b;
+
+    font-size: 12px;
+}
+
+.courierCard-rating strong {
+    color: #111827;
+
+    font-weight: 700;
+}
+
+.courierCard-rating span {
+    color: #9ca3af;
+}
+
+/* ==========================================================
+   VEHICLE INFORMATION
+========================================================== */
+
+.courierCard-vehicle {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-top: 16px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+}
+
+.courierCard-vehicleItem {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.courierCard-label {
+    color: #8a919d;
+
+    font-size: 10px;
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.35px;
+}
+
+.courierCard-vehicleItem strong {
+    min-width: 0;
+
+    color: #1f2937;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ==========================================================
+   WORKLOAD
+========================================================== */
+
+.courierCard-workload {
+    margin-top: 14px;
+
+    padding: 13px 14px;
+
+    border-top: 1px solid #edf0f4;
+    border-bottom: 1px solid #edf0f4;
+}
+
+.courierCard-workloadHeader {
+    margin-bottom: 10px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.courierCard-workloadStats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+.courierCard-workloadItem {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.courierCard-workloadIcon {
+    width: 28px;
+    height: 28px;
+
+    min-width: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+}
+
+.courierCard-batchIcon {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.courierCard-expressIcon {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+.courierCard-maxiIcon {
+    background: #fff7ed;
+
+    color: #ea580c;
+}
+
+.courierCard-workloadItem > div:last-child {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.courierCard-workloadItem strong {
+    color: #111827;
+
+    font-size: 13px;
+
+    line-height: 1.2;
+}
+
+.courierCard-workloadItem span {
+    margin-top: 2px;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+}
+
+/* ==========================================================
+   APPROVAL STATUS
+========================================================== */
+
+.courierCard-approvalRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 13px;
+}
+
+.courierCard-approval {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    color: #4b5563;
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.courierCard-approval svg {
+    font-size: 13px;
+}
+
+.courierCard-approval:has(svg:first-child) {
+    color: #2563eb;
+}
+
+.courierCard-locationAvailable {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    color: #16a34a;
+
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.courierCard-locationAvailable svg {
+    font-size: 10px;
+}
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.courierCard-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr 1.15fr;
+
+    gap: 8px;
+
+    margin-top: 17px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid #edf0f4;
+}
+
+.courierCard-action {
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 8px 10px;
+
+    border: 1px solid transparent;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.courierCard-action:active {
+    transform: scale(0.97);
+}
+
+.courierCard-action svg {
+    font-size: 11px;
+}
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierCard-viewButton {
+    background: #f8fafc;
+
+    border-color: #e2e8f0;
+
+    color: #374151;
+}
+
+.courierCard-viewButton:hover {
+    background: #f1f5f9;
+
+    border-color: #cbd5e1;
+
+    color: #111827;
+}
+
+/* ==========================================================
+   TRACK BUTTON
+========================================================== */
+
+.courierCard-trackButton {
+    background: #eff6ff;
+
+    border-color: #dbeafe;
+
+    color: #2563eb;
+}
+
+.courierCard-trackButton:hover:not(:disabled) {
+    background: #dbeafe;
+
+    border-color: #bfdbfe;
+
+    color: #1d4ed8;
+}
+
+.courierCard-trackDisabled,
+.courierCard-trackButton:disabled {
+    background: #f3f4f6;
+
+    border-color: #e5e7eb;
+
+    color: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+/* ==========================================================
+   APPROVE
+========================================================== */
+
+.courierCard-approveButton {
+    background: #111827;
+
+    color: #ffffff;
+}
+
+.courierCard-approveButton:hover:not(:disabled) {
+    background: #000000;
+}
+
+/* ==========================================================
+   UNAPPROVE
+========================================================== */
+
+.courierCard-unapproveButton {
+    background: #fef2f2;
+
+    border-color: #fecaca;
+
+    color: #dc2626;
+}
+
+.courierCard-unapproveButton:hover:not(:disabled) {
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+
+    color: #b91c1c;
+}
+
+/* ==========================================================
+   DISABLED ACTION
+========================================================== */
+
+.courierCard-approvalButton:disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+}
+
+/* ==========================================================
+   LOADING SPINNER
+========================================================== */
+
+.courierCard-spinner {
+    width: 11px;
+    height: 11px;
+
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #ffffff;
+
+    border-radius: 50%;
+
+    animation:
+        courierCard-spin 0.7s linear infinite;
+}
+
+@keyframes courierCard-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+    .courierCard {
+        padding: 18px;
+
+        border-radius: 16px;
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 480px) {
+
+    .courierCard-header {
+        align-items: flex-start;
+    }
+
+    .courierCard-avatar {
+        width: 46px;
+        height: 46px;
+
+        min-width: 46px;
+
+        font-size: 18px;
+    }
+
+    .courierCard-name {
+        font-size: 15px;
+    }
+
+    .courierCard-status {
+        padding: 5px 8px;
+
+        font-size: 9px;
+    }
+
+    .courierCard-transportRow {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+    .courierCard-rating {
+        margin-left: 2px;
+    }
+
+    .courierCard-vehicle {
+        padding: 12px;
+
+        gap: 8px;
+    }
+
+    .courierCard-actions {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 7px;
+    }
+
+    .courierCard-approvalButton {
+        grid-column: 1 / -1;
+    }
+
+}
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 360px) {
+
+    .courierCard {
+        padding: 15px;
+    }
+
+    .courierCard-vehicle {
+        grid-template-columns: 1fr;
+    }
+
+    .courierCard-workloadStats {
+        grid-template-columns: 1fr;
+    }
+
+    .courierCard-workloadItem {
+        padding: 3px 0;
+    }
+
+}

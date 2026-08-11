@@ -8,9 +8,9 @@ function Profile() {
   const {dbUser} = useAuthContext();
 
   // Replace with real admin check later
-  if (dbUser?.id !== "dslhsghioisdisoissssiso") {
-    return <Unauthorized />;
-  }
+  // if (dbUser?.id !== "dslhsghioisdisoissssiso") {
+  //   return <Unauthorized />;
+  // }
 
   return (
     <div >

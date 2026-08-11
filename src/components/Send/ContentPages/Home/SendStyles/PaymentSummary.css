@@ -1,0 +1,136 @@
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+.paymentSummaryCard {
+    width: 100%;
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 16px;
+
+    padding: 18px;
+
+    margin-bottom: 16px;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.paymentSummaryTitle {
+    margin: 0 0 18px;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* =========================================================
+   ROW
+========================================================= */
+
+.paymentSummaryRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 20px;
+
+    margin-bottom: 14px;
+}
+
+.paymentSummaryLabel {
+    font-size: 14px;
+    font-weight: 400;
+
+    color: #6B7280;
+}
+
+.paymentSummaryValue {
+    font-size: 14px;
+    font-weight: 600;
+
+    color: #374151;
+
+    text-align: right;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   DIVIDER
+========================================================= */
+
+.paymentSummaryDivider {
+    height: 1px;
+
+    background: #E5E7EB;
+
+    margin-top: 4px;
+    margin-bottom: 16px;
+}
+
+/* =========================================================
+   TOTAL
+========================================================= */
+
+.paymentSummaryTotalLabel {
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.paymentSummaryTotalValue {
+    font-size: 18px;
+    font-weight: 800;
+
+    color: #111827;
+
+    white-space: nowrap;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .paymentSummaryCard {
+        padding: 18px 16px;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    .paymentSummaryCard {
+        padding: 16px;
+
+        border-radius: 14px;
+    }
+
+    .paymentSummaryTitle {
+        font-size: 14px;
+    }
+
+    .paymentSummaryLabel,
+    .paymentSummaryValue {
+        font-size: 13px;
+    }
+
+    .paymentSummaryTotalLabel {
+        font-size: 15px;
+    }
+
+    .paymentSummaryTotalValue {
+        font-size: 17px;
+    }
+
+}

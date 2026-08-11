@@ -1,0 +1,425 @@
+/* ==========================================================
+   ADMIN HOME
+========================================================== */
+
+.adminHome {
+    min-height: 100vh;
+    padding: 36px;
+    background: #f7f9fc;
+    box-sizing: border-box;
+    font-family: Inter, sans-serif;
+}
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.adminHomeLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+    font-size: 18px;
+    font-weight: 600;
+
+    color: #6b7280;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.adminHomeHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 40px;
+}
+
+.adminHomeHeader h1 {
+    margin: 0;
+
+    font-size: 34px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.adminHomeHeader p {
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 15px;
+}
+
+/* ==========================================================
+   SECTION
+========================================================== */
+
+.adminHomeSection {
+    margin-bottom: 50px;
+}
+
+.adminHomeSection h2 {
+    margin-bottom: 18px;
+
+    font-size: 22px;
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.adminHomeGrid {
+
+    display: grid;
+
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+
+    gap: 22px;
+
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.adminHomeCard {
+
+    background: #fff;
+
+    border-radius: 20px;
+
+    padding: 24px;
+
+    cursor: pointer;
+
+    transition: .28s ease;
+
+    border: 1px solid #edf0f5;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    min-height: 200px;
+
+    position: relative;
+
+    overflow: hidden;
+
+}
+
+.adminHomeCard:hover{
+
+    transform: translateY(-8px);
+
+    box-shadow:
+    0 20px 40px rgba(15,23,42,.08);
+
+}
+
+/* ==========================================================
+   TOP
+========================================================== */
+
+.adminHomeCardTop{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.adminHomeCardTop svg:last-child{
+
+    font-size:18px;
+
+    color:#9ca3af;
+
+    transition:.25s;
+
+}
+
+.adminHomeCard:hover .adminHomeCardTop svg:last-child{
+
+    transform:translateX(5px);
+
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.adminHomeIcon{
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:18px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:28px;
+
+    color:white;
+
+}
+
+/* ==========================================================
+   TEXT
+========================================================== */
+
+.adminHomeCard h3{
+
+    margin:0;
+
+    margin-bottom:8px;
+
+    font-size:20px;
+
+    color:#111827;
+
+}
+
+.adminHomeCard p{
+
+    margin:0;
+
+    line-height:24px;
+
+    color:#6b7280;
+
+    font-size:14px;
+
+}
+
+.adminHomeCard span{
+
+    margin-top:24px;
+
+    display:inline-block;
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+/* ==========================================================
+   COLORS
+========================================================== */
+
+.adminHomeCard.blue .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #3b82f6,
+    #2563eb);
+
+}
+
+.adminHomeCard.purple .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #8b5cf6,
+    #6d28d9);
+
+}
+
+.adminHomeCard.orange .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #fb923c,
+    #ea580c);
+
+}
+
+.adminHomeCard.green .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #10b981,
+    #059669);
+
+}
+
+.adminHomeCard.emerald .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #34d399,
+    #059669);
+
+}
+
+.adminHomeCard.teal .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #14b8a6,
+    #0f766e);
+
+}
+
+.adminHomeCard.indigo .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #6366f1,
+    #4338ca);
+
+}
+
+.adminHomeCard.yellow .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #fbbf24,
+    #f59e0b);
+
+}
+
+.adminHomeCard.red .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #ef4444,
+    #dc2626);
+
+}
+
+.adminHomeCard.gray .adminHomeIcon{
+
+    background:linear-gradient(
+    135deg,
+    #64748b,
+    #334155);
+
+}
+
+/* ==========================================================
+   CARD GLOW
+========================================================== */
+
+.adminHomeCard::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+
+    height:180px;
+
+    border-radius:50%;
+
+    top:-90px;
+
+    right:-90px;
+
+    background:rgba(0,0,0,.025);
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media(max-width:1000px){
+
+    .adminHome{
+
+        padding:26px;
+
+    }
+
+    .adminHomeGrid{
+
+        grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media(max-width:700px){
+
+    .adminHome{
+
+        padding:18px;
+
+    }
+
+    .adminHomeHeader{
+
+        margin-bottom:28px;
+
+    }
+
+    .adminHomeHeader h1{
+
+        font-size:28px;
+
+    }
+
+    .adminHomeSection{
+
+        margin-bottom:35px;
+
+    }
+
+    .adminHomeSection h2{
+
+        font-size:20px;
+
+    }
+
+    .adminHomeGrid{
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+
+    }
+
+    .adminHomeCard{
+
+        min-height:170px;
+
+        padding:20px;
+
+    }
+
+    .adminHomeCard span{
+
+        font-size:30px;
+
+    }
+
+}

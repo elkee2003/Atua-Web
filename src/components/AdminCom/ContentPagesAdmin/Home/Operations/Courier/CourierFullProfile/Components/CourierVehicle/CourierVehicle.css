@@ -1,0 +1,617 @@
+/* ==========================================================
+   COURIER VEHICLE
+========================================================== */
+
+.courierVehicle {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-top: 20px;
+
+    padding: 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 18px;
+
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.035);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierVehicle-header {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #eef1f5;
+}
+
+.courierVehicle-headerIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    font-size: 14px;
+}
+
+.courierVehicle-headerContent {
+    min-width: 0;
+}
+
+.courierVehicle-title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.courierVehicle-description {
+    margin: 3px 0 0;
+
+    color: #7b8492;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+/* ==========================================================
+   VEHICLE SUMMARY
+========================================================== */
+
+.courierVehicle-summary {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-top: 20px;
+
+    padding: 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 13px;
+}
+
+/* ==========================================================
+   SUMMARY ICON
+========================================================== */
+
+.courierVehicle-summaryIcon {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #ea580c;
+
+    font-size: 21px;
+
+    box-shadow:
+        0 2px 7px rgba(15, 23, 42, 0.06);
+}
+
+/* ==========================================================
+   SUMMARY INFORMATION
+========================================================== */
+
+.courierVehicle-summaryInfo {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.courierVehicle-summaryLabel {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+.courierVehicle-summaryName {
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-size: 15px;
+
+    font-weight: 750;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierVehicle-summaryMeta {
+    overflow: hidden;
+
+    color: #64748b;
+
+    font-size: 10px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+/* ==========================================================
+   SUMMARY STATUS
+========================================================== */
+
+.courierVehicle-summaryStatus {
+    flex-shrink: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 6px;
+}
+
+/* ==========================================================
+   APPROVAL STATUS
+========================================================== */
+
+.courierVehicle-statusBadge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.courierVehicle-statusApproved {
+    background: #ecfdf5;
+
+    color: #047857;
+}
+
+.courierVehicle-statusPending {
+    background: #fffbeb;
+
+    color: #a16207;
+}
+
+.courierVehicle-statusDot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+/* ==========================================================
+   ONLINE STATUS
+========================================================== */
+
+.courierVehicle-onlineBadge {
+    padding: 4px 8px;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.courierVehicle-online {
+    background: #effdf5;
+
+    color: #059669;
+}
+
+.courierVehicle-offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+/* ==========================================================
+   VEHICLE DETAILS SECTION
+========================================================== */
+
+.courierVehicle-section {
+    padding: 20px 0;
+
+    border-bottom: 1px solid #eef1f5;
+}
+
+.courierVehicle-sectionTitle {
+    margin: 0 0 13px;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.04em;
+}
+
+/* ==========================================================
+   DETAILS GRID
+========================================================== */
+
+.courierVehicle-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+/* ==========================================================
+   INFORMATION ITEM
+========================================================== */
+
+.courierVehicle-item {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-height: 58px;
+
+    padding: 10px 12px;
+
+    box-sizing: border-box;
+
+    background: #f8fafc;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 10px;
+}
+
+.courierVehicle-itemIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    box-shadow:
+        0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+.courierVehicle-itemContent {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.courierVehicle-itemLabel {
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.03em;
+
+    line-height: 1.3;
+}
+
+.courierVehicle-itemValue {
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierVehicle-itemValueMuted {
+    color: #94a3b8;
+
+    font-weight: 500;
+}
+
+/* ==========================================================
+   NOTE
+========================================================== */
+
+.courierVehicle-note {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    margin-top: 20px;
+
+    padding: 13px 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+}
+
+.courierVehicle-noteIcon {
+    width: 31px;
+    height: 31px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    font-size: 12px;
+}
+
+.courierVehicle-noteContent {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.courierVehicle-noteContent strong {
+    color: #334155;
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+.courierVehicle-noteContent span {
+    color: #64748b;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 1100px) {
+
+    .courierVehicle {
+        padding: 22px;
+    }
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierVehicle {
+        padding: 20px;
+    }
+
+    .courierVehicle-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierVehicle {
+        margin-top: 15px;
+
+        padding: 17px;
+
+        border-radius: 15px;
+    }
+
+    .courierVehicle-header {
+        padding-bottom: 15px;
+    }
+
+    .courierVehicle-headerIcon {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 9px;
+
+        font-size: 12px;
+    }
+
+    .courierVehicle-title {
+        font-size: 15px;
+    }
+
+    .courierVehicle-description {
+        font-size: 10px;
+    }
+
+    .courierVehicle-summary {
+        align-items: flex-start;
+
+        padding: 13px;
+
+        gap: 11px;
+    }
+
+    .courierVehicle-summaryIcon {
+        width: 44px;
+        height: 44px;
+
+        border-radius: 10px;
+
+        font-size: 17px;
+    }
+
+    .courierVehicle-summaryName {
+        font-size: 13px;
+    }
+
+    .courierVehicle-summaryStatus {
+        align-items: flex-start;
+    }
+
+    .courierVehicle-grid {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+    .courierVehicle-item {
+        min-height: 54px;
+
+        padding: 9px 10px;
+    }
+
+    .courierVehicle-note {
+        align-items: flex-start;
+
+        padding: 12px;
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierVehicle {
+        padding: 14px;
+    }
+
+    .courierVehicle-summary {
+        flex-wrap: wrap;
+    }
+
+    .courierVehicle-summaryStatus {
+        width: 100%;
+
+        flex-direction: row;
+
+        align-items: center;
+    }
+
+    .courierVehicle-item {
+        gap: 9px;
+    }
+
+    .courierVehicle-itemIcon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .courierVehicle-itemValue {
+        font-size: 11px;
+    }
+
+}

@@ -1,0 +1,385 @@
+/* ==========================================================
+   COURIER PROFILE STATS
+========================================================== */
+
+.courierProfileStats {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-top: 20px;
+
+    padding: 22px 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 18px;
+
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.035);
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierProfileStats-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+}
+
+.courierProfileStats-title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.courierProfileStats-description {
+    margin: 4px 0 0;
+
+    color: #7b8492;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.courierProfileStats-grid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.courierProfileStats-card {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+
+    padding: 15px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 13px;
+
+    background: #fafbfc;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierProfileStats-card:hover {
+    transform: translateY(-2px);
+
+    border-color: #dfe5ec;
+
+    box-shadow:
+        0 5px 16px rgba(15, 23, 42, 0.05);
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierProfileStats-icon {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+/* ==========================================================
+   CARD CONTENT
+========================================================== */
+
+.courierProfileStats-content {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+.courierProfileStats-label {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+.courierProfileStats-value {
+    display: block;
+
+    overflow: hidden;
+
+    color: #111827;
+
+    font-size: 19px;
+
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierProfileStats-description {
+    overflow: hidden;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+/* ==========================================================
+   ORDERS
+========================================================== */
+
+.courierProfileStats-card-orders
+    .courierProfileStats-icon {
+    background: #eef2ff;
+
+    color: #4f46e5;
+}
+
+/* ==========================================================
+   COMPLETED
+========================================================== */
+
+.courierProfileStats-card-completed
+    .courierProfileStats-icon {
+    background: #ecfdf5;
+
+    color: #059669;
+}
+
+/* ==========================================================
+   ACTIVE
+========================================================== */
+
+.courierProfileStats-card-active
+    .courierProfileStats-icon {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+/* ==========================================================
+   CANCELLED
+========================================================== */
+
+.courierProfileStats-card-cancelled
+    .courierProfileStats-icon {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+/* ==========================================================
+   RATING
+========================================================== */
+
+.courierProfileStats-card-rating
+    .courierProfileStats-icon {
+    background: #fffbeb;
+
+    color: #f59e0b;
+}
+
+/* ==========================================================
+   ORDER VALUE
+========================================================== */
+
+.courierProfileStats-card-value
+    .courierProfileStats-icon {
+    background: #f0fdf4;
+
+    color: #16a34a;
+}
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 1200px) {
+
+    .courierProfileStats-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierProfileStats {
+        padding: 20px;
+    }
+
+    .courierProfileStats-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .courierProfileStats-card {
+        padding: 13px;
+
+        gap: 9px;
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierProfileStats {
+        margin-top: 15px;
+
+        padding: 17px;
+
+        border-radius: 15px;
+    }
+
+    .courierProfileStats-header {
+        margin-bottom: 14px;
+    }
+
+    .courierProfileStats-title {
+        font-size: 15px;
+    }
+
+    .courierProfileStats-description {
+        font-size: 10px;
+    }
+
+    .courierProfileStats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 9px;
+    }
+
+    .courierProfileStats-card {
+        padding: 12px;
+
+        gap: 9px;
+    }
+
+    .courierProfileStats-icon {
+        width: 31px;
+        height: 31px;
+
+        border-radius: 8px;
+
+        font-size: 11px;
+    }
+
+    .courierProfileStats-value {
+        font-size: 17px;
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierProfileStats {
+        padding: 14px;
+    }
+
+    .courierProfileStats-grid {
+        gap: 7px;
+    }
+
+    .courierProfileStats-card {
+        padding: 10px;
+
+        gap: 7px;
+    }
+
+    .courierProfileStats-icon {
+        width: 28px;
+        height: 28px;
+
+        font-size: 10px;
+    }
+
+    .courierProfileStats-value {
+        font-size: 15px;
+    }
+
+    .courierProfileStats-label {
+        font-size: 9px;
+    }
+
+    .courierProfileStats-description {
+        font-size: 8px;
+    }
+
+}

@@ -1,0 +1,804 @@
+/* ==========================================================
+   COURIER PROFILE HEADER
+========================================================== */
+
+.courierProfileHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 26px 28px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.035);
+}
+
+
+/* ==========================================================
+   TOP SECTION
+========================================================== */
+
+.courierProfileHeader-top {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 24px;
+}
+
+
+/* ==========================================================
+   IDENTITY
+========================================================== */
+
+.courierProfileHeader-identity {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierProfileHeader-avatar {
+    width: 88px;
+    height: 88px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #111827;
+
+    border: 4px solid #f1f5f9;
+
+    box-shadow:
+        0 0 0 1px #e2e8f0,
+        0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+
+.courierProfileHeader-avatarImage {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+.courierProfileHeader-initials {
+    color: #ffffff;
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* ==========================================================
+   INFORMATION
+========================================================== */
+
+.courierProfileHeader-info {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   NAME
+========================================================== */
+
+.courierProfileHeader-nameRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+}
+
+
+.courierProfileHeader-name {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 24px;
+
+    font-weight: 750;
+
+    line-height: 1.25;
+
+    word-break: break-word;
+}
+
+
+.courierProfileHeader-verifiedIcon {
+    flex-shrink: 0;
+
+    color: #2563eb;
+
+    font-size: 17px;
+}
+
+
+/* ==========================================================
+   PHONE
+========================================================== */
+
+.courierProfileHeader-phone {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+
+.courierProfileHeader-phone svg {
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   TRANSPORT / VEHICLE
+========================================================== */
+
+.courierProfileHeader-meta {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 2px;
+}
+
+
+.courierProfileHeader-transport,
+.courierProfileHeader-vehicle {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 25px;
+
+    padding: 4px 9px;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    white-space: nowrap;
+}
+
+
+.courierProfileHeader-transport {
+    background: #eef2ff;
+
+    color: #3730a3;
+}
+
+
+.courierProfileHeader-vehicle {
+    background: #f1f5f9;
+
+    color: #475569;
+}
+
+
+/* ==========================================================
+   ONLINE STATUS
+========================================================== */
+
+.courierProfileHeader-onlineStatus {
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.courierProfileHeader-online {
+    background: #ecfdf5;
+
+    color: #047857;
+}
+
+
+.courierProfileHeader-offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+.courierProfileHeader-statusDot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+.courierProfileHeader-online
+.courierProfileHeader-statusDot {
+    box-shadow:
+        0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+
+/* ==========================================================
+   BOTTOM SECTION
+========================================================== */
+
+.courierProfileHeader-bottom {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-top: 25px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #eef1f5;
+}
+
+
+/* ==========================================================
+   STATUS GROUP
+========================================================== */
+
+.courierProfileHeader-statusGroup {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 9px;
+}
+
+
+/* ==========================================================
+   APPROVAL BADGE
+========================================================== */
+
+.courierProfileHeader-approvalBadge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-height: 30px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+
+.courierProfileHeader-approved {
+    background: #ecfdf5;
+
+    color: #047857;
+}
+
+
+.courierProfileHeader-pending {
+    background: #fffbeb;
+
+    color: #a16207;
+}
+
+
+.courierProfileHeader-approvalBadge svg {
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   RATING
+========================================================== */
+
+.courierProfileHeader-rating {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    min-height: 30px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    background: #fffbeb;
+
+    color: #92400e;
+
+    font-size: 11px;
+}
+
+
+.courierProfileHeader-rating svg {
+    color: #f59e0b;
+
+    font-size: 12px;
+}
+
+
+.courierProfileHeader-rating strong {
+    color: #78350f;
+
+    font-size: 12px;
+}
+
+
+.courierProfileHeader-rating span {
+    color: #a16207;
+}
+
+
+/* ==========================================================
+   LOCATION
+========================================================== */
+
+.courierProfileHeader-location {
+    min-width: 0;
+
+    max-width: 260px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    min-height: 30px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+
+.courierProfileHeader-location svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+.courierProfileHeader-location span {
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ACTIONS
+========================================================== */
+
+.courierProfileHeader-actions {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+
+/* ==========================================================
+   COMMON BUTTONS
+========================================================== */
+
+.courierProfileHeader-trackButton,
+.courierProfileHeader-approvalButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 9px 14px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierProfileHeader-trackButton {
+    border: 1px solid #dbe4ef;
+
+    background: #f8fafc;
+
+    color: #334155;
+}
+
+
+.courierProfileHeader-trackButton:hover:not(:disabled) {
+    background: #eef2f7;
+
+    border-color: #cbd5e1;
+
+    color: #111827;
+}
+
+
+.courierProfileHeader-trackButton:active:not(:disabled),
+.courierProfileHeader-approvalButton:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+
+.courierProfileHeader-trackButton svg {
+    font-size: 12px;
+}
+
+
+/* ==========================================================
+   APPROVE BUTTON
+========================================================== */
+
+.courierProfileHeader-approveButton {
+    border: 1px solid #111827;
+
+    background: #111827;
+
+    color: #ffffff;
+}
+
+
+.courierProfileHeader-approveButton:hover:not(:disabled) {
+    background: #000000;
+
+    border-color: #000000;
+}
+
+
+/* ==========================================================
+   UNAPPROVE BUTTON
+========================================================== */
+
+.courierProfileHeader-unapproveButton {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+
+.courierProfileHeader-unapproveButton:hover:not(:disabled) {
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+
+    color: #991b1b;
+}
+
+
+/* ==========================================================
+   DISABLED BUTTONS
+========================================================== */
+
+.courierProfileHeader-trackButton:disabled,
+.courierProfileHeader-approvalButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   BUTTON SPINNER
+========================================================== */
+
+.courierProfileHeader-buttonSpinner {
+    width: 12px;
+    height: 12px;
+
+    border: 2px solid currentColor;
+
+    border-right-color: transparent;
+
+    border-radius: 50%;
+
+    animation:
+        courierProfileHeader-spin
+        0.7s linear infinite;
+}
+
+
+@keyframes courierProfileHeader-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   FOCUS
+========================================================== */
+
+.courierProfileHeader-trackButton:focus-visible,
+.courierProfileHeader-approvalButton:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.18);
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierProfileHeader {
+        padding: 22px;
+    }
+
+
+    .courierProfileHeader-bottom {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .courierProfileHeader-actions {
+        width: 100%;
+    }
+
+
+    .courierProfileHeader-trackButton,
+    .courierProfileHeader-approvalButton {
+        flex: 1;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierProfileHeader {
+        padding: 18px;
+
+        border-radius: 15px;
+    }
+
+
+    .courierProfileHeader-top {
+        flex-direction: column;
+
+        gap: 15px;
+    }
+
+
+    .courierProfileHeader-identity {
+        width: 100%;
+
+        align-items: flex-start;
+
+        gap: 13px;
+    }
+
+
+    .courierProfileHeader-avatar {
+        width: 68px;
+        height: 68px;
+
+        border-width: 3px;
+    }
+
+
+    .courierProfileHeader-initials {
+        font-size: 22px;
+    }
+
+
+    .courierProfileHeader-name {
+        font-size: 19px;
+    }
+
+
+    .courierProfileHeader-verifiedIcon {
+        font-size: 14px;
+    }
+
+
+    .courierProfileHeader-onlineStatus {
+        align-self: flex-start;
+    }
+
+
+    .courierProfileHeader-bottom {
+        margin-top: 19px;
+
+        padding-top: 17px;
+    }
+
+
+    .courierProfileHeader-statusGroup {
+        width: 100%;
+    }
+
+
+    .courierProfileHeader-location {
+        max-width: 100%;
+    }
+
+
+    .courierProfileHeader-actions {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+
+    .courierProfileHeader-trackButton,
+    .courierProfileHeader-approvalButton {
+        width: 100%;
+
+        flex: none;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierProfileHeader {
+        padding: 15px;
+    }
+
+
+    .courierProfileHeader-identity {
+        gap: 11px;
+    }
+
+
+    .courierProfileHeader-avatar {
+        width: 60px;
+        height: 60px;
+    }
+
+
+    .courierProfileHeader-name {
+        font-size: 17px;
+    }
+
+
+    .courierProfileHeader-phone {
+        font-size: 12px;
+    }
+
+
+    .courierProfileHeader-statusGroup {
+        gap: 6px;
+    }
+
+
+    .courierProfileHeader-approvalBadge,
+    .courierProfileHeader-rating,
+    .courierProfileHeader-location {
+        font-size: 10px;
+    }
+
+}

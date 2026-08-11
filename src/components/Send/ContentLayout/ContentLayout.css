@@ -1,24 +1,53 @@
+/* ===========================
+   Client Layout
+=========================== */
+
+:root {
+    --client-sidebar-width: 270px;
+    --client-bottom-nav-height: 85px;
+}
+
 /* Layout container */
+
 .client-layoutCon {
     display: flex;
-}
-  
-/* Main content area */
-.client-main-content {
-    margin-left: 270px; /* Same as sidebar width + 20px for padding */
-    /* padding: 20px; */
+    width: 100%;
     min-height: 100vh;
-    max-width: 100%;
-    /* width: 100vw; */
-    overflow: hidden;
-    color: #333;
-    /* background-color: rgb(0, 153, 255); */
 }
-  
-/* Responsive adjustments */
+
+/* ===========================
+   Main Content
+=========================== */
+
+.client-main-content {
+    margin-left: var(--client-sidebar-width);
+    width: calc(100% - var(--client-sidebar-width));
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    color: #333;
+    background: #fff;
+}
+
+/* ===========================
+   Tablet & Mobile
+=========================== */
+
 @media (max-width: 900px) {
+
     .client-main-content {
-      margin-left: 0; 
-      padding: 30;
+        margin-left: 0;
+        width: 100%;
+
+        /* Prevent content from hiding behind the bottom navigation */
+        padding-bottom: var(--client-bottom-nav-height);
+
+        overflow-x: hidden;
+        overflow-y: auto;
     }
+
 }

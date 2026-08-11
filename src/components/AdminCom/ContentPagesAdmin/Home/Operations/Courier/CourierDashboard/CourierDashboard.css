@@ -1,0 +1,222 @@
+/* ==========================================================
+   COURIER DASHBOARD
+========================================================== */
+
+.courierDashboard {
+    width: 100%;
+    min-height: 100vh;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: #f7f9fc;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierDashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 24px;
+
+    margin-bottom: 30px;
+}
+
+.courierDashboard-headerLeft {
+    flex: 1;
+}
+
+.courierDashboard-title {
+    margin: 0;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: #151515;
+}
+
+.courierDashboard-description {
+    margin-top: 8px;
+
+    font-size: 15px;
+    line-height: 1.6;
+
+    color: #666;
+}
+
+.courierDashboard-headerRight {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.courierDashboard-refreshButton {
+    border: none;
+
+    padding: 12px 22px;
+
+    border-radius: 10px;
+
+    background: #111827;
+    color: #ffffff;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.courierDashboard-refreshButton:hover {
+    background: #000;
+}
+
+.courierDashboard-refreshButton:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.courierDashboard-grid {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+
+    gap: 22px;
+
+    margin-top: 30px;
+}
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierDashboard-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 300px;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    color: #666;
+}
+
+/* ==========================================================
+   EMPTY
+========================================================== */
+
+.courierDashboard-empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 350px;
+
+    text-align: center;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width:1100px){
+
+    .courierDashboard{
+
+        padding:24px;
+
+    }
+
+    .courierDashboard-grid{
+
+        grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+
+        gap:18px;
+
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width:900px){
+
+    .courierDashboard{
+
+        padding:20px;
+
+    }
+
+    .courierDashboard-header{
+
+        flex-direction:column;
+        align-items:flex-start;
+
+        gap:18px;
+
+    }
+
+    .courierDashboard-headerRight{
+
+        width:100%;
+
+    }
+
+    .courierDashboard-refreshButton{
+
+        width:100%;
+
+    }
+
+    .courierDashboard-grid{
+
+        grid-template-columns:1fr;
+
+        gap:18px;
+
+    }
+
+}
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width:500px){
+
+    .courierDashboard{
+
+        padding:16px;
+
+    }
+
+    .courierDashboard-title{
+
+        font-size:1.6rem;
+
+    }
+
+    .courierDashboard-description{
+
+        font-size:14px;
+
+    }
+
+}

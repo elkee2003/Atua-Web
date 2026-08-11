@@ -1,0 +1,700 @@
+/* ==========================================================
+   COURIER ORDERS HEADER
+========================================================== */
+
+.courierOrdersHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+
+    padding: 20px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ==========================================================
+   TOP NAVIGATION
+========================================================== */
+
+.courierOrdersHeader-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 16px;
+
+    border-bottom: 1px solid #eef0f4;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.courierOrdersHeader-backButton {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 9px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #64748b;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierOrdersHeader-backButton svg {
+    font-size: 9px;
+}
+
+
+.courierOrdersHeader-backButton:hover {
+    background: #f8fafc;
+
+    color: #1e293b;
+}
+
+
+/* ==========================================================
+   HEADER ACTIONS
+========================================================== */
+
+.courierOrdersHeader-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.courierOrdersHeader-refreshButton,
+.courierOrdersHeader-trackButton {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 30px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierOrdersHeader-refreshButton {
+    border: 1px solid #e2e8f0;
+
+    background: #ffffff;
+
+    color: #475569;
+}
+
+
+.courierOrdersHeader-refreshButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+}
+
+
+.courierOrdersHeader-refreshButton:active,
+.courierOrdersHeader-trackButton:active {
+    transform: translateY(1px);
+}
+
+
+.courierOrdersHeader-refreshButton:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+.courierOrdersHeader-refreshIcon {
+    font-size: 8px;
+}
+
+
+.courierOrdersHeader-refreshIcon.spinning {
+    animation:
+        courierOrdersHeader-spin
+        0.8s linear infinite;
+}
+
+
+@keyframes courierOrdersHeader-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   LIVE TRACK BUTTON
+========================================================== */
+
+.courierOrdersHeader-trackButton {
+    border: 1px solid #1e293b;
+
+    background: #1e293b;
+
+    color: #ffffff;
+}
+
+
+.courierOrdersHeader-trackButton:hover {
+    background: #334155;
+
+    border-color: #334155;
+}
+
+
+.courierOrdersHeader-trackButton svg {
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   COURIER PROFILE
+========================================================== */
+
+.courierOrdersHeader-profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 18px 0;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierOrdersHeader-avatar {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 50%;
+
+    background: #1e293b;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.courierOrdersHeader-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+/* ==========================================================
+   COURIER INFORMATION
+========================================================== */
+
+.courierOrdersHeader-info {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* ==========================================================
+   NAME ROW
+========================================================== */
+
+.courierOrdersHeader-nameRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+}
+
+
+.courierOrdersHeader-nameRow h1 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ONLINE BADGE
+========================================================== */
+
+.courierOrdersHeader-onlineBadge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-shrink: 0;
+
+    padding: 4px 7px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+
+    font-weight: 700;
+}
+
+
+.courierOrdersHeader-onlineBadge > span {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+}
+
+
+/* ONLINE */
+
+.courierOrdersHeader-onlineBadge.online {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+
+.courierOrdersHeader-onlineBadge.online > span {
+    background: #22c55e;
+}
+
+
+/* OFFLINE */
+
+.courierOrdersHeader-onlineBadge.offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+.courierOrdersHeader-onlineBadge.offline > span {
+    background: #94a3b8;
+}
+
+
+/* ==========================================================
+   COURIER DETAILS
+========================================================== */
+
+.courierOrdersHeader-details {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    color: #64748b;
+
+    font-size: 8px;
+
+    line-height: 1.4;
+}
+
+
+.courierOrdersHeader-separator {
+    color: #cbd5e1;
+}
+
+
+/* ==========================================================
+   PHONE
+========================================================== */
+
+.courierOrdersHeader-phone {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #94a3b8;
+
+    font-size: 7px;
+}
+
+
+.courierOrdersHeader-phone svg {
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   APPROVAL
+========================================================== */
+
+.courierOrdersHeader-approval {
+    min-width: 105px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+}
+
+
+.courierOrdersHeader-approval span {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.courierOrdersHeader-approval strong {
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.courierOrdersHeader-approval strong.approved {
+    color: #2563eb;
+}
+
+
+.courierOrdersHeader-approval strong.pending {
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   PAGE TITLE
+========================================================== */
+
+.courierOrdersHeader-pageTitle {
+    padding-top: 2px;
+}
+
+
+.courierOrdersHeader-pageTitle > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+
+.courierOrdersHeader-titleIcon {
+    width: 29px;
+    height: 29px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 10px;
+}
+
+
+.courierOrdersHeader-pageTitle h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.courierOrdersHeader-pageTitle p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierOrdersHeader {
+        padding: 16px;
+
+        border-radius: 14px;
+    }
+
+
+    .courierOrdersHeader-profile {
+        padding: 15px 0;
+    }
+
+
+    .courierOrdersHeader-approval {
+        min-width: 95px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierOrdersHeader {
+        margin-bottom: 14px;
+
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .courierOrdersHeader-top {
+        align-items: flex-start;
+    }
+
+
+    .courierOrdersHeader-actions {
+        gap: 5px;
+    }
+
+
+    .courierOrdersHeader-refreshButton span {
+        display: none;
+    }
+
+
+    .courierOrdersHeader-refreshButton {
+        width: 30px;
+
+        padding: 7px;
+    }
+
+
+    .courierOrdersHeader-trackButton {
+        padding: 7px 9px;
+    }
+
+
+    .courierOrdersHeader-profile {
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+
+        gap: 10px;
+    }
+
+
+    .courierOrdersHeader-avatar {
+        width: 48px;
+        height: 48px;
+
+        font-size: 15px;
+    }
+
+
+    .courierOrdersHeader-nameRow h1 {
+        font-size: 14px;
+    }
+
+
+    .courierOrdersHeader-details {
+        font-size: 7px;
+    }
+
+
+    .courierOrdersHeader-approval {
+        width: 100%;
+
+        min-width: 0;
+
+        box-sizing: border-box;
+
+        flex-direction: row;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        padding: 8px 10px;
+    }
+
+
+    .courierOrdersHeader-pageTitle h2 {
+        font-size: 11px;
+    }
+
+
+    .courierOrdersHeader-pageTitle p {
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierOrdersHeader-backButton span {
+        display: none;
+    }
+
+
+    .courierOrdersHeader-backButton {
+        padding: 7px;
+    }
+
+
+    .courierOrdersHeader-trackButton span {
+        display: none;
+    }
+
+
+    .courierOrdersHeader-trackButton {
+        width: 30px;
+
+        padding: 7px;
+    }
+
+
+    .courierOrdersHeader-nameRow {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+
+    .courierOrdersHeader-details {
+        display: block;
+    }
+
+
+    .courierOrdersHeader-separator {
+        margin: 0 3px;
+    }
+
+}

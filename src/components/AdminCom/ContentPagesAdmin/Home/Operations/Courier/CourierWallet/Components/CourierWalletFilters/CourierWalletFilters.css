@@ -1,0 +1,431 @@
+
+/* ==========================================================
+   COURIER WALLET FILTERS
+========================================================== */
+
+.courierWalletFilters {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 18px;
+
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  border: 1px solid #e8edf3;
+  border-radius: 11px;
+
+  background: #ffffff;
+}
+
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.courierWalletFilters-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-end;
+
+  gap: 14px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierWalletFilters-title {
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding-right: 8px;
+
+  color: #475569;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.courierWalletFilters-icon {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+
+/* ==========================================================
+   FIELD
+========================================================== */
+
+.courierWalletFilters-field {
+  min-width: 150px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.courierWalletFilters-field label {
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.courierWalletFilters-field select {
+  width: 100%;
+  height: 40px;
+
+  box-sizing: border-box;
+
+  padding: 0 32px 0 11px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  outline: none;
+
+  background-color: #ffffff;
+  color: #475569;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+
+  cursor: pointer;
+
+  appearance: auto;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.courierWalletFilters-field select:hover {
+  border-color: #cbd5e1;
+  background: #fcfdff;
+}
+
+.courierWalletFilters-field select:focus {
+  border-color: #94a3b8;
+  background: #ffffff;
+
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.08);
+}
+
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.courierWalletFilters-right {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+}
+
+
+/* ==========================================================
+   RESET
+========================================================== */
+
+.courierWalletFilters-reset {
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 13px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courierWalletFilters-reset svg {
+  font-size: 14px;
+}
+
+.courierWalletFilters-reset:hover {
+  border-color: #fecaca;
+
+  background: #fef2f2;
+  color: #dc2626;
+
+  transform: translateY(-1px);
+}
+
+.courierWalletFilters-reset:active {
+  transform: translateY(0);
+}
+
+.courierWalletFilters-reset:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   ACTIVE FILTER INDICATION
+========================================================== */
+
+.courierWalletFilters-field select:not([value="ALL"]) {
+  color: #334155;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+  .courierWalletFilters {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+    padding: 14px;
+  }
+
+  .courierWalletFilters-left {
+    width: 100%;
+
+    flex-wrap: wrap;
+
+    align-items: flex-end;
+
+    gap: 12px;
+  }
+
+  .courierWalletFilters-title {
+    height: 38px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletFilters-icon {
+    width: 32px;
+    height: 32px;
+
+    font-size: 14px;
+  }
+
+  .courierWalletFilters-field {
+    min-width: 140px;
+  }
+
+  .courierWalletFilters-field label {
+    font-size: 11px;
+  }
+
+  .courierWalletFilters-field select {
+    height: 38px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-right {
+    width: 100%;
+
+    justify-content: flex-end;
+  }
+
+  .courierWalletFilters-reset {
+    height: 38px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-reset svg {
+    font-size: 13px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+  .courierWalletFilters {
+    padding: 13px;
+
+    gap: 13px;
+
+    border-radius: 10px;
+  }
+
+  .courierWalletFilters-left {
+    display: grid;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+
+    gap: 11px;
+  }
+
+  .courierWalletFilters-title {
+    grid-column: 1 / -1;
+
+    height: 34px;
+
+    padding-right: 0;
+
+    font-size: 13px;
+  }
+
+  .courierWalletFilters-icon {
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletFilters-field {
+    width: 100%;
+    min-width: 0;
+
+    gap: 5px;
+  }
+
+  .courierWalletFilters-field label {
+    font-size: 11px;
+  }
+
+  .courierWalletFilters-field select {
+    width: 100%;
+    height: 38px;
+
+    padding-left: 10px;
+    padding-right: 28px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-right {
+    justify-content: flex-start;
+  }
+
+  .courierWalletFilters-reset {
+    height: 38px;
+
+    padding: 0 12px;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+  .courierWalletFilters {
+    padding: 12px;
+  }
+
+  .courierWalletFilters-left {
+    grid-template-columns:
+      minmax(0, 1fr);
+
+    gap: 10px;
+  }
+
+  .courierWalletFilters-title {
+    grid-column: auto;
+
+    height: 32px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-icon {
+    width: 29px;
+    height: 29px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-field label {
+    font-size: 10px;
+  }
+
+  .courierWalletFilters-field select {
+    height: 38px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletFilters-reset {
+    height: 37px;
+
+    font-size: 11px;
+  }
+
+  .courierWalletFilters-reset svg {
+    font-size: 12px;
+  }
+}
+

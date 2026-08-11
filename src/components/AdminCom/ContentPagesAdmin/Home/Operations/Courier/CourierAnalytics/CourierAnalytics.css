@@ -1,0 +1,595 @@
+
+/* ==========================================================
+   COURIER ANALYTICS PAGE
+========================================================== */
+
+.courierAnalytics-page {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+
+  padding: 24px 26px 40px;
+
+  background: #f7f9fc;
+  color: #334155;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+
+/* ==========================================================
+   TOP NAVIGATION
+========================================================== */
+
+.courierAnalytics-topNavigation {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.courierAnalytics-backButton,
+.courierAnalytics-refreshButton {
+  min-height: 42px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.courierAnalytics-backButton svg,
+.courierAnalytics-refreshButton svg {
+  font-size: 16px;
+}
+
+.courierAnalytics-backButton:hover,
+.courierAnalytics-refreshButton:hover:not(:disabled) {
+  border-color: #cbd5e1;
+
+  background: #ffffff;
+  color: #334155;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.04);
+}
+
+.courierAnalytics-backButton:active,
+.courierAnalytics-refreshButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.courierAnalytics-backButton:focus-visible,
+.courierAnalytics-refreshButton:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+}
+
+.courierAnalytics-refreshButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   SPINNING REFRESH
+========================================================== */
+
+.courierAnalytics-refreshButton .spinning {
+  animation:
+    courierAnalyticsSpin
+    0.9s linear infinite;
+}
+
+@keyframes courierAnalyticsSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierAnalytics-loading {
+  min-height: 55vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  text-align: center;
+}
+
+.courierAnalytics-loadingSpinner {
+  width: 36px;
+  height: 36px;
+
+  margin-bottom: 16px;
+
+  border: 3px solid #e2e8f0;
+  border-top-color: #475569;
+
+  border-radius: 50%;
+
+  animation:
+    courierAnalyticsSpin
+    0.8s linear infinite;
+}
+
+.courierAnalytics-loading h3 {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.courierAnalytics-loading p {
+  margin: 7px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierAnalytics-error {
+  min-height: 55vh;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 40px;
+
+  text-align: center;
+}
+
+.courierAnalytics-errorIcon {
+  width: 56px;
+  height: 56px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: 16px;
+
+  border-radius: 15px;
+
+  background: #fef2f2;
+  color: #dc2626;
+
+  font-size: 21px;
+  font-weight: 800;
+}
+
+.courierAnalytics-error h2 {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.courierAnalytics-error p {
+  max-width: 480px;
+
+  margin: 8px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.courierAnalytics-errorActions {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-top: 20px;
+}
+
+.courierAnalytics-errorActions button {
+  min-height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 15px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #334155;
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courierAnalytics-errorActions button:hover {
+  background: #1e293b;
+
+  transform: translateY(-1px);
+}
+
+.courierAnalytics-errorActions button:active {
+  transform: translateY(0);
+}
+
+.courierAnalytics-errorActions button.secondary {
+  border: 1px solid #e2e8f0;
+
+  background: #ffffff;
+  color: #64748b;
+}
+
+.courierAnalytics-errorActions button.secondary:hover {
+  background: #f8fafc;
+  color: #334155;
+}
+
+
+/* ==========================================================
+   GLOBAL COMPONENT SPACING
+========================================================== */
+
+.courierAnalytics-page > section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/*
+   Prevent the analytics page from becoming too wide
+   inside large admin screens.
+*/
+
+.courierAnalytics-page > section {
+  max-width: 1600px;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* ==========================================================
+   FILTER / HEADER STACK
+========================================================== */
+
+.courierAnalytics-page
+.courierAnalyticsFilters {
+  margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   ANALYTICS SECTION SEPARATION
+========================================================== */
+
+.courierAnalytics-page
+.courierPerformance,
+.courierAnalytics-page
+.courierOrderAnalytics,
+.courierAnalytics-page
+.courierEarningsAnalytics,
+.courierAnalytics-page
+.courierActivityAnalytics {
+  margin-bottom: 20px;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.courierAnalytics-page
+.courierAnalyticsEmptyState {
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+  .courierAnalytics-page {
+    padding:
+      20px
+      20px
+      34px;
+  }
+
+  .courierAnalytics-topNavigation {
+    margin-bottom: 16px;
+  }
+
+  .courierAnalytics-backButton,
+  .courierAnalytics-refreshButton {
+    min-height: 40px;
+
+    padding: 0 13px;
+
+    font-size: 12px;
+  }
+
+  .courierAnalytics-backButton svg,
+  .courierAnalytics-refreshButton svg {
+    font-size: 15px;
+  }
+
+  .courierAnalytics-loading h3 {
+    font-size: 18px;
+  }
+
+  .courierAnalytics-loading p {
+    font-size: 12px;
+  }
+
+  .courierAnalytics-error h2 {
+    font-size: 19px;
+  }
+
+  .courierAnalytics-error p {
+    font-size: 12px;
+  }
+
+  .courierAnalytics-errorActions button {
+    font-size: 12px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+  .courierAnalytics-page {
+    padding:
+      16px
+      14px
+      28px;
+  }
+
+  .courierAnalytics-topNavigation {
+    margin-bottom: 14px;
+
+    gap: 10px;
+  }
+
+  .courierAnalytics-backButton,
+  .courierAnalytics-refreshButton {
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+  }
+
+  .courierAnalytics-backButton svg,
+  .courierAnalytics-refreshButton svg {
+    font-size: 14px;
+  }
+
+  .courierAnalytics-loading {
+    min-height: 50vh;
+
+    padding: 30px 20px;
+  }
+
+  .courierAnalytics-loadingSpinner {
+    width: 32px;
+    height: 32px;
+
+    margin-bottom: 14px;
+
+    border-width: 3px;
+  }
+
+  .courierAnalytics-loading h3 {
+    font-size: 17px;
+  }
+
+  .courierAnalytics-loading p {
+    font-size: 11px;
+  }
+
+  .courierAnalytics-error {
+    min-height: 50vh;
+
+    padding: 30px 20px;
+  }
+
+  .courierAnalytics-errorIcon {
+    width: 50px;
+    height: 50px;
+
+    margin-bottom: 14px;
+
+    border-radius: 13px;
+
+    font-size: 19px;
+  }
+
+  .courierAnalytics-error h2 {
+    font-size: 18px;
+  }
+
+  .courierAnalytics-error p {
+    max-width: 360px;
+
+    font-size: 11px;
+  }
+
+  .courierAnalytics-errorActions {
+    flex-direction: column;
+
+    width: 100%;
+    max-width: 220px;
+
+    gap: 8px;
+
+    margin-top: 16px;
+  }
+
+  .courierAnalytics-errorActions button {
+    width: 100%;
+
+    min-height: 38px;
+
+    font-size: 12px;
+  }
+
+  .courierAnalytics-page
+  .courierPerformance,
+  .courierAnalytics-page
+  .courierOrderAnalytics,
+  .courierAnalytics-page
+  .courierEarningsAnalytics,
+  .courierAnalytics-page
+  .courierActivityAnalytics {
+    margin-bottom: 16px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+  .courierAnalytics-page {
+    padding:
+      13px
+      11px
+      24px;
+  }
+
+  .courierAnalytics-topNavigation {
+    margin-bottom: 12px;
+  }
+
+  .courierAnalytics-backButton,
+  .courierAnalytics-refreshButton {
+    min-height: 36px;
+
+    padding: 0 10px;
+
+    font-size: 11px;
+  }
+
+  .courierAnalytics-backButton svg,
+  .courierAnalytics-refreshButton svg {
+    font-size: 13px;
+  }
+
+  .courierAnalytics-loading h3 {
+    font-size: 16px;
+  }
+
+  .courierAnalytics-loading p {
+    font-size: 10px;
+  }
+
+  .courierAnalytics-errorIcon {
+    width: 46px;
+    height: 46px;
+
+    font-size: 17px;
+  }
+
+  .courierAnalytics-error h2 {
+    font-size: 17px;
+  }
+
+  .courierAnalytics-error p {
+    font-size: 10px;
+  }
+
+  .courierAnalytics-errorActions button {
+    min-height: 36px;
+
+    font-size: 11px;
+  }
+}
+

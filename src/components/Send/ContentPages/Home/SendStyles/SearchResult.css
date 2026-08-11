@@ -1,45 +1,344 @@
+/*
+========================================================
+SEARCH RESULT PAGE
+========================================================
+*/
+
 .searchResultContainer {
-  position: relative;
-  width: 80vw;
-  padding-left: 0.7rem;
-  margin-bottom: 2rem;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #f7f8fa;
 }
 
-.backBtn {
-  position: absolute;
-  top: 25px;
-  left: 1.6rem;
-  height: 35px;
-  width: 35px;
-  border-radius: 10px;
-  background-color: #d8d3d3;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border: none;
+/*
+========================================================
+MAIN LAYOUT
+========================================================
+*/
+
+.searchResultLayout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 30vw, 420px);
+    gap: 20px;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 20px;
+    box-sizing: border-box;
 }
 
-.backBtnIcon {
-  font-size: 30px;
-  color: #6e6d6d;
+/*
+========================================================
+MAP
+========================================================
+*/
+
+.searchResultMapSection {
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
-@media (max-width: 1300px) {
-  
+
+.searchResultMapSection > * {
+    width: 100%;
+    height: 100%;
 }
-@media (max-width: 900px) {
-    .searchResultContainer {
-        width: 100vw;
-        padding-left: 0;
-        margin-bottom: 10rem;
+
+/*
+========================================================
+SIDEBAR
+========================================================
+*/
+
+.searchResultSidebar {
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
+
+/*
+========================================================
+CONTENT
+========================================================
+*/
+
+.searchResultSidebarContent {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/*
+========================================================
+BOTTOM BAR
+========================================================
+*/
+
+.searchResultBottomBar {
+    flex-shrink: 0;
+
+    padding: 18px;
+
+    background: white;
+
+    border-top: 1px solid #ececec;
+}
+
+.searchResultContinueButton {
+    width: 100%;
+    height: 54px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: #061321;
+
+    color: white;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .25s;
+}
+
+.searchResultContinueButton:hover:not(:disabled) {
+    background: #0a1d31;
+}
+
+.searchResultContinueButtonDisabled {
+    background: #d6d6d6;
+    color: #7a7a7a;
+    cursor: not-allowed;
+}
+
+/*
+========================================================
+BACK BUTTON
+========================================================
+*/
+
+.searchResultBackButton {
+    position: absolute;
+
+    top: 34px;
+    left: 34px;
+
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: white;
+
+    cursor: pointer;
+
+    z-index: 1000;
+
+    box-shadow: 0 8px 18px rgba(0,0,0,.18);
+
+    transition: .25s;
+}
+
+.searchResultBackButton:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 12px 24px rgba(0,0,0,.22);
+}
+
+.searchResultBackButtonIcon {
+    font-size: 24px;
+    color: #555;
+}
+
+/*
+========================================================
+LARGE DESKTOP
+========================================================
+*/
+
+@media (max-width:1400px){
+
+    .searchResultLayout{
+
+        grid-template-columns:minmax(0,1fr) 380px;
+
     }
 
-    .backBtn {
-        left: 10px;
+}
+
+/*
+========================================================
+LAPTOP
+========================================================
+*/
+
+@media (max-width:1200px){
+
+    .searchResultLayout{
+
+        grid-template-columns:minmax(0,1fr) 340px;
+
     }
 
 }
-@media (max-width: 500px) {
+
+/*
+========================================================
+SMALL LAPTOP / TABLET LANDSCAPE
+========================================================
+*/
+
+@media (max-width:1000px){
+
+    .searchResultLayout{
+
+        grid-template-columns:minmax(0,1fr) 300px;
+
+        gap:16px;
+
+        padding:16px;
+
+    }
+
+}
+
+/*
+========================================================
+TABLET
+========================================================
+*/
+
+@media (max-width:800px){
+
+    .searchResultLayout{
+
+        grid-template-columns:minmax(0,1fr) 270px;
+
+        gap:14px;
+
+        padding:14px;
+
+    }
+
+    .searchResultBackButton{
+
+        top:20px;
+        left:20px;
+
+    }
+
+}
+
+/*
+========================================================
+PHONE
+========================================================
+*/
+
+@media (max-width:650px){
+
+    .searchResultLayout{
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:14px;
+
+        padding:10px;
+
+    }
+
+    .searchResultMapSection{
+
+        flex:0 0 45vh;
+
+        min-height:300px;
+
+        border-radius:14px;
+
+    }
+
+    .searchResultSidebar{
+
+        flex:1;
+
+        min-height:0;
+
+        border-radius:14px;
+
+    }
+
+    .searchResultBottomBar{
+
+        padding:14px;
+
+    }
+
+    .searchResultContinueButton{
+
+        height:52px;
+
+        font-size:15px;
+
+    }
+
+    .searchResultBackButton{
+
+        width:42px;
+        height:42px;
+
+        top:16px;
+        left:16px;
+
+    }
+
+    .searchResultBackButtonIcon{
+
+        font-size:20px;
+
+    }
+
+}
+
+/*
+========================================================
+SMALL PHONES
+========================================================
+*/
+
+@media (max-width:420px){
+
+    .searchResultMapSection{
+
+        flex:0 0 50vh;
+
+        min-height:320px;
+
+    }
 
 }

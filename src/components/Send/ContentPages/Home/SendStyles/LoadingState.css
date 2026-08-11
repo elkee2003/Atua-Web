@@ -1,0 +1,108 @@
+/* =========================================================
+   PAYMENT LOADING
+========================================================= */
+
+.paymentLoadingContainer {
+
+    width: 100%;
+    min-height: calc(100vh - 40px);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: #F8F9FB;
+}
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.paymentLoadingSpinner {
+
+    width: 52px;
+    height: 52px;
+
+    border-radius: 50%;
+
+    border: 4px solid #E5E7EB;
+
+    border-top: 4px solid #111827;
+
+    animation: paymentLoadingSpin .8s linear infinite;
+}
+
+@keyframes paymentLoadingSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.paymentLoadingText {
+
+    margin-top: 16px;
+
+    font-size: 14px;
+
+    color: #6B7280;
+
+    text-align: center;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .paymentLoadingContainer {
+
+        min-height: calc(100vh - 85px);
+
+        padding: 24px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .paymentLoadingContainer {
+
+        min-height: calc(100vh - 85px);
+
+        padding: 20px;
+    }
+
+    .paymentLoadingSpinner {
+
+        width: 46px;
+        height: 46px;
+
+        border-width: 3px;
+    }
+
+    .paymentLoadingText {
+
+        font-size: 13px;
+    }
+
+}

@@ -1,0 +1,535 @@
+/* ==========================================================
+   COURIER ANALYTICS HEADER
+========================================================== */
+
+.courierAnalyticsHeader {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-bottom: 24px;
+
+    padding: 20px 22px;
+
+    border: 1px solid #e7ebf0;
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 14px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.courierAnalyticsHeader-left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.courierAnalyticsHeader-backButton {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+.courierAnalyticsHeader-backButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+}
+
+.courierAnalyticsHeader-backButton:active {
+    transform: translateY(1px);
+}
+
+.courierAnalyticsHeader-backButton:focus-visible {
+    outline: 2px solid #64748b;
+
+    outline-offset: 2px;
+}
+
+.courierAnalyticsHeader-backButton svg {
+    font-size: 15px;
+}
+
+
+/* ==========================================================
+   DIVIDER
+========================================================== */
+
+.courierAnalyticsHeader-divider {
+    width: 1px;
+
+    height: 38px;
+
+    flex-shrink: 0;
+
+    background: #e2e8f0;
+}
+
+
+/* ==========================================================
+   ANALYTICS ICON
+========================================================== */
+
+.courierAnalyticsHeader-icon {
+    width: 46px;
+    height: 46px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierAnalyticsHeader-content {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierAnalyticsHeader-titleRow {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+.courierAnalyticsHeader-titleRow h1 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #1e293b;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierAnalyticsHeader-description {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierAnalyticsHeader-meta {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+.courierAnalyticsHeader-metaDivider {
+    color: #cbd5e1;
+}
+
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.courierAnalyticsHeader-right {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.courierAnalyticsHeader-refreshButton {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 40px;
+
+    padding: 0 14px;
+
+    border: 1px solid #1e293b;
+
+    border-radius: 9px;
+
+    background: #1e293b;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.15s ease,
+        opacity 0.2s ease;
+}
+
+.courierAnalyticsHeader-refreshButton:hover:not(:disabled) {
+    background: #334155;
+
+    border-color: #334155;
+}
+
+.courierAnalyticsHeader-refreshButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.courierAnalyticsHeader-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+.courierAnalyticsHeader-refreshButton:focus-visible {
+    outline: 2px solid #64748b;
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   REFRESH ICON
+========================================================== */
+
+.courierAnalyticsHeader-refreshIcon {
+    font-size: 15px;
+}
+
+.courierAnalyticsHeader-refreshIcon-spinning {
+    animation:
+        courierAnalyticsHeaderSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierAnalyticsHeaderSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierAnalyticsHeader {
+        padding: 18px;
+
+        gap: 18px;
+    }
+
+    .courierAnalyticsHeader-left {
+        gap: 12px;
+    }
+
+    .courierAnalyticsHeader-icon {
+        width: 42px;
+        height: 42px;
+
+        font-size: 17px;
+    }
+
+    .courierAnalyticsHeader-titleRow h1 {
+        font-size: 20px;
+    }
+
+    .courierAnalyticsHeader-description {
+        font-size: 12px;
+    }
+
+    .courierAnalyticsHeader-meta {
+        font-size: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierAnalyticsHeader {
+        align-items: flex-start;
+
+        padding: 15px;
+
+        gap: 12px;
+
+        border-radius: 12px;
+
+        margin-bottom: 18px;
+    }
+
+    .courierAnalyticsHeader-left {
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .courierAnalyticsHeader-backButton {
+        width: 34px;
+
+        min-height: 34px;
+
+        padding: 0;
+
+        border-radius: 8px;
+    }
+
+    .courierAnalyticsHeader-backButton span {
+        display: none;
+    }
+
+    .courierAnalyticsHeader-backButton svg {
+        font-size: 14px;
+    }
+
+    .courierAnalyticsHeader-divider {
+        height: 34px;
+    }
+
+    .courierAnalyticsHeader-icon {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierAnalyticsHeader-content {
+        gap: 3px;
+    }
+
+    .courierAnalyticsHeader-titleRow {
+        gap: 7px;
+    }
+
+    .courierAnalyticsHeader-titleRow h1 {
+        font-size: 18px;
+    }
+
+    .courierAnalyticsHeader-description {
+        font-size: 11px;
+
+        line-height: 1.45;
+    }
+
+    .courierAnalyticsHeader-meta {
+        gap: 5px;
+
+        margin-top: 2px;
+
+        font-size: 10px;
+    }
+
+    .courierAnalyticsHeader-refreshButton {
+        min-height: 36px;
+
+        padding: 0 11px;
+
+        border-radius: 8px;
+
+        font-size: 11px;
+    }
+
+    .courierAnalyticsHeader-refreshIcon {
+        font-size: 14px;
+    }
+
+    .courierAnalyticsHeader-refreshButton span {
+        display: none;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierAnalyticsHeader {
+        padding: 13px;
+
+        gap: 9px;
+    }
+
+    .courierAnalyticsHeader-left {
+        gap: 8px;
+    }
+
+    .courierAnalyticsHeader-divider {
+        display: none;
+    }
+
+    .courierAnalyticsHeader-icon {
+        width: 35px;
+        height: 35px;
+
+        font-size: 14px;
+    }
+
+    .courierAnalyticsHeader-titleRow h1 {
+        font-size: 17px;
+    }
+
+    .courierAnalyticsHeader-description {
+        font-size: 10px;
+    }
+
+    .courierAnalyticsHeader-meta {
+        font-size: 9px;
+    }
+
+    .courierAnalyticsHeader-refreshButton {
+        width: 34px;
+
+        min-height: 34px;
+
+        padding: 0;
+    }
+
+    .courierAnalyticsHeader-refreshIcon {
+        font-size: 13px;
+    }
+
+}

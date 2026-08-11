@@ -1,0 +1,508 @@
+
+/* ==========================================================
+   COURIER TRANSACTION CARD
+========================================================== */
+
+.courierTransactionCard {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 1.3fr)
+    minmax(150px, 1fr)
+    auto;
+
+  align-items: center;
+  gap: 16px;
+
+  padding: 13px 14px;
+
+  border: 1px solid #edf1f5;
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+
+/* ==========================================================
+   CLICKABLE
+========================================================== */
+
+.courierTransactionCard.clickable {
+  cursor: pointer;
+}
+
+.courierTransactionCard.clickable:hover {
+  border-color: #dbe2ea;
+  background: #fcfdff;
+  box-shadow: 0 3px 10px rgba(15, 23, 42, 0.035);
+  transform: translateY(-1px);
+}
+
+.courierTransactionCard.clickable:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.courierTransactionCard-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierTransactionCard-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 14px;
+}
+
+
+/* Credit */
+
+.courierTransactionCard.credit
+.courierTransactionCard-icon {
+  background: #ecfdf3;
+  color: #16a34a;
+}
+
+
+/* Debit */
+
+.courierTransactionCard.debit
+.courierTransactionCard-icon {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+
+/* ==========================================================
+   MAIN
+========================================================== */
+
+.courierTransactionCard-main {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierTransactionCard-titleRow {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.courierTransactionCard-titleRow h3 {
+  max-width: 250px;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   TYPE
+========================================================== */
+
+.courierTransactionCard-type {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 7px;
+
+  border-radius: 5px;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.courierTransactionCard-type.credit {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.courierTransactionCard-type.debit {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierTransactionCard-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.courierTransactionCard-meta .metaDivider {
+  color: #cbd5e1;
+}
+
+
+/* ==========================================================
+   REFERENCES
+========================================================== */
+
+.courierTransactionCard-references {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.courierTransactionCard-reference {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.courierTransactionCard-reference svg {
+  flex-shrink: 0;
+
+  color: #cbd5e1;
+
+  font-size: 12px;
+}
+
+.courierTransactionCard-reference span {
+  min-width: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.courierTransactionCard-right {
+  min-width: 115px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierTransactionCard-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 4px 8px;
+
+  border-radius: 6px;
+
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.courierTransactionCard-status svg {
+  font-size: 12px;
+}
+
+
+/* Completed */
+
+.courierTransactionCard-status.completed {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+
+/* Pending */
+
+.courierTransactionCard-status.pending {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+
+/* Unknown */
+
+.courierTransactionCard-status.unknown {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+
+/* ==========================================================
+   AMOUNT
+========================================================== */
+
+.courierTransactionCard-amount {
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.25;
+
+  white-space: nowrap;
+}
+
+.courierTransactionCard-amount.credit {
+  color: #15803d;
+}
+
+.courierTransactionCard-amount.debit {
+  color: #b91c1c;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+  .courierTransactionCard {
+    grid-template-columns:
+      minmax(190px, 1.3fr)
+      minmax(120px, 1fr)
+      auto;
+
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .courierTransactionCard-titleRow h3 {
+    font-size: 13px;
+  }
+
+  .courierTransactionCard-type {
+    font-size: 10px;
+  }
+
+  .courierTransactionCard-meta,
+  .courierTransactionCard-reference {
+    font-size: 10px;
+  }
+
+  .courierTransactionCard-status {
+    font-size: 10px;
+  }
+
+  .courierTransactionCard-right {
+    min-width: 100px;
+  }
+
+  .courierTransactionCard-amount {
+    font-size: 15px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+  .courierTransactionCard {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+  }
+
+  .courierTransactionCard-references {
+    grid-column: 1 / 2;
+    padding-left: 45px;
+  }
+
+  .courierTransactionCard-right {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+
+    align-self: center;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 520px) {
+  .courierTransactionCard {
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+
+    gap: 9px;
+    padding: 11px;
+  }
+
+  .courierTransactionCard-left {
+    gap: 9px;
+  }
+
+  .courierTransactionCard-icon {
+    width: 31px;
+    height: 31px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+  }
+
+  .courierTransactionCard-titleRow h3 {
+    max-width: 170px;
+    font-size: 12px;
+  }
+
+  .courierTransactionCard-type {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .courierTransactionCard-meta {
+    font-size: 9.5px;
+  }
+
+  .courierTransactionCard-references {
+    padding-left: 40px;
+  }
+
+  .courierTransactionCard-reference {
+    font-size: 9.5px;
+  }
+
+  .courierTransactionCard-reference svg {
+    font-size: 11px;
+  }
+
+  .courierTransactionCard-right {
+    min-width: 90px;
+  }
+
+  .courierTransactionCard-status {
+    padding: 4px 7px;
+    font-size: 9.5px;
+  }
+
+  .courierTransactionCard-status svg {
+    font-size: 11px;
+  }
+
+  .courierTransactionCard-amount {
+    font-size: 14px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+  .courierTransactionCard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .courierTransactionCard-right {
+    grid-column: 1;
+    grid-row: auto;
+
+    width: 100%;
+    min-width: 0;
+
+    padding-left: 40px;
+
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .courierTransactionCard-references {
+    grid-column: 1;
+    padding-left: 40px;
+  }
+
+  .courierTransactionCard-titleRow h3 {
+    max-width: 180px;
+    font-size: 12px;
+  }
+
+  .courierTransactionCard-amount {
+    font-size: 14px;
+  }
+}
+

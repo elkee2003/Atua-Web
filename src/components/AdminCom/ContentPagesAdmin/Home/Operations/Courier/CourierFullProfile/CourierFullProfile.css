@@ -1,0 +1,1155 @@
+/* ==========================================================
+   COURIER FULL PROFILE
+========================================================== */
+
+.courierFullProfile {
+    width: 100%;
+
+    min-height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 22px;
+
+    background: #f8fafc;
+
+    color: #334155;
+}
+
+
+/* ==========================================================
+   TOP BAR
+========================================================== */
+
+.courierFullProfile-topbar {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+
+/* ==========================================================
+   BACK / REFRESH BUTTONS
+========================================================== */
+
+.courierFullProfile-backButton,
+.courierFullProfile-refreshButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    padding: 0 13px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierFullProfile-backButton svg,
+.courierFullProfile-refreshButton svg {
+    font-size: 14px;
+}
+
+.courierFullProfile-backButton:hover,
+.courierFullProfile-refreshButton:hover {
+    border-color: #cbd5e1;
+
+    background: #ffffff;
+
+    color: #334155;
+}
+
+.courierFullProfile-backButton:active,
+.courierFullProfile-refreshButton:active {
+    transform: translateY(1px);
+}
+
+.courierFullProfile-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierFullProfile-refreshIconSpinning {
+    animation:
+        courierFullProfileSpin
+        0.8s linear infinite;
+}
+
+@keyframes courierFullProfileSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   MAIN GRID
+========================================================== */
+
+.courierFullProfile-mainGrid {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.65fr)
+        minmax(300px, 0.75fr);
+
+    gap: 18px;
+
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   MAIN COLUMN
+========================================================== */
+
+.courierFullProfile-mainColumn {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* ==========================================================
+   SIDE COLUMN
+========================================================== */
+
+.courierFullProfile-sideColumn {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+/* ==========================================================
+   QUICK ACTIONS / STATUS / PERFORMANCE
+========================================================== */
+
+
+.courierFullProfile-statusCard,
+.courierFullProfile-performanceCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 3px 12px rgba(
+            15,
+            23,
+            42,
+            0.035
+        );
+}
+
+
+/* ==========================================================
+   SECTION HEADER
+========================================================== */
+
+.courierFullProfile-sectionHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.courierFullProfile-sectionHeader h2 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 16px;
+
+    font-weight: 750;
+
+    line-height: 1.3;
+}
+
+.courierFullProfile-sectionHeader p {
+    margin: 4px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   ACTION GRID
+========================================================== */
+
+.courierFullProfile-actionGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+}
+
+
+/* ==========================================================
+   ACTION BUTTON
+========================================================== */
+
+.courierFullProfile-actionButton {
+    min-width: 0;
+
+    min-height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 11px;
+
+    border: 1px solid #edf1f5;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+.courierFullProfile-actionButton:hover {
+    border-color: #dbe2ea;
+
+    background: #fcfdff;
+
+    box-shadow:
+        0 4px 12px rgba(
+            15,
+            23,
+            42,
+            0.045
+        );
+
+    transform: translateY(-1px);
+}
+
+.courierFullProfile-actionButton:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================================
+   ACTION ICON
+========================================================== */
+
+.courierFullProfile-actionIcon {
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   ACTION ICON COLORS
+========================================================== */
+
+.courierFullProfile-ordersIcon {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.courierFullProfile-analyticsIcon {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+.courierFullProfile-walletIcon {
+    background: #ecfdf3;
+
+    color: #16a34a;
+}
+
+.courierFullProfile-payoutIcon {
+    background: #ecfeff;
+
+    color: #0891b2;
+}
+
+.courierFullProfile-reviewsIcon {
+    background: #fffbeb;
+
+    color: #d97706;
+}
+
+.courierFullProfile-reportsIcon {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+.courierFullProfile-documentsIcon {
+    background: #f1f5f9;
+
+    color: #475569;
+}
+
+.courierFullProfile-trackingIcon {
+    background: #f0fdf4;
+
+    color: #16a34a;
+}
+
+
+/* ==========================================================
+   ACTION CONTENT
+========================================================== */
+
+.courierFullProfile-actionContent {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.courierFullProfile-actionContent strong {
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierFullProfile-actionContent small {
+    overflow: hidden;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    line-height: 1.35;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierFullProfile-onlineText {
+    color: #16a34a !important;
+}
+
+
+/* ==========================================================
+   CURRENT STATUS
+========================================================== */
+
+.courierFullProfile-statusCard {
+    padding: 16px;
+}
+
+.courierFullProfile-statusHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ==========================================================
+   STATUS INDICATOR
+========================================================== */
+
+.courierFullProfile-statusIndicator {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+}
+
+.courierFullProfile-statusIndicatorOnline {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(
+            34,
+            197,
+            94,
+            0.12
+        );
+}
+
+.courierFullProfile-statusIndicatorOffline {
+    background: #94a3b8;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(
+            148,
+            163,
+            184,
+            0.12
+        );
+}
+
+
+/* ==========================================================
+   STATUS VALUE
+========================================================== */
+
+.courierFullProfile-statusValue {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 12px;
+}
+
+.courierFullProfile-statusValue strong {
+    color: #334155;
+
+    font-size: 17px;
+
+    font-weight: 750;
+
+    line-height: 1.25;
+}
+
+.courierFullProfile-statusValue span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+
+    line-height: 1.4;
+}
+
+
+/* ==========================================================
+   LOCATION
+========================================================== */
+
+.courierFullProfile-location {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.courierFullProfile-location span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+}
+
+.courierFullProfile-location strong {
+    color: #64748b;
+
+    font-size: 10px;
+
+    font-weight: 650;
+
+    text-align: right;
+}
+
+
+/* ==========================================================
+   PERFORMANCE CARD
+========================================================== */
+
+.courierFullProfile-performanceCard {
+    padding: 16px;
+}
+
+.courierFullProfile-performanceList {
+    display: flex;
+
+    flex-direction: column;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.courierFullProfile-performanceRow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 11px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.courierFullProfile-performanceRow:last-child {
+    border-bottom: none;
+}
+
+.courierFullProfile-performanceRow span {
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+}
+
+.courierFullProfile-performanceRow strong {
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierFullProfile-loading {
+    width: 100%;
+
+    min-height: 560px;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+}
+
+.courierFullProfile-loadingHeader {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.courierFullProfile-skeletonAvatar {
+    width: 70px;
+    height: 70px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: #eef2f6;
+
+    animation:
+        courierFullProfileSkeleton
+        1.4s ease-in-out infinite;
+}
+
+.courierFullProfile-loadingLines {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.courierFullProfile-skeletonLine {
+    height: 9px;
+
+    border-radius: 5px;
+
+    background: #eef2f6;
+
+    animation:
+        courierFullProfileSkeleton
+        1.4s ease-in-out infinite;
+}
+
+.courierFullProfile-skeletonLineLarge {
+    width: 190px;
+}
+
+.courierFullProfile-skeletonLineMedium {
+    width: 130px;
+}
+
+.courierFullProfile-skeletonLineSmall {
+    width: 90px;
+}
+
+.courierFullProfile-loadingStats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.courierFullProfile-skeletonStat {
+    height: 70px;
+
+    border-radius: 10px;
+
+    background: #eef2f6;
+
+    animation:
+        courierFullProfileSkeleton
+        1.4s ease-in-out infinite;
+}
+
+.courierFullProfile-loadingBody {
+    display: grid;
+
+    grid-template-columns:
+        1.5fr
+        1fr;
+
+    gap: 14px;
+
+    margin-top: 20px;
+}
+
+.courierFullProfile-skeletonCard {
+    height: 280px;
+
+    border-radius: 11px;
+
+    background: #eef2f6;
+
+    animation:
+        courierFullProfileSkeleton
+        1.4s ease-in-out infinite;
+}
+
+@keyframes courierFullProfileSkeleton {
+
+    0% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.55;
+    }
+
+}
+
+
+/* ==========================================================
+   ERROR PAGE
+========================================================== */
+
+.courierFullProfile-errorPage {
+    min-height: 480px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 40px;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    text-align: center;
+}
+
+.courierFullProfile-errorIcon {
+    width: 56px;
+    height: 56px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 14px;
+
+    border-radius: 14px;
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    font-size: 18px;
+}
+
+.courierFullProfile-errorPage h1 {
+    margin: 0;
+
+    color: #475569;
+
+    font-size: 18px;
+
+    font-weight: 750;
+}
+
+.courierFullProfile-errorPage p {
+    max-width: 420px;
+
+    margin: 8px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================================
+   ERROR ACTIONS
+========================================================== */
+
+.courierFullProfile-errorActions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 18px;
+}
+
+.courierFullProfile-secondaryButton,
+.courierFullProfile-primaryButton {
+    min-height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 0 14px;
+
+    border-radius: 9px;
+
+    font-family: inherit;
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+}
+
+.courierFullProfile-secondaryButton {
+    border: 1px solid #e2e8f0;
+
+    background: #ffffff;
+
+    color: #64748b;
+}
+
+.courierFullProfile-primaryButton {
+    border: 1px solid #334155;
+
+    background: #334155;
+
+    color: #ffffff;
+}
+
+.courierFullProfile-secondaryButton:hover {
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+}
+
+.courierFullProfile-primaryButton:hover {
+    background: #1e293b;
+
+    border-color: #1e293b;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1000px) {
+
+    .courierFullProfile-mainGrid {
+        grid-template-columns:
+            minmax(0, 1.35fr)
+            minmax(270px, 0.8fr);
+    }
+
+    .courierFullProfile-actionGrid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierFullProfile {
+        padding: 16px;
+    }
+
+    .courierFullProfile-mainGrid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .courierFullProfile-sideColumn {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        align-items: start;
+
+        gap: 14px;
+    }
+
+    .courierFullProfile-actionGrid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .courierFullProfile-quickActions {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierFullProfile {
+        padding: 12px;
+    }
+
+    .courierFullProfile-topbar {
+        margin-bottom: 12px;
+    }
+
+    .courierFullProfile-backButton span,
+    .courierFullProfile-refreshButton span {
+        display: none;
+    }
+
+    .courierFullProfile-backButton,
+    .courierFullProfile-refreshButton {
+        width: 36px;
+
+        min-height: 36px;
+
+        padding: 0;
+    }
+
+    .courierFullProfile-backButton svg,
+    .courierFullProfile-refreshButton svg {
+        font-size: 15px;
+    }
+
+    .courierFullProfile-mainGrid {
+        gap: 12px;
+
+        margin-top: 12px;
+    }
+
+    .courierFullProfile-sideColumn {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .courierFullProfile-quickActions,
+    .courierFullProfile-statusCard,
+    .courierFullProfile-performanceCard {
+        padding: 14px;
+
+        border-radius: 11px;
+    }
+
+    .courierFullProfile-sectionHeader h2 {
+        font-size: 15px;
+    }
+
+    .courierFullProfile-sectionHeader p {
+        font-size: 10px;
+    }
+
+    .courierFullProfile-actionGrid {
+        gap: 8px;
+    }
+
+    .courierFullProfile-actionButton {
+        min-height: 64px;
+
+        padding: 9px;
+    }
+
+    .courierFullProfile-actionIcon {
+        width: 32px;
+        height: 32px;
+
+        font-size: 13px;
+    }
+
+    .courierFullProfile-actionContent strong {
+        font-size: 11px;
+    }
+
+    .courierFullProfile-actionContent small {
+        font-size: 9px;
+    }
+
+    .courierFullProfile-statusValue strong {
+        font-size: 16px;
+    }
+
+    .courierFullProfile-statusValue span {
+        font-size: 10px;
+    }
+
+    .courierFullProfile-location span,
+    .courierFullProfile-location strong {
+        font-size: 9px;
+    }
+
+    .courierFullProfile-performanceRow span {
+        font-size: 9px;
+    }
+
+    .courierFullProfile-performanceRow strong {
+        font-size: 11px;
+    }
+
+    .courierFullProfile-loadingStats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+    .courierFullProfile-loadingBody {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierFullProfile {
+        padding: 10px;
+    }
+
+    .courierFullProfile-actionGrid {
+        grid-template-columns:
+            1fr;
+    }
+
+    .courierFullProfile-actionButton {
+        min-height: 62px;
+    }
+
+    .courierFullProfile-actionContent strong {
+        font-size: 11px;
+    }
+
+    .courierFullProfile-actionContent small {
+        font-size: 9px;
+    }
+
+    .courierFullProfile-errorActions {
+        width: 100%;
+
+        flex-direction: column;
+    }
+
+    .courierFullProfile-secondaryButton,
+    .courierFullProfile-primaryButton {
+        width: 100%;
+
+        min-height: 40px;
+    }
+
+}

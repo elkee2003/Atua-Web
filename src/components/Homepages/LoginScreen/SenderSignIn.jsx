@@ -1,3 +1,5 @@
+// I have to do the login flow I did with the app where email is saved async so that when going to get code from email, and page refreshes you don't have to lose the email, or get an unverified email
+
 import { signIn, fetchAuthSession, signOut } from "aws-amplify/auth";
 import { useForm } from "react-hook-form";
 import { useState } from "react";

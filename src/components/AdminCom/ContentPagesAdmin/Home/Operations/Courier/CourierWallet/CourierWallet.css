@@ -1,0 +1,317 @@
+/* ==========================================================
+   COURIER WALLET
+========================================================== */
+
+.courierWallet {
+  width: 100%;
+
+  min-height: 100%;
+
+  box-sizing: border-box;
+
+  padding: 16px;
+
+  background: #f8fafc;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierWallet-loading {
+  width: 100%;
+
+  min-height: 260px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  border: 1px solid #e7ebf0;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  color: #94a3b8;
+
+  font-size: 8px;
+
+  font-weight: 550;
+}
+
+
+.courierWallet-loadingIcon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #f1f5f9;
+
+  color: #64748b;
+
+  font-size: 13px;
+
+  animation:
+    courierWalletPulse
+    1.4s ease-in-out infinite;
+}
+
+
+@keyframes courierWalletPulse {
+
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+}
+
+
+/* ==========================================================
+   TRANSACTION SECTION
+========================================================== */
+
+.courierWallet-transactionSection {
+  width: 100%;
+}
+
+
+/* ==========================================================
+   TRANSACTION CONTROLS
+========================================================== */
+
+.courierWallet-transactionControls {
+  width: 100%;
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierWallet-error {
+  width: 100%;
+
+  min-height: 320px;
+
+  box-sizing: border-box;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 30px;
+
+  border: 1px solid #e8edf3;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+
+.courierWallet-errorIcon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-bottom: 10px;
+
+  border-radius: 12px;
+
+  background: #fef2f2;
+
+  color: #dc2626;
+
+  font-size: 14px;
+}
+
+
+.courierWallet-error h2 {
+  margin: 0;
+
+  color: #475569;
+
+  font-size: 9px;
+
+  font-weight: 750;
+}
+
+
+.courierWallet-error p {
+  max-width: 360px;
+
+  margin: 6px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 5.5px;
+
+  font-weight: 500;
+
+  line-height: 1.6;
+}
+
+
+.courierWallet-errorButton {
+  min-height: 28px;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  margin-top: 13px;
+
+  padding:
+    0
+    11px;
+
+  border: 1px solid #dbe2ea;
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #475569;
+
+  font-family: inherit;
+
+  font-size: 5.5px;
+
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+
+.courierWallet-errorButton:hover {
+  background: #f8fafc;
+
+  border-color: #cbd5e1;
+
+  color: #334155;
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media (max-width: 900px) {
+
+  .courierWallet {
+    padding: 13px;
+  }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+
+  .courierWallet {
+    padding: 11px;
+  }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 500px) {
+
+  .courierWallet {
+    padding: 9px;
+  }
+
+
+  .courierWallet-loading {
+    min-height: 220px;
+
+    border-radius: 9px;
+  }
+
+
+  .courierWallet-error {
+    min-height: 260px;
+
+    padding: 20px;
+
+    border-radius: 9px;
+  }
+
+
+  .courierWallet-error h2 {
+    font-size: 8px;
+  }
+
+
+  .courierWallet-error p {
+    font-size: 5px;
+  }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 350px) {
+
+  .courierWallet {
+    padding: 7px;
+  }
+
+
+  .courierWallet-loading {
+    min-height: 190px;
+  }
+
+}

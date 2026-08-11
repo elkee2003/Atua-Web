@@ -1,0 +1,503 @@
+
+/* ==========================================================
+   COURIER WALLET STATS
+========================================================== */
+
+.courierWalletStats {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 18px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierWalletStats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 14px;
+}
+
+.courierWalletStats-header h2 {
+  margin: 0;
+
+  color: #334155;
+
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.courierWalletStats-header p {
+  margin: 4px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+
+/* ==========================================================
+   GRID
+========================================================== */
+
+.courierWalletStats-grid {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, minmax(0, 1fr));
+
+  gap: 12px;
+}
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.courierWalletStats-card {
+  min-width: 0;
+  box-sizing: border-box;
+
+  padding: 15px;
+
+  border: 1px solid #e8edf3;
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.courierWalletStats-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #dbe2ea;
+
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.035);
+}
+
+
+/* ==========================================================
+   CARD TOP
+========================================================== */
+
+.courierWalletStats-cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierWalletStats-icon {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 15px;
+}
+
+
+/* ==========================================================
+   CARD CONTENT
+========================================================== */
+
+.courierWalletStats-cardContent {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierWalletStats-label {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   VALUE
+========================================================== */
+
+.courierWalletStats-value {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #334155;
+
+  font-size: 18px;
+  font-weight: 750;
+  line-height: 1.25;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.courierWalletStats-description {
+  min-width: 0;
+
+  overflow: hidden;
+
+  color: #a1aab8;
+
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   BALANCE
+========================================================== */
+
+.courierWalletStats-balance {
+  border-top: 3px solid #16a34a;
+}
+
+.courierWalletStats-balance
+.courierWalletStats-icon {
+  background: #ecfdf3;
+  color: #16a34a;
+}
+
+.courierWalletStats-balance
+.courierWalletStats-value {
+  color: #15803d;
+}
+
+
+/* ==========================================================
+   PENDING
+========================================================== */
+
+.courierWalletStats-pending {
+  border-top: 3px solid #f59e0b;
+}
+
+.courierWalletStats-pending
+.courierWalletStats-icon {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.courierWalletStats-pending
+.courierWalletStats-value {
+  color: #b45309;
+}
+
+
+/* ==========================================================
+   EARNINGS
+========================================================== */
+
+.courierWalletStats-earnings {
+  border-top: 3px solid #3b82f6;
+}
+
+.courierWalletStats-earnings
+.courierWalletStats-icon {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.courierWalletStats-earnings
+.courierWalletStats-value {
+  color: #1d4ed8;
+}
+
+
+/* ==========================================================
+   PAYOUT
+========================================================== */
+
+.courierWalletStats-payout {
+  border-top: 3px solid #8b5cf6;
+}
+
+.courierWalletStats-payout
+.courierWalletStats-icon {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.courierWalletStats-payout
+.courierWalletStats-value {
+  color: #6d28d9;
+}
+
+
+/* ==========================================================
+   COMPLETED
+========================================================== */
+
+.courierWalletStats-completed {
+  border-top: 3px solid #10b981;
+}
+
+.courierWalletStats-completed
+.courierWalletStats-icon {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.courierWalletStats-completed
+.courierWalletStats-value {
+  color: #047857;
+}
+
+
+/* ==========================================================
+   PROCESSING
+========================================================== */
+
+.courierWalletStats-processing {
+  border-top: 3px solid #f97316;
+}
+
+.courierWalletStats-processing
+.courierWalletStats-icon {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.courierWalletStats-processing
+.courierWalletStats-value {
+  color: #c2410c;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1150px) {
+  .courierWalletStats-grid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+  }
+
+  .courierWalletStats-card {
+    padding: 14px;
+  }
+
+  .courierWalletStats-value {
+    font-size: 17px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 700px) {
+  .courierWalletStats-header {
+    margin-bottom: 12px;
+  }
+
+  .courierWalletStats-header h2 {
+    font-size: 17px;
+  }
+
+  .courierWalletStats-header p {
+    font-size: 11px;
+  }
+
+  .courierWalletStats-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+  }
+
+  .courierWalletStats-card {
+    padding: 13px;
+  }
+
+  .courierWalletStats-icon {
+    width: 32px;
+    height: 32px;
+
+    font-size: 14px;
+  }
+
+  .courierWalletStats-label {
+    font-size: 11px;
+  }
+
+  .courierWalletStats-value {
+    font-size: 16px;
+  }
+
+  .courierWalletStats-description {
+    font-size: 10px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 430px) {
+  .courierWalletStats {
+    margin-bottom: 14px;
+  }
+
+  .courierWalletStats-header {
+    margin-bottom: 11px;
+  }
+
+  .courierWalletStats-header h2 {
+    font-size: 16px;
+  }
+
+  .courierWalletStats-header p {
+    font-size: 10px;
+  }
+
+  .courierWalletStats-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+  }
+
+  .courierWalletStats-card {
+    padding: 11px;
+
+    border-radius: 9px;
+  }
+
+  .courierWalletStats-cardTop {
+    margin-bottom: 9px;
+  }
+
+  .courierWalletStats-icon {
+    width: 29px;
+    height: 29px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletStats-cardContent {
+    gap: 4px;
+  }
+
+  .courierWalletStats-label {
+    font-size: 10px;
+  }
+
+  .courierWalletStats-value {
+    font-size: 15px;
+  }
+
+  .courierWalletStats-description {
+    font-size: 9px;
+  }
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+  .courierWalletStats-grid {
+    grid-template-columns:
+      minmax(0, 1fr);
+  }
+
+  .courierWalletStats-card {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px;
+  }
+
+  .courierWalletStats-cardTop {
+    margin: 0;
+  }
+
+  .courierWalletStats-cardContent {
+    flex: 1;
+  }
+
+  .courierWalletStats-label {
+    font-size: 11px;
+  }
+
+  .courierWalletStats-value {
+    font-size: 16px;
+  }
+
+  .courierWalletStats-description {
+    font-size: 10px;
+  }
+}

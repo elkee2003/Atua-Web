@@ -1,0 +1,1121 @@
+
+/* ==========================================================
+   COURIER ORDER ANALYTICS
+========================================================== */
+
+.courierOrderAnalytics {
+    width: 100%;
+    box-sizing: border-box;
+
+    margin-bottom: 24px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierOrderAnalytics-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 18px;
+}
+
+.courierOrderAnalytics-heading {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.courierOrderAnalytics-titleIcon {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: #eef2ff;
+    color: #4f46e5;
+
+    font-size: 18px;
+}
+
+.courierOrderAnalytics-heading h2 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.courierOrderAnalytics-heading p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.45;
+}
+
+
+/* ==========================================================
+   PERIODS
+========================================================== */
+
+.courierOrderAnalytics-periods {
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 4px;
+
+    border: 1px solid #e5eaf0;
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+.courierOrderAnalytics-periods button {
+    min-height: 36px;
+
+    border: none;
+
+    padding: 0 13px;
+
+    border-radius: 7px;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.courierOrderAnalytics-periods button:hover {
+    color: #475569;
+}
+
+.courierOrderAnalytics-periods button.active {
+    background: #ffffff;
+
+    color: #1e293b;
+
+    box-shadow:
+        0 1px 4px rgba(
+            15,
+            23,
+            42,
+            0.08
+        );
+}
+
+
+/* ==========================================================
+   SUMMARY
+========================================================== */
+
+.courierOrderAnalytics-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 16px;
+}
+
+.courierOrderAnalytics-summaryCard {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+
+    padding: 16px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 9px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+.courierOrderAnalytics-summaryIcon {
+    width: 40px;
+    height: 40px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+}
+
+.courierOrderAnalytics-summaryIcon.total {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.courierOrderAnalytics-summaryIcon.delivered {
+    background: #ecfdf5;
+    color: #16a34a;
+}
+
+.courierOrderAnalytics-summaryIcon.active {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.courierOrderAnalytics-summaryIcon.cancelled {
+    background: #fff1f2;
+    color: #e11d48;
+}
+
+.courierOrderAnalytics-summaryCard span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+.courierOrderAnalytics-summaryCard strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #1e293b;
+
+    font-size: 20px;
+    font-weight: 750;
+
+    line-height: 1.2;
+}
+
+
+/* ==========================================================
+   MAIN GRID
+========================================================== */
+
+.courierOrderAnalytics-main {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.7fr)
+        minmax(280px, 0.9fr);
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+
+/* ==========================================================
+   COMMON CARD
+========================================================== */
+
+.courierOrderAnalytics-card {
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding: 18px;
+
+    margin-bottom: 14px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 13px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 10px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+
+/* ==========================================================
+   CARD HEADER
+========================================================== */
+
+.courierOrderAnalytics-cardHeader {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 16px;
+}
+
+.courierOrderAnalytics-cardHeader h3 {
+    margin: 0;
+
+    color: #334155;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.35;
+}
+
+.courierOrderAnalytics-cardHeader p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    line-height: 1.45;
+}
+
+.courierOrderAnalytics-cardHeader > span {
+    color: #94a3b8;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ACTIVITY CHART
+========================================================== */
+
+.courierOrderAnalytics-chart {
+    width: 100%;
+
+    height: 220px;
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.courierOrderAnalytics-yAxis {
+    width: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    padding-bottom: 24px;
+
+    color: #cbd5e1;
+
+    font-size: 10px;
+
+    text-align: right;
+}
+
+.courierOrderAnalytics-bars {
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: stretch;
+
+    gap: 6px;
+
+    border-bottom: 1px solid #e8edf3;
+
+    background-image:
+        linear-gradient(
+            to bottom,
+            transparent 24.5%,
+            #f1f5f9 25%,
+            transparent 25.5%,
+            transparent 49.5%,
+            #f1f5f9 50%,
+            transparent 50.5%,
+            transparent 74.5%,
+            #f1f5f9 75%,
+            transparent 75.5%
+        );
+}
+
+.courierOrderAnalytics-barGroup {
+    flex: 1;
+
+    min-width: 0;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.courierOrderAnalytics-barArea {
+    width: 100%;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.courierOrderAnalytics-bar {
+    width: min(70%, 24px);
+
+    min-height: 0;
+
+    border-radius:
+        5px 5px 0 0;
+
+    background: #4f46e5;
+
+    transition:
+        height 0.25s ease,
+        opacity 0.2s ease;
+}
+
+.courierOrderAnalytics-bar:hover {
+    opacity: 0.75;
+}
+
+.courierOrderAnalytics-barGroup > span {
+    height: 24px;
+
+    padding-top: 7px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   CHART LEGEND
+========================================================== */
+
+.courierOrderAnalytics-chartLegend {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-top: 12px;
+}
+
+.courierOrderAnalytics-chartLegend span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.courierOrderAnalytics-chartLegend i {
+    width: 8px;
+    height: 8px;
+
+    display: block;
+
+    border-radius: 50%;
+}
+
+.courierOrderAnalytics-chartLegend i.orders {
+    background: #4f46e5;
+}
+
+.courierOrderAnalytics-chartLegend i.delivered {
+    background: #16a34a;
+}
+
+
+/* ==========================================================
+   OUTCOMES
+========================================================== */
+
+.courierOrderAnalytics-outcomes {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.courierOrderAnalytics-outcomeRow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+.courierOrderAnalytics-outcomeLabel {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.courierOrderAnalytics-outcomeLabel > span:first-child {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+}
+
+.courierOrderAnalytics-outcomeLabel > span.delivered {
+    background: #ecfdf5;
+    color: #16a34a;
+}
+
+.courierOrderAnalytics-outcomeLabel > span.cancelled {
+    background: #fff1f2;
+    color: #e11d48;
+}
+
+.courierOrderAnalytics-outcomeLabel > span.disputed {
+    background: #fff7ed;
+    color: #ea580c;
+}
+
+.courierOrderAnalytics-outcomeRow strong {
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.courierOrderAnalytics-progress {
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #f1f5f9;
+}
+
+.courierOrderAnalytics-progress span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    transition: width 0.3s ease;
+}
+
+.courierOrderAnalytics-progress span.delivered {
+    background: #16a34a;
+}
+
+.courierOrderAnalytics-progress span.cancelled {
+    background: #e11d48;
+}
+
+
+/* ==========================================================
+   STATUS GRID
+========================================================== */
+
+.courierOrderAnalytics-statusGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.courierOrderAnalytics-statusItem {
+    min-width: 0;
+
+    padding: 13px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+.courierOrderAnalytics-statusTop {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 8px;
+}
+
+.courierOrderAnalytics-statusTop span {
+    overflow: hidden;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.courierOrderAnalytics-statusTop strong {
+    color: #334155;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.courierOrderAnalytics-statusTrack {
+    width: 100%;
+
+    height: 6px;
+
+    overflow: hidden;
+
+    border-radius: 10px;
+
+    background: #e2e8f0;
+}
+
+.courierOrderAnalytics-statusTrack span {
+    display: block;
+
+    height: 100%;
+
+    border-radius: inherit;
+
+    background: #4f46e5;
+}
+
+.courierOrderAnalytics-statusItem small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   FINANCIAL GRID
+========================================================== */
+
+.courierOrderAnalytics-financialGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+.courierOrderAnalytics-financialCard {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 15px;
+
+    border: 1px solid #e8edf3;
+
+    border-radius: 11px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 2px 9px rgba(
+            15,
+            23,
+            42,
+            0.025
+        );
+}
+
+.courierOrderAnalytics-financialIcon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+}
+
+.courierOrderAnalytics-financialIcon.orderValue {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.courierOrderAnalytics-financialIcon.earnings {
+    background: #ecfdf5;
+    color: #15803d;
+}
+
+.courierOrderAnalytics-financialCard span {
+    display: block;
+
+    color: #64748b;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.courierOrderAnalytics-financialCard strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #1e293b;
+
+    font-size: 18px;
+
+    font-weight: 750;
+}
+
+.courierOrderAnalytics-financialCard small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   FUNDS GRID
+========================================================== */
+
+.courierOrderAnalytics-fundsGrid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 10px;
+}
+
+.courierOrderAnalytics-fundsGrid > div {
+    padding: 12px;
+
+    border: 1px solid #eef2f6;
+
+    border-radius: 9px;
+
+    background: #fafbfc;
+}
+
+.courierOrderAnalytics-fundsGrid span {
+    display: block;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.courierOrderAnalytics-fundsGrid strong {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   EMPTY
+========================================================== */
+
+.courierOrderAnalytics-empty {
+    padding: 32px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+/* ==========================================================
+   LARGE TABLET
+========================================================== */
+
+@media (max-width: 1050px) {
+
+    .courierOrderAnalytics-main {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .courierOrderAnalytics-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierOrderAnalytics-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 14px;
+    }
+
+    .courierOrderAnalytics-heading {
+        gap: 9px;
+    }
+
+    .courierOrderAnalytics-titleIcon {
+        width: 35px;
+        height: 35px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
+    }
+
+    .courierOrderAnalytics-heading h2 {
+        font-size: 17px;
+    }
+
+    .courierOrderAnalytics-heading p {
+        font-size: 11px;
+    }
+
+    .courierOrderAnalytics-periods {
+        width: 100%;
+    }
+
+    .courierOrderAnalytics-periods button {
+        flex: 1;
+
+        min-height: 34px;
+
+        padding: 0 9px;
+
+        font-size: 11px;
+    }
+
+    .courierOrderAnalytics-summary {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 9px;
+    }
+
+    .courierOrderAnalytics-summaryCard {
+        padding: 12px;
+
+        gap: 9px;
+    }
+
+    .courierOrderAnalytics-summaryIcon {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 8px;
+
+        font-size: 13px;
+    }
+
+    .courierOrderAnalytics-summaryCard span {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-summaryCard strong {
+        font-size: 16px;
+    }
+
+    .courierOrderAnalytics-card {
+        padding: 14px;
+
+        border-radius: 10px;
+    }
+
+    .courierOrderAnalytics-cardHeader h3 {
+        font-size: 14px;
+    }
+
+    .courierOrderAnalytics-cardHeader p {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-cardHeader > span {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-chart {
+        height: 165px;
+
+        gap: 6px;
+    }
+
+    .courierOrderAnalytics-yAxis {
+        width: 25px;
+
+        font-size: 9px;
+    }
+
+    .courierOrderAnalytics-bar {
+        width: 65%;
+
+        border-radius:
+            4px 4px 0 0;
+    }
+
+    .courierOrderAnalytics-barGroup > span {
+        font-size: 9px;
+    }
+
+    .courierOrderAnalytics-chartLegend span {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-outcomeLabel {
+        font-size: 11px;
+    }
+
+    .courierOrderAnalytics-outcomeRow strong {
+        font-size: 12px;
+    }
+
+    .courierOrderAnalytics-statusGrid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .courierOrderAnalytics-statusTop span {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-statusTop strong {
+        font-size: 12px;
+    }
+
+    .courierOrderAnalytics-statusItem small {
+        font-size: 9px;
+    }
+
+    .courierOrderAnalytics-financialGrid {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+    .courierOrderAnalytics-financialCard {
+        padding: 13px;
+    }
+
+    .courierOrderAnalytics-financialCard span {
+        font-size: 11px;
+    }
+
+    .courierOrderAnalytics-financialCard strong {
+        font-size: 16px;
+    }
+
+    .courierOrderAnalytics-financialCard small {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-fundsGrid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .courierOrderAnalytics-fundsGrid span {
+        font-size: 10px;
+    }
+
+    .courierOrderAnalytics-fundsGrid strong {
+        font-size: 13px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 380px) {
+
+    .courierOrderAnalytics-summaryCard {
+        padding: 10px;
+
+        gap: 8px;
+    }
+
+    .courierOrderAnalytics-summaryIcon {
+        width: 29px;
+        height: 29px;
+
+        font-size: 12px;
+    }
+
+    .courierOrderAnalytics-summaryCard span {
+        font-size: 9px;
+    }
+
+    .courierOrderAnalytics-summaryCard strong {
+        font-size: 15px;
+    }
+
+    .courierOrderAnalytics-chart {
+        height: 145px;
+    }
+
+    .courierOrderAnalytics-fundsGrid {
+        gap: 7px;
+    }
+
+    .courierOrderAnalytics-fundsGrid > div {
+        padding: 10px;
+    }
+
+    .courierOrderAnalytics-fundsGrid span {
+        font-size: 9px;
+    }
+
+    .courierOrderAnalytics-fundsGrid strong {
+        font-size: 12px;
+    }
+
+}
+

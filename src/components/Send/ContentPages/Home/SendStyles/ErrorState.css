@@ -1,0 +1,214 @@
+/* =========================================================
+   PAYMENT ERROR
+========================================================= */
+
+.paymentErrorContainer {
+
+    width: 100%;
+
+    min-height: calc(100vh - 40px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    background: #F8F9FB;
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.paymentErrorCard {
+
+    width: 100%;
+    max-width: 460px;
+
+    background: #FFFFFF;
+
+    border: 1px solid #E5E7EB;
+
+    border-radius: 18px;
+
+    padding: 40px 32px;
+
+    text-align: center;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 8px 24px rgba(17, 24, 39, .06);
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.paymentErrorIcon {
+
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 22px;
+
+    border-radius: 50%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #FEF2F2;
+}
+
+.paymentErrorIcon svg {
+
+    font-size: 32px;
+
+    color: #DC2626;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.paymentErrorTitle {
+
+    margin: 0;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.paymentErrorMessage {
+
+    margin: 16px 0 28px;
+
+    font-size: 14px;
+
+    line-height: 24px;
+
+    color: #6B7280;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.paymentErrorButton {
+
+    width: 100%;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #111827;
+
+    color: #FFFFFF;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .25s ease;
+}
+
+.paymentErrorButton:hover {
+
+    background: #1F2937;
+}
+
+.paymentErrorButton:active {
+
+    transform: scale(.98);
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .paymentErrorContainer {
+
+        min-height: calc(100vh - 85px);
+
+        padding: 24px;
+    }
+
+    .paymentErrorCard {
+
+        padding: 36px 28px;
+    }
+
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .paymentErrorContainer {
+
+        min-height: calc(100vh - 85px);
+
+        padding: 18px;
+    }
+
+    .paymentErrorCard {
+
+        padding: 28px 22px;
+
+        border-radius: 16px;
+    }
+
+    .paymentErrorIcon {
+
+        width: 60px;
+        height: 60px;
+
+        margin-bottom: 18px;
+    }
+
+    .paymentErrorIcon svg {
+
+        font-size: 28px;
+    }
+
+    .paymentErrorTitle {
+
+        font-size: 20px;
+    }
+
+    .paymentErrorMessage {
+
+        margin: 14px 0 24px;
+
+        font-size: 13px;
+
+        line-height: 22px;
+    }
+
+    .paymentErrorButton {
+
+        height: 48px;
+
+        font-size: 14px;
+    }
+
+}

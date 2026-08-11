@@ -1,4 +1,137 @@
-/* .resultMapContainer {
+/*
+========================================================
+RESULT MAP
+========================================================
+*/
+
+.resultMapContainer {
+
     width: 100%;
-    height: 55vh;
-} */
+
+    height: 100%;
+
+    min-height: 100%;
+
+    position: relative;
+
+    overflow: hidden;
+
+    border-radius: inherit;
+
+    background: #f5f5f5;
+
+}
+
+/*
+========================================================
+GOOGLE MAP
+========================================================
+*/
+
+.resultMapContainer > div {
+
+    width: 100% !important;
+
+    height: 100% !important;
+
+}
+
+/*
+========================================================
+LOADING
+========================================================
+*/
+
+.resultMapLoading {
+
+    width: 100%;
+
+    height: 100%;
+
+    min-height: 300px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    background: #f7f8fa;
+
+    color: #6b7280;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+}
+
+/*
+========================================================
+MAP CONTROLS
+========================================================
+*/
+
+.gm-style button {
+
+    transition: .2s;
+
+}
+
+.gm-style button:hover {
+
+    transform: scale(1.03);
+
+}
+
+/*
+========================================================
+INFO WINDOWS
+========================================================
+*/
+
+.gm-style .gm-style-iw {
+
+    border-radius: 12px;
+
+}
+
+/*
+========================================================
+TABLET
+========================================================
+*/
+
+@media (max-width:900px){
+
+    .resultMapContainer{
+
+        min-height:400px;
+
+    }
+
+}
+
+/*
+========================================================
+MOBILE
+========================================================
+*/
+
+@media (max-width:600px){
+
+    .resultMapContainer{
+
+        min-height:320px;
+
+    }
+
+    .resultMapLoading{
+
+        min-height:320px;
+
+        font-size:16px;
+
+    }
+
+}

@@ -1,0 +1,527 @@
+/* ==========================================================
+   TRACKING HEADER
+========================================================== */
+
+.trackingHeader {
+    width: 100%;
+    min-height: 68px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 12px 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 18px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ==========================================================
+   LEFT SECTION
+========================================================== */
+
+.trackingHeader-left {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.trackingHeader-backButton {
+    flex-shrink: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 34px;
+
+    padding: 7px 11px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+.trackingHeader-backButton:hover {
+    background: #f8fafc;
+
+    border-color: #d8dee7;
+
+    color: #111827;
+}
+
+.trackingHeader-backButton:active {
+    transform: translateY(1px);
+}
+
+.trackingHeader-backButton svg {
+    font-size: 10px;
+}
+
+
+/* ==========================================================
+   DIVIDER
+========================================================== */
+
+.trackingHeader-divider {
+    width: 1px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    background: #e8ebf0;
+}
+
+
+/* ==========================================================
+   HEADER CONTENT
+========================================================== */
+
+.trackingHeader-content {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.trackingHeader-titleRow {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+}
+
+.trackingHeader-titleIcon {
+    flex-shrink: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+}
+
+.trackingHeader-title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    line-height: 1.2;
+}
+
+
+/* ==========================================================
+   COURIER INFORMATION ROW
+========================================================== */
+
+.trackingHeader-courierRow {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+}
+
+
+/* ==========================================================
+   COURIER NAME
+========================================================== */
+
+.trackingHeader-courierName {
+    max-width: 200px;
+
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ONLINE / OFFLINE STATUS
+========================================================== */
+
+.trackingHeader-onlineStatus {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+.trackingHeader-onlineStatus svg {
+    font-size: 5px;
+}
+
+
+/* ONLINE */
+
+.trackingHeader-online {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+
+/* OFFLINE */
+
+.trackingHeader-offline {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   TRANSPORTATION TYPE
+========================================================== */
+
+.trackingHeader-transport {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+
+/* ==========================================================
+   APPROVAL STATUS
+========================================================== */
+
+.trackingHeader-approvalStatus {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 3px 8px;
+
+    border-radius: 999px;
+
+    font-size: 8px;
+    font-weight: 600;
+
+    line-height: 1.2;
+}
+
+
+/* APPROVED */
+
+.trackingHeader-approved {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+/* PENDING */
+
+.trackingHeader-pending {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   RIGHT SECTION
+========================================================== */
+
+.trackingHeader-right {
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+}
+
+
+/* ==========================================================
+   REFRESH BUTTON
+========================================================== */
+
+.trackingHeader-refreshButton {
+    min-height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.trackingHeader-refreshButton:hover {
+    background: #f8fafc;
+
+    border-color: #d8dee7;
+
+    color: #111827;
+}
+
+.trackingHeader-refreshButton:active {
+    transform: translateY(1px);
+}
+
+.trackingHeader-refreshButton:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   REFRESH ICON
+========================================================== */
+
+.trackingHeader-refreshIcon {
+    flex-shrink: 0;
+
+    font-size: 9px;
+}
+
+
+/* ==========================================================
+   REFRESH SPINNING ANIMATION
+========================================================== */
+
+.trackingHeader-refreshSpinning {
+    animation:
+        trackingHeader-spin 0.8s linear infinite;
+}
+
+@keyframes trackingHeader-spin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .trackingHeader {
+        min-height: 64px;
+
+        padding: 11px 13px;
+
+        gap: 12px;
+    }
+
+
+    .trackingHeader-left {
+        gap: 10px;
+    }
+
+
+    .trackingHeader-courierName {
+        max-width: 160px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .trackingHeader {
+        min-height: auto;
+
+        align-items: flex-start;
+
+        padding: 11px;
+
+        border-radius: 12px;
+    }
+
+
+    .trackingHeader-left {
+        align-items: flex-start;
+
+        gap: 9px;
+    }
+
+
+    .trackingHeader-divider {
+        height: 28px;
+    }
+
+
+    .trackingHeader-title {
+        font-size: 14px;
+    }
+
+
+    .trackingHeader-titleIcon {
+        font-size: 11px;
+    }
+
+
+    .trackingHeader-courierRow {
+        gap: 5px;
+    }
+
+
+    .trackingHeader-courierName {
+        width: 100%;
+
+        max-width: 160px;
+    }
+
+
+    .trackingHeader-right {
+        margin-left: auto;
+    }
+
+
+    .trackingHeader-refreshButton {
+        width: 34px;
+        height: 34px;
+
+        min-height: 34px;
+
+        padding: 0;
+    }
+
+
+    .trackingHeader-refreshButton span {
+        display: none;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .trackingHeader-backButton {
+        width: 32px;
+        height: 32px;
+
+        min-height: 32px;
+
+        padding: 0;
+    }
+
+
+    .trackingHeader-backButton span {
+        display: none;
+    }
+
+
+    .trackingHeader-divider {
+        display: none;
+    }
+
+
+    .trackingHeader-title {
+        font-size: 13px;
+    }
+
+
+    .trackingHeader-transport,
+    .trackingHeader-approvalStatus {
+        display: none;
+    }
+
+}

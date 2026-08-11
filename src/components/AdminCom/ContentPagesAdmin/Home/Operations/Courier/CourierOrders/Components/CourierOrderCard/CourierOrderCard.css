@@ -1,0 +1,732 @@
+/* ==========================================================
+   COURIER ORDER CARD
+========================================================== */
+
+.courierOrderCard {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7ebf0;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 3px 14px rgba(15, 23, 42, 0.035);
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.courierOrderCard:hover {
+    transform: translateY(-2px);
+
+    border-color: #d8dee7;
+
+    box-shadow:
+        0 7px 22px rgba(15, 23, 42, 0.065);
+}
+
+
+/* ==========================================================
+   TOP
+========================================================== */
+
+.courierOrderCard-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding-bottom: 13px;
+
+    border-bottom: 1px solid #f0f2f5;
+}
+
+
+/* ==========================================================
+   ORDER IDENTITY
+========================================================== */
+
+.courierOrderCard-orderIdentity {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+
+.courierOrderCard-orderIcon {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: #f1f5f9;
+
+    color: #475569;
+
+    font-size: 10px;
+}
+
+
+.courierOrderCard-orderIdentity > div:last-child {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    min-width: 0;
+}
+
+
+.courierOrderCard-orderLabel {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+.courierOrderCard-orderId {
+    color: #1e293b;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.courierOrderCard-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-shrink: 0;
+
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.courierOrderCard-statusDot {
+    width: 5px;
+    height: 5px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* ==========================================================
+   DEFAULT STATUS
+========================================================== */
+
+.courierOrderCard-statusBadge-unknown {
+    background: #f1f5f9;
+
+    color: #64748b;
+}
+
+
+/* ==========================================================
+   PENDING
+========================================================== */
+
+.courierOrderCard-statusBadge-pending {
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+
+/* ==========================================================
+   ASSIGNED
+========================================================== */
+
+.courierOrderCard-statusBadge-assigned {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+/* ==========================================================
+   ACCEPTED
+========================================================== */
+
+.courierOrderCard-statusBadge-accepted {
+    background: #eef2ff;
+
+    color: #4338ca;
+}
+
+
+/* ==========================================================
+   PICKED UP
+========================================================== */
+
+.courierOrderCard-statusBadge-picked_up {
+    background: #f5f3ff;
+
+    color: #7c3aed;
+}
+
+
+/* ==========================================================
+   IN TRANSIT
+========================================================== */
+
+.courierOrderCard-statusBadge-in_transit {
+    background: #eff6ff;
+
+    color: #1d4ed8;
+}
+
+
+/* ==========================================================
+   DELIVERED
+========================================================== */
+
+.courierOrderCard-statusBadge-delivered {
+    background: #ecfdf5;
+
+    color: #15803d;
+}
+
+
+/* ==========================================================
+   CANCELLED
+========================================================== */
+
+.courierOrderCard-statusBadge-cancelled {
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+
+/* ==========================================================
+   ROUTE
+========================================================== */
+
+.courierOrderCard-route {
+    padding: 15px 0 13px;
+}
+
+
+/* ==========================================================
+   LOCATION
+========================================================== */
+
+.courierOrderCard-location {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+
+.courierOrderCard-locationIcon {
+    width: 25px;
+    height: 25px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-top: 1px;
+
+    border-radius: 7px;
+
+    font-size: 8px;
+}
+
+
+.courierOrderCard-pickupIcon {
+    background: #ecfdf5;
+
+    color: #16a34a;
+}
+
+
+.courierOrderCard-destinationIcon {
+    background: #fef2f2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   LOCATION CONTENT
+========================================================== */
+
+.courierOrderCard-locationContent {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.courierOrderCard-locationLabel {
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+
+.courierOrderCard-locationContent p {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: #334155;
+
+    font-size: 9px;
+
+    font-weight: 500;
+
+    line-height: 1.45;
+
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+}
+
+
+/* ==========================================================
+   ROUTE CONNECTOR
+========================================================== */
+
+.courierOrderCard-routeConnector {
+    height: 15px;
+
+    margin-left: 12px;
+
+    display: flex;
+
+    align-items: center;
+}
+
+
+.courierOrderCard-routeConnector span {
+    width: 1px;
+
+    height: 100%;
+
+    border-left: 1px dashed #cbd5e1;
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierOrderCard-meta {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        auto;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 0;
+
+    border-top: 1px solid #f0f2f5;
+
+    border-bottom: 1px solid #f0f2f5;
+}
+
+
+/* ==========================================================
+   META ITEM
+========================================================== */
+
+.courierOrderCard-metaItem {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.courierOrderCard-metaItem > svg {
+    flex-shrink: 0;
+
+    color: #94a3b8;
+
+    font-size: 9px;
+}
+
+
+.courierOrderCard-metaItem > div {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.courierOrderCard-metaItem span {
+    color: #94a3b8;
+
+    font-size: 6px;
+
+    font-weight: 500;
+}
+
+
+.courierOrderCard-metaItem strong {
+    overflow: hidden;
+
+    color: #475569;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   PRICE
+========================================================== */
+
+.courierOrderCard-price {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    gap: 2px;
+}
+
+
+.courierOrderCard-price span {
+    color: #94a3b8;
+
+    font-size: 6px;
+
+    font-weight: 500;
+}
+
+
+.courierOrderCard-price strong {
+    color: #1e293b;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   FOOTER
+========================================================== */
+
+.courierOrderCard-footer {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding-top: 12px;
+}
+
+
+.courierOrderCard-footerText {
+    color: #94a3b8;
+
+    font-size: 7px;
+}
+
+
+/* ==========================================================
+   VIEW BUTTON
+========================================================== */
+
+.courierOrderCard-viewButton {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    padding: 7px 9px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 7px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierOrderCard-viewButton:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+}
+
+
+.courierOrderCard-viewButton svg {
+    font-size: 7px;
+
+    transition:
+        transform 0.2s ease;
+}
+
+
+.courierOrderCard-viewButton:hover svg {
+    transform: translateX(2px);
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierOrderCard {
+        padding: 14px;
+    }
+
+
+    .courierOrderCard-meta {
+        grid-template-columns:
+            1fr
+            1fr
+            auto;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierOrderCard {
+        padding: 13px;
+
+        border-radius: 12px;
+    }
+
+
+    .courierOrderCard-top {
+        gap: 8px;
+    }
+
+
+    .courierOrderCard-orderIcon {
+        width: 27px;
+        height: 27px;
+
+        font-size: 9px;
+    }
+
+
+    .courierOrderCard-orderLabel {
+        font-size: 6px;
+    }
+
+
+    .courierOrderCard-orderId {
+        font-size: 9px;
+    }
+
+
+    .courierOrderCard-status {
+        padding: 4px 7px;
+
+        font-size: 6px;
+    }
+
+
+    .courierOrderCard-locationIcon {
+        width: 23px;
+        height: 23px;
+    }
+
+
+    .courierOrderCard-locationContent p {
+        font-size: 8px;
+    }
+
+
+    .courierOrderCard-meta {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+
+    .courierOrderCard-price {
+        grid-column: 1 / -1;
+
+        align-items: flex-start;
+
+        padding-top: 4px;
+
+        border-top: 1px solid #f1f5f9;
+    }
+
+
+    .courierOrderCard-footerText {
+        display: none;
+    }
+
+
+    .courierOrderCard-footer {
+        justify-content: flex-end;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierOrderCard {
+        padding: 11px;
+    }
+
+
+    .courierOrderCard-status {
+        max-width: 90px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+    }
+
+
+    .courierOrderCard-locationContent p {
+        font-size: 7px;
+    }
+
+
+    .courierOrderCard-metaItem strong {
+        font-size: 7px;
+    }
+
+
+    .courierOrderCard-price strong {
+        font-size: 11px;
+    }
+
+
+    .courierOrderCard-viewButton {
+        padding: 7px 8px;
+
+        font-size: 6px;
+    }
+
+}

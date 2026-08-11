@@ -1,0 +1,272 @@
+/* ==========================================================
+   COURIER STATS
+========================================================== */
+
+.courierStats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(6, minmax(0, 1fr));
+
+    gap: 16px;
+
+    width: 100%;
+
+    margin-bottom: 28px;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.courierStats-card {
+    position: relative;
+
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #e8ebef;
+
+    border-radius: 16px;
+
+    background: #ffffff;
+
+    font-family: inherit;
+
+    text-align: left;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+/* ==========================================================
+   CLICKABLE CARDS
+========================================================== */
+
+.courierStats-cardClickable {
+    cursor: pointer;
+}
+
+.courierStats-cardClickable:hover {
+    transform: translateY(-3px);
+
+    border-color: #d9dde3;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.07);
+}
+
+.courierStats-cardClickable:active {
+    transform: translateY(-1px);
+}
+
+/* ==========================================================
+   STATIC CARD
+========================================================== */
+
+.courierStats-cardStatic {
+    cursor: default;
+}
+
+/* ==========================================================
+   ACTIVE FILTER
+========================================================== */
+
+.courierStats-cardActive {
+    border-color: #111827;
+
+    background: #fafafa;
+
+    box-shadow:
+        0 0 0 2px rgba(17, 24, 39, 0.08);
+}
+
+.courierStats-cardActive:hover {
+    transform: translateY(-3px);
+
+    border-color: #111827;
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierStats-icon {
+    width: 50px;
+    height: 50px;
+
+    min-width: 50px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 13px;
+
+    color: #ffffff;
+
+    font-size: 19px;
+
+    flex-shrink: 0;
+}
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierStats-content {
+    min-width: 0;
+
+    flex: 1;
+}
+
+.courierStats-title {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #6b7280;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.courierStats-value {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 27px;
+    font-weight: 700;
+
+    line-height: 1.15;
+}
+
+.courierStats-subtitle {
+    margin: 5px 0 0;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+/* ==========================================================
+   ACTIVE INDICATOR
+========================================================== */
+
+.courierStats-activeIndicator {
+    position: absolute;
+
+    top: 10px;
+    right: 10px;
+
+    padding: 3px 7px;
+
+    border-radius: 999px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+/* ==========================================================
+   FOCUS
+========================================================== */
+
+.courierStats-cardClickable:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.25);
+
+    outline-offset: 2px;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1300px) {
+
+    .courierStats {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierStats {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 14px;
+    }
+
+    .courierStats-card {
+        padding: 18px;
+    }
+
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .courierStats {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-bottom: 20px;
+    }
+
+    .courierStats-card {
+        width: 100%;
+
+        padding: 16px;
+
+        border-radius: 14px;
+    }
+
+    .courierStats-icon {
+        width: 46px;
+        height: 46px;
+
+        min-width: 46px;
+
+        font-size: 17px;
+    }
+
+    .courierStats-value {
+        font-size: 25px;
+    }
+
+}

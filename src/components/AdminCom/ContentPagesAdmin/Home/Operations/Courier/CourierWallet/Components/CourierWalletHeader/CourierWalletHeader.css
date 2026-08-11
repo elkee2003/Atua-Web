@@ -1,0 +1,674 @@
+
+/* ==========================================================
+   COURIER WALLET HEADER
+========================================================== */
+
+.courierWalletHeader {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 18px 20px;
+  margin-bottom: 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #e7ebf0;
+  border-radius: 13px;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.025);
+}
+
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.courierWalletHeader-left {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.courierWalletHeader-backButton {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #64748b;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courierWalletHeader-backButton svg {
+  font-size: 17px;
+}
+
+.courierWalletHeader-backButton:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+
+  transform: translateX(-1px);
+}
+
+.courierWalletHeader-backButton:active {
+  transform: translateX(0);
+}
+
+.courierWalletHeader-backButton:focus-visible {
+  outline: 2px solid #94a3b8;
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   WALLET ICON
+========================================================== */
+
+.courierWalletHeader-walletIcon {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #f1f5f9;
+  color: #475569;
+
+  font-size: 18px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierWalletHeader-title {
+  min-width: 0;
+}
+
+.courierWalletHeader-titleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+  gap: 9px;
+}
+
+.courierWalletHeader-title h1 {
+  margin: 0;
+
+  color: #1e293b;
+
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.courierWalletHeader-title p {
+  margin: 5px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+
+/* ==========================================================
+   APPROVED BADGE
+========================================================== */
+
+.courierWalletHeader-approved {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 9px;
+
+  border-radius: 6px;
+
+  background: #ecfdf3;
+  color: #15803d;
+
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  white-space: nowrap;
+}
+
+.courierWalletHeader-approved svg {
+  font-size: 13px;
+}
+
+
+/* ==========================================================
+   RIGHT
+========================================================== */
+
+.courierWalletHeader-right {
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 18px;
+}
+
+
+/* ==========================================================
+   COURIER
+========================================================== */
+
+.courierWalletHeader-courier {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+
+/* ==========================================================
+   AVATAR
+========================================================== */
+
+.courierWalletHeader-avatar {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 50%;
+
+  background: #334155;
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.courierWalletHeader-avatar img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+
+/* ==========================================================
+   COURIER INFORMATION
+========================================================== */
+
+.courierWalletHeader-courierInfo {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.courierWalletHeader-courierInfo strong {
+  max-width: 180px;
+
+  overflow: hidden;
+
+  color: #334155;
+
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   META
+========================================================== */
+
+.courierWalletHeader-meta {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+  font-weight: 550;
+  line-height: 1.3;
+
+  white-space: nowrap;
+}
+
+.courierWalletHeader-metaDivider {
+  color: #cbd5e1;
+}
+
+.courierWalletHeader-meta .online {
+  color: #16a34a;
+}
+
+.courierWalletHeader-meta .offline {
+  color: #94a3b8;
+}
+
+
+/* ==========================================================
+   WALLET ID
+========================================================== */
+
+.courierWalletHeader-walletId {
+  min-width: 120px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 4px;
+
+  padding-left: 16px;
+
+  border-left: 1px solid #edf1f5;
+}
+
+.courierWalletHeader-walletId span {
+  color: #94a3b8;
+
+  font-size: 11px;
+  font-weight: 550;
+  line-height: 1.3;
+}
+
+.courierWalletHeader-walletId strong {
+  max-width: 140px;
+
+  overflow: hidden;
+
+  color: #475569;
+
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.3;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* ==========================================================
+   REFRESH
+========================================================== */
+
+.courierWalletHeader-refresh {
+  min-height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 14px;
+
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+
+  outline: none;
+
+  background: #ffffff;
+  color: #64748b;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.courierWalletHeader-refresh svg {
+  font-size: 15px;
+}
+
+.courierWalletHeader-refresh:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+
+  transform: translateY(-1px);
+}
+
+.courierWalletHeader-refresh:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.courierWalletHeader-refresh:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+
+/* ==========================================================
+   REFRESH ANIMATION
+========================================================== */
+
+.courierWalletHeader-refresh .spinning {
+  animation: courierWalletHeaderSpin 0.8s linear infinite;
+}
+
+@keyframes courierWalletHeaderSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 950px) {
+  .courierWalletHeader {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 16px;
+
+    padding: 16px;
+  }
+
+  .courierWalletHeader-left {
+    width: 100%;
+  }
+
+  .courierWalletHeader-right {
+    width: 100%;
+
+    justify-content: space-between;
+
+    gap: 16px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+  .courierWalletHeader {
+    padding: 14px;
+
+    border-radius: 11px;
+  }
+
+  .courierWalletHeader-left {
+    gap: 9px;
+  }
+
+  .courierWalletHeader-backButton {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 8px;
+  }
+
+  .courierWalletHeader-backButton svg {
+    font-size: 15px;
+  }
+
+  .courierWalletHeader-walletIcon {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+  }
+
+  .courierWalletHeader-title h1 {
+    font-size: 18px;
+  }
+
+  .courierWalletHeader-title p {
+    font-size: 12px;
+  }
+
+  .courierWalletHeader-approved {
+    padding: 4px 8px;
+
+    font-size: 10px;
+  }
+
+  .courierWalletHeader-right {
+    width: 100%;
+
+    flex-wrap: wrap;
+
+    justify-content: space-between;
+
+    gap: 10px;
+  }
+
+  .courierWalletHeader-courier {
+    flex: 1;
+
+    min-width: 150px;
+  }
+
+  .courierWalletHeader-avatar {
+    width: 38px;
+    height: 38px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletHeader-courierInfo strong {
+    max-width: 170px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletHeader-meta {
+    font-size: 11px;
+  }
+
+  .courierWalletHeader-walletId {
+    flex: 1;
+
+    min-width: 100px;
+
+    padding-left: 10px;
+  }
+
+  .courierWalletHeader-walletId span {
+    font-size: 10px;
+  }
+
+  .courierWalletHeader-walletId strong {
+    font-size: 11px;
+  }
+
+  .courierWalletHeader-refresh {
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    font-size: 12px;
+  }
+
+  .courierWalletHeader-refresh svg {
+    font-size: 14px;
+  }
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 420px) {
+  .courierWalletHeader {
+    padding: 12px;
+  }
+
+  .courierWalletHeader-left {
+    gap: 8px;
+  }
+
+  .courierWalletHeader-title h1 {
+    font-size: 16px;
+  }
+
+  .courierWalletHeader-title p {
+    font-size: 11px;
+  }
+
+  .courierWalletHeader-walletIcon {
+    width: 35px;
+    height: 35px;
+
+    font-size: 15px;
+  }
+
+  .courierWalletHeader-backButton {
+    width: 32px;
+    height: 32px;
+  }
+
+  .courierWalletHeader-right {
+    display: grid;
+
+    grid-template-columns:
+      minmax(0, 1fr)
+      auto;
+
+    gap: 12px;
+  }
+
+  .courierWalletHeader-courier {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .courierWalletHeader-courierInfo strong {
+    max-width: 160px;
+
+    font-size: 13px;
+  }
+
+  .courierWalletHeader-walletId {
+    padding-left: 0;
+
+    border-left: none;
+  }
+
+  .courierWalletHeader-walletId span {
+    font-size: 10px;
+  }
+
+  .courierWalletHeader-walletId strong {
+    font-size: 11px;
+  }
+}
+
+
+/* ==========================================================
+   VERY SMALL MOBILE
+========================================================== */
+
+@media (max-width: 330px) {
+  .courierWalletHeader-title p {
+    display: none;
+  }
+
+  .courierWalletHeader-approved {
+    display: none;
+  }
+
+  .courierWalletHeader-walletId {
+    min-width: 70px;
+  }
+
+  .courierWalletHeader-refresh span {
+    display: none;
+  }
+
+  .courierWalletHeader-refresh {
+    width: 38px;
+
+    padding: 0;
+  }
+
+  .courierWalletHeader-refresh svg {
+    font-size: 14px;
+  }
+}
+

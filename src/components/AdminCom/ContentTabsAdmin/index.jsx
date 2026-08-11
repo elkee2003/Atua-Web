@@ -1,100 +1,105 @@
-import React from 'react';
-import { FaHome, FaBell, FaCompass, FaSearch, FaUser, FaUsers } from 'react-icons/fa';
+import React from "react";
+import { FaHome, FaBell, FaUser } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
-import './Sidebar.css';
+import "./Sidebar.css";
 
-function ContentTabsClient ({ unreadCount }){
+function ContentTabsAdmin({ unreadCount }) {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  return (
+    <>
+      {/* ===========================
+                Desktop Sidebar
+            =========================== */}
+      <aside className="admin-sidebar">
+        <div className="admin-logoClick" onClick={() => navigate("/")}>
+          <img src="/AtuaSoloLogoTrans.png" alt="Atua Logo" />
+        </div>
 
-    return (
-        <>
-            {/* Sidebar for larger screens */}
-            <div className="client-sidebar">
-                {/* <h2>Atua</h2> */}
-                <div 
-                    className='client-logoClickClient'
-                    onClick={() => navigate('/')}
-                >
-                    <img 
-                        src={'/AtuaSoloLogoTrans.png'}
-                        alt="logo" 
-                        width={150} 
-                    />
+        <nav>
+          <ul>
+            <li>
+              <NavLink
+                to="/admin/home"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                <div className="admin-nav-container">
+                  <FaHome />
+                  <span>Home</span>
                 </div>
-                <nav>
-                    <ul>
-                        <li>
-                            {/* Approved */}
-                            <NavLink 
-                                to="/admin/home"
-                                className={({ isActive }) => isActive ? 'active-link' : ''}
-                            >
-                                <div className='client-nav-container'>
-                                    <FaHome /> Home
-                                </div>
-                            </NavLink>
-                        </li>
+              </NavLink>
+            </li>
 
-                        <li>
-                            <NavLink 
-                                to="/admin/alert"
-                                className={({ isActive }) => isActive ? 'active-link' : ''}
-                            >
-                                <div className='client-nav-container'>
-                                    <FaBell /> Alerts
-                                    {unreadCount > 0 && (
-                                        <span className="clientNotification-badge">{unreadCount}</span>
-                                    )}
-                                </div>
-                            </NavLink>
-                        </li>
+            <li>
+              <NavLink
+                to="/admin/alert"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                <div className="admin-nav-container">
+                  <FaBell />
+                  <span>Alerts</span>
 
-                        <li>
-                            <NavLink 
-                                to="/admin/profile"
-                                className={({ isActive }) => isActive ? 'active-link' : ''}
-                            >
-                                <div className='client-nav-container'>
-                                    <FaUser /> Profile
-                                </div>
-                            </NavLink>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                  {unreadCount > 0 && (
+                    <span className="adminNotification-badge">
+                      {unreadCount}
+                    </span>
+                  )}
+                </div>
+              </NavLink>
+            </li>
 
-            {/* Bottom tab navigator for smaller screens */}
-            <div className="client-bottom-nav">
-                {/* Approved */}
-                <NavLink 
-                    to="/admin/home"
-                    className={({ isActive }) => isActive ? 'active-link' : ''}
-                >
-                    <FaHome /> Home
-                </NavLink>
+            <li>
+              <NavLink
+                to="/admin/profile"
+                className={({ isActive }) => (isActive ? "active-link" : "")}
+              >
+                <div className="admin-nav-container">
+                  <FaUser />
+                  <span>Profile</span>
+                </div>
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </aside>
 
-                <NavLink 
-                    to="/admin/alert"
-                    className={({ isActive }) => isActive ? 'active-link' : ''}
-                >
-                    <div className='clientBottomNavBellCon'>
-                    <FaBell /> Alerts
-                        {unreadCount > 0 && (
-                            <span className="clientNotification-badge">{unreadCount}</span>
-                        )}
-                    </div>
-                </NavLink>
+      {/* ===========================
+                Mobile Bottom Navigation
+            =========================== */}
 
-                <NavLink Link 
-                    to="/admin/profile"
-                    className={({ isActive }) => isActive ? 'active-link' : ''}
-                >
-                    <FaUser /> Profile
-                </NavLink>
-            </div>
-        </>
-    )
+      <div className="admin-bottom-nav">
+        <NavLink
+          to="/admin/home"
+          className={({ isActive }) => (isActive ? "active-link" : "")}
+        >
+          <FaHome />
+          <span>Home</span>
+        </NavLink>
+
+        <NavLink
+          to="/admin/alert"
+          className={({ isActive }) => (isActive ? "active-link" : "")}
+        >
+          <div className="adminBottomNavBellCon">
+            <FaBell />
+            <span>Alerts</span>
+
+            {unreadCount > 0 && (
+              <span className="adminNotification-badge">{unreadCount}</span>
+            )}
+          </div>
+        </NavLink>
+
+        <NavLink
+          to="/admin/profile"
+          className={({ isActive }) => (isActive ? "active-link" : "")}
+        >
+          <FaUser />
+          <span>Profile</span>
+        </NavLink>
+      </div>
+    </>
+  );
 }
 
-export default ContentTabsClient;
+export default ContentTabsAdmin;

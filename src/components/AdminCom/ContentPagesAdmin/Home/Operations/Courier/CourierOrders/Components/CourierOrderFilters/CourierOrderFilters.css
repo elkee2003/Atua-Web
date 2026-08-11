@@ -1,0 +1,462 @@
+/* ==========================================================
+   COURIER ORDER FILTERS
+========================================================== */
+
+.courierOrderFilters {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-bottom: 18px;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.courierOrderFilters-header {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+}
+
+
+/* ==========================================================
+   TITLE
+========================================================== */
+
+.courierOrderFilters-title {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #64748b;
+
+    font-size: 7px;
+
+    font-weight: 600;
+}
+
+
+.courierOrderFilters-title svg {
+    color: #94a3b8;
+
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   CLEAR
+========================================================== */
+
+.courierOrderFilters-clear {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 4px 7px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    background: transparent;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 6px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.courierOrderFilters-clear:hover {
+    background: #f1f5f9;
+
+    color: #1e293b;
+}
+
+
+.courierOrderFilters-clear svg {
+    font-size: 6px;
+}
+
+
+/* ==========================================================
+   FILTER LIST
+========================================================== */
+
+.courierOrderFilters-list {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    overflow-x: auto;
+
+    padding-bottom: 2px;
+
+    scrollbar-width: none;
+}
+
+
+.courierOrderFilters-list::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* ==========================================================
+   FILTER OPTION
+========================================================== */
+
+.courierOrderFilters-option {
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
+
+    min-height: 30px;
+
+    padding: 6px 10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #64748b;
+
+    font-family: inherit;
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierOrderFilters-option:hover {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #334155;
+}
+
+
+.courierOrderFilters-option:active {
+    transform: translateY(1px);
+}
+
+
+.courierOrderFilters-option:focus-visible {
+    outline: 2px solid #64748b;
+
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.courierOrderFilters-icon {
+    width: 18px;
+    height: 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 5px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 7px;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+
+/* ==========================================================
+   LABEL
+========================================================== */
+
+.courierOrderFilters-label {
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   ALL
+========================================================== */
+
+.courierOrderFilters-all.active {
+    background: #f1f5f9;
+
+    border-color: #94a3b8;
+
+    color: #334155;
+
+    box-shadow:
+        0 2px 7px rgba(15, 23, 42, 0.06);
+}
+
+
+.courierOrderFilters-all.active
+.courierOrderFilters-icon {
+    background: #e2e8f0;
+
+    color: #475569;
+}
+
+
+/* ==========================================================
+   PENDING
+========================================================== */
+
+.courierOrderFilters-pending.active {
+    background: #fff7ed;
+
+    border-color: #fdba74;
+
+    color: #c2410c;
+
+    box-shadow:
+        0 2px 7px rgba(249, 115, 22, 0.08);
+}
+
+
+.courierOrderFilters-pending.active
+.courierOrderFilters-icon {
+    background: #ffedd5;
+
+    color: #ea580c;
+}
+
+
+/* ==========================================================
+   IN TRANSIT
+========================================================== */
+
+.courierOrderFilters-in_transit.active {
+    background: #eff6ff;
+
+    border-color: #93c5fd;
+
+    color: #1d4ed8;
+
+    box-shadow:
+        0 2px 7px rgba(37, 99, 235, 0.08);
+}
+
+
+.courierOrderFilters-in_transit.active
+.courierOrderFilters-icon {
+    background: #dbeafe;
+
+    color: #2563eb;
+}
+
+
+/* ==========================================================
+   DELIVERED
+========================================================== */
+
+.courierOrderFilters-delivered.active {
+    background: #ecfdf5;
+
+    border-color: #86efac;
+
+    color: #15803d;
+
+    box-shadow:
+        0 2px 7px rgba(22, 163, 74, 0.08);
+}
+
+
+.courierOrderFilters-delivered.active
+.courierOrderFilters-icon {
+    background: #dcfce7;
+
+    color: #16a34a;
+}
+
+
+/* ==========================================================
+   CANCELLED
+========================================================== */
+
+.courierOrderFilters-cancelled.active {
+    background: #fef2f2;
+
+    border-color: #fca5a5;
+
+    color: #b91c1c;
+
+    box-shadow:
+        0 2px 7px rgba(220, 38, 38, 0.08);
+}
+
+
+.courierOrderFilters-cancelled.active
+.courierOrderFilters-icon {
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   ACTIVE ICON
+========================================================== */
+
+.courierOrderFilters-option.active
+.courierOrderFilters-icon {
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 900px) {
+
+    .courierOrderFilters-option {
+        min-height: 29px;
+
+        padding: 6px 9px;
+
+        font-size: 7px;
+    }
+
+
+    .courierOrderFilters-icon {
+        width: 17px;
+        height: 17px;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierOrderFilters {
+        margin-bottom: 14px;
+    }
+
+
+    .courierOrderFilters-title {
+        font-size: 6px;
+    }
+
+
+    .courierOrderFilters-title svg {
+        font-size: 7px;
+    }
+
+
+    .courierOrderFilters-option {
+        min-height: 28px;
+
+        padding: 5px 8px;
+
+        gap: 5px;
+
+        border-radius: 7px;
+
+        font-size: 6px;
+    }
+
+
+    .courierOrderFilters-icon {
+        width: 16px;
+        height: 16px;
+
+        font-size: 6px;
+    }
+
+
+    .courierOrderFilters-clear {
+        padding: 4px 6px;
+
+        font-size: 6px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierOrderFilters-option {
+        min-height: 26px;
+
+        padding: 5px 7px;
+
+        font-size: 5px;
+    }
+
+
+    .courierOrderFilters-icon {
+        width: 15px;
+        height: 15px;
+
+        font-size: 5px;
+    }
+
+}

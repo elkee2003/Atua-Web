@@ -52,6 +52,27 @@ export enum OfferStatus {
   REJECTED = "REJECTED"
 }
 
+export enum CourierPreTransferUploadStatus {
+  PENDING = "PENDING",
+  UPLOADING = "UPLOADING",
+  COMPLETE = "COMPLETE",
+  FAILED = "FAILED"
+}
+
+export enum CourierPostLoadingUploadStatus {
+  PENDING = "PENDING",
+  UPLOADING = "UPLOADING",
+  COMPLETE = "COMPLETE",
+  FAILED = "FAILED"
+}
+
+export enum DropoffUploadStatus {
+  PENDING = "PENDING",
+  UPLOADING = "UPLOADING",
+  COMPLETE = "COMPLETE",
+  FAILED = "FAILED"
+}
+
 export enum MediaUploadStatus {
   PENDING = "PENDING",
   UPLOADING = "UPLOADING",
@@ -76,7 +97,58 @@ export enum OrderStatus {
   DISPUTED = "DISPUTED"
 }
 
+export enum CourierReportStatus {
+  OPEN = "OPEN",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  RESOLVED = "RESOLVED",
+  DISMISSED = "DISMISSED"
+}
 
+type EagerVerifyAtuaPaymentResult = {
+  readonly success: boolean;
+  readonly verified?: boolean | null;
+  readonly alreadyPaid?: boolean | null;
+  readonly message: string;
+  readonly orderId?: string | null;
+  readonly deliveryVerificationCode?: string | null;
+  readonly payment?: VerifiedPaymentDetails | null;
+}
+
+type LazyVerifyAtuaPaymentResult = {
+  readonly success: boolean;
+  readonly verified?: boolean | null;
+  readonly alreadyPaid?: boolean | null;
+  readonly message: string;
+  readonly orderId?: string | null;
+  readonly deliveryVerificationCode?: string | null;
+  readonly payment?: VerifiedPaymentDetails | null;
+}
+
+export declare type VerifyAtuaPaymentResult = LazyLoading extends LazyLoadingDisabled ? EagerVerifyAtuaPaymentResult : LazyVerifyAtuaPaymentResult
+
+export declare const VerifyAtuaPaymentResult: (new (init: ModelInit<VerifyAtuaPaymentResult>) => VerifyAtuaPaymentResult)
+
+type EagerVerifiedPaymentDetails = {
+  readonly reference?: string | null;
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+  readonly status?: string | null;
+  readonly channel?: string | null;
+  readonly paidAt?: string | null;
+}
+
+type LazyVerifiedPaymentDetails = {
+  readonly reference?: string | null;
+  readonly amount?: number | null;
+  readonly currency?: string | null;
+  readonly status?: string | null;
+  readonly channel?: string | null;
+  readonly paidAt?: string | null;
+}
+
+export declare type VerifiedPaymentDetails = LazyLoading extends LazyLoadingDisabled ? EagerVerifiedPaymentDetails : LazyVerifiedPaymentDetails
+
+export declare const VerifiedPaymentDetails: (new (init: ModelInit<VerifiedPaymentDetails>) => VerifiedPaymentDetails)
 
 type EagerCompanyVehicle = {
   readonly [__modelMeta__]: {
@@ -399,6 +471,9 @@ type EagerOrder = {
   readonly transportationType?: string | null;
   readonly vehicleClass?: string | null;
   readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly hasNewOffer?: boolean | null;
+  readonly lastOfferAt?: string | null;
+  readonly lastOfferSenderType?: string | null;
   readonly loadCategory?: string | null;
   readonly isInterState?: boolean | null;
   readonly estimatedMinPrice?: number | null;
@@ -410,6 +485,7 @@ type EagerOrder = {
   readonly fragileSurcharge?: number | null;
   readonly extrasTotal?: number | null;
   readonly totalPrice?: number | null;
+  readonly operationalFare?: number | null;
   readonly courierEarnings?: number | null;
   readonly commissionAmount?: number | null;
   readonly platformFee?: number | null;
@@ -424,13 +500,22 @@ type EagerOrder = {
   readonly senderPreTransferLocalPhotos?: (string | null)[] | null;
   readonly senderPreTransferLocalVideo?: string | null;
   readonly mediaUploadStatus?: MediaUploadStatus | keyof typeof MediaUploadStatus | null;
+  readonly courierPreTransferUploadStatus?: CourierPreTransferUploadStatus | keyof typeof CourierPreTransferUploadStatus | null;
+  readonly courierPostLoadingUploadStatus?: CourierPostLoadingUploadStatus | keyof typeof CourierPostLoadingUploadStatus | null;
+  readonly dropoffUploadStatus?: DropoffUploadStatus | keyof typeof DropoffUploadStatus | null;
   readonly courierPreTransferPhotos?: (string | null)[] | null;
   readonly courierPreTransferVideo?: string | null;
   readonly courierPreTransferRecordedAt?: string | null;
+  readonly courierPreTransferLocalPhotos?: (string | null)[] | null;
+  readonly courierPreTransferLocalVideo?: string | null;
   readonly courierPostLoadingPhotos?: (string | null)[] | null;
   readonly courierPostLoadingVideo?: string | null;
+  readonly courierPostLoadingLocalPhotos?: (string | null)[] | null;
+  readonly courierPostLoadingLocalVideo?: string | null;
   readonly dropoffArrivalPhotos?: (string | null)[] | null;
   readonly dropoffArrivalVideo?: string | null;
+  readonly dropoffArrivalLocalPhotos?: (string | null)[] | null;
+  readonly dropoffArrivalLocalVideo?: string | null;
   readonly postDeliveryPhotos?: (string | null)[] | null;
   readonly postDeliveryVideo?: string | null;
   readonly pickupLoadingResponsibility?: string | null;
@@ -466,6 +551,8 @@ type EagerOrder = {
   readonly rejectedCourierIds?: (string | null)[] | null;
   readonly assignmentStatus?: string | null;
   readonly userID: string;
+  readonly reviews?: (CourierReview | null)[] | null;
+  readonly reports?: (CourierReport | null)[] | null;
   readonly offers?: (Offer | null)[] | null;
   readonly assignedCourier?: Courier | null;
   readonly payments?: (Payment | null)[] | null;
@@ -496,6 +583,9 @@ type LazyOrder = {
   readonly transportationType?: string | null;
   readonly vehicleClass?: string | null;
   readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly hasNewOffer?: boolean | null;
+  readonly lastOfferAt?: string | null;
+  readonly lastOfferSenderType?: string | null;
   readonly loadCategory?: string | null;
   readonly isInterState?: boolean | null;
   readonly estimatedMinPrice?: number | null;
@@ -507,6 +597,7 @@ type LazyOrder = {
   readonly fragileSurcharge?: number | null;
   readonly extrasTotal?: number | null;
   readonly totalPrice?: number | null;
+  readonly operationalFare?: number | null;
   readonly courierEarnings?: number | null;
   readonly commissionAmount?: number | null;
   readonly platformFee?: number | null;
@@ -521,13 +612,22 @@ type LazyOrder = {
   readonly senderPreTransferLocalPhotos?: (string | null)[] | null;
   readonly senderPreTransferLocalVideo?: string | null;
   readonly mediaUploadStatus?: MediaUploadStatus | keyof typeof MediaUploadStatus | null;
+  readonly courierPreTransferUploadStatus?: CourierPreTransferUploadStatus | keyof typeof CourierPreTransferUploadStatus | null;
+  readonly courierPostLoadingUploadStatus?: CourierPostLoadingUploadStatus | keyof typeof CourierPostLoadingUploadStatus | null;
+  readonly dropoffUploadStatus?: DropoffUploadStatus | keyof typeof DropoffUploadStatus | null;
   readonly courierPreTransferPhotos?: (string | null)[] | null;
   readonly courierPreTransferVideo?: string | null;
   readonly courierPreTransferRecordedAt?: string | null;
+  readonly courierPreTransferLocalPhotos?: (string | null)[] | null;
+  readonly courierPreTransferLocalVideo?: string | null;
   readonly courierPostLoadingPhotos?: (string | null)[] | null;
   readonly courierPostLoadingVideo?: string | null;
+  readonly courierPostLoadingLocalPhotos?: (string | null)[] | null;
+  readonly courierPostLoadingLocalVideo?: string | null;
   readonly dropoffArrivalPhotos?: (string | null)[] | null;
   readonly dropoffArrivalVideo?: string | null;
+  readonly dropoffArrivalLocalPhotos?: (string | null)[] | null;
+  readonly dropoffArrivalLocalVideo?: string | null;
   readonly postDeliveryPhotos?: (string | null)[] | null;
   readonly postDeliveryVideo?: string | null;
   readonly pickupLoadingResponsibility?: string | null;
@@ -563,6 +663,8 @@ type LazyOrder = {
   readonly rejectedCourierIds?: (string | null)[] | null;
   readonly assignmentStatus?: string | null;
   readonly userID: string;
+  readonly reviews: AsyncCollection<CourierReview>;
+  readonly reports: AsyncCollection<CourierReport>;
   readonly offers: AsyncCollection<Offer>;
   readonly assignedCourier: AsyncItem<Courier | undefined>;
   readonly payments: AsyncCollection<Payment>;
@@ -574,6 +676,98 @@ export declare type Order = LazyLoading extends LazyLoadingDisabled ? EagerOrder
 
 export declare const Order: (new (init: ModelInit<Order>) => Order) & {
   copyOf(source: Order, mutator: (draft: MutableModel<Order>) => MutableModel<Order> | void): Order;
+}
+
+type EagerCourierReport = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<CourierReport, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly courierID: string;
+  readonly courier?: Courier | null;
+  readonly userID: string;
+  readonly user?: User | null;
+  readonly orderID: string;
+  readonly order?: Order | null;
+  readonly reason: string;
+  readonly description?: string | null;
+  readonly evidencePhotos?: (string | null)[] | null;
+  readonly evidenceVideo?: string | null;
+  readonly status?: CourierReportStatus | keyof typeof CourierReportStatus | null;
+  readonly adminComment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyCourierReport = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<CourierReport, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly courierID: string;
+  readonly courier: AsyncItem<Courier | undefined>;
+  readonly userID: string;
+  readonly user: AsyncItem<User | undefined>;
+  readonly orderID: string;
+  readonly order: AsyncItem<Order | undefined>;
+  readonly reason: string;
+  readonly description?: string | null;
+  readonly evidencePhotos?: (string | null)[] | null;
+  readonly evidenceVideo?: string | null;
+  readonly status?: CourierReportStatus | keyof typeof CourierReportStatus | null;
+  readonly adminComment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type CourierReport = LazyLoading extends LazyLoadingDisabled ? EagerCourierReport : LazyCourierReport
+
+export declare const CourierReport: (new (init: ModelInit<CourierReport>) => CourierReport) & {
+  copyOf(source: CourierReport, mutator: (draft: MutableModel<CourierReport>) => MutableModel<CourierReport> | void): CourierReport;
+}
+
+type EagerCourierReview = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<CourierReview, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly courierID: string;
+  readonly courier?: Courier | null;
+  readonly userID: string;
+  readonly user?: User | null;
+  readonly orderID: string;
+  readonly order?: Order | null;
+  readonly rating: number;
+  readonly comment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyCourierReview = {
+  readonly [__modelMeta__]: {
+    identifier: ManagedIdentifier<CourierReview, 'id'>;
+    readOnlyFields: 'createdAt' | 'updatedAt';
+  };
+  readonly id: string;
+  readonly courierID: string;
+  readonly courier: AsyncItem<Courier | undefined>;
+  readonly userID: string;
+  readonly user: AsyncItem<User | undefined>;
+  readonly orderID: string;
+  readonly order: AsyncItem<Order | undefined>;
+  readonly rating: number;
+  readonly comment?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type CourierReview = LazyLoading extends LazyLoadingDisabled ? EagerCourierReview : LazyCourierReview
+
+export declare const CourierReview: (new (init: ModelInit<CourierReview>) => CourierReview) & {
+  copyOf(source: CourierReview, mutator: (draft: MutableModel<CourierReview>) => MutableModel<CourierReview> | void): CourierReview;
 }
 
 type EagerCourier = {
@@ -623,6 +817,11 @@ type EagerCourier = {
   readonly currentExpressCount?: number | null;
   readonly currentMaxiCount?: number | null;
   readonly lastBatchAssignedAt?: string | null;
+  readonly averageRating?: number | null;
+  readonly reviewCount?: number | null;
+  readonly totalReports?: number | null;
+  readonly reviews?: (CourierReview | null)[] | null;
+  readonly reports?: (CourierReport | null)[] | null;
   readonly statusKey?: string | null;
   readonly offers?: (Offer | null)[] | null;
   readonly orders?: (Order | null)[] | null;
@@ -679,6 +878,11 @@ type LazyCourier = {
   readonly currentExpressCount?: number | null;
   readonly currentMaxiCount?: number | null;
   readonly lastBatchAssignedAt?: string | null;
+  readonly averageRating?: number | null;
+  readonly reviewCount?: number | null;
+  readonly totalReports?: number | null;
+  readonly reviews: AsyncCollection<CourierReview>;
+  readonly reports: AsyncCollection<CourierReport>;
   readonly statusKey?: string | null;
   readonly offers: AsyncCollection<Offer>;
   readonly orders: AsyncCollection<Order>;
@@ -712,6 +916,8 @@ type EagerUser = {
   readonly lng?: number | null;
   readonly isBlocked?: boolean | null;
   readonly push_token?: string | null;
+  readonly courierReviews?: (CourierReview | null)[] | null;
+  readonly courierReports?: (CourierReport | null)[] | null;
   readonly Orders?: (Order | null)[] | null;
   readonly payments?: (Payment | null)[] | null;
   readonly createdAt?: string | null;
@@ -736,6 +942,8 @@ type LazyUser = {
   readonly lng?: number | null;
   readonly isBlocked?: boolean | null;
   readonly push_token?: string | null;
+  readonly courierReviews: AsyncCollection<CourierReview>;
+  readonly courierReports: AsyncCollection<CourierReport>;
   readonly Orders: AsyncCollection<Order>;
   readonly payments: AsyncCollection<Payment>;
   readonly createdAt?: string | null;

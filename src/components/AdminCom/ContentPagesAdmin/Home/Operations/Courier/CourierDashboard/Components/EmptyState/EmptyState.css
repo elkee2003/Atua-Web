@@ -1,0 +1,155 @@
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.emptyState {
+    width: 100%;
+    min-height: 320px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    box-sizing: border-box;
+
+    padding: 40px 24px;
+
+    background: #ffffff;
+
+    border: 1px solid #e7eaf0;
+
+    border-radius: 18px;
+
+    text-align: center;
+}
+
+/* ==========================================================
+   ICON
+========================================================== */
+
+.emptyState-icon {
+    width: 64px;
+    height: 64px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 18px;
+
+    background: #f1f5f9;
+
+    color: #64748b;
+
+    font-size: 25px;
+}
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.emptyState-content {
+    max-width: 430px;
+}
+
+.emptyState-title {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+.emptyState-description {
+    margin: 8px 0 0;
+
+    color: #7b8492;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+/* ==========================================================
+   ACTION
+========================================================== */
+
+.emptyState-action {
+    margin-top: 20px;
+
+    padding: 10px 18px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #111827;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+.emptyState-action:hover {
+    background: #000000;
+}
+
+.emptyState-action:active {
+    transform: scale(0.97);
+}
+
+.emptyState-action:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.2);
+
+    outline-offset: 2px;
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 600px) {
+
+    .emptyState {
+        min-height: 280px;
+
+        padding: 32px 18px;
+
+        border-radius: 14px;
+    }
+
+    .emptyState-icon {
+        width: 56px;
+        height: 56px;
+
+        margin-bottom: 15px;
+
+        border-radius: 15px;
+
+        font-size: 22px;
+    }
+
+    .emptyState-title {
+        font-size: 16px;
+    }
+
+    .emptyState-description {
+        font-size: 12px;
+    }
+
+}

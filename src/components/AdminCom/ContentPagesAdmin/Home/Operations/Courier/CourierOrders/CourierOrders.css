@@ -1,0 +1,507 @@
+/* ==========================================================
+   COURIER ORDERS
+========================================================== */
+
+.courierOrders {
+    width: 100%;
+
+    min-height: 100vh;
+
+    box-sizing: border-box;
+
+    padding: 24px 28px 40px;
+
+    background: #f7f9fc;
+
+    color: #1e293b;
+
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+}
+
+
+/* ==========================================================
+   PAGE HEADER
+========================================================== */
+
+.courierOrders-pageHeader {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+/* ==========================================================
+   BACK BUTTON
+========================================================== */
+
+.courierOrders-backButton,
+.courierOrders-refreshButton {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 32px;
+
+    padding: 7px 10px;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 8px;
+
+    background: #ffffff;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierOrders-backButton:hover,
+.courierOrders-refreshButton:hover:not(:disabled) {
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+}
+
+
+.courierOrders-backButton:active,
+.courierOrders-refreshButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+
+.courierOrders-backButton svg,
+.courierOrders-refreshButton svg {
+    font-size: 8px;
+}
+
+
+/* ==========================================================
+   REFRESH
+========================================================== */
+
+.courierOrders-refreshButton {
+    background: #1e293b;
+
+    border-color: #1e293b;
+
+    color: #ffffff;
+}
+
+
+.courierOrders-refreshButton:hover:not(:disabled) {
+    background: #334155;
+
+    border-color: #334155;
+
+    color: #ffffff;
+}
+
+
+.courierOrders-refreshButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+.courierOrders-refreshIcon.spinning {
+    animation:
+        courierOrdersSpin 0.8s linear infinite;
+}
+
+
+@keyframes courierOrdersSpin {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* ==========================================================
+   ERROR
+========================================================== */
+
+.courierOrders-error {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+
+    padding: 11px 13px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 10px;
+
+    background: #fef2f2;
+
+    color: #991b1b;
+
+    font-size: 8px;
+}
+
+
+.courierOrders-error strong {
+    font-size: 8px;
+}
+
+
+.courierOrders-error span {
+    color: #b91c1c;
+
+    font-size: 7px;
+}
+
+
+.courierOrders-error button {
+    margin-left: auto;
+
+    padding: 6px 9px;
+
+    border: 1px solid #fecaca;
+
+    border-radius: 6px;
+
+    background: #ffffff;
+
+    color: #b91c1c;
+
+    font-family: inherit;
+
+    font-size: 7px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.courierOrders-error button:hover {
+    background: #fff7f7;
+}
+
+
+/* ==========================================================
+   CONTENT
+========================================================== */
+
+.courierOrders-content {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin-top: 18px;
+}
+
+
+/* ==========================================================
+   CONTENT HEADER
+========================================================== */
+
+.courierOrders-contentHeader {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 11px;
+}
+
+
+.courierOrders-contentHeader h2 {
+    margin: 0;
+
+    color: #1e293b;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.courierOrders-contentHeader p {
+    margin: 3px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 7px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   ORDER LIST
+========================================================== */
+
+.courierOrders-list {
+    width: 100%;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 12px;
+
+    align-items: start;
+}
+
+
+/* ==========================================================
+   LOADING
+========================================================== */
+
+.courierOrders-loading {
+    width: 100%;
+
+    min-height: 230px;
+
+    box-sizing: border-box;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    border: 1px solid #e6eaf0;
+
+    border-radius: 14px;
+
+    background: #ffffff;
+}
+
+
+.courierOrders-loadingSpinner {
+    width: 25px;
+    height: 25px;
+
+    border: 3px solid #e2e8f0;
+
+    border-top-color: #475569;
+
+    border-radius: 50%;
+
+    animation:
+        courierOrdersSpin 0.8s linear infinite;
+}
+
+
+.courierOrders-loading p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 8px;
+
+    font-weight: 500;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media (max-width: 1000px) {
+
+    .courierOrders {
+        padding: 22px 22px 35px;
+    }
+
+
+    .courierOrders-list {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL TABLET
+========================================================== */
+
+@media (max-width: 800px) {
+
+    .courierOrders {
+        padding: 20px 18px 32px;
+    }
+
+
+    .courierOrders-list {
+        grid-template-columns:
+            minmax(0, 1fr);
+    }
+
+
+    .courierOrders-error {
+        flex-wrap: wrap;
+    }
+
+
+    .courierOrders-error button {
+        margin-left: 0;
+    }
+
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media (max-width: 650px) {
+
+    .courierOrders {
+        padding: 16px 13px 90px;
+    }
+
+
+    .courierOrders-pageHeader {
+        margin-bottom: 11px;
+    }
+
+
+    .courierOrders-backButton,
+    .courierOrders-refreshButton {
+        min-height: 30px;
+
+        padding: 6px 8px;
+
+        font-size: 7px;
+    }
+
+
+    .courierOrders-backButton svg,
+    .courierOrders-refreshButton svg {
+        font-size: 7px;
+    }
+
+
+    .courierOrders-content {
+        margin-top: 14px;
+    }
+
+
+    .courierOrders-contentHeader {
+        margin-bottom: 9px;
+    }
+
+
+    .courierOrders-contentHeader h2 {
+        font-size: 12px;
+    }
+
+
+    .courierOrders-contentHeader p {
+        font-size: 6px;
+    }
+
+
+    .courierOrders-list {
+        gap: 9px;
+    }
+
+
+    .courierOrders-loading {
+        min-height: 200px;
+
+        border-radius: 12px;
+    }
+
+
+    .courierOrders-error {
+        align-items: flex-start;
+
+        padding: 10px;
+
+        gap: 6px;
+
+        font-size: 7px;
+    }
+
+}
+
+
+/* ==========================================================
+   SMALL MOBILE
+========================================================== */
+
+@media (max-width: 400px) {
+
+    .courierOrders {
+        padding-left: 10px;
+
+        padding-right: 10px;
+    }
+
+
+    .courierOrders-backButton span {
+        display: none;
+    }
+
+
+    .courierOrders-refreshButton {
+        padding: 6px 8px;
+    }
+
+
+    .courierOrders-contentHeader h2 {
+        font-size: 11px;
+    }
+
+
+    .courierOrders-contentHeader p {
+        font-size: 5px;
+    }
+
+}
