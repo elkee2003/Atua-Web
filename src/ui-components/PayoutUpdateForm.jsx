@@ -30,14 +30,22 @@ export default function PayoutUpdateForm(props) {
   } = props;
   const initialValues = {
     courierID: "",
+    walletID: "",
     amount: "",
     status: "",
     bankName: "",
     accountNumber: "",
     reference: "",
-    walletID: "",
+    transferCode: "",
+    transferID: "",
+    failureReason: "",
+    payoutMethod: "",
+    processedAt: "",
+    paidAt: "",
+    failedAt: "",
   };
   const [courierID, setCourierID] = React.useState(initialValues.courierID);
+  const [walletID, setWalletID] = React.useState(initialValues.walletID);
   const [amount, setAmount] = React.useState(initialValues.amount);
   const [status, setStatus] = React.useState(initialValues.status);
   const [bankName, setBankName] = React.useState(initialValues.bankName);
@@ -45,19 +53,40 @@ export default function PayoutUpdateForm(props) {
     initialValues.accountNumber
   );
   const [reference, setReference] = React.useState(initialValues.reference);
-  const [walletID, setWalletID] = React.useState(initialValues.walletID);
+  const [transferCode, setTransferCode] = React.useState(
+    initialValues.transferCode
+  );
+  const [transferID, setTransferID] = React.useState(initialValues.transferID);
+  const [failureReason, setFailureReason] = React.useState(
+    initialValues.failureReason
+  );
+  const [payoutMethod, setPayoutMethod] = React.useState(
+    initialValues.payoutMethod
+  );
+  const [processedAt, setProcessedAt] = React.useState(
+    initialValues.processedAt
+  );
+  const [paidAt, setPaidAt] = React.useState(initialValues.paidAt);
+  const [failedAt, setFailedAt] = React.useState(initialValues.failedAt);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = payoutRecord
       ? { ...initialValues, ...payoutRecord }
       : initialValues;
     setCourierID(cleanValues.courierID);
+    setWalletID(cleanValues.walletID);
     setAmount(cleanValues.amount);
     setStatus(cleanValues.status);
     setBankName(cleanValues.bankName);
     setAccountNumber(cleanValues.accountNumber);
     setReference(cleanValues.reference);
-    setWalletID(cleanValues.walletID);
+    setTransferCode(cleanValues.transferCode);
+    setTransferID(cleanValues.transferID);
+    setFailureReason(cleanValues.failureReason);
+    setPayoutMethod(cleanValues.payoutMethod);
+    setProcessedAt(cleanValues.processedAt);
+    setPaidAt(cleanValues.paidAt);
+    setFailedAt(cleanValues.failedAt);
     setErrors({});
   };
   const [payoutRecord, setPayoutRecord] = React.useState(payoutModelProp);
@@ -73,12 +102,19 @@ export default function PayoutUpdateForm(props) {
   React.useEffect(resetStateValues, [payoutRecord]);
   const validations = {
     courierID: [{ type: "Required" }],
+    walletID: [],
     amount: [{ type: "Required" }],
     status: [],
     bankName: [],
     accountNumber: [],
     reference: [],
-    walletID: [],
+    transferCode: [],
+    transferID: [],
+    failureReason: [],
+    payoutMethod: [],
+    processedAt: [],
+    paidAt: [],
+    failedAt: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -97,6 +133,23 @@ export default function PayoutUpdateForm(props) {
     setErrors((errors) => ({ ...errors, [fieldName]: validationResponse }));
     return validationResponse;
   };
+  const convertToLocal = (date) => {
+    const df = new Intl.DateTimeFormat("default", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      calendar: "iso8601",
+      numberingSystem: "latn",
+      hourCycle: "h23",
+    });
+    const parts = df.formatToParts(date).reduce((acc, part) => {
+      acc[part.type] = part.value;
+      return acc;
+    }, {});
+    return `${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}`;
+  };
   return (
     <Grid
       as="form"
@@ -107,12 +160,19 @@ export default function PayoutUpdateForm(props) {
         event.preventDefault();
         let modelFields = {
           courierID,
+          walletID,
           amount,
           status,
           bankName,
           accountNumber,
           reference,
-          walletID,
+          transferCode,
+          transferID,
+          failureReason,
+          payoutMethod,
+          processedAt,
+          paidAt,
+          failedAt,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -169,12 +229,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID: value,
+              walletID,
               amount,
               status,
               bankName,
               accountNumber,
               reference,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.courierID ?? value;
@@ -190,6 +257,43 @@ export default function PayoutUpdateForm(props) {
         {...getOverrideProps(overrides, "courierID")}
       ></TextField>
       <TextField
+        label="Wallet id"
+        isRequired={false}
+        isReadOnly={false}
+        value={walletID}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID: value,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.walletID ?? value;
+          }
+          if (errors.walletID?.hasError) {
+            runValidationTasks("walletID", value);
+          }
+          setWalletID(value);
+        }}
+        onBlur={() => runValidationTasks("walletID", walletID)}
+        errorMessage={errors.walletID?.errorMessage}
+        hasError={errors.walletID?.hasError}
+        {...getOverrideProps(overrides, "walletID")}
+      ></TextField>
+      <TextField
         label="Amount"
         isRequired={true}
         isReadOnly={false}
@@ -203,12 +307,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount: value,
               status,
               bankName,
               accountNumber,
               reference,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.amount ?? value;
@@ -233,12 +344,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount,
               status: value,
               bankName,
               accountNumber,
               reference,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -284,12 +402,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount,
               status,
               bankName: value,
               accountNumber,
               reference,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.bankName ?? value;
@@ -314,12 +439,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount,
               status,
               bankName,
               accountNumber: value,
               reference,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.accountNumber ?? value;
@@ -344,12 +476,19 @@ export default function PayoutUpdateForm(props) {
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount,
               status,
               bankName,
               accountNumber,
               reference: value,
-              walletID,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
             value = result?.reference ?? value;
@@ -365,34 +504,269 @@ export default function PayoutUpdateForm(props) {
         {...getOverrideProps(overrides, "reference")}
       ></TextField>
       <TextField
-        label="Wallet id"
+        label="Transfer code"
         isRequired={false}
         isReadOnly={false}
-        value={walletID}
+        value={transferCode}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
               courierID,
+              walletID,
               amount,
               status,
               bankName,
               accountNumber,
               reference,
-              walletID: value,
+              transferCode: value,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
             };
             const result = onChange(modelFields);
-            value = result?.walletID ?? value;
+            value = result?.transferCode ?? value;
           }
-          if (errors.walletID?.hasError) {
-            runValidationTasks("walletID", value);
+          if (errors.transferCode?.hasError) {
+            runValidationTasks("transferCode", value);
           }
-          setWalletID(value);
+          setTransferCode(value);
         }}
-        onBlur={() => runValidationTasks("walletID", walletID)}
-        errorMessage={errors.walletID?.errorMessage}
-        hasError={errors.walletID?.hasError}
-        {...getOverrideProps(overrides, "walletID")}
+        onBlur={() => runValidationTasks("transferCode", transferCode)}
+        errorMessage={errors.transferCode?.errorMessage}
+        hasError={errors.transferCode?.hasError}
+        {...getOverrideProps(overrides, "transferCode")}
+      ></TextField>
+      <TextField
+        label="Transfer id"
+        isRequired={false}
+        isReadOnly={false}
+        value={transferID}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID: value,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.transferID ?? value;
+          }
+          if (errors.transferID?.hasError) {
+            runValidationTasks("transferID", value);
+          }
+          setTransferID(value);
+        }}
+        onBlur={() => runValidationTasks("transferID", transferID)}
+        errorMessage={errors.transferID?.errorMessage}
+        hasError={errors.transferID?.hasError}
+        {...getOverrideProps(overrides, "transferID")}
+      ></TextField>
+      <TextField
+        label="Failure reason"
+        isRequired={false}
+        isReadOnly={false}
+        value={failureReason}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason: value,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.failureReason ?? value;
+          }
+          if (errors.failureReason?.hasError) {
+            runValidationTasks("failureReason", value);
+          }
+          setFailureReason(value);
+        }}
+        onBlur={() => runValidationTasks("failureReason", failureReason)}
+        errorMessage={errors.failureReason?.errorMessage}
+        hasError={errors.failureReason?.hasError}
+        {...getOverrideProps(overrides, "failureReason")}
+      ></TextField>
+      <TextField
+        label="Payout method"
+        isRequired={false}
+        isReadOnly={false}
+        value={payoutMethod}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod: value,
+              processedAt,
+              paidAt,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.payoutMethod ?? value;
+          }
+          if (errors.payoutMethod?.hasError) {
+            runValidationTasks("payoutMethod", value);
+          }
+          setPayoutMethod(value);
+        }}
+        onBlur={() => runValidationTasks("payoutMethod", payoutMethod)}
+        errorMessage={errors.payoutMethod?.errorMessage}
+        hasError={errors.payoutMethod?.hasError}
+        {...getOverrideProps(overrides, "payoutMethod")}
+      ></TextField>
+      <TextField
+        label="Processed at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={processedAt && convertToLocal(new Date(processedAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt: value,
+              paidAt,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.processedAt ?? value;
+          }
+          if (errors.processedAt?.hasError) {
+            runValidationTasks("processedAt", value);
+          }
+          setProcessedAt(value);
+        }}
+        onBlur={() => runValidationTasks("processedAt", processedAt)}
+        errorMessage={errors.processedAt?.errorMessage}
+        hasError={errors.processedAt?.hasError}
+        {...getOverrideProps(overrides, "processedAt")}
+      ></TextField>
+      <TextField
+        label="Paid at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={paidAt && convertToLocal(new Date(paidAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt: value,
+              failedAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.paidAt ?? value;
+          }
+          if (errors.paidAt?.hasError) {
+            runValidationTasks("paidAt", value);
+          }
+          setPaidAt(value);
+        }}
+        onBlur={() => runValidationTasks("paidAt", paidAt)}
+        errorMessage={errors.paidAt?.errorMessage}
+        hasError={errors.paidAt?.hasError}
+        {...getOverrideProps(overrides, "paidAt")}
+      ></TextField>
+      <TextField
+        label="Failed at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={failedAt && convertToLocal(new Date(failedAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              processedAt,
+              paidAt,
+              failedAt: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.failedAt ?? value;
+          }
+          if (errors.failedAt?.hasError) {
+            runValidationTasks("failedAt", value);
+          }
+          setFailedAt(value);
+        }}
+        onBlur={() => runValidationTasks("failedAt", failedAt)}
+        errorMessage={errors.failedAt?.errorMessage}
+        hasError={errors.failedAt?.hasError}
+        {...getOverrideProps(overrides, "failedAt")}
       ></TextField>
       <Flex
         justifyContent="space-between"

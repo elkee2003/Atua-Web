@@ -41,31 +41,37 @@
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
           "s3Key": "amplify-builds/resetCourierIfIdle-494b38367052737a505a-build.zip"
         },
-        "processPaymentAndWallet": {
-          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/processPaymentAndWallet-6c776168626450372f31-build.zip"
-        },
         "releaseFunds": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/releaseFunds-727a48642b6642793446-build.zip"
+          "s3Key": "amplify-builds/releaseFunds-72487a4833532f317752-build.zip"
         },
         "processPayouts": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/processPayouts-7541797a4d2f32437668-build.zip"
+          "s3Key": "amplify-builds/processPayouts-6c416439717033764b37-build.zip",
+          "paystackSecretKey": "sk_test_02e162f3ef2ad01ddf01867bb9fbad18a5618fb0"
         },
         "verifyAtuaPayment": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/verifyAtuaPayment-6e585050355a4a6d3572-build.zip",
+          "s3Key": "amplify-builds/verifyAtuaPayment-73702b44626962663062-build.zip",
           "secretsPathAmplifyAppId": "d4d2e6dwzso4a"
         },
         "paystackWebhook": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/paystackWebhook-56657a62547a74497268-build.zip",
+          "s3Key": "amplify-builds/paystackWebhook-3557336a4b6b42706836-build.zip",
           "secretsPathAmplifyAppId": "d4d2e6dwzso4a"
+        },
+        "allocateCourierEarnings": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/allocateCourierEarnings-5270454d6c2f2b787363-build.zip"
+        },
+        "releaseCourierMilestoneFunds": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/releaseCourierMilestoneFunds-645775535a632f2f4c4f-build.zip"
         }
       },
       "api": {
-        "Atua": {}
+        "Atua": {},
+        "atuaPaystackWebhookApi": {}
       },
       "storage": {
         "atuaStorage": {}

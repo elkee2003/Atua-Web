@@ -23,32 +23,53 @@ export declare type ValidationResponse = {
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type PayoutCreateFormInputValues = {
     courierID?: string;
+    walletID?: string;
     amount?: number;
     status?: string;
     bankName?: string;
     accountNumber?: string;
     reference?: string;
-    walletID?: string;
+    transferCode?: string;
+    transferID?: string;
+    failureReason?: string;
+    payoutMethod?: string;
+    processedAt?: string;
+    paidAt?: string;
+    failedAt?: string;
 };
 export declare type PayoutCreateFormValidationValues = {
     courierID?: ValidationFunction<string>;
+    walletID?: ValidationFunction<string>;
     amount?: ValidationFunction<number>;
     status?: ValidationFunction<string>;
     bankName?: ValidationFunction<string>;
     accountNumber?: ValidationFunction<string>;
     reference?: ValidationFunction<string>;
-    walletID?: ValidationFunction<string>;
+    transferCode?: ValidationFunction<string>;
+    transferID?: ValidationFunction<string>;
+    failureReason?: ValidationFunction<string>;
+    payoutMethod?: ValidationFunction<string>;
+    processedAt?: ValidationFunction<string>;
+    paidAt?: ValidationFunction<string>;
+    failedAt?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PayoutCreateFormOverridesProps = {
     PayoutCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     courierID?: PrimitiveOverrideProps<TextFieldProps>;
+    walletID?: PrimitiveOverrideProps<TextFieldProps>;
     amount?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<SelectFieldProps>;
     bankName?: PrimitiveOverrideProps<TextFieldProps>;
     accountNumber?: PrimitiveOverrideProps<TextFieldProps>;
     reference?: PrimitiveOverrideProps<TextFieldProps>;
-    walletID?: PrimitiveOverrideProps<TextFieldProps>;
+    transferCode?: PrimitiveOverrideProps<TextFieldProps>;
+    transferID?: PrimitiveOverrideProps<TextFieldProps>;
+    failureReason?: PrimitiveOverrideProps<TextFieldProps>;
+    payoutMethod?: PrimitiveOverrideProps<TextFieldProps>;
+    processedAt?: PrimitiveOverrideProps<TextFieldProps>;
+    paidAt?: PrimitiveOverrideProps<TextFieldProps>;
+    failedAt?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PayoutCreateFormProps = React.PropsWithChildren<{
     overrides?: PayoutCreateFormOverridesProps | undefined | null;

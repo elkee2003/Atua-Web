@@ -25,25 +25,25 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type WalletUpdateFormInputValues = {
     ownerID?: string;
     ownerType?: string;
-    balance?: number;
+    availableBalance?: number;
     pendingBalance?: number;
-    totalEarnings?: number;
+    lifetimeEarnings?: number;
 };
 export declare type WalletUpdateFormValidationValues = {
     ownerID?: ValidationFunction<string>;
     ownerType?: ValidationFunction<string>;
-    balance?: ValidationFunction<number>;
+    availableBalance?: ValidationFunction<number>;
     pendingBalance?: ValidationFunction<number>;
-    totalEarnings?: ValidationFunction<number>;
+    lifetimeEarnings?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type WalletUpdateFormOverridesProps = {
     WalletUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     ownerID?: PrimitiveOverrideProps<TextFieldProps>;
     ownerType?: PrimitiveOverrideProps<SelectFieldProps>;
-    balance?: PrimitiveOverrideProps<TextFieldProps>;
+    availableBalance?: PrimitiveOverrideProps<TextFieldProps>;
     pendingBalance?: PrimitiveOverrideProps<TextFieldProps>;
-    totalEarnings?: PrimitiveOverrideProps<TextFieldProps>;
+    lifetimeEarnings?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type WalletUpdateFormProps = React.PropsWithChildren<{
     overrides?: WalletUpdateFormOverridesProps | undefined | null;

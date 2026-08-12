@@ -30,34 +30,36 @@ export default function WalletCreateForm(props) {
   const initialValues = {
     ownerID: "",
     ownerType: "",
-    balance: "",
+    availableBalance: "",
     pendingBalance: "",
-    totalEarnings: "",
+    lifetimeEarnings: "",
   };
   const [ownerID, setOwnerID] = React.useState(initialValues.ownerID);
   const [ownerType, setOwnerType] = React.useState(initialValues.ownerType);
-  const [balance, setBalance] = React.useState(initialValues.balance);
+  const [availableBalance, setAvailableBalance] = React.useState(
+    initialValues.availableBalance
+  );
   const [pendingBalance, setPendingBalance] = React.useState(
     initialValues.pendingBalance
   );
-  const [totalEarnings, setTotalEarnings] = React.useState(
-    initialValues.totalEarnings
+  const [lifetimeEarnings, setLifetimeEarnings] = React.useState(
+    initialValues.lifetimeEarnings
   );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setOwnerID(initialValues.ownerID);
     setOwnerType(initialValues.ownerType);
-    setBalance(initialValues.balance);
+    setAvailableBalance(initialValues.availableBalance);
     setPendingBalance(initialValues.pendingBalance);
-    setTotalEarnings(initialValues.totalEarnings);
+    setLifetimeEarnings(initialValues.lifetimeEarnings);
     setErrors({});
   };
   const validations = {
     ownerID: [{ type: "Required" }],
     ownerType: [{ type: "Required" }],
-    balance: [],
+    availableBalance: [],
     pendingBalance: [],
-    totalEarnings: [],
+    lifetimeEarnings: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -87,9 +89,9 @@ export default function WalletCreateForm(props) {
         let modelFields = {
           ownerID,
           ownerType,
-          balance,
+          availableBalance,
           pendingBalance,
-          totalEarnings,
+          lifetimeEarnings,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -146,9 +148,9 @@ export default function WalletCreateForm(props) {
             const modelFields = {
               ownerID: value,
               ownerType,
-              balance,
+              availableBalance,
               pendingBalance,
-              totalEarnings,
+              lifetimeEarnings,
             };
             const result = onChange(modelFields);
             value = result?.ownerID ?? value;
@@ -174,9 +176,9 @@ export default function WalletCreateForm(props) {
             const modelFields = {
               ownerID,
               ownerType: value,
-              balance,
+              availableBalance,
               pendingBalance,
-              totalEarnings,
+              lifetimeEarnings,
             };
             const result = onChange(modelFields);
             value = result?.ownerType ?? value;
@@ -203,12 +205,12 @@ export default function WalletCreateForm(props) {
         ></option>
       </SelectField>
       <TextField
-        label="Balance"
+        label="Available balance"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={balance}
+        value={availableBalance}
         onChange={(e) => {
           let value = isNaN(parseFloat(e.target.value))
             ? e.target.value
@@ -217,22 +219,22 @@ export default function WalletCreateForm(props) {
             const modelFields = {
               ownerID,
               ownerType,
-              balance: value,
+              availableBalance: value,
               pendingBalance,
-              totalEarnings,
+              lifetimeEarnings,
             };
             const result = onChange(modelFields);
-            value = result?.balance ?? value;
+            value = result?.availableBalance ?? value;
           }
-          if (errors.balance?.hasError) {
-            runValidationTasks("balance", value);
+          if (errors.availableBalance?.hasError) {
+            runValidationTasks("availableBalance", value);
           }
-          setBalance(value);
+          setAvailableBalance(value);
         }}
-        onBlur={() => runValidationTasks("balance", balance)}
-        errorMessage={errors.balance?.errorMessage}
-        hasError={errors.balance?.hasError}
-        {...getOverrideProps(overrides, "balance")}
+        onBlur={() => runValidationTasks("availableBalance", availableBalance)}
+        errorMessage={errors.availableBalance?.errorMessage}
+        hasError={errors.availableBalance?.hasError}
+        {...getOverrideProps(overrides, "availableBalance")}
       ></TextField>
       <TextField
         label="Pending balance"
@@ -249,9 +251,9 @@ export default function WalletCreateForm(props) {
             const modelFields = {
               ownerID,
               ownerType,
-              balance,
+              availableBalance,
               pendingBalance: value,
-              totalEarnings,
+              lifetimeEarnings,
             };
             const result = onChange(modelFields);
             value = result?.pendingBalance ?? value;
@@ -267,12 +269,12 @@ export default function WalletCreateForm(props) {
         {...getOverrideProps(overrides, "pendingBalance")}
       ></TextField>
       <TextField
-        label="Total earnings"
+        label="Lifetime earnings"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={totalEarnings}
+        value={lifetimeEarnings}
         onChange={(e) => {
           let value = isNaN(parseFloat(e.target.value))
             ? e.target.value
@@ -281,22 +283,22 @@ export default function WalletCreateForm(props) {
             const modelFields = {
               ownerID,
               ownerType,
-              balance,
+              availableBalance,
               pendingBalance,
-              totalEarnings: value,
+              lifetimeEarnings: value,
             };
             const result = onChange(modelFields);
-            value = result?.totalEarnings ?? value;
+            value = result?.lifetimeEarnings ?? value;
           }
-          if (errors.totalEarnings?.hasError) {
-            runValidationTasks("totalEarnings", value);
+          if (errors.lifetimeEarnings?.hasError) {
+            runValidationTasks("lifetimeEarnings", value);
           }
-          setTotalEarnings(value);
+          setLifetimeEarnings(value);
         }}
-        onBlur={() => runValidationTasks("totalEarnings", totalEarnings)}
-        errorMessage={errors.totalEarnings?.errorMessage}
-        hasError={errors.totalEarnings?.hasError}
-        {...getOverrideProps(overrides, "totalEarnings")}
+        onBlur={() => runValidationTasks("lifetimeEarnings", lifetimeEarnings)}
+        errorMessage={errors.lifetimeEarnings?.errorMessage}
+        hasError={errors.lifetimeEarnings?.hasError}
+        {...getOverrideProps(overrides, "lifetimeEarnings")}
       ></TextField>
       <Flex
         justifyContent="space-between"
