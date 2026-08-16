@@ -20,6 +20,7 @@ import CourierReviews from "../../components/AdminCom/ContentPagesAdmin/Home/Ope
 import CourierReports from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierReports/CourierReports";
 import CourierDocuments from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierDocuments/CourierDocuments";
 import CourierLiveTrackingPage from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierLiveTracking/CourierLiveTracking";
+import OrderDetails from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Order/OrderDetails/OrderDetails";
 import UserFullProfile from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/User/FullDetails.jsx/UserFullProfile";
 
 const AdminRoutes = () => (
@@ -71,11 +72,15 @@ const AdminRoutes = () => (
 
         {/* Courier Analytics */}
         <Route path="courier_analytics/:id" element={<CourierAnalytics />} />
+
         {/* Courier Live Update*/}
         <Route
           path="courier_live_tracking/:id"
           element={<CourierLiveTrackingPage />}
         />
+
+        {/* Order Details */}
+        <Route path="order_details/:id" element={<OrderDetails />} />
 
         {/* Full User Profile */}
         <Route path="user_full_profile/:id" element={<UserFullProfile />} />

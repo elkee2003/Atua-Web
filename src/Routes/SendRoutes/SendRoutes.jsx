@@ -5,6 +5,7 @@ import "./SendRoutes.css";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 import SendLayout from "../../components/Send/ContentLayout";
+import CourierReviewGate from "../../components/Send/ContentPages/CourierReviewGate/CourierReviewGate";
 import HomeScreen from "../../../src/components/Send/ContentPages/Home/HomeScreen/HomeScreen";
 import DestinationSearch from "../../../src/components/Send/ContentPages/Home/DestinationSearch/Destination";
 import ParcelNotes from "../../components/Send/ContentPages/Home/OrderComs/ParcelNotes";
@@ -32,6 +33,8 @@ import DeleteAccount from "../../components/Send/ContentPages/Profile/ProfileBtn
 
 const SendRoutes = () => (
   <GoogleMapsProvider>
+    <CourierReviewGate />
+
     <Routes>
       {/* Layout wrapper */}
       <Route path="/" element={<SendLayout />}>

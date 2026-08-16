@@ -1,0 +1,1113 @@
+/* =========================================================
+   COURIER REVIEW GATE
+========================================================= */
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.courierReviewGateOverlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    justify-content: flex-end;
+    align-items: stretch;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 99999;
+}
+
+
+.courierReviewGateModal {
+    width: 100%;
+
+    max-height: 94vh;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #FFFFFF;
+
+    border-radius: 28px 28px 0 0;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    animation: courierReviewGateSlideUp 0.25s ease;
+}
+
+
+/* =========================================================
+   MODAL ANIMATION
+========================================================= */
+
+@keyframes courierReviewGateSlideUp {
+
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.courierReviewGateHeader {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding:
+        26px
+        24px
+        20px;
+
+    box-sizing: border-box;
+}
+
+
+.courierReviewGateSuccessIcon {
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 50%;
+
+    background: #10B981;
+
+    color: #FFFFFF;
+
+    font-size: 22px;
+}
+
+
+.courierReviewGateHeaderTitle {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 21px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+
+.courierReviewGateHeaderSubtitle {
+
+    max-width: 300px;
+
+    margin:
+        6px
+        0
+        0;
+
+    color: #6B7280;
+
+    font-size: 14px;
+
+    line-height: 20px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   SCROLL CONTENT
+========================================================= */
+
+.courierReviewGateScrollContent {
+
+    flex: 1;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    padding:
+        0
+        20px
+        24px;
+
+    box-sizing: border-box;
+
+    overscroll-behavior: contain;
+
+    scrollbar-width: thin;
+}
+
+
+/* =========================================================
+   DELIVERY REFERENCE
+========================================================= */
+
+.courierReviewGateOrderReference {
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 18px;
+
+    padding:
+        11px
+        14px;
+
+    box-sizing: border-box;
+
+    background: #F9FAFB;
+
+    border:
+        1px
+        solid
+        #E5E7EB;
+
+    border-radius: 12px;
+}
+
+
+.courierReviewGateOrderReferenceLabel {
+
+    color: #6B7280;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.courierReviewGateOrderReferenceValue {
+
+    color: #111827;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================================================
+   GENERAL SECTION
+========================================================= */
+
+.courierReviewGateSection {
+
+    margin-bottom: 20px;
+}
+
+
+.courierReviewGateSectionTitle {
+
+    margin:
+        0
+        0
+        10px;
+
+    color: #6B7280;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   DELIVERY ROUTE
+========================================================= */
+
+.courierReviewGateRouteContainer {
+
+    padding:
+        15px;
+
+    box-sizing: border-box;
+
+    background: #FFFFFF;
+
+    border:
+        1px
+        solid
+        #E5E7EB;
+
+    border-radius: 16px;
+}
+
+
+.courierReviewGateLocationRow {
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: flex-start;
+}
+
+
+.courierReviewGateLocationIcon {
+
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    margin-right: 10px;
+
+    flex-shrink: 0;
+}
+
+
+.courierReviewGateLocationContent {
+
+    flex: 1;
+
+    min-width: 0;
+
+    padding-top: 1px;
+}
+
+
+.courierReviewGateLocationLabel {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #9CA3AF;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.4px;
+}
+
+
+.courierReviewGateLocationText {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    line-height: 19px;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+
+.courierReviewGateRouteConnector {
+
+    width: 1px;
+    height: 22px;
+
+    margin:
+        2px
+        0
+        2px
+        11.5px;
+
+    background: #D1D5DB;
+}
+
+
+/* =========================================================
+   COURIER
+========================================================= */
+
+.courierReviewGateCourierCard {
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    padding: 14px;
+
+    box-sizing: border-box;
+
+    background: #F9FAFB;
+
+    border:
+        1px
+        solid
+        #E5E7EB;
+
+    border-radius: 16px;
+}
+
+
+.courierReviewGateCourierImage {
+
+    width: 62px;
+    height: 62px;
+
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+
+    background: #E5E7EB;
+}
+
+
+.courierReviewGateCourierInfo {
+
+    flex: 1;
+
+    min-width: 0;
+
+    margin-left: 14px;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.courierReviewGateCourierName {
+
+    margin-bottom: 4px;
+
+    overflow: hidden;
+
+    color: #111827;
+
+    font-size: 17px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.courierReviewGateCourierTransport {
+
+    margin-bottom: 3px;
+
+    overflow: hidden;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.courierReviewGateCourierVehicle {
+
+    overflow: hidden;
+
+    color: #6B7280;
+
+    font-size: 12px;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   RATING
+========================================================= */
+
+.courierReviewGateRatingSection {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    padding:
+        4px
+        0
+        20px;
+}
+
+
+.courierReviewGateRatingTitle {
+
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 19px;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    text-align: center;
+}
+
+
+.courierReviewGateRatingSubtitle {
+
+    margin:
+        5px
+        0
+        0;
+
+    color: #6B7280;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    text-align: center;
+}
+
+
+.courierReviewGateStarsContainer {
+
+    display: flex;
+
+    flex-direction: row;
+
+    justify-content: center;
+
+    align-items: center;
+
+    margin-top: 17px;
+}
+
+
+.courierReviewGateStarButton {
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #D1D5DB;
+
+    font-size: 34px;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        color 0.15s ease;
+}
+
+
+.courierReviewGateStarButton:hover:not(:disabled) {
+
+    transform: scale(1.08);
+}
+
+
+.courierReviewGateStarButton:active:not(:disabled) {
+
+    transform: scale(0.96);
+}
+
+
+.courierReviewGateStarButton:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.7;
+}
+
+
+.courierReviewGateStarSelected {
+
+    color: #F59E0B;
+}
+
+
+.courierReviewGateRatingValue {
+
+    min-height: 20px;
+
+    margin-top: 6px;
+
+    color: #F59E0B;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    line-height: 20px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   COMMENT
+========================================================= */
+
+.courierReviewGateCommentSection {
+
+    margin-top: 2px;
+}
+
+
+.courierReviewGateCommentLabel {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #374151;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+}
+
+
+.courierReviewGateOptionalText {
+
+    color: #9CA3AF;
+
+    font-weight: 400;
+}
+
+
+.courierReviewGateCommentInput {
+
+    width: 100%;
+
+    min-height: 105px;
+
+    max-height: 150px;
+
+    display: block;
+
+    padding:
+        12px
+        14px;
+
+    box-sizing: border-box;
+
+    resize: vertical;
+
+    background: #F9FAFB;
+
+    border:
+        1px
+        solid
+        #E5E7EB;
+
+    border-radius: 14px;
+
+    outline: none;
+
+    color: #111827;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    line-height: 19px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.courierReviewGateCommentInput::placeholder {
+
+    color: #9CA3AF;
+}
+
+
+.courierReviewGateCommentInput:focus {
+
+    background: #FFFFFF;
+
+    border-color: #9CA3AF;
+}
+
+
+.courierReviewGateCommentInput:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.7;
+}
+
+
+.courierReviewGateCharacterCount {
+
+    margin-top: 5px;
+
+    color: #9CA3AF;
+
+    font-size: 10px;
+
+    line-height: 14px;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.courierReviewGateErrorContainer {
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 14px;
+
+    padding:
+        10px
+        12px;
+
+    box-sizing: border-box;
+
+    background: #FEF2F2;
+
+    border:
+        1px
+        solid
+        #FECACA;
+
+    border-radius: 12px;
+}
+
+
+.courierReviewGateErrorIcon {
+
+    flex-shrink: 0;
+
+    color: #DC2626;
+
+    font-size: 18px;
+}
+
+
+.courierReviewGateErrorText {
+
+    flex: 1;
+
+    margin: 0;
+
+    color: #B91C1C;
+
+    font-size: 12px;
+
+    line-height: 17px;
+}
+
+
+/* =========================================================
+   BOTTOM SPACING
+========================================================= */
+
+.courierReviewGateBottomSpacing {
+
+    height: 8px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.courierReviewGateFooter {
+
+    flex-shrink: 0;
+
+    padding:
+        12px
+        20px
+        20px;
+
+    box-sizing: border-box;
+
+    background: #FFFFFF;
+
+    border-top:
+        1px
+        solid
+        #E5E7EB;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.courierReviewGateSubmitButton {
+
+    width: 100%;
+
+    height: 54px;
+
+    display: flex;
+
+    flex-direction: row;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    border: none;
+
+    border-radius: 15px;
+
+    background: #111827;
+
+    color: #FFFFFF;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.15s ease;
+}
+
+
+.courierReviewGateSubmitButton:hover:not(:disabled) {
+
+    background: #1F2937;
+}
+
+
+.courierReviewGateSubmitButton:active:not(:disabled) {
+
+    transform: scale(0.99);
+}
+
+
+.courierReviewGateSubmitButtonDisabled {
+
+    background: #D1D5DB;
+
+    color: #9CA3AF;
+
+    cursor: not-allowed;
+}
+
+
+.courierReviewGateSubmitButton svg {
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   SPINNER
+========================================================= */
+
+.courierReviewGateSpinner {
+
+    width: 18px;
+    height: 18px;
+
+    display: block;
+
+    box-sizing: border-box;
+
+    border:
+        2px
+        solid
+        rgba(255, 255, 255, 0.35);
+
+    border-top-color: #FFFFFF;
+
+    border-radius: 50%;
+
+    animation:
+        courierReviewGateSpin
+        0.7s
+        linear
+        infinite;
+}
+
+
+@keyframes courierReviewGateSpin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .courierReviewGateModal {
+
+        max-height: 94vh;
+
+    }
+
+    .courierReviewGateHeader {
+
+        padding:
+            24px
+            22px
+            18px;
+
+    }
+
+    .courierReviewGateScrollContent {
+
+        padding:
+            0
+            18px
+            24px;
+
+    }
+
+    .courierReviewGateFooter {
+
+        padding:
+            12px
+            18px
+            18px;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+    .courierReviewGateOverlay {
+
+        padding: 0;
+
+    }
+
+    .courierReviewGateModal {
+
+        max-height: 94vh;
+
+        border-radius:
+            28px
+            28px
+            0
+            0;
+
+    }
+
+    .courierReviewGateHeader {
+
+        padding:
+            24px
+            20px
+            18px;
+
+    }
+
+    .courierReviewGateHeaderTitle {
+
+        font-size: 20px;
+
+    }
+
+    .courierReviewGateHeaderSubtitle {
+
+        font-size: 13px;
+
+    }
+
+    .courierReviewGateScrollContent {
+
+        padding:
+            0
+            18px
+            24px;
+
+    }
+
+    .courierReviewGateFooter {
+
+        padding:
+            12px
+            18px
+            18px;
+
+    }
+
+    .courierReviewGateRatingTitle {
+
+        font-size: 18px;
+
+    }
+
+    .courierReviewGateStarButton {
+
+        width: 44px;
+        height: 44px;
+
+        font-size: 31px;
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .courierReviewGateHeader {
+
+        padding:
+            20px
+            16px
+            16px;
+
+    }
+
+    .courierReviewGateScrollContent {
+
+        padding:
+            0
+            14px
+            20px;
+
+    }
+
+    .courierReviewGateFooter {
+
+        padding:
+            10px
+            14px
+            14px;
+
+    }
+
+    .courierReviewGateStarButton {
+
+        width: 40px;
+        height: 40px;
+
+        font-size: 28px;
+
+    }
+
+    .courierReviewGateCourierImage {
+
+        width: 56px;
+        height: 56px;
+
+    }
+
+    .courierReviewGateCourierName {
+
+        font-size: 15px;
+
+    }
+
+}

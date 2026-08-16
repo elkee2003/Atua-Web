@@ -472,9 +472,9 @@ function CourierOrders() {
       const status = normalizeStatus(order.status);
 
       return (
-        status === "PENDING" ||
-        status === "AWAITING_ACCEPTANCE" ||
-        status === "WAITING"
+        status === "ACCEPTED" ||
+        status === "ARRIVED_PICKUP" ||
+        status === "LOADING"
       );
     }).length;
 
@@ -568,17 +568,17 @@ function CourierOrders() {
         switch (statusFilter) {
           case "PENDING":
             return (
-              status === "PENDING" ||
-              status === "AWAITING_ACCEPTANCE" ||
-              status === "WAITING"
+              status === "ACCEPTED" ||
+              status === "ARRIVED_PICKUP" ||
+              status === "LOADING"
             );
 
           case "IN_TRANSIT":
             return (
-              status === "IN_TRANSIT" ||
               status === "PICKED_UP" ||
-              status === "OUT_FOR_DELIVERY" ||
-              status === "ON_THE_WAY"
+              status === "IN_TRANSIT" ||
+              status === "ARRIVED_DROPOFF" ||
+              status === "UNLOADING"
             );
 
           case "DELIVERED":
