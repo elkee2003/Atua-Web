@@ -1,9 +1,11 @@
 import React from "react";
 
 import {
+  FaBan,
   FaCheckCircle,
   FaMapMarkerAlt,
   FaPhone,
+  FaRedo,
   FaStar,
   FaTimesCircle,
 } from "react-icons/fa";
@@ -13,8 +15,14 @@ import "./CourierProfileHeader.css";
 function CourierProfileHeader({
   courier,
   profileUrl,
+
   approvalLoading = false,
+  blockLoading = false,
+  resetLoading = false,
+
   onApprove,
+  onBlock,
+  onForceReset,
   onTrack,
 }) {
   /*
@@ -34,7 +42,6 @@ function CourierProfileHeader({
   */
 
   const firstName = courier.firstName || "";
-
   const lastName = courier.lastName || "";
 
   const fullName = `${firstName} ${lastName}`.trim() || "Unknown Courier";
@@ -55,8 +62,8 @@ function CourierProfileHeader({
   */
 
   const isOnline = Boolean(courier.isOnline);
-
   const isApproved = Boolean(courier.isApproved);
+  const isBlocked = Boolean(courier.isBlocked);
 
   /*
   ==========================================================
@@ -110,6 +117,34 @@ function CourierProfileHeader({
 
   /*
   ==========================================================
+  BLOCK / UNBLOCK
+  ==========================================================
+  */
+
+  const handleBlock = () => {
+    if (!onBlock || blockLoading) {
+      return;
+    }
+
+    onBlock();
+  };
+
+  /*
+  ==========================================================
+  FORCE RESET
+  ==========================================================
+  */
+
+  const handleForceReset = () => {
+    if (!onForceReset || resetLoading) {
+      return;
+    }
+
+    onForceReset();
+  };
+
+  /*
+  ==========================================================
   RENDER
   ==========================================================
   */
@@ -126,33 +161,21 @@ function CourierProfileHeader({
         ================================================== */}
 
         <div className="courierProfileHeader-identity">
-          {/* ==================================================
-              AVATAR
-          ================================================== */}
+          {/* AVATAR */}
 
           <div className="courierProfileHeader-avatar">
             {profileUrl ? (
               <img
                 src={profileUrl}
                 alt={fullName}
-                className="
-                  courierProfileHeader-avatarImage
-                "
+                className="courierProfileHeader-avatarImage"
               />
             ) : (
-              <span
-                className="
-                courierProfileHeader-initials
-              "
-              >
-                {initials}
-              </span>
+              <span className="courierProfileHeader-initials">{initials}</span>
             )}
           </div>
 
-          {/* ==================================================
-              INFORMATION
-          ================================================== */}
+          {/* INFORMATION */}
 
           <div className="courierProfileHeader-info">
             {/* NAME */}
@@ -162,9 +185,7 @@ function CourierProfileHeader({
 
               {isApproved && (
                 <FaCheckCircle
-                  className="
-                    courierProfileHeader-verifiedIcon
-                  "
+                  className="courierProfileHeader-verifiedIcon"
                   title="Approved courier"
                 />
               )}
@@ -181,19 +202,11 @@ function CourierProfileHeader({
             {/* VEHICLE META */}
 
             <div className="courierProfileHeader-meta">
-              <span
-                className="
-                courierProfileHeader-transport
-              "
-              >
+              <span className="courierProfileHeader-transport">
                 {transportationType}
               </span>
 
-              <span
-                className="
-                courierProfileHeader-vehicle
-              "
-              >
+              <span className="courierProfileHeader-vehicle">
                 {vehicleClass}
               </span>
             </div>
@@ -214,11 +227,7 @@ function CourierProfileHeader({
             }
           `}
         >
-          <span
-            className="
-            courierProfileHeader-statusDot
-          "
-          />
+          <span className="courierProfileHeader-statusDot" />
 
           <span>{isOnline ? "Online" : "Offline"}</span>
         </div>
@@ -234,9 +243,7 @@ function CourierProfileHeader({
         ================================================== */}
 
         <div className="courierProfileHeader-statusGroup">
-          {/* ==================================================
-              APPROVAL STATUS
-          ================================================== */}
+          {/* APPROVAL STATUS */}
 
           <div
             className={`
@@ -253,15 +260,9 @@ function CourierProfileHeader({
             <span>{isApproved ? "Approved" : "Pending Approval"}</span>
           </div>
 
-          {/* ==================================================
-              RATING
-          ================================================== */}
+          {/* RATING */}
 
-          <div
-            className="
-            courierProfileHeader-rating
-          "
-          >
+          <div className="courierProfileHeader-rating">
             <FaStar />
 
             <strong>{rating > 0 ? rating.toFixed(1) : "No rating"}</strong>
@@ -271,16 +272,10 @@ function CourierProfileHeader({
             </span>
           </div>
 
-          {/* ==================================================
-              LOCATION
-          ================================================== */}
+          {/* LOCATION */}
 
           {locationText && (
-            <div
-              className="
-              courierProfileHeader-location
-            "
-            >
+            <div className="courierProfileHeader-location">
               <FaMapMarkerAlt />
 
               <span>{locationText}</span>
@@ -292,26 +287,80 @@ function CourierProfileHeader({
             ACTIONS
         ================================================== */}
 
-        <div
-          className="
-          courierProfileHeader-actions
-        "
-        >
+        <div className="courierProfileHeader-actions">
           {/* ==================================================
               TRACK COURIER
           ================================================== */}
 
           <button
             type="button"
-            className="
-              courierProfileHeader-trackButton
-            "
+            className="courierProfileHeader-trackButton"
             onClick={handleTrack}
             disabled={!onTrack}
           >
             <FaMapMarkerAlt />
 
             <span>Track Courier</span>
+          </button>
+
+          {/* ==================================================
+              BLOCK / UNBLOCK COURIER
+          ================================================== */}
+
+          <button
+            type="button"
+            className={`
+              courierProfileHeader-blockButton
+              ${isBlocked ? "courierProfileHeader-unblockButton" : ""}
+            `}
+            onClick={handleBlock}
+            disabled={blockLoading || !onBlock}
+          >
+            {blockLoading ? (
+              <>
+                <span className="courierProfileHeader-buttonSpinner" />
+
+                <span>Updating...</span>
+              </>
+            ) : isBlocked ? (
+              <>
+                <FaCheckCircle />
+
+                <span>Unblock Courier</span>
+              </>
+            ) : (
+              <>
+                <FaBan />
+
+                <span>Block Courier</span>
+              </>
+            )}
+          </button>
+
+          {/* ==================================================
+              FORCE RESET COURIER CAPACITY
+          ================================================== */}
+
+          <button
+            type="button"
+            className="courierProfileHeader-resetButton"
+            onClick={handleForceReset}
+            disabled={resetLoading || !onForceReset}
+            title="Reset the courier's current Express and Batch capacity counters"
+          >
+            {resetLoading ? (
+              <>
+                <span className="courierProfileHeader-buttonSpinner" />
+
+                <span>Resetting...</span>
+              </>
+            ) : (
+              <>
+                <FaRedo />
+
+                <span>Force Reset</span>
+              </>
+            )}
           </button>
 
           {/* ==================================================
@@ -333,11 +382,7 @@ function CourierProfileHeader({
           >
             {approvalLoading ? (
               <>
-                <span
-                  className="
-                  courierProfileHeader-buttonSpinner
-                "
-                />
+                <span className="courierProfileHeader-buttonSpinner" />
 
                 <span>Updating...</span>
               </>

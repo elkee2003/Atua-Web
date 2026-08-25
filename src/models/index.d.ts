@@ -57,6 +57,15 @@ export enum OwnerType {
   USER = "USER"
 }
 
+export enum AssignmentStatus {
+  PENDING = "PENDING",
+  OFFERED = "OFFERED",
+  ACCEPTED = "ACCEPTED",
+  EXPIRED = "EXPIRED",
+  REJECTED = "REJECTED",
+  CANCELLED = "CANCELLED"
+}
+
 export enum OfferStatus {
   ACTIVE = "ACTIVE",
   ACCEPTED = "ACCEPTED",
@@ -583,11 +592,14 @@ type EagerOrder = {
   readonly fundsReleasedAt?: string | null;
   readonly fundsReleaseType?: string | null;
   readonly assignedCourierId?: string | null;
+  readonly assignmentStatus?: AssignmentStatus | keyof typeof AssignmentStatus | null;
   readonly assignmentExpiresAt?: string | null;
   readonly assignmentAttempts?: number | null;
   readonly lastAssignedAt?: string | null;
-  readonly rejectedCourierIds?: (string | null)[] | null;
-  readonly assignmentStatus?: string | null;
+  readonly dispatchAttemptedCourierIds?: (string | null)[] | null;
+  readonly dispatchRound?: number | null;
+  readonly dispatchRadiusKm?: number | null;
+  readonly dispatchMaxRadiusKm?: number | null;
   readonly userID: string;
   readonly reviews?: (CourierReview | null)[] | null;
   readonly reports?: (CourierReport | null)[] | null;
@@ -706,11 +718,14 @@ type LazyOrder = {
   readonly fundsReleasedAt?: string | null;
   readonly fundsReleaseType?: string | null;
   readonly assignedCourierId?: string | null;
+  readonly assignmentStatus?: AssignmentStatus | keyof typeof AssignmentStatus | null;
   readonly assignmentExpiresAt?: string | null;
   readonly assignmentAttempts?: number | null;
   readonly lastAssignedAt?: string | null;
-  readonly rejectedCourierIds?: (string | null)[] | null;
-  readonly assignmentStatus?: string | null;
+  readonly dispatchAttemptedCourierIds?: (string | null)[] | null;
+  readonly dispatchRound?: number | null;
+  readonly dispatchRadiusKm?: number | null;
+  readonly dispatchMaxRadiusKm?: number | null;
   readonly userID: string;
   readonly reviews: AsyncCollection<CourierReview>;
   readonly reports: AsyncCollection<CourierReport>;
@@ -861,6 +876,7 @@ type EagerCourier = {
   readonly heading?: number | null;
   readonly push_token?: string | null;
   readonly isApproved?: boolean | null;
+  readonly isBlocked?: boolean | null;
   readonly approvedById?: string | null;
   readonly currentBatchCount?: number | null;
   readonly currentExpressCount?: number | null;
@@ -922,6 +938,7 @@ type LazyCourier = {
   readonly heading?: number | null;
   readonly push_token?: string | null;
   readonly isApproved?: boolean | null;
+  readonly isBlocked?: boolean | null;
   readonly approvedById?: string | null;
   readonly currentBatchCount?: number | null;
   readonly currentExpressCount?: number | null;

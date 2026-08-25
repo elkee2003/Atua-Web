@@ -477,7 +477,9 @@
 ========================================================== */
 
 .courierProfileHeader-trackButton,
-.courierProfileHeader-approvalButton {
+.courierProfileHeader-approvalButton,
+.courierProfileHeader-blockButton,
+.courierProfileHeader-resetButton {
     min-height: 38px;
 
     display: inline-flex;
@@ -527,7 +529,9 @@
 
 
 .courierProfileHeader-trackButton:active:not(:disabled),
-.courierProfileHeader-approvalButton:active:not(:disabled) {
+.courierProfileHeader-approvalButton:active:not(:disabled),
+.courierProfileHeader-blockButton:active:not(:disabled),
+.courierProfileHeader-resetButton:active:not(:disabled) {
     transform: scale(0.97);
 }
 
@@ -578,13 +582,82 @@
     color: #991b1b;
 }
 
+/* ==========================================================
+   BLOCK / UNBLOCK BUTTON
+========================================================== */
+
+.courierProfileHeader-blockButton {
+    border: 1px solid #fecaca;
+
+    background: #fef2f2;
+
+    color: #b91c1c;
+}
+
+
+.courierProfileHeader-blockButton:hover:not(:disabled) {
+    background: #fee2e2;
+
+    border-color: #fca5a5;
+
+    color: #991b1b;
+}
+
+
+/* ==========================================================
+   UNBLOCK BUTTON
+========================================================== */
+
+.courierProfileHeader-unblockButton {
+    border: 1px solid #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+
+.courierProfileHeader-unblockButton:hover:not(:disabled) {
+    background: #dcfce7;
+
+    border-color: #86efac;
+
+    color: #166534;
+}
+
+/* ==========================================================
+   FORCE RESET COURIER CAPACITY
+========================================================== */
+
+.courierProfileHeader-resetButton {
+    border: 1px solid #fed7aa;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+}
+
+.courierProfileHeader-resetButton:hover:not(:disabled) {
+    background: #ffedd5;
+
+    border-color: #fdba74;
+
+    color: #9a3412;
+}
+
+.courierProfileHeader-resetButton svg {
+    font-size: 12px;
+}
+
 
 /* ==========================================================
    DISABLED BUTTONS
 ========================================================== */
 
 .courierProfileHeader-trackButton:disabled,
-.courierProfileHeader-approvalButton:disabled {
+.courierProfileHeader-approvalButton:disabled,
+.courierProfileHeader-blockButton:disabled,
+.courierProfileHeader-resetButton:disabled {
     opacity: 0.55;
 
     cursor: not-allowed;
@@ -629,7 +702,9 @@
 ========================================================== */
 
 .courierProfileHeader-trackButton:focus-visible,
-.courierProfileHeader-approvalButton:focus-visible {
+.courierProfileHeader-approvalButton:focus-visible,
+.courierProfileHeader-blockButton:focus-visible,
+.courierProfileHeader-resetButton:focus-visible {
     outline: 3px solid rgba(37, 99, 235, 0.18);
 
     outline-offset: 2px;
@@ -660,7 +735,9 @@
 
 
     .courierProfileHeader-trackButton,
-    .courierProfileHeader-approvalButton {
+    .courierProfileHeader-approvalButton,
+    .courierProfileHeader-blockButton,
+    .courierProfileHeader-resetButton {
         flex: 1;
     }
 
@@ -749,7 +826,9 @@
 
 
     .courierProfileHeader-trackButton,
-    .courierProfileHeader-approvalButton {
+    .courierProfileHeader-approvalButton,
+    .courierProfileHeader-blockButton,
+    .courierProfileHeader-resetButton {
         width: 100%;
 
         flex: none;

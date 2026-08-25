@@ -359,6 +359,14 @@
         }
       ]
     },
+    "AMPLIFY_function_processPaymentAndWallet_paystackSecretKey": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "processPaymentAndWallet"
+        }
+      ]
+    },
     "AMPLIFY_function_processPayouts_deploymentBucketName": {
       "usedBy": [
         {

@@ -120,6 +120,10 @@ function CourierFullProfile() {
 
   const [approvalLoading, setApprovalLoading] = useState(false);
 
+  const [blockLoading, setBlockLoading] = useState(false);
+
+  const [resetLoading, setResetLoading] = useState(false);
+
   /*
   ==========================================================
   IMAGE URL HELPER
@@ -541,6 +545,160 @@ function CourierFullProfile() {
 
   /*
   ==========================================================
+  BLOCK / UNBLOCK COURIER
+  ==========================================================
+  */
+
+  const handleBlock = async () => {
+    if (!courier) {
+      return;
+    }
+
+    const isCurrentlyBlocked = Boolean(courier.isBlocked);
+
+    const confirmed = window.confirm(
+      isCurrentlyBlocked
+        ? `Are you sure you want to unblock ${
+            courier.firstName || "this courier"
+          }?`
+        : `Block ${
+            courier.firstName || "this courier"
+          }?\n\nThis will immediately take the courier offline and prevent them from going online or receiving delivery jobs.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setBlockLoading(true);
+
+      const freshCourier = await DataStore.query(Courier, courier.id);
+
+      if (!freshCourier) {
+        return;
+      }
+
+      const newBlockedStatus = !Boolean(freshCourier.isBlocked);
+
+      const updatedCourier = Courier.copyOf(freshCourier, (updated) => {
+        updated.isBlocked = newBlockedStatus;
+
+        /*
+      ------------------------------------------------------
+      BLOCKING ALWAYS FORCES THE COURIER OFFLINE
+      ------------------------------------------------------
+      */
+
+        if (newBlockedStatus) {
+          updated.isOnline = false;
+          updated.statusKey = "OFFLINE#BLOCKED";
+        } else {
+          /*
+        ----------------------------------------------------
+        UNBLOCKING DOES NOT AUTOMATICALLY PUT THE COURIER
+        ONLINE.
+        ----------------------------------------------------
+
+        They must manually go online from the courier app.
+        ----------------------------------------------------
+        */
+
+          updated.statusKey = `${updated.isOnline ? "ONLINE" : "OFFLINE"}#${
+            updated.isApproved ? "APPROVED" : "NOT_APPROVED"
+          }`;
+        }
+      });
+
+      await DataStore.save(updatedCourier);
+
+      setCourier(updatedCourier);
+    } catch (blockError) {
+      console.error("Failed to update courier block status:", blockError);
+    } finally {
+      setBlockLoading(false);
+    }
+  };
+
+  /*
+    ==========================================================
+    FORCE RESET COURIER CAPACITY
+    ==========================================================
+  */
+
+  const handleForceReset = async () => {
+    if (!courier?.id || resetLoading) {
+      return;
+    }
+
+    const courierName =
+      `${courier.firstName || ""} ${courier.lastName || ""}`.trim() ||
+      "this courier";
+
+    const currentExpressCount = Number(courier.currentExpressCount || 0);
+    const currentBatchCount = Number(courier.currentBatchCount || 0);
+
+    const confirmed = window.confirm(
+      `Force reset capacity for ${courierName}?\n\n` +
+        `Current Express Orders: ${currentExpressCount}\n` +
+        `Current Batch Orders: ${currentBatchCount}\n\n` +
+        `This will set both counters to 0.\n\n` +
+        `Only do this if the courier's capacity is incorrectly stuck.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+
+      // Always get the freshest courier record
+      const freshCourier = await DataStore.query(Courier, courier.id);
+
+      if (!freshCourier) {
+        window.alert("Courier could not be found.");
+        return;
+      }
+
+      console.log("🔄 ADMIN FORCE RESET");
+      console.log("Courier:", freshCourier.id);
+      console.log("Current Express Count:", freshCourier.currentExpressCount);
+      console.log("Current Batch Count:", freshCourier.currentBatchCount);
+
+      const updatedCourier = Courier.copyOf(freshCourier, (updated) => {
+        updated.currentExpressCount = 0;
+        updated.currentBatchCount = 0;
+
+        // Clear the timestamp associated with the last batch assignment.
+        updated.lastBatchAssignedAt = null;
+      });
+
+      const savedCourier = await DataStore.save(updatedCourier);
+
+      setCourier(savedCourier);
+
+      console.log("✅ Courier capacity force reset successfully");
+      console.log("Courier:", savedCourier.id);
+      console.log("Express Count:", savedCourier.currentExpressCount);
+      console.log("Batch Count:", savedCourier.currentBatchCount);
+
+      window.alert(
+        `Capacity reset successfully for ${courierName}.\n\n` +
+          `Express: 0\n` +
+          `Batch: 0`,
+      );
+    } catch (resetError) {
+      console.error("❌ Failed to force reset courier capacity:", resetError);
+
+      window.alert("Failed to reset courier capacity.\n\nPlease try again.");
+    } finally {
+      setResetLoading(false);
+    }
+  };
+
+  /*
+  ==========================================================
   ORDER STATISTICS
   ==========================================================
   */
@@ -921,7 +1079,10 @@ function CourierFullProfile() {
         courier={courier}
         profileUrl={profileUrl}
         approvalLoading={approvalLoading}
+        blockLoading={blockLoading}
         onApprove={handleApproval}
+        onBlock={handleBlock}
+        onForceReset={handleForceReset}
         onTrack={goToLiveTracking}
       />
 
@@ -1316,19 +1477,31 @@ function CourierFullProfile() {
                 className={`
                   courierFullProfile-statusIndicator
                   ${
-                    courier.isOnline
-                      ? "courierFullProfile-statusIndicatorOnline"
-                      : "courierFullProfile-statusIndicatorOffline"
+                    courier.isBlocked
+                      ? "courierFullProfile-statusIndicatorBlocked"
+                      : courier.isOnline
+                        ? "courierFullProfile-statusIndicatorOnline"
+                        : "courierFullProfile-statusIndicatorOffline"
                   }
                 `}
               />
             </div>
 
             <div className="courierFullProfile-statusValue">
-              <strong>{courier.isOnline ? "Online" : "Offline"}</strong>
+              <strong>
+                {courier.isBlocked
+                  ? "Blocked"
+                  : courier.isOnline
+                    ? "Online"
+                    : "Offline"}
+              </strong>
 
               <span>
-                {courier.isApproved ? "Approved courier" : "Approval required"}
+                {courier.isBlocked
+                  ? "Courier access restricted"
+                  : courier.isApproved
+                    ? "Approved courier"
+                    : "Approval required"}
               </span>
             </div>
 

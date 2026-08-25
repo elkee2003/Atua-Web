@@ -57,6 +57,15 @@ const OwnerType = {
   "USER": "USER"
 };
 
+const AssignmentStatus = {
+  "PENDING": "PENDING",
+  "OFFERED": "OFFERED",
+  "ACCEPTED": "ACCEPTED",
+  "EXPIRED": "EXPIRED",
+  "REJECTED": "REJECTED",
+  "CANCELLED": "CANCELLED"
+};
+
 const OfferStatus = {
   "ACTIVE": "ACTIVE",
   "ACCEPTED": "ACCEPTED",
@@ -139,6 +148,7 @@ export {
   TransactionStatus,
   PayoutStatus,
   OwnerType,
+  AssignmentStatus,
   OfferStatus,
   CourierPreTransferUploadStatus,
   CourierPostLoadingUploadStatus,

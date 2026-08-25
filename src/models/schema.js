@@ -1756,6 +1756,15 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "assignmentStatus": {
+                    "name": "assignmentStatus",
+                    "isArray": false,
+                    "type": {
+                        "enum": "AssignmentStatus"
+                    },
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "assignmentExpiresAt": {
                     "name": "assignmentExpiresAt",
                     "isArray": false,
@@ -1777,18 +1786,32 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "rejectedCourierIds": {
-                    "name": "rejectedCourierIds",
+                "dispatchAttemptedCourierIds": {
+                    "name": "dispatchAttemptedCourierIds",
                     "isArray": true,
                     "type": "ID",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "assignmentStatus": {
-                    "name": "assignmentStatus",
+                "dispatchRound": {
+                    "name": "dispatchRound",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dispatchRadiusKm": {
+                    "name": "dispatchRadiusKm",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "dispatchMaxRadiusKm": {
+                    "name": "dispatchMaxRadiusKm",
+                    "isArray": false,
+                    "type": "Float",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -2560,6 +2583,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "isBlocked": {
+                    "name": "isBlocked",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "approvedById": {
                     "name": "approvedById",
                     "isArray": false,
@@ -3039,6 +3069,17 @@ export const schema = {
                 "USER"
             ]
         },
+        "AssignmentStatus": {
+            "name": "AssignmentStatus",
+            "values": [
+                "PENDING",
+                "OFFERED",
+                "ACCEPTED",
+                "EXPIRED",
+                "REJECTED",
+                "CANCELLED"
+            ]
+        },
         "OfferStatus": {
             "name": "OfferStatus",
             "values": [
@@ -3218,5 +3259,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "bbe4ca145f6022de4b78642299d35724"
+    "version": "9cbe947d29c1aa4dcacd7fc6cc5a60c7"
 };

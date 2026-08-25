@@ -1032,6 +1032,13 @@
         0 0 0 4px #f1f5f9;
 }
 
+.courierFullProfile-statusIndicatorBlocked {
+    background: #ef4444;
+
+    box-shadow:
+        0 0 0 4px #fee2e2;
+}
+
 .courierFullProfile-statusValue {
     display: flex;
 

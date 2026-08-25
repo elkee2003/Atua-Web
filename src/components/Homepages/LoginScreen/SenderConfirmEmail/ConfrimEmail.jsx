@@ -12,8 +12,7 @@ const ConfirmEmail = () => {
   const navigate = useNavigate();
 
   const username =
-    searchParams.get("username") ||
-    localStorage.getItem("signupEmail");
+    searchParams.get("username") || localStorage.getItem("signupEmail");
 
   const {
     register,
@@ -56,7 +55,7 @@ const ConfirmEmail = () => {
 
     try {
       await resendSignUpCode({ username });
-      alert("A new code has been sent to your email.");
+      alert("A new code has been sent to your email. Check inbox or spam");
     } catch (error) {
       alert(error?.message || "Failed to resend code");
     } finally {
@@ -67,12 +66,10 @@ const ConfirmEmail = () => {
   return (
     <section className="confirm-email-section">
       <div className="confirm-email-card">
-
         <div className="confirm-email-header">
           <h1>Verify your email</h1>
           <p>
-            Enter the 6-digit code sent to{" "}
-            <strong>{username}</strong>
+            Enter the 6-digit code sent to <strong>{username}</strong>
           </p>
         </div>
 
@@ -116,14 +113,10 @@ const ConfirmEmail = () => {
             {loadingCode ? "Resending..." : "Resend Code"}
           </button>
 
-          <button
-            onClick={() => navigate("/")}
-            className="confirm-email-link"
-          >
+          <button onClick={() => navigate("/")} className="confirm-email-link">
             Back to Sign In
           </button>
         </div>
-
       </div>
     </section>
   );

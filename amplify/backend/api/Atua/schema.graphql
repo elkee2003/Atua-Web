@@ -84,6 +84,15 @@ enum OwnerType {
   USER
 }
 
+enum AssignmentStatus {
+  PENDING
+  OFFERED
+  ACCEPTED
+  EXPIRED
+  REJECTED
+  CANCELLED
+}
+
 enum OfferStatus {
   ACTIVE
   ACCEPTED
@@ -405,22 +414,48 @@ type Order @model @auth(rules: [{ allow: public }]) {
   fundsReleasedAt: AWSDateTime
   fundsReleaseType: String
 
-  # ---------------- ASSIGNMENT FIELDS ----------------
+  # ---------------- ASSIGNMENT / DISPATCH ----------------
+
+  # Courier currently holding the offer OR the courier who accepted it
   assignedCourierId: ID @index(name: "byAssignedCourier")
-  #assignmentStatus: String
-  assignmentExpiresAt: AWSDateTime
-  assignmentAttempts: Int
-  lastAssignedAt: AWSDateTime
-  rejectedCourierIds: [ID] # meant to be for couriers already assigned that expired or didn't accept
-  # ---------------- RELATIONS ----------------
-  assignmentStatus: String
+
+  # OFFERED | ACCEPTED | EXPIRED | REJECTED | CANCELLED
+  assignmentStatus: AssignmentStatus
     @index(name: "byAssignmentStatus", sortKeyFields: ["assignmentExpiresAt"])
+
+  # When the current courier offer expires
+  assignmentExpiresAt: AWSDateTime
+
+  # Number of courier offers made
+  assignmentAttempts: Int
+
+  # Last time an offer was made
+  lastAssignedAt: AWSDateTime
+
+  # Couriers already attempted during the current dispatch round
+  dispatchAttemptedCourierIds: [ID]
+
+  # Current dispatch cycle
+  dispatchRound: Int
+
+  # Current search radius
+  dispatchRadiusKm: Float
+
+  # Maximum allowed radius for this service
+  dispatchMaxRadiusKm: Float
+
+  # ---------------- RELATIONS ----------------
+
   userID: ID! @index(name: "byUser")
+
   reviews: [CourierReview] @hasMany(indexName: "byOrder", fields: ["id"])
 
   reports: [CourierReport] @hasMany(indexName: "byOrder", fields: ["id"])
+
   offers: [Offer] @hasMany(indexName: "byOrder", fields: ["id"])
+
   assignedCourier: Courier @belongsTo(fields: ["assignedCourierId"])
+
   payments: [Payment] @hasMany(indexName: "byOrder", fields: ["id"])
 }
 
@@ -503,6 +538,7 @@ type Courier @model @auth(rules: [{ allow: public }]) {
   heading: Float
   push_token: String
   isApproved: Boolean
+  isBlocked: Boolean
   approvedById: String
   currentBatchCount: Int
   currentExpressCount: Int

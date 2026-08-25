@@ -59,6 +59,7 @@ export declare type CourierUpdateFormInputValues = {
     heading?: number;
     push_token?: string;
     isApproved?: boolean;
+    isBlocked?: boolean;
     approvedById?: string;
     currentBatchCount?: number;
     currentExpressCount?: number;
@@ -106,6 +107,7 @@ export declare type CourierUpdateFormValidationValues = {
     heading?: ValidationFunction<number>;
     push_token?: ValidationFunction<string>;
     isApproved?: ValidationFunction<boolean>;
+    isBlocked?: ValidationFunction<boolean>;
     approvedById?: ValidationFunction<string>;
     currentBatchCount?: ValidationFunction<number>;
     currentExpressCount?: ValidationFunction<number>;
@@ -155,6 +157,7 @@ export declare type CourierUpdateFormOverridesProps = {
     heading?: PrimitiveOverrideProps<TextFieldProps>;
     push_token?: PrimitiveOverrideProps<TextFieldProps>;
     isApproved?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isBlocked?: PrimitiveOverrideProps<SwitchFieldProps>;
     approvedById?: PrimitiveOverrideProps<TextFieldProps>;
     currentBatchCount?: PrimitiveOverrideProps<TextFieldProps>;
     currentExpressCount?: PrimitiveOverrideProps<TextFieldProps>;

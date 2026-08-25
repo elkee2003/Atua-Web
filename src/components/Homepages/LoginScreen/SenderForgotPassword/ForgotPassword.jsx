@@ -21,7 +21,7 @@ const ForgotPassword = () => {
 
       localStorage.setItem("resetEmail", email);
 
-      alert("Code sent to your email");
+      alert("Code sent to your email. Check inbox or spam");
       navigate(`/sender_confirm_code?email=${email}`);
     } catch (e) {
       alert(e.message);
@@ -33,7 +33,6 @@ const ForgotPassword = () => {
   return (
     <section className="reset-section">
       <div className="reset-container">
-
         <div className="reset-card">
           <h1>Reset Password</h1>
           <p>Enter your email to receive a reset code</p>
@@ -47,8 +46,7 @@ const ForgotPassword = () => {
               rules={{
                 required: "Email is required",
                 pattern: {
-                  value:
-                    /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+                  value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
                   message: "Invalid email format",
                 },
               }}
@@ -60,10 +58,7 @@ const ForgotPassword = () => {
               loading={loading}
             />
 
-            <p
-              className="reset-link"
-              onClick={() => navigate("/")}
-            >
+            <p className="reset-link" onClick={() => navigate("/")}>
               Back to Sign In
             </p>
           </form>
