@@ -1,9 +1,11 @@
+"use strict";
+
 /* Amplify Params - DO NOT EDIT
-	API_ATUA_GRAPHQLAPIENDPOINTOUTPUT
-	API_ATUA_GRAPHQLAPIIDOUTPUT
-	API_ATUA_GRAPHQLAPIKEYOUTPUT
-	ENV
-	REGION
+    API_ATUA_GRAPHQLAPIENDPOINTOUTPUT
+    API_ATUA_GRAPHQLAPIIDOUTPUT
+    API_ATUA_GRAPHQLAPIKEYOUTPUT
+    ENV
+    REGION
  Amplify Params - DO NOT EDIT */
 
 const { SSMClient, GetParameterCommand } = require("@aws-sdk/client-ssm");
@@ -61,6 +63,14 @@ const generateVerificationCode = () => {
 };
 
 /* ==========================================================
+   GENERATE RECIPIENT TRACKING TOKEN
+========================================================== */
+
+const generateRecipientTrackingToken = () => {
+  return crypto.randomBytes(24).toString("hex");
+};
+
+/* ==========================================================
    GRAPHQL REQUEST
 ========================================================== */
 
@@ -109,10 +119,6 @@ const graphqlRequest = async (
       });
 
       res.on("end", () => {
-        /* ------------------------------------------
-                   HTTP ERROR
-                ------------------------------------------ */
-
         if (res.statusCode < 200 || res.statusCode >= 300) {
           console.error(`${operationName} HTTP ERROR:`, {
             statusCode: res.statusCode,
@@ -125,27 +131,19 @@ const graphqlRequest = async (
           );
         }
 
-        /* ------------------------------------------
-                   PARSE RESPONSE
-                ------------------------------------------ */
-
         let parsed;
 
         try {
           parsed = JSON.parse(data);
         } catch (error) {
-          console.error(`${operationName} PARSE ERROR:`, {
-            rawResponse: data,
-
+          console.error(`${operationName} JSON PARSE ERROR:`, {
             error: error.message,
+
+            response: data,
           });
 
           return reject(error);
         }
-
-        /* ------------------------------------------
-                   GRAPHQL ERRORS
-                ------------------------------------------ */
 
         if (parsed?.errors?.length) {
           console.error(
@@ -180,6 +178,169 @@ const graphqlRequest = async (
 };
 
 /* ==========================================================
+   COMPLETE ORDER FIELDS
+========================================================== */
+
+const ORDER_FIELDS = `
+  id
+
+  recipientName
+  recipientNumber
+  recipientNumber2
+  orderDetails
+
+  originAddress
+  originState
+  originLat
+  originLng
+
+  destinationAddress
+  destinationState
+  destinationLat
+  destinationLng
+
+  tripType
+  distance
+
+  transportationType
+  vehicleClass
+
+  status
+
+  hasNewOffer
+  lastOfferAt
+  lastOfferSenderType
+
+  loadCategory
+  isInterState
+
+  estimatedMinPrice
+  estimatedMaxPrice
+  initialOfferPrice
+
+  loadingFee
+  unloadingFee
+  floorSurcharge
+  fragileSurcharge
+  extrasTotal
+
+  totalPrice
+  operationalFare
+
+  courierEarnings
+  commissionAmount
+  platformFee
+  platformServiceRevenue
+  vatAmount
+  platformNetRevenue
+
+  deliveryVerificationCode
+
+    recipientTrackingToken
+  recipientTrackingEnabled
+  recipientTrackingRevokedAt
+
+  declaredWeightBracket
+
+  senderPreTransferPhotos
+  senderPreTransferVideo
+  senderPreTransferRecordedAt
+
+  senderPreTransferLocalPhotos
+  senderPreTransferLocalVideo
+
+  mediaUploadStatus
+
+  courierPreTransferUploadStatus
+  courierPostLoadingUploadStatus
+  dropoffUploadStatus
+
+  courierPreTransferPhotos
+  courierPreTransferVideo
+  courierPreTransferRecordedAt
+
+  courierPreTransferLocalPhotos
+  courierPreTransferLocalVideo
+
+  courierPostLoadingPhotos
+  courierPostLoadingVideo
+
+  courierPostLoadingLocalPhotos
+  courierPostLoadingLocalVideo
+
+  dropoffArrivalPhotos
+  dropoffArrivalVideo
+
+  dropoffArrivalLocalPhotos
+  dropoffArrivalLocalVideo
+
+  postDeliveryPhotos
+  postDeliveryVideo
+
+  pickupLoadingResponsibility
+  pickupFloorLevel
+  pickupFloorLevelPrice
+  pickupHasElevator
+
+  dropoffUnloadingResponsibility
+  dropoffFloorLevel
+  dropoffFloorLevelPrice
+  dropoffHasElevator
+
+  acceptedAt
+  arrivedPickupAt
+  loadingStartedAt
+  tripStartedAt
+  arrivedDropoffAt
+  unloadingCompletedAt
+
+  logisticsCompanyId
+  waybillNumber
+  waybillPhoto
+  logisticsTrackingCode
+  logisticsTrackingStatus
+  handedOverToLogisticsAt
+  logisticsIntakeConfirmedAt
+
+  acceptedOfferID
+
+  paymentStatus
+  paymentID
+  paymentReference
+
+  payoutStatus
+  fundsStatus
+
+  earningsAllocationStatus
+  earningsAllocatedAt
+
+  fundsReleaseBlocked
+  fundsHoldReason
+  fundsHeldBy
+  fundsHeldAt
+  fundsReleasedAmount
+  pickupFundsReleasedAt
+  fundsReleasedAt
+  fundsReleaseType
+
+  assignedCourierId
+  assignmentExpiresAt
+  assignmentAttempts
+  lastAssignedAt
+  rejectedCourierIds
+  assignmentStatus
+
+  userID
+
+  createdAt
+  updatedAt
+
+  _version
+  _lastChangedAt
+  _deleted
+`;
+
+/* ==========================================================
    GET ORDER
 ========================================================== */
 
@@ -189,42 +350,13 @@ const getOrder = async (orderId) => {
   }
 
   const query = `
-    query GetOrder($id: ID!) {
-      getOrder(id: $id) {
-        id
-        userID
-        totalPrice
-        status
-        paymentStatus
-        paymentID
-        payoutStatus
-        fundsStatus
-        deliveryVerificationCode
-        courierEarnings
-
-        # ----------------------------------------------
-        # ASSIGNMENT / DISPATCH
-        # ----------------------------------------------
-
-        assignedCourierId
-        assignmentStatus
-        assignmentExpiresAt
-        assignmentAttempts
-        lastAssignedAt
-        dispatchAttemptedCourierIds
-        dispatchRound
-        dispatchRadiusKm
-        dispatchMaxRadiusKm
-
-        # ----------------------------------------------
-        # TIMESTAMPS / VERSION
-        # ----------------------------------------------
-
-        createdAt
-        updatedAt
-        _version
-        _lastChangedAt
-        _deleted
+    query GetOrder(
+      $id: ID!
+    ) {
+      getOrder(
+        id: $id
+      ) {
+        ${ORDER_FIELDS}
       }
     }
   `;
@@ -237,51 +369,7 @@ const getOrder = async (orderId) => {
     "GetOrder",
   );
 
-  const order = data?.getOrder || null;
-
-  if (!order) {
-    console.error("ORDER NOT FOUND:", {
-      orderId,
-    });
-
-    return null;
-  }
-
-  console.log("ORDER RETRIEVED:", {
-    orderId: order.id,
-
-    userID: order.userID,
-
-    status: order.status,
-
-    paymentStatus: order.paymentStatus,
-
-    paymentID: order.paymentID,
-
-    fundsStatus: order.fundsStatus,
-
-    assignedCourierId: order.assignedCourierId,
-
-    assignmentStatus: order.assignmentStatus,
-
-    assignmentExpiresAt: order.assignmentExpiresAt,
-
-    assignmentAttempts: order.assignmentAttempts,
-
-    lastAssignedAt: order.lastAssignedAt,
-
-    dispatchRound: order.dispatchRound,
-
-    dispatchRadiusKm: order.dispatchRadiusKm,
-
-    dispatchMaxRadiusKm: order.dispatchMaxRadiusKm,
-
-    attemptedCouriers: order.dispatchAttemptedCourierIds?.length || 0,
-
-    version: order._version,
-  });
-
-  return order;
+  return data?.getOrder || null;
 };
 
 /* ==========================================================
@@ -294,32 +382,38 @@ const getPaymentByReference = async (reference) => {
   }
 
   const query = `
-      query ListPayments(
-        $filter: ModelPaymentFilterInput
+    query ListPayments(
+      $filter: ModelPaymentFilterInput
+    ) {
+      listPayments(
+        filter: $filter
+        limit: 1
       ) {
-        listPayments(
-          filter: $filter
-          limit: 1
-        ) {
-          items {
-            id
-            orderID
-            userID
-            amount
-            currency
-            status
-            paymentMethod
-            provider
-            reference
-            createdAt
-            updatedAt
-            _version
-            _lastChangedAt
-            _deleted
-          }
+        items {
+          id
+
+          orderID
+          userID
+
+          amount
+          currency
+
+          status
+          paymentMethod
+          provider
+
+          reference
+
+          createdAt
+          updatedAt
+
+          _version
+          _lastChangedAt
+          _deleted
         }
       }
-    `;
+    }
+  `;
 
   const data = await graphqlRequest(
     query,
@@ -333,25 +427,7 @@ const getPaymentByReference = async (reference) => {
     "GetPaymentByReference",
   );
 
-  const payment = data?.listPayments?.items?.[0] || null;
-
-  if (payment) {
-    console.log("EXISTING PAYMENT FOUND:", {
-      paymentId: payment.id,
-
-      orderID: payment.orderID,
-
-      userID: payment.userID,
-
-      reference: payment.reference,
-
-      amount: payment.amount,
-
-      status: payment.status,
-    });
-  }
-
-  return payment;
+  return data?.listPayments?.items?.find((item) => !item?._deleted) || null;
 };
 
 /* ==========================================================
@@ -360,15 +436,21 @@ const getPaymentByReference = async (reference) => {
 
 const createPayment = async ({ order, transaction }) => {
   if (!order?.id) {
-    throw new Error("Order is required to create payment.");
+    throw new Error("Order is required to create Payment.");
   }
 
   if (!order?.userID) {
-    throw new Error("Order userID is required to create payment.");
+    throw new Error(`Order ${order.id} has no userID.`);
   }
 
-  if (!transaction) {
-    throw new Error("Paystack transaction is required.");
+  if (!transaction?.reference) {
+    throw new Error("Paystack transaction reference is required.");
+  }
+
+  const amount = Number(order.totalPrice);
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    throw new Error(`Invalid Order totalPrice: ${order.totalPrice}`);
   }
 
   const mutation = `
@@ -379,16 +461,22 @@ const createPayment = async ({ order, transaction }) => {
         input: $input
       ) {
         id
+
         orderID
         userID
+
         amount
         currency
+
         status
         paymentMethod
         provider
+
         reference
+
         createdAt
         updatedAt
+
         _version
         _lastChangedAt
         _deleted
@@ -396,38 +484,30 @@ const createPayment = async ({ order, transaction }) => {
     }
   `;
 
-  const paymentMethod = transaction.channel || "paystack";
-
   const input = {
     orderID: order.id,
 
     userID: order.userID,
 
-    amount: Number(order.totalPrice),
+    amount,
 
-    currency: transaction.currency,
+    currency: transaction.currency || "NGN",
 
     status: "SUCCESS",
 
-    paymentMethod,
+    paymentMethod: transaction.channel || "paystack",
 
     provider: "PAYSTACK",
 
     reference: transaction.reference,
   };
 
-  console.log("CREATING PAYMENT:", {
+  console.log("CREATING FALLBACK PAYMENT:", {
     orderID: input.orderID,
 
     userID: input.userID,
 
     amount: input.amount,
-
-    currency: input.currency,
-
-    paymentMethod: input.paymentMethod,
-
-    provider: input.provider,
 
     reference: input.reference,
   });
@@ -442,73 +522,66 @@ const createPayment = async ({ order, transaction }) => {
 
   const payment = data?.createPayment || null;
 
-  console.log(
-    "PAYMENT CREATE RESULT:",
-    payment
-      ? {
-          id: payment.id,
+  if (!payment) {
+    throw new Error("Payment creation returned no Payment.");
+  }
 
-          orderID: payment.orderID,
+  console.log("FALLBACK PAYMENT CREATED:", {
+    paymentID: payment.id,
 
-          userID: payment.userID,
+    orderID: payment.orderID,
 
-          amount: payment.amount,
+    userID: payment.userID,
 
-          currency: payment.currency,
-
-          status: payment.status,
-
-          reference: payment.reference,
-
-          version: payment._version,
-        }
-      : null,
-  );
+    reference: payment.reference,
+  });
 
   return payment;
 };
 
 /* ==========================================================
-   UPDATE ORDER AS PAID
+   FALLBACK ORDER UPDATE
 ========================================================== */
 
-const markOrderAsPaid = async ({ order, paymentId, verificationCode }) => {
+/*
+ * This function is ONLY called when:
+ *
+ *     Paystack says SUCCESS
+ *
+ * AND
+ *
+ *     the webhook has not successfully completed
+ *     the Order.
+ *
+ * It is NOT called merely because verifyAtuaPayment
+ * was invoked.
+ */
+
+const markOrderAsPaidFallback = async ({
+  order,
+  paymentId,
+  verificationCode,
+  recipientTrackingToken,
+}) => {
   if (!order?.id) {
-    throw new Error("Order is required before it can be marked as paid.");
+    throw new Error("Order is required before fallback update.");
+  }
+
+  if (!order?.userID) {
+    throw new Error(`Order ${order.id} is missing userID.`);
   }
 
   if (!paymentId) {
-    throw new Error(
-      "Payment ID is required before the order can be marked as paid.",
-    );
+    throw new Error("Payment ID is required.");
   }
 
   if (!verificationCode) {
     throw new Error("Delivery verification code is required.");
   }
 
-  /*
-  ==========================================================
-  IMPORTANT
-
-  Payment verification ONLY changes payment-related fields.
-
-  It does NOT modify:
-
-    assignedCourierId
-    assignmentStatus
-    assignmentExpiresAt
-    assignmentAttempts
-    lastAssignedAt
-    dispatchAttemptedCourierIds
-    dispatchRound
-    dispatchRadiusKm
-    dispatchMaxRadiusKm
-
-  Those belong to courier dispatch.
-
-  ==========================================================
-  */
+  if (!recipientTrackingToken) {
+    throw new Error("Recipient tracking token is required.");
+  }
 
   const mutation = `
     mutation UpdateOrder(
@@ -517,18 +590,7 @@ const markOrderAsPaid = async ({ order, paymentId, verificationCode }) => {
       updateOrder(
         input: $input
       ) {
-        id
-        status
-        paymentStatus
-        paymentID
-        fundsStatus
-        deliveryVerificationCode
-        payoutStatus
-        createdAt
-        updatedAt
-        _version
-        _lastChangedAt
-        _deleted
+        ${ORDER_FIELDS}
       }
     }
   `;
@@ -536,53 +598,50 @@ const markOrderAsPaid = async ({ order, paymentId, verificationCode }) => {
   const input = {
     id: order.id,
 
+    userID: order.userID,
+
     paymentStatus: "PAID",
 
     paymentID: paymentId,
 
+    status: "READY_FOR_PICKUP",
+
     fundsStatus: "HELD",
+
+    deliveryVerificationCode: verificationCode,
+
+    // Enable recipient tracking when payment is successfully confirmed.
+    recipientTrackingToken,
+
+    recipientTrackingEnabled: true,
+
+    // The field is nullable and should be clear for a fresh payment.
+    recipientTrackingRevokedAt: null,
+  };
+
+  if (Number.isInteger(order._version)) {
+    input._version = order._version;
+  }
+
+  console.log("FALLBACK ORDER UPDATE:", {
+    orderID: order.id,
+
+    userID: order.userID,
+
+    currentVersion: order._version,
+
+    paymentID: paymentId,
+
+    paymentStatus: "PAID",
 
     status: "READY_FOR_PICKUP",
 
-    deliveryVerificationCode: verificationCode,
-  };
+    fundsStatus: "HELD",
 
-  /*
-  ----------------------------------------------------------
-  OPTIMISTIC CONCURRENCY
-  ----------------------------------------------------------
-
-  Keep the version exactly like the old implementation.
-
-  ----------------------------------------------------------
-  */
-
-  if (Number.isInteger(order._version)) {
-    input._version = order._version;
-  }
-
-  console.log("MARKING ORDER AS PAID:", {
-    orderId: order.id,
-
-    userID: order.userID,
-
-    paymentId,
-
-    currentVersion: order._version,
-
-    paymentStatus: input.paymentStatus,
-
-    fundsStatus: input.fundsStatus,
-
-    status: input.status,
-
-    assignedCourierId: order.assignedCourierId,
-
-    assignmentStatus: order.assignmentStatus,
-
-    dispatchRound: order.dispatchRound,
-
-    attemptedCouriers: order.dispatchAttemptedCourierIds?.length || 0,
+    verificationCode,
+    recipientTrackingToken,
+    recipientTrackingEnabled: true,
+    recipientTrackingRevokedAt: null,
   });
 
   const data = await graphqlRequest(
@@ -590,99 +649,49 @@ const markOrderAsPaid = async ({ order, paymentId, verificationCode }) => {
     {
       input,
     },
-    "MarkOrderAsPaid",
+    "MarkOrderAsPaidFallback",
   );
 
   const updatedOrder = data?.updateOrder || null;
 
   if (!updatedOrder) {
-    throw new Error("Order update returned no order.");
+    throw new Error("Fallback Order update returned no Order.");
   }
 
-  console.log("ORDER MARKED AS PAID:", {
-    orderId: updatedOrder.id,
+  console.log(
+    "FALLBACK ORDER UPDATED:",
+    JSON.stringify(
+      {
+        id: updatedOrder.id,
 
-    paymentStatus: updatedOrder.paymentStatus,
+        userID: updatedOrder.userID,
 
-    paymentID: updatedOrder.paymentID,
+        paymentStatus: updatedOrder.paymentStatus,
 
-    fundsStatus: updatedOrder.fundsStatus,
+        paymentID: updatedOrder.paymentID,
 
-    status: updatedOrder.status,
+        fundsStatus: updatedOrder.fundsStatus,
 
-    version: updatedOrder._version,
-  });
+        status: updatedOrder.status,
 
-  return updatedOrder;
-};
+        deliveryVerificationCode: updatedOrder.deliveryVerificationCode,
 
-/* ==========================================================
-   SAVE DELIVERY VERIFICATION CODE
-========================================================== */
+        totalPrice: updatedOrder.totalPrice,
 
-const saveVerificationCode = async ({ order, verificationCode }) => {
-  if (!order?.id) {
-    throw new Error("Order is required before saving verification code.");
-  }
+        recipientName: updatedOrder.recipientName,
 
-  if (!verificationCode) {
-    throw new Error("Verification code is required.");
-  }
+        originAddress: updatedOrder.originAddress,
 
-  const mutation = `
-      mutation UpdateOrder(
-        $input: UpdateOrderInput!
-      ) {
-        updateOrder(
-          input: $input
-        ) {
-          id
-          paymentStatus
-          paymentID
-          fundsStatus
-          status
-          deliveryVerificationCode
-          payoutStatus
-          createdAt
-          updatedAt
-          _version
-          _lastChangedAt
-          _deleted
-        }
-      }
-    `;
+        destinationAddress: updatedOrder.destinationAddress,
 
-  const input = {
-    id: order.id,
+        _version: updatedOrder._version,
 
-    deliveryVerificationCode: verificationCode,
-  };
-
-  if (Number.isInteger(order._version)) {
-    input._version = order._version;
-  }
-
-  console.log("SAVING DELIVERY VERIFICATION CODE:", {
-    orderId: order.id,
-
-    userID: order.userID,
-
-    currentVersion: order._version,
-  });
-
-  const data = await graphqlRequest(
-    mutation,
-    {
-      input,
-    },
-    "SaveVerificationCode",
+        _lastChangedAt: updatedOrder._lastChangedAt,
+      },
+      null,
+      2,
+    ),
   );
-
-  const updatedOrder = data?.updateOrder || null;
-
-  if (!updatedOrder) {
-    throw new Error("Verification code update returned no order.");
-  }
 
   return updatedOrder;
 };
@@ -694,10 +703,6 @@ const saveVerificationCode = async ({ order, verificationCode }) => {
 const verifyWithPaystack = async (reference, secretKey) => {
   if (!reference) {
     throw new Error("Payment reference is required.");
-  }
-
-  if (!secretKey) {
-    throw new Error("Paystack secret key is required.");
   }
 
   const encodedReference = encodeURIComponent(reference);
@@ -725,19 +730,25 @@ const verifyWithPaystack = async (reference, secretKey) => {
       });
 
       res.on("end", () => {
-        try {
-          const parsed = JSON.parse(data);
+        let parsed;
 
-          resolve({
+        try {
+          parsed = JSON.parse(data);
+        } catch (error) {
+          console.error("PAYSTACK RESPONSE PARSE ERROR:", {
             statusCode: res.statusCode,
 
-            body: parsed,
+            body: data,
           });
-        } catch (error) {
-          console.error("PAYSTACK PARSE ERROR:", error);
 
-          reject(error);
+          return reject(error);
         }
+
+        resolve({
+          statusCode: res.statusCode,
+
+          body: parsed,
+        });
       });
     });
 
@@ -763,6 +774,8 @@ const failureResult = (message, orderId = null) => {
 
     alreadyPaid: false,
 
+    fallbackUsed: false,
+
     message,
 
     orderId,
@@ -774,7 +787,7 @@ const failureResult = (message, orderId = null) => {
 };
 
 /* ==========================================================
-   PAYMENT RESPONSE DETAILS
+   PAYMENT DETAILS
 ========================================================== */
 
 const buildPaymentDetails = ({
@@ -799,29 +812,266 @@ const buildPaymentDetails = ({
     paidAt: paidAt || null,
   };
 };
+/* ==========================================================
+   VERIFY ATUA PAYMENT
+========================================================== */
+
+/*
+ * ==========================================================
+ *
+ * PAYMENT ARCHITECTURE
+ *
+ * ==========================================================
+ *
+ * PRIMARY:
+ *
+ * Paystack
+ *    ↓
+ * charge.success webhook
+ *    ↓
+ * paystackWebhook
+ *    ↓
+ * Payment
+ *    ↓
+ * Order:
+ *    PAID
+ *    HELD
+ *    READY_FOR_PICKUP
+ *    deliveryVerificationCode
+ *
+ *
+ * FALLBACK:
+ *
+ * verifyAtuaPayment
+ *    ↓
+ * verify Paystack directly
+ *    ↓
+ * reload Order
+ *
+ *    ┌─────────────────────────────────────┐
+ *    │                                     │
+ *    │ PAID + CODE                         │
+ *    │                                     │
+ *    │      → DO NOTHING                   │
+ *    │      → return success               │
+ *    │                                     │
+ *    └─────────────────────────────────────┘
+ *
+ *
+ *    ┌─────────────────────────────────────┐
+ *    │                                     │
+ *    │ PAID + NO CODE                      │
+ *    │                                     │
+ *    │      → WEBHOOK PAYMENT SUCCEEDED    │
+ *    │      → BUT CODE IS MISSING          │
+ *    │      → GENERATE CODE                │
+ *    │      → UPDATE ONLY CODE + REQUIRED  │
+ *    │        PAYMENT FIELDS               │
+ *    │                                     │
+ *    └─────────────────────────────────────┘
+ *
+ *
+ *    ┌─────────────────────────────────────┐
+ *    │                                     │
+ *    │ NOT PAID                            │
+ *    │                                     │
+ *    │      → verify Paystack              │
+ *    │      → create/find Payment           │
+ *    │      → generate code                │
+ *    │      → fallback Order update        │
+ *    │                                     │
+ *    └─────────────────────────────────────┘
+ *
+ * ==========================================================
+ */
 
 /* ==========================================================
-   MAIN LAMBDA HANDLER
+   REPAIR DELIVERY CODE AND RECIPIENT TRACKING DATA
+========================================================== */
+
+/*
+ * This is different from markOrderAsPaidFallback().
+ *
+ * It is used for the very specific case:
+ *
+ *     Order.paymentStatus === "PAID"
+ *
+ * AND
+ *
+ *     Order.deliveryVerificationCode or recipient tracking data is missing
+ *
+ * In that situation the webhook already processed the
+ * payment, so we DO NOT change payment status, Payment ID,
+ * funds status, etc.
+ *
+ * We only repair the missing delivery or recipient tracking data.
+ *
+ * This prevents verifyAtuaPayment from becoming a second
+ * payment processor.
+ */
+
+const repairMissingVerificationCode = async ({
+  order,
+  verificationCode,
+  recipientTrackingToken,
+}) => {
+  if (!order?.id) {
+    throw new Error(
+      "Order is required to repair delivery and recipient tracking data.",
+    );
+  }
+
+  if (!order?.userID) {
+    throw new Error(`Order ${order.id} is missing userID.`);
+  }
+
+  if (!verificationCode) {
+    throw new Error("Verification code is required.");
+  }
+
+  if (!recipientTrackingToken) {
+    throw new Error("Recipient tracking token is required.");
+  }
+
+  const mutation = `
+    mutation UpdateOrder(
+      $input: UpdateOrderInput!
+    ) {
+      updateOrder(
+        input: $input
+      ) {
+        ${ORDER_FIELDS}
+      }
+    }
+  `;
+
+  const input = {
+    id: order.id,
+
+    /*
+     * Keep required userID present.
+     */
+    userID: order.userID,
+
+    /*
+     * Payment is already PAID.
+     *
+     * We preserve these existing values instead of
+     * inventing new payment information.
+     */
+    paymentStatus: order.paymentStatus,
+
+    paymentID: order.paymentID,
+
+    fundsStatus: order.fundsStatus,
+
+    status: order.status,
+
+    deliveryVerificationCode: verificationCode,
+
+    // Repair or restore recipient tracking fields as well.
+    recipientTrackingToken,
+
+    recipientTrackingEnabled: true,
+
+    recipientTrackingRevokedAt: null,
+  };
+
+  if (Number.isInteger(order._version)) {
+    input._version = order._version;
+  }
+
+  console.log("REPAIRING DELIVERY AND RECIPIENT TRACKING DATA:", {
+    orderID: order.id,
+    userID: order.userID,
+    currentVersion: order._version,
+    paymentStatus: order.paymentStatus,
+    paymentID: order.paymentID,
+    fundsStatus: order.fundsStatus,
+    status: order.status,
+    verificationCode,
+    recipientTrackingToken,
+    recipientTrackingEnabled: true,
+    recipientTrackingRevokedAt: null,
+  });
+
+  const data = await graphqlRequest(
+    mutation,
+    {
+      input,
+    },
+    "RepairMissingVerificationCode",
+  );
+
+  const updatedOrder = data?.updateOrder || null;
+
+  if (!updatedOrder) {
+    throw new Error("Verification code repair returned no Order.");
+  }
+
+  console.log(
+    "VERIFICATION CODE REPAIR RESULT:",
+    JSON.stringify(
+      {
+        id: updatedOrder.id,
+
+        userID: updatedOrder.userID,
+
+        paymentStatus: updatedOrder.paymentStatus,
+
+        paymentID: updatedOrder.paymentID,
+
+        fundsStatus: updatedOrder.fundsStatus,
+
+        status: updatedOrder.status,
+
+        deliveryVerificationCode: updatedOrder.deliveryVerificationCode,
+
+        recipientTrackingToken: updatedOrder.recipientTrackingToken,
+
+        recipientTrackingEnabled: updatedOrder.recipientTrackingEnabled,
+
+        recipientTrackingRevokedAt: updatedOrder.recipientTrackingRevokedAt,
+
+        recipientName: updatedOrder.recipientName,
+
+        originAddress: updatedOrder.originAddress,
+
+        destinationAddress: updatedOrder.destinationAddress,
+
+        totalPrice: updatedOrder.totalPrice,
+
+        courierEarnings: updatedOrder.courierEarnings,
+
+        _version: updatedOrder._version,
+
+        _lastChangedAt: updatedOrder._lastChangedAt,
+      },
+      null,
+      2,
+    ),
+  );
+
+  return updatedOrder;
+};
+
+/* ==========================================================
+   MAIN HANDLER
 ========================================================== */
 
 exports.handler = async (event) => {
-  console.log("==================================================");
+  console.log("==========================================");
 
-  console.log("🚀 VERIFY ATUA PAYMENT LAMBDA STARTED");
+  console.log("VERIFY ATUA PAYMENT STARTED");
 
-  console.log("==================================================");
+  console.log("==========================================");
 
   try {
     /* ======================================================
-       1. GET INPUT
+       1. GET ARGUMENTS
     ====================================================== */
 
     const { orderId, reference } = event?.arguments || {};
-
-    console.log("PAYMENT VERIFICATION REQUEST:", {
-      orderId,
-      reference,
-    });
 
     if (!orderId) {
       return failureResult("Order ID is required.");
@@ -830,6 +1080,11 @@ exports.handler = async (event) => {
     if (!reference) {
       return failureResult("Payment reference is required.", orderId);
     }
+
+    console.log("VERIFY PAYMENT REQUEST:", {
+      orderId,
+      reference,
+    });
 
     /* ======================================================
        2. GET ORDER
@@ -841,17 +1096,48 @@ exports.handler = async (event) => {
       return failureResult("Order could not be found.", orderId);
     }
 
+    console.log(
+      "INITIAL ORDER:",
+      JSON.stringify(
+        {
+          id: order.id,
+
+          userID: order.userID,
+
+          paymentStatus: order.paymentStatus,
+
+          paymentID: order.paymentID,
+
+          fundsStatus: order.fundsStatus,
+
+          status: order.status,
+
+          deliveryVerificationCode: order.deliveryVerificationCode,
+
+          recipientTrackingToken: order.recipientTrackingToken,
+          recipientTrackingEnabled: order.recipientTrackingEnabled,
+          recipientTrackingRevokedAt: order.recipientTrackingRevokedAt,
+
+          totalPrice: order.totalPrice,
+
+          _version: order._version,
+        },
+        null,
+        2,
+      ),
+    );
+
     /* ======================================================
-       3. VALIDATE ORDER
+       3. VALIDATE USER ID
     ====================================================== */
 
     if (!order.userID) {
-      console.error("ORDER HAS NO USER ID:", {
-        orderId: order.id,
-      });
-
       return failureResult("Order does not have a user ID.", order.id);
     }
+
+    /* ======================================================
+       4. VALIDATE ORDER AMOUNT
+    ====================================================== */
 
     const orderAmount = Number(order.totalPrice);
 
@@ -860,43 +1146,31 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
-       4. GET PAYSTACK SECRET
+       5. GET PAYSTACK SECRET
     ====================================================== */
 
     const secretKey = await getPaystackSecretKey();
 
-    console.log("✅ PAYSTACK SECRET RETRIEVED");
+    console.log("PAYSTACK SECRET RETRIEVED");
 
     /* ======================================================
-       5. VERIFY PAYSTACK TRANSACTION
+       6. VERIFY TRANSACTION WITH PAYSTACK
     ====================================================== */
 
-    const verification = await verifyWithPaystack(reference, secretKey);
+    const paystackResponse = await verifyWithPaystack(reference, secretKey);
 
-    const paystack = verification?.body;
+    console.log("PAYSTACK HTTP STATUS:", paystackResponse?.statusCode);
 
-    console.log("PAYSTACK VERIFICATION RESPONSE:", {
-      statusCode: verification?.statusCode,
-
-      success: paystack?.status,
-
-      message: paystack?.message,
-
-      transactionStatus: paystack?.data?.status,
-
-      reference: paystack?.data?.reference,
-
-      amount: paystack?.data?.amount,
-
-      currency: paystack?.data?.currency,
-    });
+    const paystack = paystackResponse?.body;
 
     if (
-      !verification ||
-      verification.statusCode < 200 ||
-      verification.statusCode >= 300 ||
+      !paystackResponse ||
+      paystackResponse.statusCode < 200 ||
+      paystackResponse.statusCode >= 300 ||
       !paystack?.status
     ) {
+      console.error("PAYSTACK VERIFICATION FAILED:", JSON.stringify(paystack));
+
       return failureResult(
         paystack?.message || "Payment could not be verified.",
         order.id,
@@ -904,20 +1178,17 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
-       6. GET TRANSACTION
+       7. GET TRANSACTION
     ====================================================== */
 
     const transaction = paystack?.data;
 
     if (!transaction) {
-      return failureResult(
-        "Paystack returned an invalid transaction.",
-        order.id,
-      );
+      return failureResult("Paystack returned no transaction.", order.id);
     }
 
     /* ======================================================
-       7. VERIFY TRANSACTION STATUS
+       8. VERIFY TRANSACTION STATUS
     ====================================================== */
 
     if (transaction.status !== "success") {
@@ -928,11 +1199,11 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
-       8. VERIFY REFERENCE
+       9. VERIFY REFERENCE
     ====================================================== */
 
     if (transaction.reference !== reference) {
-      console.error("❌ PAYMENT REFERENCE MISMATCH:", {
+      console.error("PAYMENT REFERENCE MISMATCH:", {
         requestedReference: reference,
 
         paystackReference: transaction.reference,
@@ -942,7 +1213,7 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
-       9. VERIFY CURRENCY
+       10. VERIFY CURRENCY
     ====================================================== */
 
     if (transaction.currency !== "NGN") {
@@ -953,20 +1224,12 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
-       10. VERIFY AMOUNT
+       11. VERIFY AMOUNT
     ====================================================== */
 
     const expectedAmountInKobo = Math.round(orderAmount * 100);
 
     const paidAmountInKobo = Number(transaction.amount);
-
-    console.log("PAYMENT AMOUNT CHECK:", {
-      orderAmount,
-
-      expectedAmountInKobo,
-
-      paidAmountInKobo,
-    });
 
     if (!Number.isFinite(paidAmountInKobo)) {
       return failureResult(
@@ -976,7 +1239,7 @@ exports.handler = async (event) => {
     }
 
     if (paidAmountInKobo !== expectedAmountInKobo) {
-      console.error("❌ PAYMENT AMOUNT MISMATCH:", {
+      console.error("PAYMENT AMOUNT MISMATCH:", {
         orderId: order.id,
 
         expectedAmountInKobo,
@@ -990,16 +1253,12 @@ exports.handler = async (event) => {
       );
     }
 
-    /* ======================================================
-       11. PAYMENT VERIFIED
-    ====================================================== */
-
-    console.log("✅ PAYSTACK PAYMENT VERIFIED:", {
+    console.log("PAYSTACK TRANSACTION VERIFIED:", {
       orderId: order.id,
 
       reference: transaction.reference,
 
-      amount: orderAmount,
+      amount: transaction.amount,
 
       currency: transaction.currency,
 
@@ -1012,178 +1271,140 @@ exports.handler = async (event) => {
 
     let payment = await getPaymentByReference(transaction.reference);
 
-    /* ======================================================
-       13. CREATE PAYMENT IF NECESSARY
-    ====================================================== */
-
     if (payment) {
-      /*
-      --------------------------------------------------------
-      SECURITY CHECK
+      console.log("EXISTING PAYMENT FOUND:", {
+        paymentID: payment.id,
 
-      A payment reference must never be reused against
-      another order.
-      --------------------------------------------------------
-      */
+        orderID: payment.orderID,
+
+        userID: payment.userID,
+
+        reference: payment.reference,
+
+        status: payment.status,
+      });
+
+      /*
+       * Never allow the same Paystack reference to
+       * belong to another Order.
+       */
 
       if (payment.orderID && payment.orderID !== order.id) {
-        console.error(
-          "❌ PAYMENT REFERENCE ALREADY BELONGS TO ANOTHER ORDER:",
-          {
-            reference: transaction.reference,
+        console.error("PAYMENT REFERENCE BELONGS TO ANOTHER ORDER:", {
+          reference: transaction.reference,
 
-            existingOrderId: payment.orderID,
+          existingOrderID: payment.orderID,
 
-            attemptedOrderId: order.id,
-          },
-        );
+          requestedOrderID: order.id,
+        });
 
         return failureResult(
           "This payment reference has already been used for another order.",
           order.id,
         );
       }
-
-      console.log("ℹ️ EXISTING PAYMENT WILL BE REUSED:", {
-        paymentId: payment.id,
-
-        orderId: payment.orderID,
-
-        reference: payment.reference,
-      });
     } else {
+      /*
+       * The webhook may not have created the Payment yet.
+       *
+       * verifyAtuaPayment is allowed to create it because
+       * this is the fallback path.
+       */
+
       payment = await createPayment({
         order,
+
         transaction,
       });
 
-      /*
-      --------------------------------------------------------
-      RACE CONDITION PROTECTION
-
-      If another Lambda invocation created the payment
-      at the same time, try finding it again.
-      --------------------------------------------------------
-      */
-
       if (!payment?.id) {
-        console.log("PAYMENT CREATE RETURNED NO RECORD. RETRYING LOOKUP.");
+        /*
+         * Race-condition protection.
+         *
+         * The webhook may have created the Payment between
+         * our lookup and creation attempt.
+         */
 
         payment = await getPaymentByReference(transaction.reference);
 
         if (!payment?.id) {
-          throw new Error("Payment record could not be created.");
+          throw new Error("Payment record could not be created or found.");
         }
       }
-
-      console.log("✅ PAYMENT RECORD READY:", {
-        paymentId: payment.id,
-
-        orderId: payment.orderID,
-
-        reference: payment.reference,
-      });
     }
 
     /* ======================================================
-       14. REFRESH ORDER
+       13. RELOAD ORDER
     ====================================================== */
+
+    /*
+     * THIS IS VERY IMPORTANT.
+     *
+     * The webhook could have updated the Order while this
+     * Lambda was verifying Paystack.
+     *
+     * Therefore we throw away the old Order object and
+     * retrieve the newest version.
+     */
 
     order = await getOrder(order.id);
 
     if (!order) {
-      throw new Error("Order could not be reloaded before payment processing.");
+      throw new Error("Order could not be reloaded.");
     }
 
-    /*
-      VERY IMPORTANT:
+    console.log(
+      "ORDER AFTER PAYSTACK VERIFICATION:",
+      JSON.stringify(
+        {
+          id: order.id,
 
-      Make sure the refreshed Order still has userID.
+          userID: order.userID,
 
-      This lets us detect a bad Order before we perform
-      another update.
-    */
+          paymentStatus: order.paymentStatus,
 
-    if (!order.userID) {
-      throw new Error("Refreshed order does not contain userID.");
-    }
+          paymentID: order.paymentID,
 
-    /* ======================================================
-       15. ALREADY PAID?
-    ====================================================== */
+          fundsStatus: order.fundsStatus,
 
-    if (order.paymentStatus === "PAID") {
-      console.log("ℹ️ ORDER IS ALREADY PAID.");
-
-      /*
-      --------------------------------------------------------
-      If the order already has a verification code,
-      everything is already complete.
-      --------------------------------------------------------
-      */
-
-      if (order.deliveryVerificationCode) {
-        return {
-          success: true,
-
-          verified: true,
-
-          alreadyPaid: true,
-
-          message: "This order has already been paid.",
-
-          orderId: order.id,
+          status: order.status,
 
           deliveryVerificationCode: order.deliveryVerificationCode,
 
-          payment: buildPaymentDetails({
-            reference: transaction.reference,
+          version: order._version,
+        },
+        null,
+        2,
+      ),
+    );
 
-            amount: orderAmount,
+    /* ======================================================
+       14. NORMAL WEBHOOK SUCCESS
+    ====================================================== */
 
-            currency: transaction.currency,
+    /*
+     * CASE 1:
+     *
+     * Webhook has already processed EVERYTHING.
+     *
+     * There is nothing for verifyAtuaPayment to change.
+     */
 
-            status: transaction.status,
+    if (
+      order.paymentStatus === "PAID" &&
+      order.deliveryVerificationCode &&
+      order.recipientTrackingToken &&
+      order.recipientTrackingEnabled === true
+    ) {
+      console.log("==========================================");
 
-            channel: transaction.channel,
+      console.log("WEBHOOK ALREADY COMPLETED PAYMENT.");
 
-            paidAt: transaction.paid_at,
-          }),
-        };
-      }
+      console.log("VERIFICATION CODE ALREADY EXISTS.");
 
-      /* ====================================================
-         PAID BUT NO VERIFICATION CODE
-      ==================================================== */
+      console.log("NO ORDER UPDATE WILL BE PERFORMED.");
 
-      const verificationCode = generateVerificationCode();
-
-      console.log("⚠️ ORDER IS PAID BUT HAS NO VERIFICATION CODE.");
-
-      const updatedOrder = await saveVerificationCode({
-        order,
-        verificationCode,
-      });
-
-      if (!updatedOrder) {
-        throw new Error("Delivery verification code could not be saved.");
-      }
-
-      const confirmedOrder = await getOrder(order.id);
-
-      if (!confirmedOrder) {
-        throw new Error(
-          "Could not reload order after saving delivery verification code.",
-        );
-      }
-
-      if (!confirmedOrder.userID) {
-        throw new Error("Order lost userID after verification-code update.");
-      }
-
-      if (!confirmedOrder.deliveryVerificationCode) {
-        throw new Error("Delivery verification code was not saved.");
-      }
+      console.log("==========================================");
 
       return {
         success: true,
@@ -1192,11 +1413,13 @@ exports.handler = async (event) => {
 
         alreadyPaid: true,
 
-        message: "This order has already been paid.",
+        fallbackUsed: false,
 
-        orderId: confirmedOrder.id,
+        message: "Payment has already been processed by the Paystack webhook.",
 
-        deliveryVerificationCode: confirmedOrder.deliveryVerificationCode,
+        orderId: order.id,
+
+        deliveryVerificationCode: order.deliveryVerificationCode,
 
         payment: buildPaymentDetails({
           reference: transaction.reference,
@@ -1213,154 +1436,323 @@ exports.handler = async (event) => {
         }),
       };
     }
+
     /* ======================================================
-       16. GENERATE VERIFICATION CODE
+       15. PAID BUT DELIVERY OR RECIPIENT TRACKING DATA MISSING
     ====================================================== */
+
+    /*
+     * CASE 2:
+     *
+     * This is the special fallback you requested.
+     *
+     * The webhook already processed the payment:
+     *
+     *     paymentStatus = PAID
+     *
+     * BUT:
+     *
+     *     deliveryVerificationCode or recipient tracking data is missing
+     *
+     * Therefore:
+     *
+     *     DO NOT process payment again.
+     *
+     *     DO NOT create another Payment.
+     *
+     *     DO NOT change paymentStatus.
+     *
+     *     DO NOT change fundsStatus.
+     *
+     *     DO NOT change status.
+     *
+     *     ONLY generate/save the missing delivery code
+     *      and/or recipient tracking data.
+     */
+
+    if (
+      order.paymentStatus === "PAID" &&
+      (!order.deliveryVerificationCode ||
+        !order.recipientTrackingToken ||
+        order.recipientTrackingEnabled !== true)
+    ) {
+      console.log("==========================================");
+
+      console.log(
+        "ORDER IS PAID BUT DELIVERY CODE OR RECIPIENT TRACKING DATA IS MISSING.",
+      );
+
+      console.log("WEBHOOK PROCESSED PAYMENT.");
+
+      console.log(
+        "VERIFY ATUA PAYMENT IS REPAIRING MISSING DELIVERY/TRACKING DATA ONLY.",
+      );
+
+      console.log("==========================================");
+
+      const verificationCode =
+        order.deliveryVerificationCode || generateVerificationCode();
+
+      const recipientTrackingToken =
+        order.recipientTrackingToken || generateRecipientTrackingToken();
+
+      console.log("GENERATED FALLBACK VERIFICATION CODE:", {
+        orderId: order.id,
+
+        userID: order.userID,
+
+        currentVersion: order._version,
+      });
+
+      const repairedOrder = await repairMissingVerificationCode({
+        order,
+
+        verificationCode,
+
+        recipientTrackingToken,
+      });
+
+      if (!repairedOrder) {
+        throw new Error("Could not repair missing verification code.");
+      }
+
+      if (!repairedOrder.deliveryVerificationCode) {
+        throw new Error(
+          "Verification code repair completed without a saved code.",
+        );
+      }
+
+      if (!repairedOrder.recipientTrackingToken) {
+        throw new Error(
+          "Tracking repair completed without a saved recipient tracking token.",
+        );
+      }
+
+      if (repairedOrder.recipientTrackingEnabled !== true) {
+        throw new Error(
+          "Tracking repair completed but recipient tracking is not enabled.",
+        );
+      }
+
+      console.log("==========================================");
+
+      console.log("DELIVERY AND RECIPIENT TRACKING REPAIR COMPLETED.");
+
+      console.log("ORDER:", repairedOrder.id);
+
+      console.log(
+        "DELIVERY VERIFICATION CODE:",
+        repairedOrder.deliveryVerificationCode,
+      );
+      console.log(
+        "RECIPIENT TRACKING TOKEN:",
+        repairedOrder.recipientTrackingToken,
+      );
+      console.log(
+        "RECIPIENT TRACKING ENABLED:",
+        repairedOrder.recipientTrackingEnabled,
+      );
+
+      console.log("VERSION:", repairedOrder._version);
+
+      console.log("==========================================");
+
+      return {
+        success: true,
+
+        verified: true,
+
+        alreadyPaid: true,
+
+        fallbackUsed: true,
+
+        message:
+          "Payment was already confirmed. Missing delivery or recipient tracking data was repaired.",
+
+        orderId: repairedOrder.id,
+
+        deliveryVerificationCode: repairedOrder.deliveryVerificationCode,
+
+        payment: buildPaymentDetails({
+          reference: transaction.reference,
+
+          amount: orderAmount,
+
+          currency: transaction.currency,
+
+          status: transaction.status,
+
+          channel: transaction.channel,
+
+          paidAt: transaction.paid_at,
+        }),
+      };
+    }
+
+    /* ======================================================
+       16. FULL FALLBACK PAYMENT PROCESSING
+    ====================================================== */
+
+    /*
+     * CASE 3:
+     *
+     * The transaction is genuinely successful,
+     * but the webhook has NOT yet marked the Order PAID.
+     *
+     * Therefore verifyAtuaPayment is allowed to complete
+     * the entire payment state as a FALLBACK.
+     */
+
+    console.log("==========================================");
+
+    console.log("WEBHOOK HAS NOT COMPLETED ORDER.");
+
+    console.log("VERIFY ATUA PAYMENT IS ACTING AS FULL FALLBACK.");
+
+    console.log("==========================================");
+
+    /*
+     * Preserve an existing code if there somehow is one.
+     */
 
     const verificationCode =
       order.deliveryVerificationCode || generateVerificationCode();
 
-    console.log("DELIVERY VERIFICATION CODE READY:", {
+    const recipientTrackingToken =
+      order.recipientTrackingToken || generateRecipientTrackingToken();
+
+    console.log("FALLBACK VERIFICATION CODE:", {
       orderId: order.id,
 
       reused: Boolean(order.deliveryVerificationCode),
     });
 
     /* ======================================================
-       17. MARK ORDER AS PAID
+       17. FALLBACK ORDER UPDATE
     ====================================================== */
 
-    const updatedOrder = await markOrderAsPaid({
+    const updatedOrder = await markOrderAsPaidFallback({
       order,
+
       paymentId: payment.id,
+
       verificationCode,
+
+      recipientTrackingToken,
     });
 
     if (!updatedOrder) {
-      throw new Error("Order could not be updated after payment.");
+      throw new Error("Fallback Order update failed.");
     }
 
     /* ======================================================
-       18. REFRESH AND CONFIRM
+       18. RELOAD FINAL ORDER
     ====================================================== */
 
-    const confirmedOrder = await getOrder(order.id);
+    const finalOrder = await getOrder(order.id);
 
-    if (!confirmedOrder) {
-      throw new Error("Could not reload order after payment update.");
+    if (!finalOrder) {
+      throw new Error("Could not reload Order after fallback update.");
     }
 
-    /*
-    --------------------------------------------------------
-    IMPORTANT
+    console.log(
+      "FINAL FALLBACK ORDER:",
+      JSON.stringify(
+        {
+          id: finalOrder.id,
 
-    userID is required by the Order model.
+          userID: finalOrder.userID,
 
-    If the update caused the returned Order to lose
-    userID, stop here rather than allowing a malformed
-    subscription/update to continue.
-    --------------------------------------------------------
-    */
+          paymentStatus: finalOrder.paymentStatus,
 
-    if (!confirmedOrder.userID) {
-      throw new Error("Order does not contain userID after payment update.");
+          paymentID: finalOrder.paymentID,
+
+          fundsStatus: finalOrder.fundsStatus,
+
+          status: finalOrder.status,
+
+          deliveryVerificationCode: finalOrder.deliveryVerificationCode,
+
+          recipientName: finalOrder.recipientName,
+
+          originAddress: finalOrder.originAddress,
+
+          destinationAddress: finalOrder.destinationAddress,
+
+          totalPrice: finalOrder.totalPrice,
+
+          courierEarnings: finalOrder.courierEarnings,
+
+          version: finalOrder._version,
+
+          lastChangedAt: finalOrder._lastChangedAt,
+        },
+        null,
+        2,
+      ),
+    );
+
+    /* ======================================================
+       19. VALIDATE FINAL STATE
+    ====================================================== */
+
+    if (finalOrder.paymentStatus !== "PAID") {
+      throw new Error(
+        `Fallback payment update did not produce PAID status. Current: ${finalOrder.paymentStatus}`,
+      );
+    }
+
+    if (finalOrder.paymentID !== payment.id) {
+      throw new Error(
+        `Fallback payment ID mismatch. Expected ${payment.id}, received ${finalOrder.paymentID}.`,
+      );
+    }
+
+    if (finalOrder.fundsStatus !== "HELD") {
+      throw new Error(
+        `Fallback fundsStatus mismatch. Current: ${finalOrder.fundsStatus}`,
+      );
+    }
+
+    if (finalOrder.status !== "READY_FOR_PICKUP") {
+      throw new Error(
+        `Fallback status mismatch. Current: ${finalOrder.status}`,
+      );
+    }
+
+    if (!finalOrder.deliveryVerificationCode) {
+      throw new Error("Fallback verification code was not saved.");
+    }
+
+    if (!finalOrder.recipientTrackingToken) {
+      throw new Error("Fallback recipient tracking token was not saved.");
+    }
+
+    if (finalOrder.recipientTrackingEnabled !== true) {
+      throw new Error("Fallback recipient tracking was not enabled.");
+    }
+
+    if (!finalOrder.userID) {
+      throw new Error("Order userID disappeared during fallback update.");
     }
 
     /* ======================================================
-       19. LOG FINAL ORDER STATE
+       20. SUCCESS
     ====================================================== */
 
-    console.log("==================================================");
+    console.log("==========================================");
 
-    console.log("✅ CONFIRMED ORDER AFTER PAYMENT:");
+    console.log("VERIFY ATUA PAYMENT FALLBACK COMPLETED");
 
-    console.log({
-      orderId: confirmedOrder.id,
+    console.log("ORDER:", finalOrder.id);
 
-      userID: confirmedOrder.userID,
+    console.log("PAYMENT:", payment.id);
 
-      paymentStatus: confirmedOrder.paymentStatus,
+    console.log("CODE:", finalOrder.deliveryVerificationCode);
 
-      paymentID: confirmedOrder.paymentID,
+    console.log("VERSION:", finalOrder._version);
 
-      fundsStatus: confirmedOrder.fundsStatus,
-
-      status: confirmedOrder.status,
-
-      deliveryVerificationCode: confirmedOrder.deliveryVerificationCode,
-
-      /*
-      ------------------------------------------------------
-      DISPATCH STATE
-
-      Payment verification must not destroy these fields.
-      ------------------------------------------------------
-      */
-
-      assignedCourierId: confirmedOrder.assignedCourierId,
-
-      assignmentStatus: confirmedOrder.assignmentStatus,
-
-      assignmentExpiresAt: confirmedOrder.assignmentExpiresAt,
-
-      assignmentAttempts: confirmedOrder.assignmentAttempts,
-
-      lastAssignedAt: confirmedOrder.lastAssignedAt,
-
-      dispatchAttemptedCourierIds: confirmedOrder.dispatchAttemptedCourierIds,
-
-      dispatchRound: confirmedOrder.dispatchRound,
-
-      dispatchRadiusKm: confirmedOrder.dispatchRadiusKm,
-
-      dispatchMaxRadiusKm: confirmedOrder.dispatchMaxRadiusKm,
-
-      version: confirmedOrder._version,
-    });
-
-    console.log("==================================================");
-
-    /* ======================================================
-       20. FINAL VALIDATION
-    ====================================================== */
-
-    if (confirmedOrder.paymentStatus !== "PAID") {
-      throw new Error(
-        `Order paymentStatus was not updated to PAID. Current value: ${confirmedOrder.paymentStatus}`,
-      );
-    }
-
-    if (confirmedOrder.paymentID !== payment.id) {
-      throw new Error(
-        `Payment was not linked to the order. Expected ${payment.id}, received ${confirmedOrder.paymentID}.`,
-      );
-    }
-
-    if (confirmedOrder.fundsStatus !== "HELD") {
-      throw new Error(
-        `Order fundsStatus was not set to HELD. Current value: ${confirmedOrder.fundsStatus}`,
-      );
-    }
-
-    if (confirmedOrder.status !== "READY_FOR_PICKUP") {
-      throw new Error(
-        `Order was not activated for pickup. Current value: ${confirmedOrder.status}`,
-      );
-    }
-
-    if (!confirmedOrder.deliveryVerificationCode) {
-      throw new Error("Delivery verification code was not saved.");
-    }
-
-    /* ======================================================
-       21. SUCCESS
-    ====================================================== */
-
-    console.log("==================================================");
-
-    console.log("🎉 PAYMENT SUCCESSFULLY VERIFIED AND RECORDED");
-
-    console.log("==================================================");
+    console.log("==========================================");
 
     return {
       success: true,
@@ -1369,11 +1761,18 @@ exports.handler = async (event) => {
 
       alreadyPaid: false,
 
-      message: "Payment successfully verified and recorded.",
+      fallbackUsed: true,
 
-      orderId: confirmedOrder.id,
+      message:
+        "Payment successfully verified and recorded by fallback verification.",
 
-      deliveryVerificationCode: confirmedOrder.deliveryVerificationCode,
+      orderId: finalOrder.id,
+
+      deliveryVerificationCode: finalOrder.deliveryVerificationCode,
+
+      recipientTrackingToken: finalOrder.recipientTrackingToken,
+      recipientTrackingEnabled: finalOrder.recipientTrackingEnabled,
+      recipientTrackingRevokedAt: finalOrder.recipientTrackingRevokedAt,
 
       payment: buildPaymentDetails({
         reference: transaction.reference,
@@ -1390,34 +1789,15 @@ exports.handler = async (event) => {
       }),
     };
   } catch (error) {
-    /* ======================================================
-       ERROR LOGGING
-    ====================================================== */
+    console.error("==========================================");
 
-    console.error("==================================================");
+    console.error("VERIFY ATUA PAYMENT ERROR");
 
-    console.error("❌ VERIFY ATUA PAYMENT ERROR");
+    console.error("MESSAGE:", error?.message);
 
-    console.error("==================================================");
+    console.error("STACK:", error?.stack);
 
-    console.error("ERROR:", error);
-
-    console.error("ERROR MESSAGE:", error?.message);
-
-    console.error("ERROR STACK:", error?.stack);
-
-    try {
-      console.error(
-        "ERROR DETAILS:",
-        JSON.stringify(error, Object.getOwnPropertyNames(error), 2),
-      );
-    } catch (stringifyError) {
-      console.error("ERROR DETAILS COULD NOT BE STRINGIFIED:", stringifyError);
-    }
-
-    /* ======================================================
-       FAILURE RESPONSE
-    ====================================================== */
+    console.error("==========================================");
 
     return {
       success: false,
@@ -1426,9 +1806,10 @@ exports.handler = async (event) => {
 
       alreadyPaid: false,
 
+      fallbackUsed: false,
+
       message:
-        error?.message ||
-        "Something went wrong while verifying and recording the payment.",
+        error?.message || "Something went wrong while verifying the payment.",
 
       orderId: event?.arguments?.orderId || null,
 

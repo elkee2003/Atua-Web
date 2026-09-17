@@ -4,19 +4,12 @@
 
 .trackingStatus {
     width: 100%;
-
     box-sizing: border-box;
-
     padding: 18px;
-
     background: #ffffff;
-
     border: 1px solid #e7eaf0;
-
     border-radius: 16px;
-
-    box-shadow:
-        0 4px 18px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
 }
 
 
@@ -26,74 +19,45 @@
 
 .trackingStatus-header {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
-
     gap: 15px;
-
     padding-bottom: 14px;
-
     border-bottom: 1px solid #eef0f4;
 }
 
-
 .trackingStatus-headerTitle {
     display: flex;
-
     align-items: center;
-
     gap: 10px;
+    min-width: 0;
 }
-
-
-/* ==========================================================
-   HEADER ICON
-========================================================== */
 
 .trackingStatus-headerIcon {
     width: 32px;
     height: 32px;
-
     flex-shrink: 0;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 9px;
-
     background: #f1f5f9;
-
     color: #475569;
-
     font-size: 14px;
 }
 
-
 .trackingStatus-headerTitle h2 {
     margin: 0;
-
     color: #1e293b;
-
     font-size: 15px;
-
     font-weight: 700;
-
     line-height: 1.2;
 }
 
-
 .trackingStatus-headerTitle p {
     margin: 4px 0 0;
-
-    color: #94a3b8;
-
+    color: #64748b;
     font-size: 10px;
-
     line-height: 1.4;
 }
 
@@ -104,24 +68,18 @@
 
 .trackingStatus-mainBadge {
     display: inline-flex;
-
     align-items: center;
-
+    justify-content: center;
     gap: 5px;
-
+    flex-shrink: 0;
     padding: 5px 9px;
-
     border-radius: 999px;
-
     font-size: 9px;
-
     font-weight: 700;
-
     letter-spacing: 0.04em;
-
     line-height: 1.2;
+    white-space: nowrap;
 }
-
 
 .trackingStatus-mainBadge svg {
     font-size: 6px;
@@ -129,23 +87,21 @@
 
 
 /* ==========================================================
-   ACTIVE
+   ACTIVE STATUS
 ========================================================== */
 
 .trackingStatus-mainBadgeActive {
     background: #ecfdf5;
-
     color: #15803d;
 }
 
 
 /* ==========================================================
-   INACTIVE
+   INACTIVE STATUS
 ========================================================== */
 
 .trackingStatus-mainBadgeInactive {
     background: #f1f5f9;
-
     color: #64748b;
 }
 
@@ -156,11 +112,8 @@
 
 .trackingStatus-grid {
     display: grid;
-
     grid-template-columns: repeat(2, minmax(0, 1fr));
-
     gap: 8px;
-
     margin-top: 14px;
 }
 
@@ -171,44 +124,25 @@
 
 .trackingStatus-item {
     min-width: 0;
-
     display: flex;
-
     align-items: center;
-
     gap: 9px;
-
     padding: 10px;
-
     border: 1px solid #edf0f4;
-
     border-radius: 10px;
-
     background: #fafbfc;
 }
-
-
-/* ==========================================================
-   ITEM ICON
-========================================================== */
 
 .trackingStatus-itemIcon {
     width: 27px;
     height: 27px;
-
     flex-shrink: 0;
-
     display: flex;
-
     align-items: center;
-
     justify-content: center;
-
     border-radius: 8px;
-
     font-size: 11px;
 }
-
 
 .trackingStatus-itemIcon svg {
     font-size: 10px;
@@ -216,15 +150,13 @@
 
 
 /* ==========================================================
-   ONLINE
+   ONLINE ICON
 ========================================================== */
 
 .trackingStatus-iconOnline {
     background: #ecfdf5;
-
     color: #16a34a;
 }
-
 
 .trackingStatus-iconOnline svg {
     font-size: 7px;
@@ -232,15 +164,13 @@
 
 
 /* ==========================================================
-   OFFLINE
+   OFFLINE ICON
 ========================================================== */
 
 .trackingStatus-iconOffline {
     background: #f1f5f9;
-
     color: #94a3b8;
 }
-
 
 .trackingStatus-iconOffline svg {
     font-size: 7px;
@@ -248,56 +178,51 @@
 
 
 /* ==========================================================
-   APPROVED
+   APPROVED ICON
 ========================================================== */
 
 .trackingStatus-iconApproved {
     background: #eff6ff;
-
     color: #2563eb;
 }
 
 
 /* ==========================================================
-   PENDING
+   PENDING ICON
 ========================================================== */
 
 .trackingStatus-iconPending {
     background: #fff7ed;
-
     color: #c2410c;
 }
 
 
 /* ==========================================================
-   LOCATION
+   LOCATION ICON
 ========================================================== */
 
 .trackingStatus-iconLocation {
     background: #f0fdf4;
-
     color: #16a34a;
 }
 
 
 /* ==========================================================
-   WARNING
+   WARNING ICON
 ========================================================== */
 
 .trackingStatus-iconWarning {
     background: #fff7ed;
-
     color: #ea580c;
 }
 
 
 /* ==========================================================
-   UPDATE
+   UPDATE ICON
 ========================================================== */
 
 .trackingStatus-iconUpdate {
     background: #f1f5f9;
-
     color: #64748b;
 }
 
@@ -308,40 +233,58 @@
 
 .trackingStatus-itemContent {
     min-width: 0;
-
+    flex: 1;
     display: flex;
-
     flex-direction: column;
+    gap: 4px;
+}
 
+.trackingStatus-itemContent > span {
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.trackingStatus-itemContent > strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+}
+
+
+/* ==========================================================
+   LAST GPS UPDATE
+========================================================== */
+
+.trackingStatus-lastGps {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
     gap: 3px;
 }
 
-
-.trackingStatus-itemContent span {
-    color: #94a3b8;
-
-    font-size: 9px;
-
-    font-weight: 500;
-
-    line-height: 1.3;
+.trackingStatus-lastGpsTime {
+    display: block;
+    overflow: visible;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.35;
+    white-space: normal;
 }
 
-
-.trackingStatus-itemContent strong {
-    overflow: hidden;
-
-    color: #334155;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
+.trackingStatus-lastGpsDate {
+    display: block;
+    overflow: visible;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 500;
     line-height: 1.3;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
+    white-space: normal;
 }
 
 
@@ -353,26 +296,21 @@
     color: #16a34a !important;
 }
 
-
 .trackingStatus-valueOffline {
     color: #64748b !important;
 }
-
 
 .trackingStatus-valueApproved {
     color: #2563eb !important;
 }
 
-
 .trackingStatus-valuePending {
     color: #c2410c !important;
 }
 
-
 .trackingStatus-valueLocation {
     color: #16a34a !important;
 }
-
 
 .trackingStatus-valueWarning {
     color: #ea580c !important;
@@ -385,31 +323,18 @@
 
 .trackingStatus-message {
     display: flex;
-
     align-items: flex-start;
-
     gap: 9px;
-
     margin-top: 12px;
-
     padding: 11px;
-
     border-radius: 10px;
 }
-
-
-/* ==========================================================
-   MESSAGE DOT
-========================================================== */
 
 .trackingStatus-messageDot {
     width: 6px;
     height: 6px;
-
     flex-shrink: 0;
-
     margin-top: 4px;
-
     border-radius: 50%;
 }
 
@@ -420,17 +345,12 @@
 
 .trackingStatus-messageActive {
     background: #f0fdf4;
-
     color: #166534;
 }
 
-
-.trackingStatus-messageActive
-.trackingStatus-messageDot {
+.trackingStatus-messageActive .trackingStatus-messageDot {
     background: #22c55e;
-
-    box-shadow:
-        0 0 0 3px rgba(34, 197, 94, 0.12);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
 }
 
 
@@ -440,46 +360,35 @@
 
 .trackingStatus-messageInactive {
     background: #f8fafc;
-
     color: #475569;
 }
 
-
-.trackingStatus-messageInactive
-.trackingStatus-messageDot {
+.trackingStatus-messageInactive .trackingStatus-messageDot {
     background: #94a3b8;
 }
 
 
 /* ==========================================================
-   MESSAGE TEXT
+   MESSAGE CONTENT
 ========================================================== */
 
 .trackingStatus-message div {
     min-width: 0;
+    flex: 1;
 }
-
 
 .trackingStatus-message strong {
     display: block;
-
     color: inherit;
-
-    font-size: 10px;
-
-    font-weight: 700;
-
-    line-height: 1.3;
+    font-size: 11px;
+    font-weight: 800;
+    line-height: 1.35;
 }
-
 
 .trackingStatus-message p {
     margin: 4px 0 0;
-
     color: #64748b;
-
-    font-size: 9px;
-
+    font-size: 10px;
     line-height: 1.5;
 }
 
@@ -490,90 +399,219 @@
 
 .trackingStatus-coordinates {
     margin-top: 12px;
-
     padding: 11px;
-
     border: 1px solid #e8edf3;
-
     border-radius: 10px;
-
     background: #fafbfc;
 }
-
-
-/* ==========================================================
-   COORDINATE HEADER
-========================================================== */
 
 .trackingStatus-coordinateHeader {
     margin-bottom: 8px;
 }
 
-
 .trackingStatus-coordinateHeader span {
     color: #64748b;
-
     font-size: 9px;
-
     font-weight: 700;
-
     text-transform: uppercase;
-
     letter-spacing: 0.04em;
+}
+
+.trackingStatus-coordinateValues {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.trackingStatus-coordinate {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 8px;
+    background: #ffffff;
+    border: 1px solid #edf0f4;
+    border-radius: 8px;
+}
+
+.trackingStatus-coordinate span {
+    color: #64748b;
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.trackingStatus-coordinate strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: #1e293b;
+    font-family: monospace;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.35;
 }
 
 
 /* ==========================================================
-   COORDINATE VALUES
+   GPS DETAILS
 ========================================================== */
 
-.trackingStatus-coordinateValues {
+/*
+   Two columns work better than four columns inside
+   a sidebar because the values have more space.
+
+   Example:
+
+   Speed       Accuracy
+   0.4 km/h    5.9 m
+
+   Heading     Altitude
+   90°         35.8 m
+*/
+
+.trackingStatus-gpsDetails {
     display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
+    margin-top: 12px;
 }
 
 
-.trackingStatus-coordinate {
+/* ==========================================================
+   GPS DETAIL CARD
+========================================================== */
+
+.trackingStatus-gpsDetail {
+    min-width: 0;
     display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-
-    padding: 8px;
-
-    background: #ffffff;
-
+    align-items: center;
+    gap: 8px;
+    padding: 10px;
+    background: #fafbfc;
     border: 1px solid #edf0f4;
-
-    border-radius: 8px;
+    border-radius: 10px;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
 }
 
 
-.trackingStatus-coordinate span {
-    color: #94a3b8;
+/* ==========================================================
+   GPS DETAIL ICON
+========================================================== */
 
-    font-size: 8px;
+.trackingStatus-gpsDetail > svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    color: #64748b;
+}
 
+
+/* ==========================================================
+   GPS DETAIL CONTENT
+========================================================== */
+
+.trackingStatus-gpsDetail > div {
+    min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+
+/* ==========================================================
+   GPS DETAIL LABEL
+========================================================== */
+
+.trackingStatus-gpsDetail span {
+    display: block;
+    color: #64748b;
+    font-size: 9px;
     font-weight: 600;
-
     line-height: 1.3;
+    letter-spacing: 0.02em;
 }
 
 
-.trackingStatus-coordinate strong {
-    color: #334155;
+/* ==========================================================
+   GPS DETAIL VALUE
+========================================================== */
 
-    font-family: monospace;
+/*
+   The values are intentionally not hidden.
 
+   This prevents values such as:
+
+   - 0.4 km/h
+   - 5.9 m
+   - 90°
+   - 35.8 m
+   - Unavailable
+
+   from being cut off by ellipsis.
+*/
+
+.trackingStatus-gpsDetail strong {
+    display: block;
+    overflow: visible;
+    color: #1e293b;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1.4;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+
+/* ==========================================================
+   GPS DETAIL HOVER
+========================================================== */
+
+.trackingStatus-gpsDetail:hover {
+    background: #f8fafc;
+    border-color: #dbe2ea;
+}
+
+
+/* ==========================================================
+   TRACKING SOURCE
+========================================================== */
+
+.trackingStatus-source {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+    padding: 10px 11px;
+    background: #fafbfc;
+    border: 1px solid #edf0f4;
+    border-radius: 10px;
+}
+
+.trackingStatus-source span {
+    color: #64748b;
     font-size: 10px;
-
     font-weight: 600;
-
     line-height: 1.3;
+}
+
+.trackingStatus-source strong {
+    max-width: 60%;
+    overflow: hidden;
+    padding: 4px 7px;
+    color: #0f766e;
+    background: #ccfbf1;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: 0.03em;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
 
@@ -582,48 +620,73 @@
 ========================================================== */
 
 @media (max-width: 900px) {
-
     .trackingStatus {
         padding: 16px;
-
         border-radius: 14px;
     }
-
 
     .trackingStatus-headerTitle h2 {
         font-size: 14px;
     }
 
-
     .trackingStatus-headerTitle p {
-        font-size: 9px;
+        font-size: 10px;
     }
-
 
     .trackingStatus-grid {
         gap: 7px;
     }
 
+    .trackingStatus-item {
+        padding: 9px;
+        gap: 8px;
+    }
 
-    .trackingStatus-itemContent span {
+    .trackingStatus-itemContent > span {
         font-size: 9px;
     }
 
-
-    .trackingStatus-itemContent strong {
-        font-size: 10px;
+    .trackingStatus-itemContent > strong {
+        font-size: 11px;
     }
 
+    .trackingStatus-lastGpsTime {
+        font-size: 11px;
+    }
+
+    .trackingStatus-lastGpsDate {
+        font-size: 9px;
+    }
 
     .trackingStatus-message strong {
         font-size: 10px;
     }
 
-
     .trackingStatus-message p {
         font-size: 9px;
     }
 
+    .trackingStatus-gpsDetails {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .trackingStatus-gpsDetail {
+        padding: 9px;
+        gap: 7px;
+    }
+
+    .trackingStatus-gpsDetail strong {
+        font-size: 11px;
+    }
+
+    .trackingStatus-source span {
+        font-size: 9px;
+    }
+
+    .trackingStatus-source strong {
+        font-size: 9px;
+    }
 }
 
 
@@ -632,108 +695,131 @@
 ========================================================== */
 
 @media (max-width: 650px) {
-
     .trackingStatus {
         padding: 14px;
-
         border-radius: 12px;
     }
 
-
     .trackingStatus-header {
-        padding-bottom: 12px;
-
+        align-items: flex-start;
         gap: 10px;
+        padding-bottom: 12px;
     }
-
 
     .trackingStatus-headerTitle {
         gap: 8px;
     }
 
-
     .trackingStatus-headerIcon {
         width: 29px;
         height: 29px;
-
         font-size: 11px;
     }
-
 
     .trackingStatus-headerTitle h2 {
         font-size: 13px;
     }
 
-
     .trackingStatus-headerTitle p {
         font-size: 9px;
     }
 
-
     .trackingStatus-mainBadge {
         padding: 5px 8px;
-
         font-size: 8px;
     }
 
-
     .trackingStatus-grid {
         grid-template-columns: 1fr;
-
         gap: 7px;
     }
 
-
     .trackingStatus-item {
-        padding: 9px;
+        padding: 10px;
     }
-
 
     .trackingStatus-itemIcon {
         width: 27px;
         height: 27px;
     }
 
-
-    .trackingStatus-itemContent span {
+    .trackingStatus-itemContent > span {
         font-size: 9px;
     }
 
-
-    .trackingStatus-itemContent strong {
-        font-size: 10px;
+    .trackingStatus-itemContent > strong {
+        font-size: 11px;
     }
 
+    .trackingStatus-lastGpsTime {
+        font-size: 11px;
+    }
+
+    .trackingStatus-lastGpsDate {
+        font-size: 9px;
+    }
 
     .trackingStatus-message {
         padding: 10px;
     }
 
-
     .trackingStatus-message strong {
         font-size: 10px;
     }
-
 
     .trackingStatus-message p {
         font-size: 9px;
     }
 
-
     .trackingStatus-coordinateHeader span {
         font-size: 9px;
     }
 
-
     .trackingStatus-coordinate span {
+        font-size: 9px;
+    }
+
+    .trackingStatus-coordinate strong {
+        font-size: 11px;
+    }
+
+    /*
+       Keep GPS details in two columns on mobile.
+       This prevents the sidebar from becoming excessively tall.
+    */
+
+    .trackingStatus-gpsDetails {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+    }
+
+    .trackingStatus-gpsDetail {
+        padding: 9px;
+        gap: 7px;
+    }
+
+    .trackingStatus-gpsDetail > svg {
+        width: 13px;
+        height: 13px;
+    }
+
+    .trackingStatus-gpsDetail span {
         font-size: 8px;
     }
 
-
-    .trackingStatus-coordinate strong {
-        font-size: 10px;
+    .trackingStatus-gpsDetail strong {
+        font-size: 11px;
     }
 
+    .trackingStatus-source {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .trackingStatus-source strong {
+        max-width: 100%;
+    }
 }
 
 
@@ -742,71 +828,119 @@
 ========================================================== */
 
 @media (max-width: 400px) {
-
     .trackingStatus {
         padding: 12px;
     }
 
-
-    .trackingStatus-coordinateValues {
-        grid-template-columns: 1fr;
+    .trackingStatus-header {
+        gap: 8px;
     }
 
-
-    .trackingStatus-mainBadge {
-        padding: 4px 7px;
-
-        font-size: 8px;
+    .trackingStatus-headerTitle {
+        gap: 7px;
     }
 
-
-    .trackingStatus-headerTitle h2 {
-        font-size: 13px;
-    }
-
-
-    .trackingStatus-headerTitle p {
-        font-size: 9px;
-    }
-
-
-    .trackingStatus-item {
-        padding: 9px;
-    }
-
-
-    .trackingStatus-itemContent span {
-        font-size: 9px;
-    }
-
-
-    .trackingStatus-itemContent strong {
+    .trackingStatus-headerIcon {
+        width: 27px;
+        height: 27px;
         font-size: 10px;
     }
 
+    .trackingStatus-headerTitle h2 {
+        font-size: 12px;
+    }
+
+    .trackingStatus-headerTitle p {
+        font-size: 8px;
+    }
+
+    .trackingStatus-mainBadge {
+        padding: 4px 7px;
+        font-size: 8px;
+    }
+
+    .trackingStatus-item {
+        padding: 9px;
+        gap: 8px;
+    }
+
+    .trackingStatus-itemIcon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .trackingStatus-itemContent > span {
+        font-size: 8px;
+    }
+
+    .trackingStatus-itemContent > strong {
+        font-size: 11px;
+    }
+
+    .trackingStatus-lastGpsTime {
+        font-size: 10px;
+    }
+
+    .trackingStatus-lastGpsDate {
+        font-size: 8px;
+    }
 
     .trackingStatus-message strong {
         font-size: 10px;
     }
 
-
     .trackingStatus-message p {
         font-size: 9px;
     }
 
-
-    .trackingStatus-coordinateHeader span {
-        font-size: 9px;
+    .trackingStatus-coordinateValues {
+        grid-template-columns: 1fr;
     }
 
+    .trackingStatus-coordinateHeader span {
+        font-size: 8px;
+    }
 
     .trackingStatus-coordinate span {
         font-size: 8px;
     }
 
-
     .trackingStatus-coordinate strong {
         font-size: 10px;
     }
 
+    .trackingStatus-gpsDetails {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 6px;
+    }
+
+    .trackingStatus-gpsDetail {
+        padding: 8px;
+        gap: 6px;
+    }
+
+    .trackingStatus-gpsDetail > svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .trackingStatus-gpsDetail span {
+        font-size: 8px;
+    }
+
+    .trackingStatus-gpsDetail strong {
+        font-size: 10px;
+    }
+
+    .trackingStatus-source {
+        padding: 9px;
+    }
+
+    .trackingStatus-source span {
+        font-size: 8px;
+    }
+
+    .trackingStatus-source strong {
+        font-size: 8px;
+    }
 }

@@ -84,15 +84,6 @@ enum OwnerType {
   USER
 }
 
-enum AssignmentStatus {
-  PENDING
-  OFFERED
-  ACCEPTED
-  EXPIRED
-  REJECTED
-  CANCELLED
-}
-
 enum OfferStatus {
   ACTIVE
   ACCEPTED
@@ -414,48 +405,39 @@ type Order @model @auth(rules: [{ allow: public }]) {
   fundsReleasedAt: AWSDateTime
   fundsReleaseType: String
 
-  # ---------------- ASSIGNMENT / DISPATCH ----------------
-
-  # Courier currently holding the offer OR the courier who accepted it
+  # ---------------- ASSIGNMENT FIELDS ----------------
   assignedCourierId: ID @index(name: "byAssignedCourier")
-
-  # OFFERED | ACCEPTED | EXPIRED | REJECTED | CANCELLED
-  assignmentStatus: AssignmentStatus
+  assignmentExpiresAt: AWSDateTime
+  assignmentAttempts: Int
+  lastAssignedAt: AWSDateTime
+  rejectedCourierIds: [ID] # meant to be for couriers already assigned that expired or didn't accept
+  # ---------------- RELATIONS ----------------
+  assignmentStatus: String
     @index(name: "byAssignmentStatus", sortKeyFields: ["assignmentExpiresAt"])
 
-  # When the current courier offer expires
-  assignmentExpiresAt: AWSDateTime
+  # ---------------- TRACKING FIELDS ----------------
 
-  # Number of courier offers made
-  assignmentAttempts: Int
+  trackingStartedAt: AWSDateTime
+  trackingEndedAt: AWSDateTime
 
-  # Last time an offer was made
-  lastAssignedAt: AWSDateTime
+  # ---------------- RECIPIENT PUBLIC TRACKING ----------------
 
-  # Couriers already attempted during the current dispatch round
-  dispatchAttemptedCourierIds: [ID]
+  # Secure random token used in:
+  # https://atuainc.com/send/track/:trackingToken
+  recipientTrackingToken: String @index(name: "byRecipientTrackingToken")
 
-  # Current dispatch cycle
-  dispatchRound: Int
+  # Allows Atua to manually enable or disable recipient tracking
+  recipientTrackingEnabled: Boolean
 
-  # Current search radius
-  dispatchRadiusKm: Float
-
-  # Maximum allowed radius for this service
-  dispatchMaxRadiusKm: Float
-
-  # ---------------- RELATIONS ----------------
+  # Timestamp showing when the public link was revoked
+  recipientTrackingRevokedAt: AWSDateTime
 
   userID: ID! @index(name: "byUser")
-
   reviews: [CourierReview] @hasMany(indexName: "byOrder", fields: ["id"])
 
   reports: [CourierReport] @hasMany(indexName: "byOrder", fields: ["id"])
-
   offers: [Offer] @hasMany(indexName: "byOrder", fields: ["id"])
-
   assignedCourier: Courier @belongsTo(fields: ["assignedCourierId"])
-
   payments: [Payment] @hasMany(indexName: "byOrder", fields: ["id"])
 }
 
@@ -500,10 +482,50 @@ type CourierReview @model @auth(rules: [{ allow: public }]) {
   comment: String
 }
 
+type CourierLiveLocation @model @auth(rules: [{ allow: public }]) {
+  id: ID!
+
+  # The courier whose location this record belongs to
+  courierID: ID! @index(name: "byCourierLiveLocation")
+
+  # Relationship back to the Courier model
+  courier: Courier @belongsTo(fields: ["courierID"])
+
+  # Latest GPS coordinates
+  latitude: Float!
+  longitude: Float!
+
+  # Direction the courier is facing/moving
+  heading: Float
+
+  # Speed from the GPS provider
+  speed: Float
+
+  # GPS accuracy in metres
+  accuracy: Float
+
+  # Optional GPS altitude
+  altitude: Float
+
+  # Whether the background tracking task is currently active
+  isTracking: Boolean
+
+  # Example values:
+  # "FOREGROUND"
+  # "BACKGROUND"
+  # "ANDROID_BACKGROUND"
+  # "IOS_BACKGROUND"
+  trackingSource: String
+
+  # Last successful location update received
+  lastSeenAt: AWSDateTime!
+}
+
 type Courier @model @auth(rules: [{ allow: public }]) {
   id: ID!
   sub: String!
   isOnline: Boolean
+  isBlocked: Boolean
   firstName: String!
   lastName: String
   profilePic: String
@@ -536,9 +558,13 @@ type Courier @model @auth(rules: [{ allow: public }]) {
   lat: Float
   lng: Float
   heading: Float
+
+  liveLocationID: ID
+  liveLocation: CourierLiveLocation @hasOne(fields: ["liveLocationID"])
+
+  isOnboardingComplete: Boolean
   push_token: String
   isApproved: Boolean
-  isBlocked: Boolean
   approvedById: String
   currentBatchCount: Int
   currentExpressCount: Int

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   FaArrowLeft,
@@ -12,8 +12,8 @@ import "./TrackingHeader.css";
 
 function TrackingHeader({
   courier,
-  profileUrl,
-  position,
+  profileUrl = null,
+  position = null,
   refreshing = false,
   onBack,
   onRefresh,
@@ -35,11 +35,12 @@ function TrackingHeader({
   ==========================================================
   */
 
-  const firstInitial = courier?.firstName?.charAt(0)?.toUpperCase() || "";
+  const firstInitial =
+    courier?.firstName?.trim()?.charAt(0)?.toUpperCase() || "";
 
-  const lastInitial = courier?.lastName?.charAt(0)?.toUpperCase() || "";
+  const lastInitial = courier?.lastName?.trim()?.charAt(0)?.toUpperCase() || "";
 
-  const courierInitials = `${firstInitial}${lastInitial}` || "C";
+  const courierInitials = `${firstInitial}${lastInitial}`.trim() || "C";
 
   /*
   ==========================================================
@@ -58,20 +59,38 @@ function TrackingHeader({
   */
 
   const transportationType =
-    courier?.transportationType || courier?.vehicleClass || "Courier";
+    courier?.transportationType ||
+    courier?.vehicleClass ||
+    courier?.vehicleType ||
+    "Courier";
 
   /*
   ==========================================================
-  IMAGE ERROR
+  IMAGE ERROR STATE
   ==========================================================
-  
-  If the signed URL expires or the image cannot be loaded,
-  we automatically show the courier initials instead.
-  
+
+  If the profile image fails to load, the component displays
+  the courier initials instead.
+
   ==========================================================
   */
 
   const [imageError, setImageError] = useState(false);
+
+  /*
+  ==========================================================
+  RESET IMAGE ERROR WHEN PROFILE URL CHANGES
+  ==========================================================
+
+  This is important when the courier changes or Amplify
+  generates a new signed profile image URL.
+
+  ==========================================================
+  */
+
+  useEffect(() => {
+    setImageError(false);
+  }, [profileUrl]);
 
   /*
   ==========================================================
@@ -97,17 +116,68 @@ function TrackingHeader({
 
   /*
   ==========================================================
+  BACK BUTTON
+  ==========================================================
+  */
+
+  const handleBackClick = () => {
+    if (typeof onBack === "function") {
+      onBack();
+    }
+  };
+
+  /*
+  ==========================================================
+  REFRESH BUTTON
+  ==========================================================
+  */
+
+  const handleRefreshClick = () => {
+    if (refreshing) {
+      return;
+    }
+
+    if (typeof onRefresh === "function") {
+      onRefresh();
+    }
+  };
+
+  /*
+  ==========================================================
   VIEW PROFILE
   ==========================================================
   */
 
   const handleProfileClick = () => {
-    if (!onViewProfile) {
-      return;
+    if (typeof onViewProfile === "function") {
+      onViewProfile();
     }
-
-    onViewProfile();
   };
+
+  /*
+  ==========================================================
+  BUTTON STATES
+  ==========================================================
+  */
+
+  const isProfileButtonDisabled = typeof onViewProfile !== "function";
+
+  const isBackButtonDisabled = typeof onBack !== "function";
+
+  const isRefreshButtonDisabled = refreshing || typeof onRefresh !== "function";
+
+  /*
+  ==========================================================
+  REFRESH ICON CLASS
+  ==========================================================
+  */
+
+  const refreshIconClassName = [
+    "trackingHeader-refreshIcon",
+    refreshing ? "trackingHeader-refreshSpinning" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   /*
   ==========================================================
@@ -116,18 +186,21 @@ function TrackingHeader({
   */
 
   return (
-    <div className="trackingHeader">
+    <header className="trackingHeader">
       {/* =================================================
           LEFT SECTION
       ================================================= */}
 
       <div className="trackingHeader-left">
-        {/* BACK BUTTON */}
+        {/* =================================================
+            BACK BUTTON
+        ================================================= */}
 
         <button
           type="button"
           className="trackingHeader-backButton"
-          onClick={onBack}
+          onClick={handleBackClick}
+          disabled={isBackButtonDisabled}
           aria-label="Back to courier profile"
           title="Back"
         >
@@ -136,9 +209,11 @@ function TrackingHeader({
           <span>Back</span>
         </button>
 
-        {/* DIVIDER */}
+        {/* =================================================
+            DIVIDER
+        ================================================= */}
 
-        <div className="trackingHeader-divider" />
+        <div className="trackingHeader-divider" aria-hidden="true" />
 
         {/* =================================================
             COURIER PROFILE IMAGE
@@ -148,7 +223,7 @@ function TrackingHeader({
           type="button"
           className="trackingHeader-profile"
           onClick={handleProfileClick}
-          disabled={!onViewProfile}
+          disabled={isProfileButtonDisabled}
           aria-label={`View ${courierName} profile`}
           title={`View ${courierName} profile`}
         >
@@ -156,13 +231,16 @@ function TrackingHeader({
             {profileUrl && !imageError ? (
               <img
                 src={profileUrl}
-                alt={courierName}
+                alt={`${courierName} profile`}
                 className="trackingHeader-avatarImage"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />
             ) : (
-              <span className="trackingHeader-avatarInitials">
+              <span
+                className="trackingHeader-avatarInitials"
+                aria-hidden="true"
+              >
                 {courierInitials}
               </span>
             )}
@@ -170,36 +248,46 @@ function TrackingHeader({
         </button>
 
         {/* =================================================
-            TITLE / COURIER INFORMATION
+            TITLE AND COURIER INFORMATION
         ================================================= */}
 
         <div className="trackingHeader-content">
-          {/* TITLE */}
+          {/* =================================================
+              TITLE
+          ================================================= */}
 
           <div className="trackingHeader-titleRow">
-            <FaMapMarkerAlt className="trackingHeader-titleIcon" />
+            <FaMapMarkerAlt
+              className="trackingHeader-titleIcon"
+              aria-hidden="true"
+            />
 
             <h1 className="trackingHeader-title">Live Tracking</h1>
           </div>
 
-          {/* COURIER INFORMATION */}
+          {/* =================================================
+              COURIER INFORMATION
+          ================================================= */}
 
           <div className="trackingHeader-courierRow">
-            {/* NAME */}
+            {/* COURIER NAME */}
 
             <span className="trackingHeader-courierName">{courierName}</span>
 
             {/* ONLINE STATUS */}
 
             <span
-              className={`
-                trackingHeader-onlineStatus
-                ${isOnline ? "trackingHeader-online" : "trackingHeader-offline"}
-              `}
+              className={[
+                "trackingHeader-onlineStatus",
+                isOnline ? "trackingHeader-online" : "trackingHeader-offline",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              aria-label={`Courier status: ${isOnline ? "Online" : "Offline"}`}
             >
-              <FaCircle />
+              <FaCircle aria-hidden="true" />
 
-              {isOnline ? "Online" : "Offline"}
+              <span>{isOnline ? "Online" : "Offline"}</span>
             </span>
 
             {/* TRANSPORTATION TYPE */}
@@ -211,18 +299,21 @@ function TrackingHeader({
             {/* APPROVAL STATUS */}
 
             <span
-              className={`
-                trackingHeader-approvalStatus
-                ${
-                  isApproved
-                    ? "trackingHeader-approved"
-                    : "trackingHeader-pending"
-                }
-              `}
+              className={[
+                "trackingHeader-approvalStatus",
+                isApproved
+                  ? "trackingHeader-approved"
+                  : "trackingHeader-pending",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              aria-label={`Courier approval status: ${
+                isApproved ? "Approved" : "Pending Approval"
+              }`}
             >
-              {isApproved && <FaCheckCircle />}
+              {isApproved && <FaCheckCircle aria-hidden="true" />}
 
-              {isApproved ? "Approved" : "Pending Approval"}
+              <span>{isApproved ? "Approved" : "Pending Approval"}</span>
             </span>
           </div>
         </div>
@@ -236,26 +327,17 @@ function TrackingHeader({
         <button
           type="button"
           className="trackingHeader-refreshButton"
-          onClick={onRefresh}
-          disabled={refreshing}
+          onClick={handleRefreshClick}
+          disabled={isRefreshButtonDisabled}
           aria-label="Refresh courier tracking"
           title="Refresh"
         >
-          <FaRedo
-            className={
-              refreshing
-                ? `
-                    trackingHeader-refreshIcon
-                    trackingHeader-refreshSpinning
-                  `
-                : "trackingHeader-refreshIcon"
-            }
-          />
+          <FaRedo className={refreshIconClassName} aria-hidden="true" />
 
           <span>{refreshing ? "Refreshing..." : "Refresh"}</span>
         </button>
       </div>
-    </div>
+    </header>
   );
 }
 

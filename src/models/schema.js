@@ -1756,15 +1756,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "assignmentStatus": {
-                    "name": "assignmentStatus",
-                    "isArray": false,
-                    "type": {
-                        "enum": "AssignmentStatus"
-                    },
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "assignmentExpiresAt": {
                     "name": "assignmentExpiresAt",
                     "isArray": false,
@@ -1786,32 +1777,53 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "dispatchAttemptedCourierIds": {
-                    "name": "dispatchAttemptedCourierIds",
+                "rejectedCourierIds": {
+                    "name": "rejectedCourierIds",
                     "isArray": true,
                     "type": "ID",
                     "isRequired": false,
                     "attributes": [],
                     "isArrayNullable": true
                 },
-                "dispatchRound": {
-                    "name": "dispatchRound",
+                "assignmentStatus": {
+                    "name": "assignmentStatus",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "dispatchRadiusKm": {
-                    "name": "dispatchRadiusKm",
+                "trackingStartedAt": {
+                    "name": "trackingStartedAt",
                     "isArray": false,
-                    "type": "Float",
+                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 },
-                "dispatchMaxRadiusKm": {
-                    "name": "dispatchMaxRadiusKm",
+                "trackingEndedAt": {
+                    "name": "trackingEndedAt",
                     "isArray": false,
-                    "type": "Float",
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "recipientTrackingToken": {
+                    "name": "recipientTrackingToken",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "recipientTrackingEnabled": {
+                    "name": "recipientTrackingEnabled",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "recipientTrackingRevokedAt": {
+                    "name": "recipientTrackingRevokedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -1941,6 +1953,15 @@ export const schema = {
                         "fields": [
                             "assignmentStatus",
                             "assignmentExpiresAt"
+                        ]
+                    }
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byRecipientTrackingToken",
+                        "fields": [
+                            "recipientTrackingToken"
                         ]
                     }
                 },
@@ -2320,6 +2341,152 @@ export const schema = {
                 }
             ]
         },
+        "CourierLiveLocation": {
+            "name": "CourierLiveLocation",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "courierID": {
+                    "name": "courierID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "courier": {
+                    "name": "courier",
+                    "isArray": false,
+                    "type": {
+                        "model": "Courier"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "BELONGS_TO",
+                        "targetNames": [
+                            "courierID"
+                        ]
+                    }
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "heading": {
+                    "name": "heading",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "speed": {
+                    "name": "speed",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "accuracy": {
+                    "name": "accuracy",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "altitude": {
+                    "name": "altitude",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isTracking": {
+                    "name": "isTracking",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "trackingSource": {
+                    "name": "trackingSource",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lastSeenAt": {
+                    "name": "lastSeenAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "CourierLiveLocations",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCourierLiveLocation",
+                        "fields": [
+                            "courierID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
         "Courier": {
             "name": "Courier",
             "fields": {
@@ -2339,6 +2506,13 @@ export const schema = {
                 },
                 "isOnline": {
                     "name": "isOnline",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "isBlocked": {
+                    "name": "isBlocked",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
@@ -2569,6 +2743,38 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "liveLocationID": {
+                    "name": "liveLocationID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "liveLocation": {
+                    "name": "liveLocation",
+                    "isArray": false,
+                    "type": {
+                        "model": "CourierLiveLocation"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "association": {
+                        "connectionType": "HAS_ONE",
+                        "associatedWith": [
+                            "id"
+                        ],
+                        "targetNames": [
+                            "liveLocationID"
+                        ]
+                    }
+                },
+                "isOnboardingComplete": {
+                    "name": "isOnboardingComplete",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "push_token": {
                     "name": "push_token",
                     "isArray": false,
@@ -2578,13 +2784,6 @@ export const schema = {
                 },
                 "isApproved": {
                     "name": "isApproved",
-                    "isArray": false,
-                    "type": "Boolean",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "isBlocked": {
-                    "name": "isBlocked",
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
@@ -3069,17 +3268,6 @@ export const schema = {
                 "USER"
             ]
         },
-        "AssignmentStatus": {
-            "name": "AssignmentStatus",
-            "values": [
-                "PENDING",
-                "OFFERED",
-                "ACCEPTED",
-                "EXPIRED",
-                "REJECTED",
-                "CANCELLED"
-            ]
-        },
         "OfferStatus": {
             "name": "OfferStatus",
             "values": [
@@ -3259,5 +3447,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "9cbe947d29c1aa4dcacd7fc6cc5a60c7"
+    "version": "4d3d09e71077e9814f5379ad7d37df12"
 };

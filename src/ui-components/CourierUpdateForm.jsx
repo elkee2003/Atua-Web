@@ -192,6 +192,7 @@ export default function CourierUpdateForm(props) {
   const initialValues = {
     sub: "",
     isOnline: false,
+    isBlocked: false,
     firstName: "",
     lastName: "",
     profilePic: "",
@@ -224,9 +225,9 @@ export default function CourierUpdateForm(props) {
     lat: "",
     lng: "",
     heading: "",
+    isOnboardingComplete: false,
     push_token: "",
     isApproved: false,
-    isBlocked: false,
     approvedById: "",
     currentBatchCount: "",
     currentExpressCount: "",
@@ -239,6 +240,7 @@ export default function CourierUpdateForm(props) {
   };
   const [sub, setSub] = React.useState(initialValues.sub);
   const [isOnline, setIsOnline] = React.useState(initialValues.isOnline);
+  const [isBlocked, setIsBlocked] = React.useState(initialValues.isBlocked);
   const [firstName, setFirstName] = React.useState(initialValues.firstName);
   const [lastName, setLastName] = React.useState(initialValues.lastName);
   const [profilePic, setProfilePic] = React.useState(initialValues.profilePic);
@@ -307,9 +309,11 @@ export default function CourierUpdateForm(props) {
   const [lat, setLat] = React.useState(initialValues.lat);
   const [lng, setLng] = React.useState(initialValues.lng);
   const [heading, setHeading] = React.useState(initialValues.heading);
+  const [isOnboardingComplete, setIsOnboardingComplete] = React.useState(
+    initialValues.isOnboardingComplete
+  );
   const [push_token, setPush_token] = React.useState(initialValues.push_token);
   const [isApproved, setIsApproved] = React.useState(initialValues.isApproved);
-  const [isBlocked, setIsBlocked] = React.useState(initialValues.isBlocked);
   const [approvedById, setApprovedById] = React.useState(
     initialValues.approvedById
   );
@@ -342,6 +346,7 @@ export default function CourierUpdateForm(props) {
       : initialValues;
     setSub(cleanValues.sub);
     setIsOnline(cleanValues.isOnline);
+    setIsBlocked(cleanValues.isBlocked);
     setFirstName(cleanValues.firstName);
     setLastName(cleanValues.lastName);
     setProfilePic(cleanValues.profilePic);
@@ -375,9 +380,9 @@ export default function CourierUpdateForm(props) {
     setLat(cleanValues.lat);
     setLng(cleanValues.lng);
     setHeading(cleanValues.heading);
+    setIsOnboardingComplete(cleanValues.isOnboardingComplete);
     setPush_token(cleanValues.push_token);
     setIsApproved(cleanValues.isApproved);
-    setIsBlocked(cleanValues.isBlocked);
     setApprovedById(cleanValues.approvedById);
     setCurrentBatchCount(cleanValues.currentBatchCount);
     setCurrentExpressCount(cleanValues.currentExpressCount);
@@ -406,6 +411,7 @@ export default function CourierUpdateForm(props) {
   const validations = {
     sub: [{ type: "Required" }],
     isOnline: [],
+    isBlocked: [],
     firstName: [{ type: "Required" }],
     lastName: [],
     profilePic: [],
@@ -438,9 +444,9 @@ export default function CourierUpdateForm(props) {
     lat: [],
     lng: [],
     heading: [],
+    isOnboardingComplete: [],
     push_token: [],
     isApproved: [],
-    isBlocked: [],
     approvedById: [],
     currentBatchCount: [],
     currentExpressCount: [],
@@ -496,6 +502,7 @@ export default function CourierUpdateForm(props) {
         let modelFields = {
           sub,
           isOnline,
+          isBlocked,
           firstName,
           lastName,
           profilePic,
@@ -528,9 +535,9 @@ export default function CourierUpdateForm(props) {
           lat,
           lng,
           heading,
+          isOnboardingComplete,
           push_token,
           isApproved,
-          isBlocked,
           approvedById,
           currentBatchCount,
           currentExpressCount,
@@ -597,6 +604,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub: value,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -629,9 +637,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -666,6 +674,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline: value,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -698,9 +707,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -724,6 +733,76 @@ export default function CourierUpdateForm(props) {
         hasError={errors.isOnline?.hasError}
         {...getOverrideProps(overrides, "isOnline")}
       ></SwitchField>
+      <SwitchField
+        label="Is blocked"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isBlocked}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              isBlocked: value,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              isOnboardingComplete,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.isBlocked ?? value;
+          }
+          if (errors.isBlocked?.hasError) {
+            runValidationTasks("isBlocked", value);
+          }
+          setIsBlocked(value);
+        }}
+        onBlur={() => runValidationTasks("isBlocked", isBlocked)}
+        errorMessage={errors.isBlocked?.errorMessage}
+        hasError={errors.isBlocked?.hasError}
+        {...getOverrideProps(overrides, "isBlocked")}
+      ></SwitchField>
       <TextField
         label="First name"
         isRequired={true}
@@ -735,6 +814,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName: value,
               lastName,
               profilePic,
@@ -767,9 +847,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -804,6 +884,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName: value,
               profilePic,
@@ -836,9 +917,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -873,6 +954,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic: value,
@@ -905,9 +987,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -942,6 +1024,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -974,9 +1057,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1011,6 +1094,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1043,9 +1127,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1080,6 +1164,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1112,9 +1197,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1149,6 +1234,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1181,9 +1267,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1218,6 +1304,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1250,9 +1337,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1287,6 +1374,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1319,9 +1407,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1356,6 +1444,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1388,9 +1477,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1425,6 +1514,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1457,9 +1547,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1494,6 +1584,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1526,9 +1617,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1563,6 +1654,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1595,9 +1687,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1632,6 +1724,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1664,9 +1757,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1703,6 +1796,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1735,9 +1829,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1772,6 +1866,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1804,9 +1899,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1841,6 +1936,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1873,9 +1969,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1910,6 +2006,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -1942,9 +2039,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -1975,6 +2072,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2007,9 +2105,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2071,6 +2169,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2103,9 +2202,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2140,6 +2239,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2172,9 +2272,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2209,6 +2309,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2241,9 +2342,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2280,6 +2381,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2312,9 +2414,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2351,6 +2453,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2383,9 +2486,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2420,6 +2523,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2452,9 +2556,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2491,6 +2595,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2523,9 +2628,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2560,6 +2665,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2592,9 +2698,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2629,6 +2735,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2661,9 +2768,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2698,6 +2805,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2730,9 +2838,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2773,6 +2881,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2805,9 +2914,9 @@ export default function CourierUpdateForm(props) {
               lat: value,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2846,6 +2955,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2878,9 +2988,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng: value,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2919,6 +3029,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -2951,9 +3062,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading: value,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -2977,17 +3088,18 @@ export default function CourierUpdateForm(props) {
         hasError={errors.heading?.hasError}
         {...getOverrideProps(overrides, "heading")}
       ></TextField>
-      <TextField
-        label="Push token"
-        isRequired={false}
-        isReadOnly={false}
-        value={push_token}
+      <SwitchField
+        label="Is onboarding complete"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={isOnboardingComplete}
         onChange={(e) => {
-          let { value } = e.target;
+          let value = e.target.checked;
           if (onChange) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3020,9 +3132,81 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete: value,
+              push_token,
+              isApproved,
+              approvedById,
+              currentBatchCount,
+              currentExpressCount,
+              currentMaxiCount,
+              lastBatchAssignedAt,
+              averageRating,
+              reviewCount,
+              totalReports,
+              statusKey,
+            };
+            const result = onChange(modelFields);
+            value = result?.isOnboardingComplete ?? value;
+          }
+          if (errors.isOnboardingComplete?.hasError) {
+            runValidationTasks("isOnboardingComplete", value);
+          }
+          setIsOnboardingComplete(value);
+        }}
+        onBlur={() =>
+          runValidationTasks("isOnboardingComplete", isOnboardingComplete)
+        }
+        errorMessage={errors.isOnboardingComplete?.errorMessage}
+        hasError={errors.isOnboardingComplete?.hasError}
+        {...getOverrideProps(overrides, "isOnboardingComplete")}
+      ></SwitchField>
+      <TextField
+        label="Push token"
+        isRequired={false}
+        isReadOnly={false}
+        value={push_token}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              sub,
+              isOnline,
+              isBlocked,
+              firstName,
+              lastName,
+              profilePic,
+              address,
+              landMark,
+              phoneNumber,
+              email,
+              courierNIN,
+              courierNINImage,
+              bankCode,
+              bankName,
+              accountName,
+              accountNumber,
+              transportationType,
+              vehicleClass,
+              model,
+              vehicleColour,
+              plateNumber,
+              maxiImages,
+              maxiDescription,
+              guarantorName,
+              guarantorLastName,
+              guarantorProfession,
+              guarantorNumber,
+              guarantorRelationship,
+              guarantorAddress,
+              guarantorEmail,
+              guarantorNIN,
+              guarantorNINImage,
+              lat,
+              lng,
+              heading,
+              isOnboardingComplete,
               push_token: value,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3057,6 +3241,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3089,9 +3274,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved: value,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3115,75 +3300,6 @@ export default function CourierUpdateForm(props) {
         hasError={errors.isApproved?.hasError}
         {...getOverrideProps(overrides, "isApproved")}
       ></SwitchField>
-      <SwitchField
-        label="Is blocked"
-        defaultChecked={false}
-        isDisabled={false}
-        isChecked={isBlocked}
-        onChange={(e) => {
-          let value = e.target.checked;
-          if (onChange) {
-            const modelFields = {
-              sub,
-              isOnline,
-              firstName,
-              lastName,
-              profilePic,
-              address,
-              landMark,
-              phoneNumber,
-              email,
-              courierNIN,
-              courierNINImage,
-              bankCode,
-              bankName,
-              accountName,
-              accountNumber,
-              transportationType,
-              vehicleClass,
-              model,
-              vehicleColour,
-              plateNumber,
-              maxiImages,
-              maxiDescription,
-              guarantorName,
-              guarantorLastName,
-              guarantorProfession,
-              guarantorNumber,
-              guarantorRelationship,
-              guarantorAddress,
-              guarantorEmail,
-              guarantorNIN,
-              guarantorNINImage,
-              lat,
-              lng,
-              heading,
-              push_token,
-              isApproved,
-              isBlocked: value,
-              approvedById,
-              currentBatchCount,
-              currentExpressCount,
-              currentMaxiCount,
-              lastBatchAssignedAt,
-              averageRating,
-              reviewCount,
-              totalReports,
-              statusKey,
-            };
-            const result = onChange(modelFields);
-            value = result?.isBlocked ?? value;
-          }
-          if (errors.isBlocked?.hasError) {
-            runValidationTasks("isBlocked", value);
-          }
-          setIsBlocked(value);
-        }}
-        onBlur={() => runValidationTasks("isBlocked", isBlocked)}
-        errorMessage={errors.isBlocked?.errorMessage}
-        hasError={errors.isBlocked?.hasError}
-        {...getOverrideProps(overrides, "isBlocked")}
-      ></SwitchField>
       <TextField
         label="Approved by id"
         isRequired={false}
@@ -3195,6 +3311,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3227,9 +3344,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById: value,
               currentBatchCount,
               currentExpressCount,
@@ -3268,6 +3385,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3300,9 +3418,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount: value,
               currentExpressCount,
@@ -3343,6 +3461,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3375,9 +3494,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount: value,
@@ -3418,6 +3537,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3450,9 +3570,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3491,6 +3611,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3523,9 +3644,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3566,6 +3687,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3598,9 +3720,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3639,6 +3761,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3671,9 +3794,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3712,6 +3835,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3744,9 +3868,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,
@@ -3781,6 +3905,7 @@ export default function CourierUpdateForm(props) {
             const modelFields = {
               sub,
               isOnline,
+              isBlocked,
               firstName,
               lastName,
               profilePic,
@@ -3813,9 +3938,9 @@ export default function CourierUpdateForm(props) {
               lat,
               lng,
               heading,
+              isOnboardingComplete,
               push_token,
               isApproved,
-              isBlocked,
               approvedById,
               currentBatchCount,
               currentExpressCount,

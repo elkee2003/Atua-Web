@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect, useMemo, useState } from "react";
 import { getUrl } from "aws-amplify/storage";
 
 import {
@@ -10,9 +9,47 @@ import {
   FaMapMarkerAlt,
   FaCheckCircle,
   FaClock,
+  FaSatelliteDish,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 
 import "./CourierTrackingInfo.css";
+
+/**
+ * ==========================================================
+ * COURIER TRACKING INFORMATION
+ * ==========================================================
+ *
+ * This component receives:
+ *
+ * courier:
+ *   General courier information from the Courier model.
+ *
+ * position:
+ *   Latest location information from CourierLiveLocation,
+ *   already converted by the parent component into:
+ *
+ *   {
+ *     lat,
+ *     lng,
+ *     heading,
+ *     speed,
+ *     accuracy,
+ *     altitude,
+ *     isTracking,
+ *     trackingSource,
+ *     lastSeenAt
+ *   }
+ *
+ * profileUrl:
+ *   Optional profile image URL already resolved by the parent.
+ *
+ * IMPORTANT:
+ * This component does not query CourierLiveLocation directly.
+ * The parent CourierTracking component is responsible for
+ * fetching and observing the live location.
+ * ==========================================================
+ */
 
 function CourierTrackingInfo({
   courier,
@@ -60,7 +97,7 @@ function CourierTrackingInfo({
 
   /*
   ==========================================================
-  STATUS
+  COURIER ACCOUNT STATUS
   ==========================================================
   */
 
@@ -70,7 +107,99 @@ function CourierTrackingInfo({
 
   /*
   ==========================================================
-  PROFILE IMAGE
+  LIVE LOCATION STATUS
+  ==========================================================
+  *
+  * These values come from CourierLiveLocation through the
+  * position prop.
+  ==========================================================
+  */
+
+  const hasPosition = Boolean(
+    position &&
+    Number.isFinite(Number(position.lat)) &&
+    Number.isFinite(Number(position.lng)),
+  );
+
+  const isTracking = Boolean(position?.isTracking);
+
+  const trackingSource = position?.trackingSource || "Unknown source";
+
+  const lastSeenAt = position?.lastSeenAt || null;
+
+  /*
+  ==========================================================
+  COORDINATES
+  ==========================================================
+  */
+
+  const latitude = hasPosition ? Number(position.lat).toFixed(5) : null;
+
+  const longitude = hasPosition ? Number(position.lng).toFixed(5) : null;
+
+  /*
+  ==========================================================
+  LAST SEEN TEXT
+  ==========================================================
+  */
+
+  const formattedLastSeen = useMemo(() => {
+    if (!lastSeenAt) {
+      return "Not available";
+    }
+
+    const parsedDate = new Date(lastSeenAt);
+
+    if (Number.isNaN(parsedDate.getTime())) {
+      return "Unknown";
+    }
+
+    return parsedDate.toLocaleString();
+  }, [lastSeenAt]);
+
+  /*
+  ==========================================================
+  LOCATION STATUS
+  ==========================================================
+  *
+  * A valid coordinate does not automatically mean that the
+  * courier is currently transmitting live location.
+  *
+  * We therefore distinguish between:
+  *
+  * 1. Live tracking
+  * 2. Last known location
+  * 3. No location
+  ==========================================================
+  */
+
+  const locationStatus = useMemo(() => {
+    if (!hasPosition) {
+      return {
+        label: "Waiting for courier location",
+        className: "courierTrackingInfo-locationInactive",
+        isLive: false,
+      };
+    }
+
+    if (isTracking) {
+      return {
+        label: "Courier is transmitting live location",
+        className: "courierTrackingInfo-locationActive",
+        isLive: true,
+      };
+    }
+
+    return {
+      label: "Showing last known courier location",
+      className: "courierTrackingInfo-locationInactive",
+      isLive: false,
+    };
+  }, [hasPosition, isTracking]);
+
+  /*
+  ==========================================================
+  PROFILE IMAGE STATE
   ==========================================================
   */
 
@@ -95,32 +224,30 @@ function CourierTrackingInfo({
 
     const resolveProfileImage = async () => {
       /*
-          ----------------------------------------------------
-          RESET
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      RESET IMAGE STATE
+      --------------------------------------------------------
+      */
 
       setImageError(false);
 
       /*
-          ----------------------------------------------------
-          USE URL SUPPLIED BY PARENT
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      USE URL SUPPLIED BY PARENT
+      --------------------------------------------------------
+      */
 
       if (suppliedProfileUrl) {
         setResolvedProfileUrl(suppliedProfileUrl);
-
         setImageLoading(false);
-
         return;
       }
 
       /*
-          ----------------------------------------------------
-          GET STORAGE PATH
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      GET PROFILE IMAGE PATH
+      --------------------------------------------------------
+      */
 
       const profilePath =
         courier?.profilePic ||
@@ -129,24 +256,22 @@ function CourierTrackingInfo({
         null;
 
       /*
-          ----------------------------------------------------
-          NO IMAGE
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      NO PROFILE IMAGE
+      --------------------------------------------------------
+      */
 
       if (!profilePath) {
         setResolvedProfileUrl(null);
-
         setImageLoading(false);
-
         return;
       }
 
       /*
-          ----------------------------------------------------
-          IF ALREADY A URL
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      IF PROFILE IMAGE IS ALREADY A URL
+      --------------------------------------------------------
+      */
 
       if (
         typeof profilePath === "string" &&
@@ -157,7 +282,6 @@ function CourierTrackingInfo({
       ) {
         if (!cancelled) {
           setResolvedProfileUrl(profilePath);
-
           setImageLoading(false);
         }
 
@@ -165,19 +289,18 @@ function CourierTrackingInfo({
       }
 
       /*
-          ----------------------------------------------------
-          LOAD FROM AMPLIFY STORAGE
-          ----------------------------------------------------
-          */
+      --------------------------------------------------------
+      LOAD PROFILE IMAGE FROM AMPLIFY STORAGE
+      --------------------------------------------------------
+      */
 
       try {
         setImageLoading(true);
 
-        console.log("CourierTrackingInfo profilePic:", profilePath);
+        console.log("CourierTrackingInfo profile image path:", profilePath);
 
         const result = await getUrl({
           path: profilePath,
-
           options: {
             validateObjectExistence: true,
           },
@@ -193,13 +316,11 @@ function CourierTrackingInfo({
           console.log("CourierTrackingInfo resolved profile URL:", url);
 
           setResolvedProfileUrl(url);
-
           setImageError(false);
         } else {
           console.warn("Amplify Storage returned no profile image URL.");
 
           setResolvedProfileUrl(null);
-
           setImageError(true);
         }
       } catch (error) {
@@ -213,7 +334,6 @@ function CourierTrackingInfo({
         );
 
         setResolvedProfileUrl(null);
-
         setImageError(true);
       } finally {
         if (!cancelled) {
@@ -236,7 +356,7 @@ function CourierTrackingInfo({
 
   /*
   ==========================================================
-  IMAGE ERROR
+  IMAGE ERROR HANDLER
   ==========================================================
   */
 
@@ -247,37 +367,19 @@ function CourierTrackingInfo({
     );
 
     setImageError(true);
-
     setResolvedProfileUrl(null);
   };
 
   /*
   ==========================================================
-  IMAGE LOADED
+  IMAGE LOADED HANDLER
   ==========================================================
   */
 
   const handleImageLoad = () => {
     setImageError(false);
-
     setImageLoading(false);
   };
-
-  /*
-  ==========================================================
-  POSITION
-  ==========================================================
-  */
-
-  const hasPosition = Boolean(
-    position &&
-    Number.isFinite(Number(position.lat)) &&
-    Number.isFinite(Number(position.lng)),
-  );
-
-  const latitude = hasPosition ? Number(position.lat).toFixed(5) : null;
-
-  const longitude = hasPosition ? Number(position.lng).toFixed(5) : null;
 
   /*
   ==========================================================
@@ -323,7 +425,6 @@ function CourierTrackingInfo({
 
           <div>
             <h2>Courier Information</h2>
-
             <p>Current courier status</p>
           </div>
         </div>
@@ -356,7 +457,6 @@ function CourierTrackingInfo({
 
         <div className="courierTrackingInfo-identityText">
           <h3>{courierName}</h3>
-
           <p>{transportationType}</p>
         </div>
 
@@ -371,7 +471,6 @@ function CourierTrackingInfo({
           `}
         >
           <span />
-
           {isOnline ? "Online" : "Offline"}
         </div>
       </div>
@@ -407,7 +506,7 @@ function CourierTrackingInfo({
       <div className="courierTrackingInfo-section">
         <h4>Courier Details</h4>
 
-        {/* PHONE */}
+        {/* PHONE NUMBER */}
 
         <div className="courierTrackingInfo-detail">
           <div className="courierTrackingInfo-detailIcon">
@@ -416,12 +515,11 @@ function CourierTrackingInfo({
 
           <div className="courierTrackingInfo-detailContent">
             <span>Phone Number</span>
-
             <strong>{phoneNumber}</strong>
           </div>
         </div>
 
-        {/* TRANSPORTATION */}
+        {/* TRANSPORTATION TYPE */}
 
         <div className="courierTrackingInfo-detail">
           <div className="courierTrackingInfo-detailIcon">
@@ -430,12 +528,11 @@ function CourierTrackingInfo({
 
           <div className="courierTrackingInfo-detailContent">
             <span>Transportation</span>
-
             <strong>{transportationType}</strong>
           </div>
         </div>
 
-        {/* VEHICLE */}
+        {/* VEHICLE CLASS */}
 
         <div className="courierTrackingInfo-detail">
           <div className="courierTrackingInfo-detailIcon">
@@ -444,7 +541,6 @@ function CourierTrackingInfo({
 
           <div className="courierTrackingInfo-detailContent">
             <span>Vehicle</span>
-
             <strong>{vehicleClass}</strong>
           </div>
         </div>
@@ -458,7 +554,6 @@ function CourierTrackingInfo({
 
           <div className="courierTrackingInfo-detailContent">
             <span>Plate Number</span>
-
             <strong>{plateNumber}</strong>
           </div>
         </div>
@@ -475,7 +570,8 @@ function CourierTrackingInfo({
           {hasPosition && (
             <span className="courierTrackingInfo-liveLabel">
               <FaClock />
-              Live
+
+              {isTracking ? "Live" : "Last known"}
             </span>
           )}
         </div>
@@ -484,13 +580,11 @@ function CourierTrackingInfo({
           <div className="courierTrackingInfo-coordinates">
             <div className="courierTrackingInfo-coordinate">
               <span>Latitude</span>
-
               <strong>{latitude}</strong>
             </div>
 
             <div className="courierTrackingInfo-coordinate">
               <span>Longitude</span>
-
               <strong>{longitude}</strong>
             </div>
           </div>
@@ -510,27 +604,104 @@ function CourierTrackingInfo({
       </div>
 
       {/* ==================================================
+          LOCATION METADATA
+      ================================================== */}
+
+      {hasPosition && (
+        <div className="courierTrackingInfo-section">
+          <h4>Location Details</h4>
+
+          {/* LAST SEEN */}
+
+          <div className="courierTrackingInfo-detail">
+            <div className="courierTrackingInfo-detailIcon">
+              <FaClock />
+            </div>
+
+            <div className="courierTrackingInfo-detailContent">
+              <span>Last Updated</span>
+              <strong>{formattedLastSeen}</strong>
+            </div>
+          </div>
+
+          {/* TRACKING SOURCE */}
+
+          <div className="courierTrackingInfo-detail">
+            <div className="courierTrackingInfo-detailIcon">
+              <FaSatelliteDish />
+            </div>
+
+            <div className="courierTrackingInfo-detailContent">
+              <span>Tracking Source</span>
+              <strong>{trackingSource}</strong>
+            </div>
+          </div>
+
+          {/* SPEED */}
+
+          {Number.isFinite(Number(position?.speed)) && (
+            <div className="courierTrackingInfo-detail">
+              <div className="courierTrackingInfo-detailIcon">
+                <FaMotorcycle />
+              </div>
+
+              <div className="courierTrackingInfo-detailContent">
+                <span>Speed</span>
+                <strong>{Number(position.speed).toFixed(2)} m/s</strong>
+              </div>
+            </div>
+          )}
+
+          {/* ACCURACY */}
+
+          {Number.isFinite(Number(position?.accuracy)) && (
+            <div className="courierTrackingInfo-detail">
+              <div className="courierTrackingInfo-detailIcon">
+                <FaMapMarkerAlt />
+              </div>
+
+              <div className="courierTrackingInfo-detailContent">
+                <span>Location Accuracy</span>
+                <strong>{Number(position.accuracy).toFixed(2)} meters</strong>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ==================================================
           LIVE LOCATION STATUS
       ================================================== */}
 
       <div
         className={`
           courierTrackingInfo-locationStatus
-          ${
-            hasPosition
-              ? "courierTrackingInfo-locationActive"
-              : "courierTrackingInfo-locationInactive"
-          }
+          ${locationStatus.className}
         `}
       >
         <span className="courierTrackingInfo-locationStatusDot" />
 
-        <span>
-          {hasPosition
-            ? "Courier location is available"
-            : "Waiting for courier location"}
-        </span>
+        <span>{locationStatus.label}</span>
       </div>
+
+      {/* ==================================================
+          WARNING WHEN LOCATION IS NOT CURRENTLY TRACKING
+      ================================================== */}
+
+      {hasPosition && !isTracking && (
+        <div className="courierTrackingInfo-noLocation">
+          <FaExclamationTriangle />
+
+          <div>
+            <strong>Live tracking is inactive</strong>
+
+            <span>
+              The coordinates shown are the courier's last known location, not
+              an actively transmitting position.
+            </span>
+          </div>
+        </div>
+      )}
     </aside>
   );
 }

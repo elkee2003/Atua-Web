@@ -24,6 +24,7 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type CourierCreateFormInputValues = {
     sub?: string;
     isOnline?: boolean;
+    isBlocked?: boolean;
     firstName?: string;
     lastName?: string;
     profilePic?: string;
@@ -56,9 +57,9 @@ export declare type CourierCreateFormInputValues = {
     lat?: number;
     lng?: number;
     heading?: number;
+    isOnboardingComplete?: boolean;
     push_token?: string;
     isApproved?: boolean;
-    isBlocked?: boolean;
     approvedById?: string;
     currentBatchCount?: number;
     currentExpressCount?: number;
@@ -72,6 +73,7 @@ export declare type CourierCreateFormInputValues = {
 export declare type CourierCreateFormValidationValues = {
     sub?: ValidationFunction<string>;
     isOnline?: ValidationFunction<boolean>;
+    isBlocked?: ValidationFunction<boolean>;
     firstName?: ValidationFunction<string>;
     lastName?: ValidationFunction<string>;
     profilePic?: ValidationFunction<string>;
@@ -104,9 +106,9 @@ export declare type CourierCreateFormValidationValues = {
     lat?: ValidationFunction<number>;
     lng?: ValidationFunction<number>;
     heading?: ValidationFunction<number>;
+    isOnboardingComplete?: ValidationFunction<boolean>;
     push_token?: ValidationFunction<string>;
     isApproved?: ValidationFunction<boolean>;
-    isBlocked?: ValidationFunction<boolean>;
     approvedById?: ValidationFunction<string>;
     currentBatchCount?: ValidationFunction<number>;
     currentExpressCount?: ValidationFunction<number>;
@@ -122,6 +124,7 @@ export declare type CourierCreateFormOverridesProps = {
     CourierCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
     sub?: PrimitiveOverrideProps<TextFieldProps>;
     isOnline?: PrimitiveOverrideProps<SwitchFieldProps>;
+    isBlocked?: PrimitiveOverrideProps<SwitchFieldProps>;
     firstName?: PrimitiveOverrideProps<TextFieldProps>;
     lastName?: PrimitiveOverrideProps<TextFieldProps>;
     profilePic?: PrimitiveOverrideProps<TextFieldProps>;
@@ -154,9 +157,9 @@ export declare type CourierCreateFormOverridesProps = {
     lat?: PrimitiveOverrideProps<TextFieldProps>;
     lng?: PrimitiveOverrideProps<TextFieldProps>;
     heading?: PrimitiveOverrideProps<TextFieldProps>;
+    isOnboardingComplete?: PrimitiveOverrideProps<SwitchFieldProps>;
     push_token?: PrimitiveOverrideProps<TextFieldProps>;
     isApproved?: PrimitiveOverrideProps<SwitchFieldProps>;
-    isBlocked?: PrimitiveOverrideProps<SwitchFieldProps>;
     approvedById?: PrimitiveOverrideProps<TextFieldProps>;
     currentBatchCount?: PrimitiveOverrideProps<TextFieldProps>;
     currentExpressCount?: PrimitiveOverrideProps<TextFieldProps>;

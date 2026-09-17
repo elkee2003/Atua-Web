@@ -1,0 +1,1442 @@
+/* =========================================================
+   Recipient Tracking Page
+   Atua — Recipient Public Tracking
+   ========================================================= */
+
+.recipientTrackingPage {
+  min-height: 100vh;
+  width: 100%;
+  padding: 32px;
+  padding-bottom: 110px;
+  background: #f7f7f7;
+  color: #111827;
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   Header
+   ========================================================= */
+
+.recipientTrackingHeader {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto 26px;
+}
+
+.recipientTrackingBackButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+  padding: 9px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recipientTrackingBackButton:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #111827;
+  transform: translateX(-2px);
+}
+
+.recipientTrackingTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.7px;
+}
+
+.recipientTrackingSubtitle {
+  max-width: 680px;
+  margin: 9px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   Main Layout
+   ========================================================= */
+
+.recipientTrackingContent {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 1fr);
+  gap: 22px;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.recipientTrackingMainColumn,
+.recipientTrackingSideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  min-width: 0;
+}
+
+/* =========================================================
+   General Cards
+   ========================================================= */
+
+.recipientTrackingCard {
+  width: 100%;
+  min-width: 0;
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid #eef0f2;
+  border-radius: 20px;
+  box-shadow: 0 8px 28px rgba(17, 24, 39, 0.045);
+  box-sizing: border-box;
+}
+
+.recipientTrackingSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.recipientTrackingSectionTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 17px;
+  line-height: 1.35;
+  font-weight: 750;
+  letter-spacing: -0.25px;
+}
+
+.recipientTrackingSectionSubtitle {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   Status Card
+   ========================================================= */
+
+.recipientTrackingStatusCard {
+  position: relative;
+  overflow: hidden;
+  padding: 26px;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #ffffff 65%,
+      #f1f8f8 100%
+    );
+}
+
+.recipientTrackingStatusTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.recipientTrackingEyebrow {
+  margin: 0 0 8px;
+  color: #0a9396;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.recipientTrackingStatusTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.55px;
+}
+
+.recipientTrackingStatusDescription {
+  max-width: 570px;
+  margin: 11px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Base status badge */
+
+.recipientTrackingStatusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 7px 11px;
+  border: 1px solid #bde8e5;
+  border-radius: 999px;
+  background: #e8f8f7;
+  color: #087f83;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* Status badge variants */
+
+.recipientTrackingStatusBadge.ACCEPTED,
+.recipientTrackingStatusBadge.PENDING,
+.recipientTrackingStatusBadge.ASSIGNING {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.recipientTrackingStatusBadge.PICKED_UP,
+.recipientTrackingStatusBadge.IN_TRANSIT,
+.recipientTrackingStatusBadge.ARRIVED_PICKUP {
+  border-color: #bde8e5;
+  background: #e8f8f7;
+  color: #087f83;
+}
+
+.recipientTrackingStatusBadge.ARRIVED_DROPOFF,
+.recipientTrackingStatusBadge.UNLOADING {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.recipientTrackingStatusBadge.DELIVERED,
+.recipientTrackingStatusBadge.COMPLETED {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.recipientTrackingStatusBadge.CANCELLED,
+.recipientTrackingStatusBadge.CANCELED,
+.recipientTrackingStatusBadge.DISPUTED,
+.recipientTrackingStatusBadge.FAILED {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.recipientTrackingLastUpdated {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #edf1f2;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.recipientTrackingLastUpdated svg {
+  color: #0a9396;
+}
+
+/* =========================================================
+   Progress Steps
+   ========================================================= */
+
+.recipientTrackingProgress {
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  margin-top: 28px;
+}
+
+.recipientTrackingProgressStep {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+  text-align: center;
+}
+
+.recipientTrackingProgressCircle {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #e5e7eb;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 800;
+  box-sizing: border-box;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.recipientTrackingProgressStep.completed
+  .recipientTrackingProgressCircle {
+  border-color: #0a9396;
+  background: #0a9396;
+  color: #ffffff;
+}
+
+.recipientTrackingProgressStep.current
+  .recipientTrackingProgressCircle,
+.recipientTrackingProgressStep.active
+  .recipientTrackingProgressCircle {
+  border-color: #0a9396;
+  background: #e8f8f7;
+  color: #087f83;
+  box-shadow: 0 0 0 5px rgba(10, 147, 150, 0.08);
+}
+
+.recipientTrackingProgressStep.pending
+  .recipientTrackingProgressCircle {
+  border-color: #e5e7eb;
+  background: #ffffff;
+  color: #9ca3af;
+}
+
+.recipientTrackingProgressStep.cancelled
+  .recipientTrackingProgressCircle {
+  border-color: #ef4444;
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.recipientTrackingProgressLine {
+  position: absolute;
+  top: 16px;
+  left: calc(50% + 17px);
+  width: calc(100% - 34px);
+  height: 2px;
+  background: #e5e7eb;
+}
+
+.recipientTrackingProgressStep.completed
+  .recipientTrackingProgressLine {
+  background: #0a9396;
+}
+
+.recipientTrackingProgressLabel {
+  max-width: 100px;
+  margin-top: 10px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.recipientTrackingProgressStep.current
+  .recipientTrackingProgressLabel,
+.recipientTrackingProgressStep.active
+  .recipientTrackingProgressLabel,
+.recipientTrackingProgressStep.completed
+  .recipientTrackingProgressLabel {
+  color: #374151;
+}
+
+.recipientTrackingProgressStep:last-child
+  .recipientTrackingProgressLine {
+  display: none;
+}
+
+/* =========================================================
+   Verification Code Card
+   ========================================================= */
+
+.recipientTrackingVerificationCard {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid #fde68a;
+  border-radius: 18px;
+  background:
+    linear-gradient(
+      145deg,
+      #ffffff 0%,
+      #ffffff 58%,
+      #fffbeb 100%
+    );
+  box-shadow: 0 8px 24px rgba(180, 83, 9, 0.045);
+}
+
+.recipientTrackingVerificationHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  margin-bottom: 18px;
+}
+
+.recipientTrackingVerificationIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.recipientTrackingVerificationHeading {
+  min-width: 0;
+}
+
+.recipientTrackingVerificationTitle {
+  margin: 0;
+  color: #92400e;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.recipientTrackingVerificationDescription {
+  margin: 5px 0 0;
+  color: #92400e;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.recipientTrackingVerificationCodeBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 15px 16px;
+  border: 1px dashed #f59e0b;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.recipientTrackingVerificationCodeLabel {
+  margin: 0 0 5px;
+  color: #92400e;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.recipientTrackingVerificationCode {
+  display: block;
+  color: #111827;
+  font-size: 25px;
+  font-weight: 900;
+  letter-spacing: 5px;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.recipientTrackingVerificationMasked {
+  letter-spacing: 4px;
+}
+
+.recipientTrackingVerificationButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid #f59e0b;
+  border-radius: 10px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recipientTrackingVerificationButton:hover {
+  border-color: #d97706;
+  background: #fef3c7;
+  color: #78350f;
+  transform: translateY(-1px);
+}
+
+.recipientTrackingVerificationNote {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin: 13px 0 0;
+  color: #92400e;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.recipientTrackingVerificationNote svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   Notice Cards
+   ========================================================= */
+
+.recipientTrackingNoticeCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 15px;
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.recipientTrackingNoticeCard.success {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.recipientTrackingNoticeCard.warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.recipientTrackingNoticeCard.error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.recipientTrackingNoticeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.recipientTrackingNoticeCard.success
+  .recipientTrackingNoticeIcon {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.recipientTrackingNoticeCard.warning
+  .recipientTrackingNoticeIcon {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.recipientTrackingNoticeCard.error
+  .recipientTrackingNoticeIcon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.recipientTrackingNoticeContent {
+  min-width: 0;
+}
+
+.recipientTrackingNoticeTitle {
+  margin: 0 0 4px;
+  color: #1e3a8a;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.recipientTrackingNoticeText {
+  margin: 0;
+  color: #1d4ed8;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.recipientTrackingNoticeCard.success
+  .recipientTrackingNoticeTitle {
+  color: #166534;
+}
+
+.recipientTrackingNoticeCard.success
+  .recipientTrackingNoticeText {
+  color: #15803d;
+}
+
+.recipientTrackingNoticeCard.warning
+  .recipientTrackingNoticeTitle {
+  color: #92400e;
+}
+
+.recipientTrackingNoticeCard.warning
+  .recipientTrackingNoticeText {
+  color: #b45309;
+}
+
+.recipientTrackingNoticeCard.error
+  .recipientTrackingNoticeTitle {
+  color: #991b1b;
+}
+
+.recipientTrackingNoticeCard.error
+  .recipientTrackingNoticeText {
+  color: #b91c1c;
+}
+
+/* Generic content fallback for JSX headings */
+
+.recipientTrackingNoticeContent h3,
+.recipientTrackingNoticeContent h4 {
+  margin: 0 0 5px;
+}
+
+.recipientTrackingNoticeContent p {
+  margin: 0;
+}
+
+/* =========================================================
+   Map Card
+   ========================================================= */
+
+.recipientTrackingMapCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.recipientTrackingMapCard
+  .recipientTrackingSectionHeader {
+  margin: 0;
+  padding: 23px 24px 18px;
+}
+
+.recipientTrackingLiveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  border: 1px solid #bbf7d0;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.recipientTrackingLiveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.12);
+}
+
+.recipientTrackingMapWrapper {
+  position: relative;
+  width: 100%;
+  height: 390px;
+  background: #e5e7eb;
+}
+
+.recipientTrackingMap {
+  width: 100%;
+  height: 100%;
+}
+
+.recipientTrackingMapUnavailable {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 30px;
+  background:
+    linear-gradient(
+      135deg,
+      #f3f4f6 0%,
+      #e5e7eb 50%,
+      #f9fafb 100%
+    );
+  color: #6b7280;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.recipientTrackingMapHint {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  left: 14px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.94);
+  color: #4b5563;
+  font-size: 11px;
+  line-height: 1.45;
+  box-shadow: 0 4px 16px rgba(17, 24, 39, 0.12);
+  backdrop-filter: blur(8px);
+}
+
+.recipientTrackingMapHint svg {
+  flex-shrink: 0;
+  color: #0a9396;
+}
+
+/* =========================================================
+   Route Details
+   ========================================================= */
+
+.recipientTrackingRoute {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.recipientTrackingRouteItem {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  min-width: 0;
+}
+
+.recipientTrackingRouteMarker {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 31px;
+  height: 31px;
+  border: 1px solid #d1d5db;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.recipientTrackingRouteItem:first-child
+  .recipientTrackingRouteMarker {
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.recipientTrackingRouteItem:last-child
+  .recipientTrackingRouteMarker {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.recipientTrackingRouteContent {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 21px;
+}
+
+.recipientTrackingRouteItem:last-child
+  .recipientTrackingRouteContent {
+  padding-bottom: 0;
+}
+
+.recipientTrackingRouteLabel {
+  margin: 0 0 5px;
+  color: #9ca3af;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.recipientTrackingRouteAddress {
+  margin: 0;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.recipientTrackingRouteConnector {
+  position: absolute;
+  top: 31px;
+  bottom: 0;
+  left: 15px;
+  width: 1px;
+  background: #e5e7eb;
+}
+
+/* =========================================================
+   Courier Card
+   ========================================================= */
+
+.recipientTrackingCourier {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  min-width: 0;
+}
+
+.recipientTrackingCourierImage,
+.recipientTrackingCourierPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 68px;
+  height: 68px;
+  border-radius: 17px;
+  object-fit: cover;
+}
+
+.recipientTrackingCourierImage {
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+}
+
+.recipientTrackingCourierPlaceholder {
+  background: #e8f8f7;
+  color: #087f83;
+  font-size: 23px;
+  font-weight: 800;
+}
+
+.recipientTrackingCourierDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.recipientTrackingCourierName {
+  margin: 0;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.recipientTrackingCourierVehicle {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.recipientTrackingCourierOnline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.recipientTrackingCourierOnline::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.recipientTrackingCourierLoading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.recipientTrackingCourierUnavailable {
+  margin: 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+/* Compatibility with generic courier JSX elements */
+
+.recipientTrackingCourierDetails h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.recipientTrackingCourierDetails p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.recipientTrackingCourierDetails span,
+.recipientTrackingCourierDetails small {
+  color: #6b7280;
+  font-size: 11px;
+}
+
+/* =========================================================
+   Order Details
+   ========================================================= */
+
+.recipientTrackingDetails {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.recipientTrackingDetailRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.recipientTrackingDetailRow:first-child {
+  padding-top: 0;
+}
+
+.recipientTrackingDetailRow:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.recipientTrackingDetailLabel {
+  flex-shrink: 0;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.recipientTrackingDetailValue {
+  max-width: 65%;
+  color: #374151;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* Compatibility with generic detail elements */
+
+.recipientTrackingDetails span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.recipientTrackingDetails strong {
+  color: #374151;
+  font-size: 12px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   Loading and Error States
+   ========================================================= */
+
+.recipientTrackingStateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 620px;
+  min-height: 360px;
+  margin: 60px auto 0;
+  padding: 38px 28px;
+  border: 1px solid #eef0f2;
+  border-radius: 22px;
+  background: #ffffff;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(17, 24, 39, 0.045);
+  box-sizing: border-box;
+}
+
+.recipientTrackingStateIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.recipientTrackingStateCard.error
+  .recipientTrackingStateIcon {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.recipientTrackingStateCard.success
+  .recipientTrackingStateIcon {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.recipientTrackingStateTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.recipientTrackingStateMessage {
+  max-width: 440px;
+  margin: 10px auto 0;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.recipientTrackingSpinner {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #dbeeed;
+  border-top-color: #0a9396;
+  border-radius: 50%;
+  animation: recipientTrackingSpin 0.8s linear infinite;
+}
+
+@keyframes recipientTrackingSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   State Buttons
+   ========================================================= */
+
+.recipientTrackingPrimaryButton,
+.recipientTrackingSecondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  margin-top: 23px;
+  padding: 0 18px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recipientTrackingPrimaryButton {
+  border: 1px solid #0a9396;
+  background: #0a9396;
+  color: #ffffff;
+}
+
+.recipientTrackingPrimaryButton:hover {
+  border-color: #087f83;
+  background: #087f83;
+  transform: translateY(-1px);
+}
+
+.recipientTrackingSecondaryButton {
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+}
+
+.recipientTrackingSecondaryButton:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+}
+
+/* =========================================================
+   Footer Note
+   ========================================================= */
+
+.recipientTrackingFooterNote {
+  width: 100%;
+  max-width: 1180px;
+  margin: 25px auto 0;
+  color: #9ca3af;
+  font-size: 11px;
+  line-height: 1.7;
+  text-align: center;
+}
+
+/* =========================================================
+   Responsive — Tablet
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .recipientTrackingPage {
+    padding: 26px 24px 110px;
+  }
+
+  .recipientTrackingContent {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .recipientTrackingMainColumn,
+  .recipientTrackingSideColumn {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .recipientTrackingStatusCard,
+  .recipientTrackingMapCard,
+  .recipientTrackingVerificationCard {
+    grid-column: 1 / -1;
+  }
+
+  .recipientTrackingNoticeCard {
+    grid-column: 1 / -1;
+  }
+
+  .recipientTrackingMapWrapper {
+    height: 360px;
+  }
+}
+
+/* =========================================================
+   Responsive — Mobile
+   ========================================================= */
+
+@media (max-width: 700px) {
+  .recipientTrackingPage {
+    padding: 20px 16px 110px;
+  }
+
+  .recipientTrackingHeader {
+    margin-bottom: 20px;
+  }
+
+  .recipientTrackingBackButton {
+    margin-bottom: 15px;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .recipientTrackingTitle {
+    font-size: 25px;
+    letter-spacing: -0.5px;
+  }
+
+  .recipientTrackingSubtitle {
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  .recipientTrackingContent {
+    gap: 16px;
+  }
+
+  .recipientTrackingMainColumn,
+  .recipientTrackingSideColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .recipientTrackingCard {
+    padding: 19px;
+    border-radius: 17px;
+  }
+
+  .recipientTrackingStatusCard {
+    padding: 21px 19px;
+  }
+
+  .recipientTrackingStatusTop {
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .recipientTrackingStatusTitle {
+    font-size: 23px;
+  }
+
+  .recipientTrackingStatusDescription {
+    font-size: 13px;
+  }
+
+  .recipientTrackingStatusBadge {
+    align-self: flex-start;
+  }
+
+  .recipientTrackingProgress {
+    margin-top: 24px;
+  }
+
+  .recipientTrackingProgressCircle {
+    width: 30px;
+    height: 30px;
+    font-size: 11px;
+  }
+
+  .recipientTrackingProgressLine {
+    top: 14px;
+    left: calc(50% + 15px);
+    width: calc(100% - 30px);
+  }
+
+  .recipientTrackingProgressLabel {
+    max-width: 75px;
+    font-size: 10px;
+  }
+
+  .recipientTrackingSectionHeader {
+    margin-bottom: 15px;
+  }
+
+  .recipientTrackingSectionTitle {
+    font-size: 16px;
+  }
+
+  .recipientTrackingMapCard
+    .recipientTrackingSectionHeader {
+    padding: 19px 19px 15px;
+  }
+
+  .recipientTrackingMapWrapper {
+    height: 285px;
+  }
+
+  .recipientTrackingMapHint {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    padding: 9px 11px;
+    font-size: 10px;
+  }
+
+  .recipientTrackingNoticeCard {
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .recipientTrackingNoticeIcon {
+    width: 31px;
+    height: 31px;
+  }
+
+  .recipientTrackingNoticeTitle {
+    font-size: 12px;
+  }
+
+  .recipientTrackingNoticeText {
+    font-size: 11px;
+  }
+
+  /* Verification card mobile */
+
+  .recipientTrackingVerificationCard {
+    padding: 18px;
+    border-radius: 17px;
+  }
+
+  .recipientTrackingVerificationHeader {
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+
+  .recipientTrackingVerificationIcon {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
+  .recipientTrackingVerificationTitle {
+    font-size: 14px;
+  }
+
+  .recipientTrackingVerificationDescription {
+    font-size: 11px;
+  }
+
+  .recipientTrackingVerificationCodeBox {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 13px;
+    padding: 14px;
+  }
+
+  .recipientTrackingVerificationCode {
+    font-size: 23px;
+    letter-spacing: 4px;
+  }
+
+  .recipientTrackingVerificationButton {
+    width: 100%;
+  }
+
+  .recipientTrackingVerificationNote {
+    font-size: 10px;
+  }
+
+  .recipientTrackingCourierImage,
+  .recipientTrackingCourierPlaceholder {
+    width: 58px;
+    height: 58px;
+    border-radius: 15px;
+  }
+
+  .recipientTrackingCourierName {
+    font-size: 14px;
+  }
+
+  .recipientTrackingDetailRow {
+    gap: 12px;
+  }
+
+  .recipientTrackingDetailLabel,
+  .recipientTrackingDetailValue {
+    font-size: 11px;
+  }
+
+  .recipientTrackingStateCard {
+    min-height: 330px;
+    margin-top: 35px;
+    padding: 30px 22px;
+    border-radius: 18px;
+  }
+
+  .recipientTrackingStateTitle {
+    font-size: 20px;
+  }
+
+  .recipientTrackingStateMessage {
+    font-size: 12px;
+  }
+}
+
+/* =========================================================
+   Responsive — Very Small Phones
+   ========================================================= */
+
+@media (max-width: 380px) {
+  .recipientTrackingPage {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .recipientTrackingTitle {
+    font-size: 23px;
+  }
+
+  .recipientTrackingCard,
+  .recipientTrackingStatusCard,
+  .recipientTrackingVerificationCard {
+    padding: 16px;
+  }
+
+  .recipientTrackingStatusTitle {
+    font-size: 21px;
+  }
+
+  .recipientTrackingProgressLabel {
+    max-width: 60px;
+    font-size: 9px;
+  }
+
+  .recipientTrackingProgressCircle {
+    width: 27px;
+    height: 27px;
+  }
+
+  .recipientTrackingProgressLine {
+    top: 12px;
+    left: calc(50% + 13.5px);
+    width: calc(100% - 27px);
+  }
+
+  .recipientTrackingMapWrapper {
+    height: 250px;
+  }
+
+  .recipientTrackingDetailRow {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .recipientTrackingDetailValue {
+    max-width: 100%;
+    text-align: left;
+  }
+
+  .recipientTrackingVerificationCode {
+    font-size: 21px;
+    letter-spacing: 3px;
+  }
+}
+
+/* =========================================================
+   Reduced Motion
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .recipientTrackingSpinner {
+    animation: none;
+  }
+
+  .recipientTrackingBackButton,
+  .recipientTrackingPrimaryButton,
+  .recipientTrackingSecondaryButton,
+  .recipientTrackingVerificationButton,
+  .recipientTrackingProgressCircle {
+    transition: none;
+  }
+}

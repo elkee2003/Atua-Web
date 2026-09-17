@@ -14,6 +14,7 @@ import SearchResult from "../../components/Send/ContentPages/Home/SearchResult/S
 import Checkout from "../../components/Send/ContentPages/Home/SearchResult/Checkout";
 import Payment from "../../components/Send/ContentPages/Home/PaymentCom/Payment";
 import OrderTrackingScreen from "../../components/Send/ContentPages/Home/OrderTrackingScreen/OrderTrackingScreen";
+import RecipientTrackingPage from "../../components/Send/ContentPages/RecipientTracking/RecipientTracking";
 
 // Order Page
 import OrderHistoryMain from "../../components/Send/ContentPages/OrderHistory/OrderHistoryMain/OrderHistoryMain";
@@ -63,6 +64,12 @@ const SendRoutes = () => (
         <Route
           path="order_tracking_screen/:orderId"
           element={<OrderTrackingScreen />}
+        />
+
+        {/* Recipient Tracking Screen */}
+        <Route
+          path="track/:trackingToken"
+          element={<RecipientTrackingPage />}
         />
 
         {/* OrderHistory Main */}
