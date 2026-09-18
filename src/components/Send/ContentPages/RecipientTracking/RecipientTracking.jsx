@@ -420,180 +420,221 @@ function RecipientTracking() {
   const [showVerificationCode, setShowVerificationCode] = useState(false);
 
   /* =========================================================
-     FETCH ORDER BY TRACKING TOKEN
-  ========================================================= */
+   FETCH ORDER BY TRACKING TOKEN
+========================================================= */
+
+  /*
+   * DataStore may not immediately contain the order when a public
+   * recipient opens the tracking link for the first time.
+   *
+   * Therefore, an empty result is treated as a temporary condition
+   * first. We retry several times before displaying "tracking link
+   * not found".
+   */
 
   const fetchOrder = useCallback(async () => {
     if (!trackingToken) {
       setErrorType("invalid");
-
       setErrorMessage("This tracking link is missing a valid tracking token.");
-
       setLoading(false);
-
       return;
     }
 
+    const MAX_ATTEMPTS = 5;
+    const RETRY_DELAY = 1500;
+
+    let lastError = null;
+
     try {
       setLoading(true);
+      setErrorType(null);
+      setErrorMessage("");
+
+      console.log("=================================");
+      console.log("RECIPIENT TRACKING STARTED");
+      console.log("Tracking token:", trackingToken);
+      console.log("=================================");
 
       /*
-       * TEMPORARY FRONTEND QUERY
-       *
-       * This uses the current public Order model and the
-       * byRecipientTrackingToken index.
-       *
-       * IMPORTANT:
-       * Before production, replace this with a restricted
-       * Lambda/API that returns only safe tracking fields.
-       *
-       * The deliveryVerificationCode should not be publicly
-       * exposed through a general DataStore query.
+       * Retry the DataStore query because the public tracking page
+       * may open before DataStore has synchronized the order.
        */
+      for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+        try {
+          console.log(`Tracking query attempt ${attempt}/${MAX_ATTEMPTS}`);
 
-      const matchingOrders = await DataStore.query(Order, (o) =>
-        o.recipientTrackingToken.eq(trackingToken),
-      );
+          /*
+           * Start DataStore synchronization before querying.
+           *
+           * This is useful when the browser has just opened the page
+           * and the local DataStore has not finished syncing.
+           */
+          try {
+            await DataStore.start();
+          } catch (syncError) {
+            /*
+             * DataStore.start() may already be running or may not
+             * be available in every Amplify version. We do not fail
+             * the whole tracking request because of this.
+             */
+            console.warn("DataStore.start() warning:", syncError);
+          }
 
-      const foundOrder = matchingOrders?.[0];
+          const matchingOrders = await DataStore.query(Order, (o) =>
+            o.recipientTrackingToken.eq(trackingToken),
+          );
 
-      if (!foundOrder) {
-        setOrder(null);
+          console.log(
+            `Tracking query result on attempt ${attempt}:`,
+            matchingOrders,
+          );
 
-        setCourier(null);
+          const foundOrder = matchingOrders?.[0];
 
-        setErrorType("invalid");
+          /*
+           * If the order has not synchronized yet, wait and try again.
+           */
+          if (!foundOrder) {
+            if (attempt < MAX_ATTEMPTS) {
+              console.warn(
+                `No order found yet. Retrying in ${RETRY_DELAY}ms...`,
+              );
 
-        setErrorMessage(
-          "We could not find a delivery connected to this tracking link.",
-        );
+              await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
 
-        return;
-      }
+              continue;
+            }
 
-      /*
-       * Tracking must be explicitly enabled.
-       */
-      if (foundOrder.recipientTrackingEnabled !== true) {
-        setOrder(null);
+            /*
+             * Only display "not found" after all attempts fail.
+             */
+            setOrder(null);
+            setCourier(null);
+            setErrorType("invalid");
+            setErrorMessage(
+              "We could not find a delivery connected to this tracking link. Please confirm that the link is correct and try again.",
+            );
 
-        setCourier(null);
+            return;
+          }
 
-        setErrorType("disabled");
+          console.log("Found order:", foundOrder);
+          console.log("Order ID:", foundOrder.id);
+          console.log("Order status:", foundOrder.status);
+          console.log("Tracking enabled:", foundOrder.recipientTrackingEnabled);
+          console.log(
+            "Tracking revoked at:",
+            foundOrder.recipientTrackingRevokedAt,
+          );
 
-        setErrorMessage(
-          "Tracking for this delivery is not currently available.",
-        );
+          /*
+           * The tracking token exists, but tracking may have been
+           * disabled by the sender or backend.
+           */
+          if (foundOrder.recipientTrackingEnabled !== true) {
+            setOrder(null);
+            setCourier(null);
+            setErrorType("disabled");
+            setErrorMessage(
+              "Tracking for this delivery is not currently available.",
+            );
 
-        return;
-      }
+            return;
+          }
 
-      /*
-       * Do not allow tracking after it has been revoked.
-       */
-      if (foundOrder.recipientTrackingRevokedAt) {
-        setOrder(null);
+          /*
+           * Do not allow a revoked tracking link to remain active.
+           */
+          if (foundOrder.recipientTrackingRevokedAt) {
+            setOrder(null);
+            setCourier(null);
+            setErrorType("revoked");
+            setErrorMessage("This tracking link is no longer active.");
 
-        setCourier(null);
+            return;
+          }
 
-        setErrorType("revoked");
+          /*
+           * Delivered orders can still be viewed, but courier
+           * tracking and verification code must not be shown.
+           */
+          if (foundOrder.status === "DELIVERED") {
+            setOrder(foundOrder);
+            setCourier(null);
+            setErrorType("delivered");
+            setErrorMessage("This delivery has already been completed.");
+            setLastUpdated(new Date());
+            setShowVerificationCode(false);
 
-        setErrorMessage("This tracking link is no longer active.");
+            return;
+          }
 
-        return;
-      }
+          /*
+           * Cancelled and disputed orders can still display their
+           * final status without live courier information.
+           */
+          if (
+            foundOrder.status === "CANCELLED" ||
+            foundOrder.status === "DISPUTED"
+          ) {
+            setOrder(foundOrder);
+            setCourier(null);
+            setErrorType("completed");
+            setErrorMessage(getStatusDescription(foundOrder.status));
+            setLastUpdated(new Date());
+            setShowVerificationCode(false);
 
-      /*
-       * Check the optional tracking expiration date.
-       */
-      if (foundOrder.recipientTrackingExpiresAt) {
-        const expirationDate = new Date(foundOrder.recipientTrackingExpiresAt);
+            return;
+          }
 
-        if (
-          !Number.isNaN(expirationDate.getTime()) &&
-          expirationDate.getTime() <= Date.now()
-        ) {
-          setOrder(null);
+          /*
+           * Normal active tracking order.
+           */
+          setOrder(foundOrder);
+          setErrorType(null);
+          setErrorMessage("");
+          setLastUpdated(new Date());
 
-          setCourier(null);
-
-          setErrorType("expired");
-
-          setErrorMessage("This tracking link has expired.");
+          /*
+           * Hide the verification code whenever the order is not
+           * currently at the recipient's destination.
+           */
+          if (!canShowVerificationCode(foundOrder.status)) {
+            setShowVerificationCode(false);
+          }
 
           return;
+        } catch (error) {
+          lastError = error;
+
+          console.error(`Tracking query attempt ${attempt} failed:`, error);
+
+          /*
+           * A temporary DataStore/network error should also be
+           * retried instead of immediately showing an error page.
+           */
+          if (attempt < MAX_ATTEMPTS) {
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY));
+
+            continue;
+          }
         }
       }
 
       /*
-       * Once delivery is completed, stop exposing live courier
-       * tracking information.
-       *
-       * DELIVERED should only be reached after the courier has
-       * successfully verified the delivery verification code.
+       * Only show the server error after every attempt fails.
        */
-      if (foundOrder.status === "DELIVERED") {
-        setOrder(foundOrder);
+      console.error("RECIPIENT TRACKING FAILED AFTER ALL RETRIES:", lastError);
 
-        setCourier(null);
-
-        setErrorType("delivered");
-
-        setErrorMessage("This delivery has already been completed.");
-
-        setLastUpdated(new Date());
-
-        setShowVerificationCode(false);
-
-        return;
-      }
-
-      /*
-       * Handle cancelled and disputed deliveries.
-       */
-      if (
-        foundOrder.status === "CANCELLED" ||
-        foundOrder.status === "DISPUTED"
-      ) {
-        setOrder(foundOrder);
-
-        setCourier(null);
-
-        setErrorType("completed");
-
-        setErrorMessage(getStatusDescription(foundOrder.status));
-
-        setLastUpdated(new Date());
-
-        setShowVerificationCode(false);
-
-        return;
-      }
-
-      setOrder(foundOrder);
-
-      setErrorType(null);
-
-      setErrorMessage("");
-
-      setLastUpdated(new Date());
-
-      /*
-       * Hide the code whenever a fresh order record is loaded
-       * and the order is not at the destination.
-       */
-      if (!canShowVerificationCode(foundOrder.status)) {
-        setShowVerificationCode(false);
-      }
-    } catch (error) {
-      console.error("RECIPIENT TRACKING ORDER ERROR:", error);
-
+      setOrder(null);
+      setCourier(null);
       setErrorType("server");
-
       setErrorMessage(
         "We could not load this delivery right now. Please try again.",
       );
     } finally {
+      console.log("RECIPIENT TRACKING FINISHED — SETTING LOADING FALSE");
+
       setLoading(false);
     }
   }, [trackingToken]);
@@ -656,8 +697,8 @@ function RecipientTracking() {
   }, [order?.id, order?.status]);
 
   /* =========================================================
-     LIVE ORDER SUBSCRIPTION
-  ========================================================= */
+   LIVE ORDER SUBSCRIPTION
+========================================================= */
 
   useEffect(() => {
     if (!trackingToken) {
@@ -665,28 +706,64 @@ function RecipientTracking() {
     }
 
     let subscription;
+    let isMounted = true;
 
-    try {
-      subscription = DataStore.observe(Order).subscribe(
-        ({ opType, element }) => {
-          if (!element) {
-            return;
-          }
+    const subscribeToOrderChanges = async () => {
+      try {
+        /*
+         * Give DataStore a chance to start synchronization before
+         * creating the observer.
+         */
+        try {
+          await DataStore.start();
+        } catch (syncError) {
+          console.warn(
+            "DataStore.start() warning during subscription:",
+            syncError,
+          );
+        }
 
-          if (element.recipientTrackingToken !== trackingToken) {
-            return;
-          }
+        if (!isMounted) {
+          return;
+        }
 
-          if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
-            fetchOrder();
-          }
-        },
-      );
-    } catch (error) {
-      console.error("ORDER TRACKING SUBSCRIPTION ERROR:", error);
-    }
+        subscription = DataStore.observe(Order).subscribe(
+          ({ opType, element }) => {
+            if (!element) {
+              return;
+            }
+
+            /*
+             * Only react to changes belonging to this tracking link.
+             */
+            if (element.recipientTrackingToken !== trackingToken) {
+              return;
+            }
+
+            if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
+              console.log(
+                "Recipient tracking order change detected:",
+                opType,
+                element,
+              );
+
+              /*
+               * Re-fetch the complete order so that all related
+               * fields are refreshed consistently.
+               */
+              fetchOrder();
+            }
+          },
+        );
+      } catch (error) {
+        console.error("ORDER TRACKING SUBSCRIPTION ERROR:", error);
+      }
+    };
+
+    subscribeToOrderChanges();
 
     return () => {
+      isMounted = false;
       subscription?.unsubscribe?.();
     };
   }, [trackingToken, fetchOrder]);
@@ -901,7 +978,6 @@ function RecipientTracking() {
     errorType === "invalid" ||
     errorType === "disabled" ||
     errorType === "revoked" ||
-    errorType === "expired" ||
     errorType === "server"
   ) {
     return (
@@ -926,15 +1002,13 @@ function RecipientTracking() {
           <div className="recipientTrackingStateIcon">!</div>
 
           <h2>
-            {errorType === "expired"
-              ? "Tracking link expired"
-              : errorType === "revoked"
-                ? "Tracking link inactive"
-                : errorType === "disabled"
-                  ? "Tracking unavailable"
-                  : errorType === "server"
-                    ? "Something went wrong"
-                    : "Tracking link not found"}
+            {errorType === "revoked"
+              ? "Tracking link inactive"
+              : errorType === "disabled"
+                ? "Tracking unavailable"
+                : errorType === "server"
+                  ? "Something went wrong"
+                  : "Tracking link not found"}
           </h2>
 
           <p>{errorMessage}</p>
