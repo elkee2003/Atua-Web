@@ -27,11 +27,11 @@
         },
         "assignOrder": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/assignOrder-716f48626452514b6443-build.zip"
+          "s3Key": "amplify-builds/assignOrder-31475143712f524d6f47-build.zip"
         },
         "reassignOrder": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/reassignOrder-58534777635076475670-build.zip"
+          "s3Key": "amplify-builds/reassignOrder-414f684f45355332796a-build.zip"
         },
         "forceDispatch": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
@@ -43,11 +43,11 @@
         },
         "releaseFunds": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/releaseFunds-3651526365503847487a-build.zip"
+          "s3Key": "amplify-builds/releaseFunds-46373058355a4752572f-build.zip"
         },
         "processPayouts": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/processPayouts-356b645a594d546c3270-build.zip",
+          "s3Key": "amplify-builds/processPayouts-463936782f44762f3258-build.zip",
           "paystackSecretKey": "sk_test_02e162f3ef2ad01ddf01867bb9fbad18a5618fb0"
         },
         "verifyAtuaPayment": {
@@ -62,7 +62,7 @@
         },
         "allocateCourierEarnings": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/allocateCourierEarnings-6630446b6e4735457576-build.zip"
+          "s3Key": "amplify-builds/allocateCourierEarnings-5970696f7a6465714a57-build.zip"
         },
         "releaseCourierMilestoneFunds": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",

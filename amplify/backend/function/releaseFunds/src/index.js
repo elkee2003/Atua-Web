@@ -2,60 +2,158 @@ const fetch = require("node-fetch");
 
 /*
 ============================================================
-ATUA — RELEASE FUNDS
+ATUA — RELEASE COURIER MILESTONE FUNDS
 ============================================================
 
 PURPOSE
 -------
 
-Release a courier's allocated earnings after the order has
-been successfully completed.
+This Lambda handles ONLY MAXI courier earnings releases.
 
-FLOW:
+MAXI earnings are released in two milestones:
 
-    Order DELIVERED
-          ↓
-    Check admin hold
-          ↓
-    pendingBalance -= courierEarnings
-          ↓
-    availableBalance += courierEarnings
-          ↓
-    Transaction PENDING → COMPLETED
-          ↓
-    Order fundsStatus = RELEASED
+    1. PICKED_UP
+           ↓
+       50% released
+
+    2. DELIVERED
+           ↓
+       Remaining amount released
 
 
-THIS FUNCTION DOES NOT:
+============================================================
+MAXI FINANCIAL FLOW
+============================================================
 
-    - Process customer payment
-    - Verify Paystack
-    - Allocate courier earnings
-    - Generate delivery verification codes
-    - Pay courier's bank account
-    - Process Paystack transfers
-    - Change lifetimeEarnings
+Payment succeeds
+        ↓
+Paystack webhook
+        ↓
+paymentStatus = PAID
+fundsStatus = HELD
+earningsAllocationStatus = null
+        ↓
+Courier assigned
+        ↓
+allocateCourierEarnings
+        ↓
+earningsAllocationStatus = ALLOCATED
+        ↓
+100% courier earnings in pendingBalance
+        ↓
+PICKED_UP
+        ↓
+50% → availableBalance
+        ↓
+fundsStatus = PARTIALLY_RELEASED
+        ↓
+DELIVERED
+        ↓
+remaining amount → availableBalance
+        ↓
+fundsStatus = RELEASED
 
-PAYOUTS ARE A SEPARATE PROCESS.
+
+============================================================
+IMPORTANT
+============================================================
+
+This Lambda:
+
+    DOES NOT process customer payment.
+
+    DOES NOT allocate courier earnings.
+
+    DOES NOT change lifetimeEarnings.
+
+    DOES NOT process Paystack payouts.
+
+    DOES NOT transfer money to the courier's bank.
+
+    DOES NOT handle Micro/Moto normal releases.
+
+    DOES move money:
+
+        pendingBalance
+              ↓
+        availableBalance
+
+
+============================================================
+MILESTONE ACCOUNTING
+============================================================
+
+Example:
+
+    courierEarnings = ₦20,000
+
+At allocation:
+
+    pendingBalance += ₦20,000
+
+At PICKED_UP:
+
+    availableBalance += ₦10,000
+    pendingBalance   -= ₦10,000
+
+At DELIVERED:
+
+    availableBalance += ₦10,000
+    pendingBalance   -= ₦10,000
+
+Final:
+
+    availableBalance = +₦20,000
+    pendingBalance   = original amount
+    lifetimeEarnings = +₦20,000
+
+
+============================================================
+ODD AMOUNTS
+============================================================
+
+The Lambda calculates the first release as:
+
+    earnings / 2
+
+rounded to 2 decimal places.
+
+Example:
+
+    earnings = ₦20,001
+
+PICKED_UP:
+
+    ₦10,000.50
+
+DELIVERED:
+
+    ₦10,000.50
+
+Total:
+
+    ₦20,001
+
 
 ============================================================
 EXPECTED EVENT
 ============================================================
 
-{
-    "orderID": "ORDER-ID"
-}
-
-Optional:
+PICKUP:
 
 {
     "orderID": "ORDER-ID",
-    "releaseType": "MANUAL"
+    "milestone": "PICKED_UP"
 }
 
-If releaseType is not supplied:
 
-    AUTOMATIC
+DELIVERY:
+
+{
+    "orderID": "ORDER-ID",
+    "milestone": "DELIVERED"
+}
+
 
 ============================================================
 */
@@ -73,220 +171,174 @@ const API_KEY = process.env.API_ATUA_GRAPHQLAPIKEYOUTPUT;
 ========================================================== */
 
 exports.handler = async (event) => {
-  console.log("RELEASE FUNDS EVENT:", JSON.stringify(event));
+  console.log("==================================================");
+
+  console.log("ATUA — RELEASE COURIER MILESTONE FUNDS");
+
+  console.log("EVENT:", JSON.stringify(event));
+
+  console.log("==================================================");
 
   let orderID = null;
 
+  let order = null;
+
+  let wallet = null;
+
+  let transaction = null;
+
+  let updatedWallet = null;
+
+  let walletUpdated = false;
+
+  let transactionUpdated = false;
+
+  let orderUpdated = false;
+
+  let walletBeforeRelease = null;
+
   try {
-    /*
-    ----------------------------------------------------------
-    1. GET ORDER ID
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       1. GET ORDER ID
+    ====================================================== */
 
     orderID =
-      event?.orderID || event?.arguments?.orderID || event?.detail?.orderID;
+      event?.orderID ||
+      event?.arguments?.orderID ||
+      event?.detail?.orderID ||
+      event?.detail?.orderId;
 
     if (!orderID) {
-      throw new Error("orderID is required");
+      throw new Error("orderID is required.");
     }
 
-    console.log("Releasing funds for order:", orderID);
+    /* ======================================================
+       2. GET MILESTONE
+    ====================================================== */
 
-    /*
-    ----------------------------------------------------------
-    2. GET ORDER
-    ----------------------------------------------------------
-    */
+    let milestone =
+      event?.milestone ||
+      event?.arguments?.milestone ||
+      event?.detail?.milestone ||
+      null;
 
-    const getOrderQuery = `
-      query GetOrder($id: ID!) {
+    if (!milestone) {
+      throw new Error("milestone is required. Use PICKED_UP or DELIVERED.");
+    }
 
-        getOrder(id: $id) {
+    milestone = String(milestone).toUpperCase();
 
-          id
-
-          status
-
-          paymentStatus
-
-          payoutStatus
-
-          fundsStatus
-
-          fundsReleaseBlocked
-
-          fundsHoldReason
-
-          fundsHeldBy
-
-          fundsHeldAt
-
-          fundsReleasedAt
-
-          fundsReleaseType
-
-          earningsAllocationStatus
-
-          earningsAllocatedAt
-
-          assignedCourierId
-
-          courierEarnings
-
-          paymentID
-
-          paymentReference
-        }
-      }
-    `;
-
-    const orderResponse = await graphqlRequest(getOrderQuery, {
-      id: orderID,
-    });
-
-    if (orderResponse.errors) {
+    if (milestone !== "PICKED_UP" && milestone !== "DELIVERED") {
       throw new Error(
-        `Failed to fetch order: ${JSON.stringify(orderResponse.errors)}`,
+        `Unsupported milestone: ${milestone}. Use PICKED_UP or DELIVERED.`,
       );
     }
 
-    const order = orderResponse?.data?.getOrder;
+    console.log("ORDER ID:", orderID);
+
+    console.log("MILESTONE:", milestone);
+
+    /* ======================================================
+       3. GET ORDER
+    ====================================================== */
+
+    order = await getOrder(orderID);
 
     if (!order) {
-      throw new Error(`Order not found: ${orderID}`);
+      throw new Error(`Order ${orderID} was not found.`);
+    }
+
+    if (order._deleted === true) {
+      throw new Error(`Order ${orderID} has been deleted.`);
     }
 
     console.log("ORDER:", JSON.stringify(order));
 
-    /*
-    ----------------------------------------------------------
-    3. IDEMPOTENCY CHECK
-    ----------------------------------------------------------
+    /* ======================================================
+       4. VERIFY PAYMENT
+    ====================================================== */
 
-    If the funds have already been released, do nothing.
-
-    This protects against:
-
-        - duplicate Lambda invocation
-        - retries
-        - accidental manual re-runs
-        - network retries
-    ----------------------------------------------------------
-    */
-
-    if (order.fundsStatus === "RELEASED") {
-      console.log(`Funds already released for order ${orderID}`);
-
-      return successResponse({
-        message: "Funds already released",
-
-        orderID,
-
-        status: "RELEASED",
-
-        alreadyReleased: true,
-      });
-    }
-
-    /*
-    ----------------------------------------------------------
-    4. VERIFY ORDER STATUS
-    ----------------------------------------------------------
-
-    Funds should only be released after the delivery has
-    actually been completed.
-
-    Your schema defines DELIVERED as the completed delivery
-    state.
-
-    ----------------------------------------------------------
-    */
-
-    if (order.status !== "DELIVERED") {
+    if (order.paymentStatus !== "PAID") {
       throw new Error(
-        `Order ${orderID} is not DELIVERED. Current status: ${order.status}`,
+        `Order ${orderID} is not PAID. Current paymentStatus: ${order.paymentStatus}`,
       );
     }
 
-    /*
-    ----------------------------------------------------------
-    5. VERIFY EARNINGS WERE ALLOCATED
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       5. VERIFY EARNINGS ALLOCATION
+    ====================================================== */
 
     if (order.earningsAllocationStatus !== "ALLOCATED") {
       throw new Error(
-        `Courier earnings have not been allocated for order ${orderID}. Current allocation status: ${order.earningsAllocationStatus}`,
+        `Courier earnings have not been allocated for order ${orderID}. Current earningsAllocationStatus: ${order.earningsAllocationStatus}`,
       );
     }
 
-    /*
-    ----------------------------------------------------------
-    6. VERIFY COURIER
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       6. VERIFY COURIER
+    ====================================================== */
 
     const courierID = order.assignedCourierId;
 
     if (!courierID) {
-      throw new Error(`Order ${orderID} has no assigned courier`);
+      throw new Error(`Order ${orderID} has no assigned courier.`);
     }
 
-    /*
-    ----------------------------------------------------------
-    7. VERIFY EARNINGS
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       7. VERIFY COURIER EARNINGS
+    ====================================================== */
 
-    const earnings = Number(order.courierEarnings || 0);
+    const earnings = normalizeMoney(order.courierEarnings);
 
-    if (!Number.isFinite(earnings) || earnings <= 0) {
+    if (earnings <= 0) {
       throw new Error(
         `Invalid courier earnings for order ${orderID}: ${order.courierEarnings}`,
       );
     }
 
-    console.log("Courier:", courierID);
+    console.log("COURIER:", courierID);
 
-    console.log("Courier earnings:", earnings);
+    console.log("TOTAL COURIER EARNINGS:", earnings);
 
-    /*
-    ----------------------------------------------------------
-    8. CHECK ADMIN HOLD
-    ----------------------------------------------------------
+    /* ======================================================
+       8. VERIFY THIS IS A MAXI ORDER
+    ====================================================== */
 
-    THIS IS VERY IMPORTANT.
+    const transportationType = String(
+      order.transportationType || "",
+    ).toUpperCase();
 
-    An admin can deliberately prevent automatic release by
-    setting:
+    const vehicleClass = String(order.vehicleClass || "").toUpperCase();
 
-        fundsReleaseBlocked = true
+    const isMaxi = transportationType === "MAXI" || vehicleClass === "MAXI";
 
-    Even if the order is DELIVERED, the money stays in:
+    if (!isMaxi) {
+      throw new Error(
+        `Order ${orderID} is not a MAXI order. Normal Micro/Moto orders must use releaseFunds.`,
+      );
+    }
 
-        pendingBalance
-
-    until the admin removes the hold.
-
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       9. CHECK ADMIN HOLD
+    ====================================================== */
 
     if (order.fundsReleaseBlocked === true) {
-      console.log(`Funds release blocked by admin for order ${orderID}`);
+      console.log(`Funds release blocked by admin for order ${orderID}.`);
 
       return successResponse({
-        message: "Funds release is blocked by admin",
+        message: "Funds release is blocked by admin.",
 
         orderID,
 
         courierID,
 
+        milestone,
+
         amount: earnings,
 
-        status: "HELD",
-
         fundsStatus: order.fundsStatus,
+
+        fundsReleasedAmount: normalizeMoney(order.fundsReleasedAmount),
 
         holdReason: order.fundsHoldReason || null,
 
@@ -298,673 +350,1303 @@ exports.handler = async (event) => {
       });
     }
 
-    /*
-    ----------------------------------------------------------
-    9. VERIFY FUNDS ARE CURRENTLY HELD
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       10. GET COURIER
+    ====================================================== */
 
-    if (order.fundsStatus !== "HELD") {
-      throw new Error(
-        `Order ${orderID} has unexpected fundsStatus: ${order.fundsStatus}`,
-      );
-    }
-
-    /*
-    ----------------------------------------------------------
-    10. GET COURIER WALLET
-    ----------------------------------------------------------
-    */
-
-    const getCourierQuery = `
-      query GetCourier($id: ID!) {
-
-        getCourier(id: $id) {
-
-          id
-
-          firstName
-          lastName
-
-          walletID
-        }
-      }
-    `;
-
-    const courierResponse = await graphqlRequest(getCourierQuery, {
-      id: courierID,
-    });
-
-    if (courierResponse.errors) {
-      throw new Error(
-        `Failed to fetch courier: ${JSON.stringify(courierResponse.errors)}`,
-      );
-    }
-
-    const courier = courierResponse?.data?.getCourier;
+    const courier = await getCourier(courierID);
 
     if (!courier) {
-      throw new Error(`Courier not found: ${courierID}`);
+      throw new Error(`Courier ${courierID} was not found.`);
     }
 
-    /*
-    ----------------------------------------------------------
-    11. FIND COURIER WALLET
-    ----------------------------------------------------------
-
-    First attempt:
-
-        Courier.walletID
-
-    If that does not exist, search by:
-
-        ownerID
-        ownerType = COURIER
-
-    ----------------------------------------------------------
-    */
-
-    let wallet = null;
-
-    if (courier.walletID) {
-      const getWalletQuery = `
-        query GetWallet($id: ID!) {
-
-          getWallet(id: $id) {
-
-            id
-
-            ownerID
-            ownerType
-
-            availableBalance
-            pendingBalance
-            lifetimeEarnings
-          }
-        }
-      `;
-
-      const walletResponse = await graphqlRequest(getWalletQuery, {
-        id: courier.walletID,
-      });
-
-      if (walletResponse.errors) {
-        throw new Error(
-          `Failed to fetch wallet: ${JSON.stringify(walletResponse.errors)}`,
-        );
-      }
-
-      wallet = walletResponse?.data?.getWallet;
+    if (courier._deleted === true) {
+      throw new Error(`Courier ${courierID} has been deleted.`);
     }
 
-    /*
-    ----------------------------------------------------------
-    FALLBACK WALLET SEARCH
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       11. GET COURIER WALLET
+    ====================================================== */
+
+    wallet = await findCourierWallet(courier);
 
     if (!wallet) {
-      const listWalletsQuery = `
-        query ListWallets(
-          $filter: ModelWalletFilterInput
-        ) {
-
-          listWallets(
-            filter: $filter
-          ) {
-
-            items {
-
-              id
-
-              ownerID
-              ownerType
-
-              availableBalance
-              pendingBalance
-              lifetimeEarnings
-            }
-          }
-        }
-      `;
-
-      const walletResponse = await graphqlRequest(listWalletsQuery, {
-        filter: {
-          ownerID: {
-            eq: courierID,
-          },
-
-          ownerType: {
-            eq: "COURIER",
-          },
-        },
-      });
-
-      if (walletResponse.errors) {
-        throw new Error(
-          `Failed to search courier wallet: ${JSON.stringify(
-            walletResponse.errors,
-          )}`,
-        );
-      }
-
-      wallet = walletResponse?.data?.listWallets?.items?.[0];
+      throw new Error(`No wallet was found for courier ${courierID}.`);
     }
 
-    /*
-    ----------------------------------------------------------
-    12. WALLET MUST EXIST
-    ----------------------------------------------------------
-    */
-
-    if (!wallet) {
-      throw new Error(`Wallet not found for courier ${courierID}`);
-    }
-
-    /*
-    ----------------------------------------------------------
-    13. VERIFY WALLET OWNER
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       12. VERIFY WALLET OWNER
+    ====================================================== */
 
     if (wallet.ownerID !== courierID) {
       throw new Error(
-        `Wallet ${wallet.id} does not belong to courier ${courierID}`,
+        `Wallet ${wallet.id} does not belong to courier ${courierID}.`,
       );
     }
 
     if (wallet.ownerType !== "COURIER") {
-      throw new Error(`Wallet ${wallet.id} is not a courier wallet`);
+      throw new Error(`Wallet ${wallet.id} is not a COURIER wallet.`);
     }
 
     console.log("WALLET:", JSON.stringify(wallet));
 
-    /*
-    ----------------------------------------------------------
-    14. READ WALLET BALANCES
-    ----------------------------------------------------------
-    */
+    /* ======================================================
+       13. READ WALLET BALANCES
+    ====================================================== */
 
-    const currentPendingBalance = Number(wallet.pendingBalance || 0);
+    const currentPendingBalance = normalizeMoney(wallet.pendingBalance);
 
-    const currentAvailableBalance = Number(wallet.availableBalance || 0);
+    const currentAvailableBalance = normalizeMoney(wallet.availableBalance);
 
-    const currentLifetimeEarnings = Number(wallet.lifetimeEarnings || 0);
+    const currentLifetimeEarnings = normalizeMoney(wallet.lifetimeEarnings);
 
-    /*
-    ----------------------------------------------------------
-    15. VERIFY PENDING BALANCE
-    ----------------------------------------------------------
+    /* ======================================================
+       14. VERIFY WALLET BALANCES
+    ====================================================== */
 
-    We should NEVER release more money than is actually
-    sitting in pendingBalance.
+    if (currentPendingBalance < 0) {
+      throw new Error(`Wallet ${wallet.id} has a negative pendingBalance.`);
+    }
 
-    ----------------------------------------------------------
-    */
+    if (currentAvailableBalance < 0) {
+      throw new Error(`Wallet ${wallet.id} has a negative availableBalance.`);
+    }
 
-    if (currentPendingBalance < earnings) {
+    /* ======================================================
+       15. GET CURRENTLY RELEASED AMOUNT
+    ====================================================== */
+
+    const currentReleasedAmount = normalizeMoney(order.fundsReleasedAmount);
+
+    if (currentReleasedAmount < 0) {
+      throw new Error(`Order ${orderID} has an invalid fundsReleasedAmount.`);
+    }
+
+    if (currentReleasedAmount > earnings) {
       throw new Error(
-        `Insufficient pending balance for courier ${courierID}. ` +
-          `Pending: ${currentPendingBalance}, ` +
-          `Required: ${earnings}`,
+        `Order ${orderID} has already released ${currentReleasedAmount}, which is greater than total courier earnings ${earnings}.`,
       );
     }
 
-    /*
-    ----------------------------------------------------------
-    16. CALCULATE NEW BALANCES
-    ----------------------------------------------------------
+    /* ======================================================
+       16. PICKED_UP MILESTONE
+    ====================================================== */
 
-    pendingBalance
-        decreases
+    if (milestone === "PICKED_UP") {
+      /*
+       * PICKED_UP is the first Maxi release.
+       *
+       * We release exactly 50% of the total earnings.
+       */
 
-    availableBalance
-        increases
+      const firstReleaseAmount = normalizeMoney(earnings / 2);
 
-    lifetimeEarnings
-        DOES NOT CHANGE
+      /* ====================================================
+         IDEMPOTENCY CHECK
+      ====================================================
 
-    ----------------------------------------------------------
-    */
+         If fundsStatus is already PARTIALLY_RELEASED or
+         RELEASED, pickup has already been processed.
 
-    const newPendingBalance = currentPendingBalance - earnings;
+      ==================================================== */
 
-    const newAvailableBalance = currentAvailableBalance + earnings;
+      if (
+        order.fundsStatus === "PARTIALLY_RELEASED" ||
+        order.fundsStatus === "RELEASED"
+      ) {
+        console.log(`Pickup release already processed for order ${orderID}.`);
 
-    /*
-    Floating point protection.
+        return successResponse({
+          message: "Maxi pickup funds have already been released.",
 
-    Money should be stored consistently to two decimal places.
-    */
+          orderID,
 
-    const roundedPendingBalance = Number(newPendingBalance.toFixed(2));
+          courierID,
 
-    const roundedAvailableBalance = Number(newAvailableBalance.toFixed(2));
+          milestone: "PICKED_UP",
 
-    /*
-    ----------------------------------------------------------
-    17. UPDATE WALLET
-    ----------------------------------------------------------
-    */
+          amountReleased: currentReleasedAmount,
 
-    const updateWalletMutation = `
-      mutation UpdateWallet(
-        $input: UpdateWalletInput!
+          totalCourierEarnings: earnings,
+
+          fundsReleasedAmount: currentReleasedAmount,
+
+          fundsStatus: order.fundsStatus,
+
+          alreadyProcessed: true,
+        });
+      }
+
+      /* ====================================================
+         PICKUP MUST START FROM HELD
+      ==================================================== */
+
+      if (order.fundsStatus !== "HELD") {
+        throw new Error(
+          `Order ${orderID} has fundsStatus ${order.fundsStatus}. Maxi pickup release requires HELD.`,
+        );
+      }
+
+      /* ====================================================
+         VERIFY NO MONEY HAS ALREADY BEEN RELEASED
+      ==================================================== */
+
+      if (currentReleasedAmount > 0) {
+        throw new Error(
+          `Order ${orderID} has fundsReleasedAmount ${currentReleasedAmount} but fundsStatus is HELD. Manual reconciliation is required.`,
+        );
+      }
+
+      /* ====================================================
+         VERIFY PENDING BALANCE
+      ==================================================== */
+
+      if (currentPendingBalance < firstReleaseAmount) {
+        throw new Error(
+          `Insufficient pending balance. Pending: ${currentPendingBalance}. Required for pickup release: ${firstReleaseAmount}.`,
+        );
+      }
+
+      /* ====================================================
+         SAVE WALLET FOR ROLLBACK
+      ==================================================== */
+
+      walletBeforeRelease = {
+        availableBalance: currentAvailableBalance,
+
+        pendingBalance: currentPendingBalance,
+
+        lifetimeEarnings: currentLifetimeEarnings,
+
+        _version: wallet._version,
+      };
+
+      /* ====================================================
+         CALCULATE PICKUP BALANCES
+      ==================================================== */
+
+      const newPendingBalance = normalizeMoney(
+        currentPendingBalance - firstReleaseAmount,
+      );
+
+      const newAvailableBalance = normalizeMoney(
+        currentAvailableBalance + firstReleaseAmount,
+      );
+
+      console.log(
+        "MAXI PICKUP CALCULATION:",
+        JSON.stringify({
+          totalEarnings: earnings,
+
+          releaseAmount: firstReleaseAmount,
+
+          previousPendingBalance: currentPendingBalance,
+
+          newPendingBalance,
+
+          previousAvailableBalance: currentAvailableBalance,
+
+          newAvailableBalance,
+
+          lifetimeEarnings: currentLifetimeEarnings,
+        }),
+      );
+
+      /* ====================================================
+         FIND EARNINGS TRANSACTION
+      ==================================================== */
+
+      const transactionReference = `EARNINGS-${orderID}`;
+
+      transaction = await getTransactionByReference(transactionReference);
+
+      if (!transaction) {
+        throw new Error(
+          `Earnings transaction ${transactionReference} was not found. Allocation ledger must be reconciled before Maxi funds can be released.`,
+        );
+      }
+
+      /* ====================================================
+         VERIFY TRANSACTION
+      ==================================================== */
+
+      verifyEarningsTransaction({
+        transaction,
+
+        walletID: wallet.id,
+
+        earnings,
+      });
+
+      /* ====================================================
+         UPDATE WALLET
+      ==================================================== */
+
+      updatedWallet = await updateWallet(
+        wallet,
+
+        newAvailableBalance,
+
+        newPendingBalance,
+
+        currentLifetimeEarnings,
+      );
+
+      if (!updatedWallet) {
+        throw new Error(
+          `Wallet ${wallet.id} could not be updated for Maxi pickup release.`,
+        );
+      }
+
+      walletUpdated = true;
+
+      console.log("WALLET UPDATED AT PICKUP:", JSON.stringify(updatedWallet));
+
+      /* ====================================================
+         UPDATE ORDER
+      ==================================================== */
+
+      const pickupTimestamp = new Date().toISOString();
+
+      const updatedOrder = await finalizePickupRelease({
+        order,
+
+        firstReleaseAmount,
+
+        pickupTimestamp,
+      });
+
+      if (!updatedOrder) {
+        throw new Error(
+          `Order ${orderID} could not be marked PARTIALLY_RELEASED after pickup.`,
+        );
+      }
+
+      orderUpdated = true;
+
+      console.log("ORDER UPDATED AT PICKUP:", JSON.stringify(updatedOrder));
+
+      /* ====================================================
+         SUCCESS — PICKUP
+      ==================================================== */
+
+      return successResponse({
+        message: "50% of Maxi courier earnings released at pickup.",
+
+        orderID,
+
+        courierID,
+
+        milestone: "PICKED_UP",
+
+        amountReleased: firstReleaseAmount,
+
+        totalCourierEarnings: earnings,
+
+        fundsReleasedAmount: firstReleaseAmount,
+
+        remainingPendingBalance: newPendingBalance,
+
+        availableBalance: newAvailableBalance,
+
+        lifetimeEarnings: currentLifetimeEarnings,
+
+        fundsStatus: "PARTIALLY_RELEASED",
+
+        pickupFundsReleasedAt: pickupTimestamp,
+
+        releaseType: "MAXI_PICKUP",
+      });
+    }
+
+    /* ======================================================
+       17. DELIVERED MILESTONE
+    ====================================================== */
+
+    if (milestone === "DELIVERED") {
+      /*
+       * Delivery releases whatever remains.
+       *
+       * This is safer than simply saying "release 50%"
+       * because it handles odd amounts correctly.
+       *
+       * Example:
+       *
+       * ₦20,001
+       *
+       * Pickup:
+       * ₦10,000.50
+       *
+       * Delivery:
+       * ₦10,000.50
+       */
+
+      const remainingAmount = normalizeMoney(earnings - currentReleasedAmount);
+
+      /* ====================================================
+         IDEMPOTENCY
+      ==================================================== */
+
+      if (order.fundsStatus === "RELEASED") {
+        console.log(`Maxi funds already fully released for order ${orderID}.`);
+
+        return successResponse({
+          message: "Maxi courier earnings are already fully released.",
+
+          orderID,
+
+          courierID,
+
+          milestone: "DELIVERED",
+
+          amountReleased: earnings,
+
+          totalCourierEarnings: earnings,
+
+          fundsReleasedAmount: earnings,
+
+          fundsStatus: "RELEASED",
+
+          alreadyProcessed: true,
+        });
+      }
+
+      /* ====================================================
+         REMAINING AMOUNT MUST EXIST
+      ==================================================== */
+
+      if (remainingAmount <= 0) {
+        throw new Error(`Order ${orderID} has no remaining amount to release.`);
+      }
+
+      /* ====================================================
+         VALID DELIVERY STATES
+      ====================================================
+
+         Normally:
+
+             PARTIALLY_RELEASED
+
+         is expected.
+
+         HELD is accepted only if no amount has previously
+         been released. In that situation, the remaining
+         amount equals 100%.
+
+         We do NOT silently convert HELD into a normal
+         100% release without recording the Maxi delivery
+         release explicitly.
+
+      ==================================================== */
+
+      if (
+        order.fundsStatus !== "PARTIALLY_RELEASED" &&
+        order.fundsStatus !== "HELD"
+      ) {
+        throw new Error(
+          `Order ${orderID} has unexpected fundsStatus ${order.fundsStatus} for Maxi delivery release.`,
+        );
+      }
+
+      /* ====================================================
+         IMPORTANT SAFETY CHECK
+      ====================================================
+
+         If status is HELD but some amount has already been
+         recorded as released, something is inconsistent.
+
+      ==================================================== */
+
+      if (order.fundsStatus === "HELD" && currentReleasedAmount > 0) {
+        throw new Error(
+          `Order ${orderID} is HELD but already has ${currentReleasedAmount} released. Manual reconciliation is required.`,
+        );
+      }
+
+      /* ====================================================
+         VERIFY PENDING BALANCE
+      ==================================================== */
+
+      if (currentPendingBalance < remainingAmount) {
+        throw new Error(
+          `Insufficient pending balance. Pending: ${currentPendingBalance}. Required: ${remainingAmount}.`,
+        );
+      }
+
+      /* ====================================================
+         SAVE WALLET FOR ROLLBACK
+      ==================================================== */
+
+      walletBeforeRelease = {
+        availableBalance: currentAvailableBalance,
+
+        pendingBalance: currentPendingBalance,
+
+        lifetimeEarnings: currentLifetimeEarnings,
+
+        _version: wallet._version,
+      };
+
+      /* ====================================================
+         CALCULATE DELIVERY BALANCES
+      ==================================================== */
+
+      const newPendingBalance = normalizeMoney(
+        currentPendingBalance - remainingAmount,
+      );
+
+      const newAvailableBalance = normalizeMoney(
+        currentAvailableBalance + remainingAmount,
+      );
+
+      console.log(
+        "MAXI DELIVERY CALCULATION:",
+        JSON.stringify({
+          totalEarnings: earnings,
+
+          previouslyReleased: currentReleasedAmount,
+
+          remainingAmount,
+
+          previousPendingBalance: currentPendingBalance,
+
+          newPendingBalance,
+
+          previousAvailableBalance: currentAvailableBalance,
+
+          newAvailableBalance,
+
+          lifetimeEarnings: currentLifetimeEarnings,
+        }),
+      );
+
+      /* ====================================================
+         FIND EARNINGS TRANSACTION
+      ==================================================== */
+
+      const transactionReference = `EARNINGS-${orderID}`;
+
+      transaction = await getTransactionByReference(transactionReference);
+
+      if (!transaction) {
+        throw new Error(
+          `Earnings transaction ${transactionReference} was not found. Allocation ledger must be reconciled before Maxi funds can be released.`,
+        );
+      }
+
+      /* ====================================================
+         VERIFY TRANSACTION
+      ==================================================== */
+
+      verifyEarningsTransaction({
+        transaction,
+
+        walletID: wallet.id,
+
+        earnings,
+      });
+
+      /* ====================================================
+         UPDATE WALLET
+      ==================================================== */
+
+      updatedWallet = await updateWallet(
+        wallet,
+
+        newAvailableBalance,
+
+        newPendingBalance,
+
+        currentLifetimeEarnings,
+      );
+
+      if (!updatedWallet) {
+        throw new Error(
+          `Wallet ${wallet.id} could not be updated for Maxi delivery release.`,
+        );
+      }
+
+      walletUpdated = true;
+
+      console.log("WALLET UPDATED AT DELIVERY:", JSON.stringify(updatedWallet));
+
+      /* ====================================================
+         UPDATE ORDER
+      ==================================================== */
+
+      const deliveryTimestamp = new Date().toISOString();
+
+      const finalReleasedAmount = earnings;
+
+      const updatedOrder = await finalizeDeliveryRelease({
+        order,
+
+        finalReleasedAmount,
+
+        deliveryTimestamp,
+      });
+
+      if (!updatedOrder) {
+        throw new Error(
+          `Order ${orderID} could not be marked RELEASED after Maxi delivery.`,
+        );
+      }
+
+      orderUpdated = true;
+
+      console.log("ORDER UPDATED AT DELIVERY:", JSON.stringify(updatedOrder));
+
+      /* ====================================================
+         SUCCESS — DELIVERY
+      ==================================================== */
+
+      return successResponse({
+        message: "Remaining Maxi courier earnings released at delivery.",
+
+        orderID,
+
+        courierID,
+
+        milestone: "DELIVERED",
+
+        amountReleased: remainingAmount,
+
+        totalCourierEarnings: earnings,
+
+        previouslyReleased: currentReleasedAmount,
+
+        fundsReleasedAmount: finalReleasedAmount,
+
+        remainingPendingBalance: newPendingBalance,
+
+        availableBalance: newAvailableBalance,
+
+        lifetimeEarnings: currentLifetimeEarnings,
+
+        fundsStatus: "RELEASED",
+
+        fundsReleasedAt: deliveryTimestamp,
+
+        releaseType: "MAXI_DELIVERY",
+      });
+    }
+
+    throw new Error(`Unsupported milestone: ${milestone}`);
+  } catch (error) {
+    /* ======================================================
+       ERROR LOGGING
+    ====================================================== */
+
+    console.error("==================================================");
+
+    console.error("ATUA — MAXI MILESTONE RELEASE FAILED");
+
+    console.error("MESSAGE:", error?.message);
+
+    console.error("STACK:", error?.stack);
+
+    console.error("==================================================");
+
+    /* ======================================================
+       COMPENSATING WALLET ROLLBACK
+    ======================================================
+
+       If wallet was changed but Order was not successfully
+       finalized, restore the wallet.
+
+    ====================================================== */
+
+    if (
+      walletUpdated &&
+      !orderUpdated &&
+      updatedWallet &&
+      walletBeforeRelease
+    ) {
+      console.warn("Attempting Maxi wallet rollback...");
+
+      try {
+        const rolledBackWallet = await updateWallet(
+          updatedWallet,
+
+          walletBeforeRelease.availableBalance,
+
+          walletBeforeRelease.pendingBalance,
+
+          walletBeforeRelease.lifetimeEarnings,
+        );
+
+        if (!rolledBackWallet) {
+          throw new Error("Wallet rollback returned no wallet.");
+        }
+
+        walletUpdated = false;
+
+        console.log(
+          "MAXI WALLET ROLLBACK SUCCESS:",
+          JSON.stringify(rolledBackWallet),
+        );
+      } catch (rollbackError) {
+        console.error("CRITICAL: MAXI WALLET ROLLBACK FAILED", rollbackError);
+
+        return errorResponse(error, {
+          orderID,
+
+          courierID: order?.assignedCourierId || null,
+
+          milestone: event?.milestone || event?.arguments?.milestone || null,
+
+          reconciliationRequired: true,
+
+          reason:
+            "Wallet was changed during the Maxi milestone release but could not be safely rolled back. Manual reconciliation is required before retrying.",
+        });
+      }
+    }
+
+    /* ======================================================
+       FINAL ERROR RESPONSE
+    ====================================================== */
+
+    return errorResponse(error, {
+      orderID,
+
+      courierID: order?.assignedCourierId || null,
+
+      milestone: event?.milestone || event?.arguments?.milestone || null,
+
+      reconciliationRequired: false,
+    });
+  }
+};
+
+/* ==========================================================
+   GET ORDER
+========================================================== */
+
+async function getOrder(orderID) {
+  const query = `
+    query GetOrder($id: ID!) {
+
+      getOrder(id: $id) {
+
+        id
+
+        status
+
+        paymentStatus
+
+        paymentID
+
+        paymentReference
+
+        payoutStatus
+
+        fundsStatus
+
+        fundsReleaseBlocked
+
+        fundsHoldReason
+
+        fundsHeldBy
+
+        fundsHeldAt
+
+        fundsReleasedAmount
+
+        pickupFundsReleasedAt
+
+        fundsReleasedAt
+
+        fundsReleaseType
+
+        earningsAllocationStatus
+
+        earningsAllocatedAt
+
+        assignedCourierId
+
+        courierEarnings
+
+        transportationType
+
+        vehicleClass
+
+        _version
+
+        _lastChangedAt
+
+        _deleted
+
+      }
+
+    }
+  `;
+
+  const data = await graphqlRequest(query, {
+    id: orderID,
+  });
+
+  return data?.getOrder || null;
+}
+
+/* ==========================================================
+   GET COURIER
+========================================================== */
+
+async function getCourier(courierID) {
+  const query = `
+    query GetCourier($id: ID!) {
+
+      getCourier(id: $id) {
+
+        id
+
+        firstName
+
+        lastName
+
+        walletID
+
+        _version
+
+        _lastChangedAt
+
+        _deleted
+
+      }
+
+    }
+  `;
+
+  const data = await graphqlRequest(query, {
+    id: courierID,
+  });
+
+  return data?.getCourier || null;
+}
+
+/* ==========================================================
+   FIND COURIER WALLET
+========================================================== */
+
+async function findCourierWallet(courier) {
+  let wallet = null;
+
+  /* ========================================================
+     FIRST: Courier.walletID
+  ======================================================== */
+
+  if (courier.walletID) {
+    wallet = await getWalletByID(courier.walletID);
+  }
+
+  /* ========================================================
+     FALLBACK: ownerID + ownerType
+  ======================================================== */
+
+  if (!wallet) {
+    wallet = await getWalletByOwner(courier.id);
+  }
+
+  return wallet || null;
+}
+
+/* ==========================================================
+   GET WALLET BY ID
+========================================================== */
+
+async function getWalletByID(walletID) {
+  const query = `
+    query GetWallet($id: ID!) {
+
+      getWallet(id: $id) {
+
+        id
+
+        ownerID
+
+        ownerType
+
+        availableBalance
+
+        pendingBalance
+
+        lifetimeEarnings
+
+        _version
+
+        _lastChangedAt
+
+        _deleted
+
+      }
+
+    }
+  `;
+
+  const data = await graphqlRequest(query, {
+    id: walletID,
+  });
+
+  return data?.getWallet || null;
+}
+
+/* ==========================================================
+   GET WALLET BY OWNER
+========================================================== */
+
+async function getWalletByOwner(courierID) {
+  const query = `
+    query ListWallets(
+      $filter: ModelWalletFilterInput
+    ) {
+
+      listWallets(
+
+        filter: $filter
+
+        limit: 10
+
       ) {
 
-        updateWallet(
-          input: $input
-        ) {
+        items {
 
           id
+
+          ownerID
+
+          ownerType
 
           availableBalance
 
           pendingBalance
 
           lifetimeEarnings
+
+          _version
+
+          _lastChangedAt
+
+          _deleted
+
         }
+
       }
-    `;
 
-    const walletUpdateResponse = await graphqlRequest(updateWalletMutation, {
-      input: {
-        id: wallet.id,
+    }
+  `;
 
-        availableBalance: roundedAvailableBalance,
-
-        pendingBalance: roundedPendingBalance,
-
-        /*
-            IMPORTANT:
-
-            lifetimeEarnings is intentionally NOT changed.
-            */
+  const data = await graphqlRequest(query, {
+    filter: {
+      ownerID: {
+        eq: courierID,
       },
-    });
 
-    if (walletUpdateResponse.errors) {
-      throw new Error(
-        `Failed to release wallet funds: ${JSON.stringify(
-          walletUpdateResponse.errors,
-        )}`,
-      );
-    }
-
-    console.log(
-      "WALLET AFTER RELEASE:",
-      JSON.stringify(walletUpdateResponse?.data?.updateWallet),
-    );
-
-    /*
-    ----------------------------------------------------------
-    18. FIND THE EARNINGS TRANSACTION
-    ----------------------------------------------------------
-
-    allocateCourierEarnings creates:
-
-        CREDIT
-        PENDING
-
-    We now change that transaction to:
-
-        CREDIT
-        COMPLETED
-
-    ----------------------------------------------------------
-    */
-
-    const transactionReference = `EARNINGS-${orderID}`;
-
-    const findTransactionQuery = `
-      query ListTransactions(
-        $filter: ModelTransactionFilterInput
-      ) {
-
-        listTransactions(
-          filter: $filter
-        ) {
-
-          items {
-
-            id
-
-            walletID
-
-            type
-
-            amount
-
-            description
-
-            orderID
-
-            paymentID
-
-            reference
-
-            status
-          }
-        }
-      }
-    `;
-
-    const transactionResponse = await graphqlRequest(findTransactionQuery, {
-      filter: {
-        reference: {
-          eq: transactionReference,
-        },
+      ownerType: {
+        eq: "COURIER",
       },
-    });
-
-    if (transactionResponse.errors) {
-      throw new Error(
-        `Failed to find earnings transaction: ${JSON.stringify(
-          transactionResponse.errors,
-        )}`,
-      );
-    }
-
-    const transaction = transactionResponse?.data?.listTransactions?.items?.[0];
-
-    /*
-    ----------------------------------------------------------
-    19. UPDATE TRANSACTION
-    ----------------------------------------------------------
-    */
-
-    if (transaction) {
-      /*
-      Only change the transaction to COMPLETED if it is
-      currently pending.
-
-      If it is already completed, leave it alone.
-      */
-
-      if (transaction.status === "PENDING") {
-        const updateTransactionMutation = `
-          mutation UpdateTransaction(
-            $input: UpdateTransactionInput!
-          ) {
-
-            updateTransaction(
-              input: $input
-            ) {
-
-              id
-
-              walletID
-
-              type
-
-              amount
-
-              description
-
-              orderID
-
-              paymentID
-
-              reference
-
-              status
-            }
-          }
-        `;
-
-        const updateTransactionResponse = await graphqlRequest(
-          updateTransactionMutation,
-          {
-            input: {
-              id: transaction.id,
-
-              status: "COMPLETED",
-
-              description:
-                "Courier earnings released and made available for payout",
-            },
-          },
-        );
-
-        if (updateTransactionResponse.errors) {
-          throw new Error(
-            `Wallet was updated but transaction could not be completed: ${JSON.stringify(
-              updateTransactionResponse.errors,
-            )}`,
-          );
-        }
-
-        console.log(
-          "TRANSACTION COMPLETED:",
-          JSON.stringify(updateTransactionResponse?.data?.updateTransaction),
-        );
-      } else if (transaction.status === "COMPLETED") {
-        console.log("Transaction already completed");
-      } else {
-        throw new Error(
-          `Earnings transaction has unexpected status: ${transaction.status}`,
-        );
-      }
-    } else {
-      /*
-      This is unusual.
-
-      allocateCourierEarnings should have created the
-      transaction before release.
-
-      We do NOT silently create a new transaction here because
-      the wallet has already been changed.
-
-      Throwing an error makes the problem visible and
-      prevents us from pretending the ledger is complete.
-      */
-
-      throw new Error(
-        `Earnings transaction ${transactionReference} was not found`,
-      );
-    }
-
-    /*
-    ----------------------------------------------------------
-    20. DETERMINE RELEASE TYPE
-    ----------------------------------------------------------
-
-    Because fundsReleaseType is a String in your schema,
-    we can safely store:
-
-        AUTOMATIC
-
-    or:
-
-        MANUAL
-
-    ----------------------------------------------------------
-    */
-
-    const releaseType =
-      event?.releaseType || event?.arguments?.releaseType || "AUTOMATIC";
-
-    /*
-    ----------------------------------------------------------
-    21. UPDATE ORDER
-    ----------------------------------------------------------
-
-    The money is now:
-
-        pendingBalance → availableBalance
-
-    Therefore the order's funds are RELEASED.
-
-    ----------------------------------------------------------
-    */
-
-    const releaseTimestamp = new Date().toISOString();
-
-    const updateOrderMutation = `
-      mutation UpdateOrder(
-        $input: UpdateOrderInput!
-      ) {
-
-        updateOrder(
-          input: $input
-        ) {
-
-          id
-
-          fundsStatus
-
-          fundsReleasedAt
-
-          fundsReleaseType
-
-          fundsReleaseBlocked
-
-          earningsAllocationStatus
-
-          payoutStatus
-        }
-      }
-    `;
-
-    const orderUpdateResponse = await graphqlRequest(updateOrderMutation, {
-      input: {
-        id: orderID,
-
-        fundsStatus: "RELEASED",
-
-        fundsReleasedAt: releaseTimestamp,
-
-        fundsReleaseType: releaseType,
-
-        /*
-            We are NOT changing:
-
-                fundsReleaseBlocked
-
-            The admin hold state is preserved.
-
-            In normal operation it should already be false.
-            */
-      },
-    });
-
-    if (orderUpdateResponse.errors) {
-      throw new Error(
-        `Wallet and transaction were updated but order could not be marked RELEASED: ${JSON.stringify(
-          orderUpdateResponse.errors,
-        )}`,
-      );
-    }
-
-    console.log(
-      "ORDER FUNDS RELEASED:",
-      JSON.stringify(orderUpdateResponse?.data?.updateOrder),
-    );
-
-    /*
-    ----------------------------------------------------------
-    22. SUCCESS
-    ----------------------------------------------------------
-    */
-
-    return successResponse({
-      message: "Courier funds released successfully",
-
-      orderID,
-
-      courierID,
-
-      amount: earnings,
-
-      walletID: wallet.id,
-
-      previousPendingBalance: currentPendingBalance,
-
-      newPendingBalance: roundedPendingBalance,
-
-      previousAvailableBalance: currentAvailableBalance,
-
-      newAvailableBalance: roundedAvailableBalance,
-
-      lifetimeEarnings: currentLifetimeEarnings,
-
-      releaseType: releaseType,
-
-      fundsStatus: "RELEASED",
-
-      transactionStatus: "COMPLETED",
-    });
-  } catch (error) {
-    console.error("RELEASE FUNDS ERROR:", error);
-
-    /*
-    ----------------------------------------------------------
-    23. ERROR RESPONSE
-    ----------------------------------------------------------
-    */
-
-    return {
-      statusCode: 500,
-
-      body: JSON.stringify({
-        success: false,
-
-        message: error.message || "Funds release failed",
-
-        orderID,
-      }),
-    };
-  }
-};
-
-/* ==========================================================
-   GRAPHQL REQUEST HELPER
-========================================================== */
-
-async function graphqlRequest(query, variables = {}) {
-  if (!GRAPHQL_ENDPOINT) {
-    throw new Error("Missing API_ATUA_GRAPHQLAPIENDPOINTOUTPUT");
-  }
-
-  if (!API_KEY) {
-    throw new Error("Missing API_ATUA_GRAPHQLAPIKEYOUTPUT");
-  }
-
-  const response = await fetch(GRAPHQL_ENDPOINT, {
-    method: "POST",
-
-    headers: {
-      "Content-Type": "application/json",
-
-      "x-api-key": API_KEY,
     },
-
-    body: JSON.stringify({
-      query,
-
-      variables,
-    }),
   });
 
-  const responseText = await response.text();
+  const wallets = data?.listWallets?.items || [];
 
-  let responseData;
-
-  try {
-    responseData = JSON.parse(responseText);
-  } catch (parseError) {
-    throw new Error(`GraphQL returned invalid JSON: ${responseText}`);
-  }
-
-  if (!response.ok) {
-    throw new Error(`GraphQL HTTP ${response.status}: ${responseText}`);
-  }
-
-  return responseData;
+  return (
+    wallets.find(
+      (wallet) =>
+        wallet &&
+        wallet._deleted !== true &&
+        wallet.ownerID === courierID &&
+        wallet.ownerType === "COURIER",
+    ) || null
+  );
 }
 
 /* ==========================================================
-   SUCCESS RESPONSE HELPER
+   GET EARNINGS TRANSACTION
+========================================================== */
+
+async function getTransactionByReference(reference) {
+  const query = `
+    query ListTransactions(
+      $filter: ModelTransactionFilterInput
+    ) {
+
+      listTransactions(
+
+        filter: $filter
+
+        limit: 10
+
+      ) {
+
+        items {
+
+          id
+
+          walletID
+
+          type
+
+          amount
+
+          description
+
+          orderID
+
+          paymentID
+
+          reference
+
+          status
+
+          _version
+
+          _lastChangedAt
+
+          _deleted
+
+        }
+
+      }
+
+    }
+  `;
+
+  const data = await graphqlRequest(query, {
+    filter: {
+      reference: {
+        eq: reference,
+      },
+    },
+  });
+
+  const transactions = data?.listTransactions?.items || [];
+
+  return (
+    transactions.find(
+      (transaction) =>
+        transaction &&
+        transaction._deleted !== true &&
+        transaction.reference === reference,
+    ) || null
+  );
+}
+
+/* ==========================================================
+   VERIFY EARNINGS TRANSACTION
+========================================================== */
+
+function verifyEarningsTransaction({ transaction, walletID, earnings }) {
+  /* ========================================================
+     WALLET
+  ======================================================== */
+
+  if (transaction.walletID !== walletID) {
+    throw new Error(
+      `Earnings transaction ${transaction.id} belongs to wallet ${transaction.walletID}, not wallet ${walletID}.`,
+    );
+  }
+
+  /* ========================================================
+     TYPE
+  ======================================================== */
+
+  if (transaction.type !== "CREDIT") {
+    throw new Error(
+      `Earnings transaction ${transaction.id} is not a CREDIT transaction.`,
+    );
+  }
+
+  /* ========================================================
+     AMOUNT
+  ======================================================== */
+
+  const transactionAmount = normalizeMoney(transaction.amount);
+
+  if (Math.abs(transactionAmount - earnings) > 0.01) {
+    throw new Error(
+      `Transaction amount ${transactionAmount} does not match courier earnings ${earnings}.`,
+    );
+  }
+
+  /* ========================================================
+     STATUS
+  ========================================================
+
+     The transaction created by allocateCourierEarnings
+     should still be PENDING while the courier's earnings
+     are pending.
+
+     We intentionally do not change the transaction here.
+
+  ======================================================== */
+
+  if (transaction.status !== "PENDING" && transaction.status !== "COMPLETED") {
+    throw new Error(
+      `Earnings transaction ${transaction.id} has unexpected status ${transaction.status}.`,
+    );
+  }
+}
+
+/* ==========================================================
+   UPDATE WALLET
+========================================================== */
+
+async function updateWallet(
+  wallet,
+  availableBalance,
+  pendingBalance,
+  lifetimeEarnings,
+) {
+  const mutation = `
+    mutation UpdateWallet(
+      $input: UpdateWalletInput!
+    ) {
+
+      updateWallet(
+        input: $input
+      ) {
+
+        id
+
+        ownerID
+
+        ownerType
+
+        availableBalance
+
+        pendingBalance
+
+        lifetimeEarnings
+
+        _version
+
+        _lastChangedAt
+
+      }
+
+    }
+  `;
+
+  const input = {
+    id: wallet.id,
+
+    availableBalance: normalizeMoney(availableBalance),
+
+    pendingBalance: normalizeMoney(pendingBalance),
+
+    lifetimeEarnings: normalizeMoney(lifetimeEarnings),
+  };
+
+  if (wallet._version !== undefined && wallet._version !== null) {
+    input._version = wallet._version;
+  }
+
+  const data = await graphqlRequest(mutation, {
+    input,
+  });
+
+  return data?.updateWallet || null;
+}
+
+/* ==========================================================
+   FINALIZE PICKUP RELEASE
+========================================================== */
+
+async function finalizePickupRelease({
+  order,
+  firstReleaseAmount,
+  pickupTimestamp,
+}) {
+  const mutation = `
+    mutation UpdateOrder(
+      $input: UpdateOrderInput!
+      $condition: ModelOrderConditionInput
+    ) {
+
+      updateOrder(
+
+        input: $input
+
+        condition: $condition
+
+      ) {
+
+        id
+
+        status
+
+        paymentStatus
+
+        fundsStatus
+
+        fundsReleasedAmount
+
+        pickupFundsReleasedAt
+
+        fundsReleasedAt
+
+        fundsReleaseType
+
+        earningsAllocationStatus
+
+        _version
+
+        _lastChangedAt
+
+      }
+
+    }
+  `;
+
+  const input = {
+    id: order.id,
+
+    fundsStatus: "PARTIALLY_RELEASED",
+
+    fundsReleasedAmount: normalizeMoney(firstReleaseAmount),
+
+    pickupFundsReleasedAt: pickupTimestamp,
+
+    fundsReleaseType: "MAXI_PICKUP",
+  };
+
+  if (order._version !== undefined && order._version !== null) {
+    input._version = order._version;
+  }
+
+  const condition = {
+    fundsStatus: {
+      eq: "HELD",
+    },
+
+    earningsAllocationStatus: {
+      eq: "ALLOCATED",
+    },
+  };
+
+  const data = await graphqlRequest(mutation, {
+    input,
+
+    condition,
+  });
+
+  return data?.updateOrder || null;
+}
+
+/* ==========================================================
+   FINALIZE DELIVERY RELEASE
+========================================================== */
+
+async function finalizeDeliveryRelease({
+  order,
+  finalReleasedAmount,
+  deliveryTimestamp,
+}) {
+  const mutation = `
+    mutation UpdateOrder(
+      $input: UpdateOrderInput!
+      $condition: ModelOrderConditionInput
+    ) {
+
+      updateOrder(
+
+        input: $input
+
+        condition: $condition
+
+      ) {
+
+        id
+
+        status
+
+        paymentStatus
+
+        fundsStatus
+
+        fundsReleasedAmount
+
+        pickupFundsReleasedAt
+
+        fundsReleasedAt
+
+        fundsReleaseType
+
+        earningsAllocationStatus
+
+        _version
+
+        _lastChangedAt
+
+      }
+
+    }
+  `;
+
+  const input = {
+    id: order.id,
+
+    fundsStatus: "RELEASED",
+
+    fundsReleasedAmount: normalizeMoney(finalReleasedAmount),
+
+    fundsReleasedAt: deliveryTimestamp,
+
+    fundsReleaseType: "MAXI_DELIVERY",
+  };
+
+  if (order._version !== undefined && order._version !== null) {
+    input._version = order._version;
+  }
+
+  /*
+   * Normally the order should be:
+
+       PARTIALLY_RELEASED
+
+   after pickup.
+
+   We also permit:
+
+       HELD
+
+   only when fundsReleasedAmount is zero.
+
+   The caller has already validated this state.
+  */
+
+  const condition = {
+    earningsAllocationStatus: {
+      eq: "ALLOCATED",
+    },
+  };
+
+  const data = await graphqlRequest(mutation, {
+    input,
+
+    condition,
+  });
+
+  return data?.updateOrder || null;
+}
+
+/* ==========================================================
+   MONEY NORMALIZER
+========================================================== */
+
+function normalizeMoney(value) {
+  const number = Number(value);
+
+  if (!Number.isFinite(number)) {
+    return 0;
+  }
+
+  return Number(number.toFixed(2));
+}
+
+/* ==========================================================
+   SUCCESS RESPONSE
 ========================================================== */
 
 function successResponse(data) {
@@ -978,901 +1660,24 @@ function successResponse(data) {
     }),
   };
 }
-const fetch = require("node-fetch");
-
-/*
-============================================================
-ATUA — RELEASE FUNDS
-============================================================
-
-PURPOSE
--------
-
-Release 100% of a courier's allocated earnings into the
-courier's available balance after a NORMAL delivery has been
-completed.
-
-NORMAL FLOW:
-
-    Order DELIVERED
-          ↓
-    Check admin hold
-          ↓
-    pendingBalance -= courierEarnings
-          ↓
-    availableBalance += courierEarnings
-          ↓
-    Earnings Transaction = COMPLETED
-          ↓
-    Order fundsStatus = RELEASED
-          ↓
-    Order fundsReleasedAmount = courierEarnings
-
-
-THIS FUNCTION DOES NOT:
-
-    - Process customer payment
-    - Verify Paystack payment
-    - Allocate courier earnings
-    - Generate delivery verification codes
-    - Pay courier's bank account
-    - Process Paystack transfers
-    - Change lifetimeEarnings
-    - Perform Maxi milestone releases
-
-MAXI RELEASES ARE HANDLED BY:
-
-    releaseCourierMilestoneFunds
-
-
-EXPECTED EVENT:
-
-{
-    "orderID": "ORDER-ID"
-}
-
-OPTIONAL:
-
-{
-    "orderID": "ORDER-ID",
-    "releaseType": "AUTOMATIC"
-}
-
-============================================================
-*/
 
 /* ==========================================================
-   ENVIRONMENT VARIABLES
+   ERROR RESPONSE
 ========================================================== */
 
-const GRAPHQL_ENDPOINT = process.env.API_ATUA_GRAPHQLAPIENDPOINTOUTPUT;
-
-const API_KEY = process.env.API_ATUA_GRAPHQLAPIKEYOUTPUT;
-
-/* ==========================================================
-   MAIN HANDLER
-========================================================== */
-
-exports.handler = async (event) => {
-  console.log("==========================================");
-
-  console.log("ATUA RELEASE FUNDS STARTED");
-
-  console.log("EVENT:", JSON.stringify(event));
-
-  console.log("==========================================");
-
-  let orderID = null;
-
-  try {
-    /* ======================================================
-       1. GET ORDER ID
-    ====================================================== */
-
-    orderID =
-      event?.orderID || event?.arguments?.orderID || event?.detail?.orderID;
-
-    if (!orderID) {
-      throw new Error("orderID is required.");
-    }
-
-    console.log("Releasing funds for order:", orderID);
-
-    /* ======================================================
-       2. GET ORDER
-    ====================================================== */
-
-    const getOrderQuery = `
-      query GetOrder($id: ID!) {
-
-        getOrder(id: $id) {
-
-          id
-
-          status
-
-          paymentStatus
-          paymentID
-          paymentReference
-
-          payoutStatus
-
-          fundsStatus
-
-          fundsReleaseBlocked
-          fundsHoldReason
-          fundsHeldBy
-          fundsHeldAt
-
-          fundsReleasedAmount
-          pickupFundsReleasedAt
-          fundsReleasedAt
-          fundsReleaseType
-
-          earningsAllocationStatus
-          earningsAllocatedAt
-
-          assignedCourierId
-          courierEarnings
-
-          transportationType
-          vehicleClass
-
-        }
-
-      }
-    `;
-
-    const orderResponse = await graphqlRequest(getOrderQuery, {
-      id: orderID,
-    });
-
-    if (orderResponse.errors) {
-      throw new Error(
-        `Failed to fetch order: ${JSON.stringify(orderResponse.errors)}`,
-      );
-    }
-
-    const order = orderResponse?.data?.getOrder;
-
-    if (!order) {
-      throw new Error(`Order not found: ${orderID}`);
-    }
-
-    console.log("ORDER:", JSON.stringify(order));
-
-    /* ======================================================
-       3. IDEMPOTENCY
-    ====================================================== */
-
-    if (order.fundsStatus === "RELEASED") {
-      console.log(`Funds already fully released for order ${orderID}`);
-
-      return successResponse({
-        message: "Funds already released.",
-
-        orderID,
-
-        courierID: order.assignedCourierId,
-
-        amount: Number(order.courierEarnings || 0),
-
-        fundsStatus: "RELEASED",
-
-        fundsReleasedAmount: Number(order.fundsReleasedAmount || 0),
-
-        alreadyReleased: true,
-      });
-    }
-
-    /* ======================================================
-       4. VERIFY PAYMENT
-    ====================================================== */
-
-    if (order.paymentStatus !== "PAID") {
-      throw new Error(
-        `Order ${orderID} is not PAID. Current paymentStatus: ${order.paymentStatus}`,
-      );
-    }
-
-    /* ======================================================
-       5. VERIFY ORDER WAS ALLOCATED
-    ====================================================== */
-
-    if (order.earningsAllocationStatus !== "ALLOCATED") {
-      throw new Error(
-        `Courier earnings have not been allocated for order ${orderID}. Current status: ${order.earningsAllocationStatus}`,
-      );
-    }
-
-    /* ======================================================
-       6. VERIFY ORDER IS DELIVERED
-    ====================================================== */
-
-    if (order.status !== "DELIVERED") {
-      throw new Error(
-        `Order ${orderID} is not DELIVERED. Current status: ${order.status}`,
-      );
-    }
-
-    /* ======================================================
-       7. DO NOT USE NORMAL RELEASE FOR MAXI
-    ====================================================== */
-
-    const transportationType = String(
-      order.transportationType || "",
-    ).toUpperCase();
-
-    const vehicleClass = String(order.vehicleClass || "").toUpperCase();
-
-    const isMaxi = transportationType === "MAXI" || vehicleClass === "MAXI";
-
-    if (isMaxi) {
-      throw new Error(
-        `Order ${orderID} is a MAXI order. Use releaseCourierMilestoneFunds instead.`,
-      );
-    }
-
-    /* ======================================================
-       8. VERIFY COURIER
-    ====================================================== */
-
-    const courierID = order.assignedCourierId;
-
-    if (!courierID) {
-      throw new Error(`Order ${orderID} has no assigned courier.`);
-    }
-
-    /* ======================================================
-       9. VERIFY EARNINGS
-    ====================================================== */
-
-    const earnings = Number(order.courierEarnings || 0);
-
-    if (!Number.isFinite(earnings) || earnings <= 0) {
-      throw new Error(
-        `Invalid courier earnings for order ${orderID}: ${order.courierEarnings}`,
-      );
-    }
-
-    console.log("COURIER:", courierID);
-
-    console.log("EARNINGS:", earnings);
-
-    /* ======================================================
-       10. CHECK ADMIN HOLD
-    ====================================================== */
-
-    if (order.fundsReleaseBlocked === true) {
-      console.log(`Funds release blocked by admin for order ${orderID}`);
-
-      return successResponse({
-        message: "Funds release is blocked by admin.",
-
-        orderID,
-
-        courierID,
-
-        amount: earnings,
-
-        fundsStatus: order.fundsStatus,
-
-        fundsReleasedAmount: Number(order.fundsReleasedAmount || 0),
-
-        holdReason: order.fundsHoldReason || null,
-
-        heldBy: order.fundsHeldBy || null,
-
-        heldAt: order.fundsHeldAt || null,
-
-        releaseBlocked: true,
-      });
-    }
-
-    /* ======================================================
-       11. NORMAL ORDER MUST BE HELD
-    ====================================================== */
-
-    if (order.fundsStatus !== "HELD") {
-      /*
-       * PARTIALLY_RELEASED belongs to the Maxi milestone
-       * system. It should not be processed by this Lambda.
-       */
-
-      throw new Error(
-        `Order ${orderID} has fundsStatus ${order.fundsStatus}. Normal release requires HELD.`,
-      );
-    }
-
-    /* ======================================================
-       12. GET COURIER
-    ====================================================== */
-
-    const getCourierQuery = `
-      query GetCourier($id: ID!) {
-
-        getCourier(id: $id) {
-
-          id
-
-          firstName
-          lastName
-
-          walletID
-
-        }
-
-      }
-    `;
-
-    const courierResponse = await graphqlRequest(getCourierQuery, {
-      id: courierID,
-    });
-
-    if (courierResponse.errors) {
-      throw new Error(
-        `Failed to fetch courier: ${JSON.stringify(courierResponse.errors)}`,
-      );
-    }
-
-    const courier = courierResponse?.data?.getCourier;
-
-    if (!courier) {
-      throw new Error(`Courier not found: ${courierID}`);
-    }
-
-    /* ======================================================
-       13. GET COURIER WALLET
-    ====================================================== */
-
-    let wallet = null;
-
-    /*
-    ----------------------------------------------------------
-    PREFERRED: Courier.walletID
-    ----------------------------------------------------------
-    */
-
-    if (courier.walletID) {
-      const getWalletQuery = `
-        query GetWallet($id: ID!) {
-
-          getWallet(id: $id) {
-
-            id
-
-            ownerID
-            ownerType
-
-            availableBalance
-            pendingBalance
-            lifetimeEarnings
-
-          }
-
-        }
-      `;
-
-      const walletResponse = await graphqlRequest(getWalletQuery, {
-        id: courier.walletID,
-      });
-
-      if (walletResponse.errors) {
-        throw new Error(
-          `Failed to fetch wallet: ${JSON.stringify(walletResponse.errors)}`,
-        );
-      }
-
-      wallet = walletResponse?.data?.getWallet;
-    }
-
-    /*
-    ----------------------------------------------------------
-    FALLBACK: Search by ownerID + ownerType
-    ----------------------------------------------------------
-    */
-
-    if (!wallet) {
-      const listWalletsQuery = `
-        query ListWallets(
-          $filter: ModelWalletFilterInput
-        ) {
-
-          listWallets(
-            filter: $filter
-            limit: 1
-          ) {
-
-            items {
-
-              id
-
-              ownerID
-              ownerType
-
-              availableBalance
-              pendingBalance
-              lifetimeEarnings
-
-            }
-
-          }
-
-        }
-      `;
-
-      const walletResponse = await graphqlRequest(listWalletsQuery, {
-        filter: {
-          ownerID: {
-            eq: courierID,
-          },
-
-          ownerType: {
-            eq: "COURIER",
-          },
-        },
-      });
-
-      if (walletResponse.errors) {
-        throw new Error(
-          `Failed to search courier wallet: ${JSON.stringify(
-            walletResponse.errors,
-          )}`,
-        );
-      }
-
-      wallet = walletResponse?.data?.listWallets?.items?.[0];
-    }
-
-    /* ======================================================
-       14. WALLET MUST EXIST
-    ====================================================== */
-
-    if (!wallet) {
-      throw new Error(`Wallet not found for courier ${courierID}`);
-    }
-
-    /* ======================================================
-       15. VERIFY WALLET OWNER
-    ====================================================== */
-
-    if (wallet.ownerID !== courierID) {
-      throw new Error(
-        `Wallet ${wallet.id} does not belong to courier ${courierID}`,
-      );
-    }
-
-    if (wallet.ownerType !== "COURIER") {
-      throw new Error(`Wallet ${wallet.id} is not a courier wallet.`);
-    }
-
-    /* ======================================================
-       16. READ BALANCES
-    ====================================================== */
-
-    const currentPendingBalance = Number(wallet.pendingBalance || 0);
-
-    const currentAvailableBalance = Number(wallet.availableBalance || 0);
-
-    const currentLifetimeEarnings = Number(wallet.lifetimeEarnings || 0);
-
-    /* ======================================================
-       17. VERIFY PENDING BALANCE
-    ====================================================== */
-
-    if (currentPendingBalance < earnings) {
-      throw new Error(
-        `Insufficient pending balance. Pending: ${currentPendingBalance}, required: ${earnings}.`,
-      );
-    }
-
-    /* ======================================================
-       18. CALCULATE BALANCES
-    ====================================================== */
-
-    const newPendingBalance = Number(
-      (currentPendingBalance - earnings).toFixed(2),
-    );
-
-    const newAvailableBalance = Number(
-      (currentAvailableBalance + earnings).toFixed(2),
-    );
-
-    /* ======================================================
-       19. UPDATE WALLET
-    ====================================================== */
-
-    const updateWalletMutation = `
-      mutation UpdateWallet(
-        $input: UpdateWalletInput!
-      ) {
-
-        updateWallet(
-          input: $input
-        ) {
-
-          id
-
-          availableBalance
-          pendingBalance
-          lifetimeEarnings
-
-        }
-
-      }
-    `;
-
-    const walletUpdateResponse = await graphqlRequest(updateWalletMutation, {
-      input: {
-        id: wallet.id,
-
-        availableBalance: newAvailableBalance,
-
-        pendingBalance: newPendingBalance,
-
-        /*
-         * lifetimeEarnings DOES NOT CHANGE.
-         */
-      },
-    });
-
-    if (walletUpdateResponse.errors) {
-      throw new Error(
-        `Failed to update wallet: ${JSON.stringify(
-          walletUpdateResponse.errors,
-        )}`,
-      );
-    }
-
-    const updatedWallet = walletUpdateResponse?.data?.updateWallet;
-
-    if (!updatedWallet) {
-      throw new Error("Wallet update returned no wallet.");
-    }
-
-    console.log("WALLET UPDATED:", {
-      walletID: wallet.id,
-
-      previousPendingBalance: currentPendingBalance,
-
-      newPendingBalance: newPendingBalance,
-
-      previousAvailableBalance: currentAvailableBalance,
-
-      newAvailableBalance: newAvailableBalance,
-
-      lifetimeEarnings: currentLifetimeEarnings,
-    });
-
-    /* ======================================================
-       20. FIND EARNINGS TRANSACTION
-    ====================================================== */
-
-    const transactionReference = `EARNINGS-${orderID}`;
-
-    const findTransactionQuery = `
-      query ListTransactions(
-        $filter: ModelTransactionFilterInput
-      ) {
-
-        listTransactions(
-          filter: $filter
-          limit: 1
-        ) {
-
-          items {
-
-            id
-
-            walletID
-
-            type
-
-            amount
-
-            description
-
-            orderID
-            paymentID
-
-            reference
-
-            status
-
-          }
-
-        }
-
-      }
-    `;
-
-    const transactionResponse = await graphqlRequest(findTransactionQuery, {
-      filter: {
-        reference: {
-          eq: transactionReference,
-        },
-      },
-    });
-
-    if (transactionResponse.errors) {
-      throw new Error(
-        `Failed to find earnings transaction: ${JSON.stringify(
-          transactionResponse.errors,
-        )}`,
-      );
-    }
-
-    const transaction = transactionResponse?.data?.listTransactions?.items?.[0];
-
-    if (!transaction) {
-      /*
-       * The wallet has already been changed, therefore we
-       * deliberately do NOT create a replacement transaction
-       * here without reconciliation.
-       */
-
-      throw new Error(
-        `Earnings transaction ${transactionReference} was not found. Wallet update requires reconciliation.`,
-      );
-    }
-
-    /* ======================================================
-       21. VERIFY TRANSACTION
-    ====================================================== */
-
-    if (transaction.walletID !== wallet.id) {
-      throw new Error(
-        `Earnings transaction ${transaction.id} does not belong to wallet ${wallet.id}`,
-      );
-    }
-
-    if (transaction.type !== "CREDIT") {
-      throw new Error(
-        `Earnings transaction ${transaction.id} is not a CREDIT transaction.`,
-      );
-    }
-
-    const transactionAmount = Number(transaction.amount || 0);
-
-    if (Math.abs(transactionAmount - earnings) > 0.01) {
-      throw new Error(
-        `Earnings transaction amount ${transactionAmount} does not match courier earnings ${earnings}.`,
-      );
-    }
-
-    /* ======================================================
-       22. COMPLETE EARNINGS TRANSACTION
-    ====================================================== */
-
-    if (transaction.status === "PENDING") {
-      const updateTransactionMutation = `
-        mutation UpdateTransaction(
-          $input: UpdateTransactionInput!
-        ) {
-
-          updateTransaction(
-            input: $input
-          ) {
-
-            id
-
-            walletID
-
-            type
-            amount
-
-            description
-
-            orderID
-            paymentID
-
-            reference
-
-            status
-
-          }
-
-        }
-      `;
-
-      const transactionUpdateResponse = await graphqlRequest(
-        updateTransactionMutation,
-        {
-          input: {
-            id: transaction.id,
-
-            status: "COMPLETED",
-
-            description:
-              "Courier earnings released and made available for payout.",
-          },
-        },
-      );
-
-      if (transactionUpdateResponse.errors) {
-        throw new Error(
-          `Wallet was updated but transaction could not be completed: ${JSON.stringify(
-            transactionUpdateResponse.errors,
-          )}`,
-        );
-      }
-
-      console.log(
-        "EARNINGS TRANSACTION COMPLETED:",
-        JSON.stringify(transactionUpdateResponse?.data?.updateTransaction),
-      );
-    } else if (transaction.status === "COMPLETED") {
-      console.log("Earnings transaction already completed.");
-    } else {
-      throw new Error(
-        `Unexpected earnings transaction status: ${transaction.status}`,
-      );
-    }
-
-    /* ======================================================
-       23. DETERMINE RELEASE TYPE
-    ====================================================== */
-
-    const releaseType = String(
-      event?.releaseType || event?.arguments?.releaseType || "AUTOMATIC",
-    ).toUpperCase();
-
-    /* ======================================================
-       24. UPDATE ORDER
-    ====================================================== */
-
-    const releaseTimestamp = new Date().toISOString();
-
-    const updateOrderMutation = `
-      mutation UpdateOrder(
-        $input: UpdateOrderInput!
-      ) {
-
-        updateOrder(
-          input: $input
-        ) {
-
-          id
-
-          fundsStatus
-
-          fundsReleasedAmount
-
-          pickupFundsReleasedAt
-
-          fundsReleasedAt
-
-          fundsReleaseType
-
-          fundsReleaseBlocked
-
-          earningsAllocationStatus
-
-          payoutStatus
-
-        }
-
-      }
-    `;
-
-    const orderUpdateResponse = await graphqlRequest(updateOrderMutation, {
-      input: {
-        id: orderID,
-
-        fundsStatus: "RELEASED",
-
-        /*
-         * For a normal courier, 100% is released.
-         */
-
-        fundsReleasedAmount: earnings,
-
-        /*
-         * pickupFundsReleasedAt is intentionally NOT
-         * set here. It is only for Maxi pickup release.
-         */
-
-        fundsReleasedAt: releaseTimestamp,
-
-        fundsReleaseType: releaseType,
-      },
-    });
-
-    if (orderUpdateResponse.errors) {
-      throw new Error(
-        `Wallet and transaction were updated but order could not be marked RELEASED: ${JSON.stringify(
-          orderUpdateResponse.errors,
-        )}`,
-      );
-    }
-
-    const updatedOrder = orderUpdateResponse?.data?.updateOrder;
-
-    if (!updatedOrder) {
-      throw new Error("Order update returned no order.");
-    }
-
-    /* ======================================================
-       25. VERIFY FINAL ORDER STATE
-    ====================================================== */
-
-    if (updatedOrder.fundsStatus !== "RELEASED") {
-      throw new Error(
-        `Order fundsStatus was not updated to RELEASED. Current value: ${updatedOrder.fundsStatus}`,
-      );
-    }
-
-    const releasedAmount = Number(updatedOrder.fundsReleasedAmount || 0);
-
-    if (Math.abs(releasedAmount - earnings) > 0.01) {
-      throw new Error(
-        `Order fundsReleasedAmount ${releasedAmount} does not match courier earnings ${earnings}.`,
-      );
-    }
-
-    /* ======================================================
-       26. SUCCESS
-    ====================================================== */
-
-    console.log("==========================================");
-
-    console.log("FUNDS RELEASED SUCCESSFULLY");
-
-    console.log("==========================================");
-
-    return successResponse({
-      message: "Courier funds released successfully.",
-
-      orderID,
-
-      courierID,
-
-      amount: earnings,
-
-      walletID: wallet.id,
-
-      previousPendingBalance: currentPendingBalance,
-
-      newPendingBalance: newPendingBalance,
-
-      previousAvailableBalance: currentAvailableBalance,
-
-      newAvailableBalance: newAvailableBalance,
-
-      lifetimeEarnings: currentLifetimeEarnings,
-
-      fundsReleasedAmount: earnings,
-
-      fundsStatus: "RELEASED",
-
-      releaseType,
-
-      transactionStatus: "COMPLETED",
-    });
-  } catch (error) {
-    console.error("==========================================");
-
-    console.error("ATUA RELEASE FUNDS ERROR");
-
-    console.error("MESSAGE:", error?.message);
-
-    console.error("STACK:", error?.stack);
-
-    console.error("==========================================");
-
-    return {
-      statusCode: 500,
-
-      body: JSON.stringify({
-        success: false,
-
-        message: error?.message || "Funds release failed.",
-
-        orderID,
-      }),
-    };
-  }
-};
+function errorResponse(error, extra = {}) {
+  return {
+    statusCode: 500,
+
+    body: JSON.stringify({
+      success: false,
+
+      message: error?.message || "Maxi milestone funds release failed.",
+
+      ...extra,
+    }),
+  };
+}
 
 /* ==========================================================
    GRAPHQL REQUEST HELPER
@@ -1880,11 +1685,11 @@ exports.handler = async (event) => {
 
 async function graphqlRequest(query, variables = {}) {
   if (!GRAPHQL_ENDPOINT) {
-    throw new Error("Missing API_ATUA_GRAPHQLAPIENDPOINTOUTPUT");
+    throw new Error("Missing API_ATUA_GRAPHQLAPIENDPOINTOUTPUT.");
   }
 
   if (!API_KEY) {
-    throw new Error("Missing API_ATUA_GRAPHQLAPIKEYOUTPUT");
+    throw new Error("Missing API_ATUA_GRAPHQLAPIKEYOUTPUT.");
   }
 
   const response = await fetch(GRAPHQL_ENDPOINT, {
@@ -1927,20 +1732,4 @@ async function graphqlRequest(query, variables = {}) {
   }
 
   return responseData;
-}
-
-/* ==========================================================
-   SUCCESS RESPONSE HELPER
-========================================================== */
-
-function successResponse(data) {
-  return {
-    statusCode: 200,
-
-    body: JSON.stringify({
-      success: true,
-
-      ...data,
-    }),
-  };
 }

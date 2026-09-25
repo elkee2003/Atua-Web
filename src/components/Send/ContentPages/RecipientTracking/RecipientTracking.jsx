@@ -450,11 +450,6 @@ function RecipientTracking() {
       setErrorType(null);
       setErrorMessage("");
 
-      console.log("=================================");
-      console.log("RECIPIENT TRACKING STARTED");
-      console.log("Tracking token:", trackingToken);
-      console.log("=================================");
-
       /*
        * Retry the DataStore query because the public tracking page
        * may open before DataStore has synchronized the order.
@@ -517,15 +512,6 @@ function RecipientTracking() {
 
             return;
           }
-
-          console.log("Found order:", foundOrder);
-          console.log("Order ID:", foundOrder.id);
-          console.log("Order status:", foundOrder.status);
-          console.log("Tracking enabled:", foundOrder.recipientTrackingEnabled);
-          console.log(
-            "Tracking revoked at:",
-            foundOrder.recipientTrackingRevokedAt,
-          );
 
           /*
            * The tracking token exists, but tracking may have been
@@ -633,8 +619,6 @@ function RecipientTracking() {
         "We could not load this delivery right now. Please try again.",
       );
     } finally {
-      console.log("RECIPIENT TRACKING FINISHED — SETTING LOADING FALSE");
-
       setLoading(false);
     }
   }, [trackingToken]);

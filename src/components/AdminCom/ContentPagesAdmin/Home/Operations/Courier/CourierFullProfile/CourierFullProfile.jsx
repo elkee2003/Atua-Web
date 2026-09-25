@@ -621,10 +621,10 @@ function CourierFullProfile() {
   };
 
   /*
-    ==========================================================
-    FORCE RESET COURIER CAPACITY
-    ==========================================================
-  */
+  ==========================================================
+  FORCE RESET COURIER CAPACITY
+  ==========================================================
+*/
 
   const handleForceReset = async () => {
     if (!courier?.id || resetLoading) {
@@ -637,12 +637,14 @@ function CourierFullProfile() {
 
     const currentExpressCount = Number(courier.currentExpressCount || 0);
     const currentBatchCount = Number(courier.currentBatchCount || 0);
+    const currentMaxiCount = Number(courier.currentMaxiCount || 0);
 
     const confirmed = window.confirm(
       `Force reset capacity for ${courierName}?\n\n` +
         `Current Express Orders: ${currentExpressCount}\n` +
-        `Current Batch Orders: ${currentBatchCount}\n\n` +
-        `This will set both counters to 0.\n\n` +
+        `Current Batch Orders: ${currentBatchCount}\n` +
+        `Current Maxi Orders: ${currentMaxiCount}\n\n` +
+        `This will set all three counters to 0.\n\n` +
         `Only do this if the courier's capacity is incorrectly stuck.`,
     );
 
@@ -665,28 +667,38 @@ function CourierFullProfile() {
       console.log("Courier:", freshCourier.id);
       console.log("Current Express Count:", freshCourier.currentExpressCount);
       console.log("Current Batch Count:", freshCourier.currentBatchCount);
+      console.log("Current Maxi Count:", freshCourier.currentMaxiCount);
 
       const updatedCourier = Courier.copyOf(freshCourier, (updated) => {
+        // Reset Express capacity
         updated.currentExpressCount = 0;
+
+        // Reset Batch capacity
         updated.currentBatchCount = 0;
 
-        // Clear the timestamp associated with the last batch assignment.
+        // Reset Maxi capacity
+        updated.currentMaxiCount = 0;
+
+        // Clear the timestamp associated with the last batch assignment
         updated.lastBatchAssignedAt = null;
       });
 
       const savedCourier = await DataStore.save(updatedCourier);
 
+      // Update the local UI immediately
       setCourier(savedCourier);
 
       console.log("✅ Courier capacity force reset successfully");
       console.log("Courier:", savedCourier.id);
       console.log("Express Count:", savedCourier.currentExpressCount);
       console.log("Batch Count:", savedCourier.currentBatchCount);
+      console.log("Maxi Count:", savedCourier.currentMaxiCount);
 
       window.alert(
         `Capacity reset successfully for ${courierName}.\n\n` +
           `Express: 0\n` +
-          `Batch: 0`,
+          `Batch: 0\n` +
+          `Maxi: 0`,
       );
     } catch (resetError) {
       console.error("❌ Failed to force reset courier capacity:", resetError);
