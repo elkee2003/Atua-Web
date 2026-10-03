@@ -237,6 +237,87 @@
     white-space: nowrap;
 }
 
+/* ==========================================================
+   HEADER ACTIONS
+========================================================== */
+
+.courierPayoutsHeader-actions {
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+
+/* ==========================================================
+   MAKE PAYOUT BUTTON
+========================================================== */
+
+.courierPayoutsHeader-payoutButton {
+    min-height: 32px;
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    padding:
+        0
+        12px;
+
+    border: 1px solid #059669;
+
+    border-radius: 7px;
+
+    outline: none;
+
+    background: #059669;
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 9px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+.courierPayoutsHeader-payoutButton:hover:not(:disabled) {
+    background: #047857;
+
+    border-color: #047857;
+}
+
+
+.courierPayoutsHeader-payoutButton:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+}
+
+
+.courierPayoutsHeader-payoutButton svg {
+    font-size: 11px;
+}
+
 
 /* ==========================================================
    REFRESH BUTTON
@@ -396,6 +477,7 @@
 ========================================================== */
 
 .courierPayoutsHeader-backButton:focus-visible,
+.courierPayoutsHeader-payoutButton:focus-visible,
 .courierPayoutsHeader-refreshButton:focus-visible {
     outline: 2px solid rgba(
         37,
@@ -500,6 +582,20 @@
         font-size: 8px;
     }
 
+    .courierPayoutsHeader-payoutButton {
+        min-height: 31px;
+
+        padding:
+            0
+            10px;
+
+        font-size: 8px;
+    }
+
+    .courierPayoutsHeader-payoutButton svg {
+        font-size: 10px;
+    }
+
 
     .courierPayoutsHeader-refreshButton {
         min-height: 31px;
@@ -593,13 +689,19 @@
         font-size: 11px;
     }
 
-
-    .courierPayoutsHeader-refreshButton {
+        .courierPayoutsHeader-actions {
         width: 100%;
 
-        min-height: 32px;
+        display: flex;
 
-        font-size: 8px;
+        gap: 7px;
+    }
+
+    .courierPayoutsHeader-payoutButton,
+    .courierPayoutsHeader-refreshButton {
+        flex: 1;
+
+        width: auto;
     }
 
 

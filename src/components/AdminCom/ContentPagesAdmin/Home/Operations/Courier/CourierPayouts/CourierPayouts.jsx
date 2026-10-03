@@ -1,8 +1,17 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
-import { FaExclamationTriangle, FaMoneyBillWave, FaRedo } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaMoneyBillWave,
+  FaRedo,
+  FaTimes,
+  FaWallet,
+} from "react-icons/fa";
 
 import { useNavigate, useParams } from "react-router-dom";
+
+import { generateClient } from "aws-amplify/api";
 
 import { DataStore } from "aws-amplify/datastore";
 
@@ -25,6 +34,56 @@ import CourierPayoutTransactions from "./Components/CourierPayoutTransactions/Co
 import CourierPayoutEmptyState from "./Components/CourierPayoutEmptyState/CourierPayoutEmptyState";
 
 import "./CourierPayouts.css";
+
+/*
+==========================================================
+AMPLIFY GRAPHQL CLIENT
+==========================================================
+
+The admin payout is intentionally sent through the
+processPayouts Lambda via the AppSync mutation.
+
+The page does NOT modify the wallet directly.
+==========================================================
+*/
+
+const client = generateClient();
+
+/*
+==========================================================
+ADMIN MAKE PAYOUT MUTATION
+==========================================================
+
+Business rules enforced by the Lambda:
+
+- Admin payout has NO ₦100 courier-request fee.
+- Admin payout has NO ₦3,000 minimum.
+- Requested amount cannot exceed current available balance.
+- The backend remains the final authority on the balance.
+==========================================================
+*/
+
+const ADMIN_MAKE_PAYOUT = /* GraphQL */ `
+  mutation AdminMakePayout($courierID: ID!, $requestedAmount: Float!) {
+    adminMakePayout(courierID: $courierID, requestedAmount: $requestedAmount) {
+      statusCode
+      body
+    }
+  }
+`;
+
+/*
+==========================================================
+CURRENCY FORMATTER
+==========================================================
+*/
+
+const formatPayoutCurrency = (amount = 0) => {
+  return `₦${Number(amount || 0).toLocaleString("en-NG", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+};
 
 function CourierPayouts() {
   /*
@@ -96,6 +155,22 @@ function CourierPayouts() {
   */
 
   const [statusFilter, setStatusFilter] = useState("ALL");
+
+  /*
+==========================================================
+ADMIN PAYOUT MODAL
+==========================================================
+*/
+
+  const [payoutModalOpen, setPayoutModalOpen] = useState(false);
+
+  const [payoutAmountInput, setPayoutAmountInput] = useState("");
+
+  const [payoutSubmitting, setPayoutSubmitting] = useState(false);
+
+  const [payoutError, setPayoutError] = useState(null);
+
+  const [payoutSuccess, setPayoutSuccess] = useState(null);
 
   /*
   ==========================================================
@@ -433,6 +508,337 @@ function CourierPayouts() {
       showLoading: false,
       showRefreshing: true,
     });
+  };
+
+  /*
+==========================================================
+MAKE PAYOUT
+==========================================================
+
+Opens the admin payout modal.
+
+The admin can either:
+
+1. Enter a specific amount
+2. Choose "Empty Wallet"
+
+The actual payout is performed by the
+adminMakePayout AppSync mutation.
+==========================================================
+*/
+
+  const handleMakePayout = () => {
+    if (!courierId || !courier) {
+      return;
+    }
+
+    /*
+  --------------------------------------------------------
+  Open a fresh payout form.
+  --------------------------------------------------------
+  */
+
+    setPayoutAmountInput("");
+
+    setPayoutError(null);
+
+    setPayoutSuccess(null);
+
+    setPayoutModalOpen(true);
+  };
+
+  /*
+==========================================================
+CLOSE ADMIN PAYOUT MODAL
+==========================================================
+*/
+
+  const handleClosePayoutModal = () => {
+    /*
+  --------------------------------------------------------
+  Do not allow the admin to close the modal while the
+  payout request is actively being submitted.
+  --------------------------------------------------------
+  */
+
+    if (payoutSubmitting) {
+      return;
+    }
+
+    setPayoutModalOpen(false);
+
+    setPayoutAmountInput("");
+
+    setPayoutError(null);
+
+    setPayoutSuccess(null);
+  };
+
+  /*
+==========================================================
+EMPTY WALLET
+==========================================================
+
+"Empty Wallet" simply fills the current available balance
+into the amount field.
+
+The backend STILL checks the live wallet balance before
+actually processing the payout.
+
+This prevents the frontend from becoming the authority
+on the wallet balance.
+==========================================================
+*/
+
+  const handleEmptyWallet = () => {
+    const availableBalance = Number(wallet?.availableBalance || 0);
+
+    if (!Number.isFinite(availableBalance) || availableBalance <= 0) {
+      setPayoutError("This courier has no available balance to pay out.");
+
+      return;
+    }
+
+    setPayoutError(null);
+
+    setPayoutSuccess(null);
+
+    setPayoutAmountInput(String(availableBalance));
+  };
+
+  /*
+==========================================================
+SUBMIT ADMIN PAYOUT
+==========================================================
+*/
+
+  const handleSubmitAdminPayout = async () => {
+    if (!courierId || !courier) {
+      setPayoutError("Courier information is missing.");
+
+      return;
+    }
+
+    const availableBalance = Number(wallet?.availableBalance || 0);
+
+    /*
+  --------------------------------------------------------
+  Normalize number input.
+
+  This allows:
+
+      10000
+      10,000
+
+  to both work.
+  --------------------------------------------------------
+  */
+
+    const normalizedInput = String(payoutAmountInput || "")
+      .replace(/,/g, "")
+      .trim();
+
+    const requestedAmount = Number(normalizedInput);
+
+    setPayoutError(null);
+
+    setPayoutSuccess(null);
+
+    /*
+  --------------------------------------------------------
+  AMOUNT REQUIRED
+  --------------------------------------------------------
+  */
+
+    if (!normalizedInput) {
+      setPayoutError("Enter a payout amount or choose Empty Wallet.");
+
+      return;
+    }
+
+    /*
+  --------------------------------------------------------
+  AMOUNT MUST BE VALID
+  --------------------------------------------------------
+  */
+
+    if (!Number.isFinite(requestedAmount) || requestedAmount <= 0) {
+      setPayoutError("Enter a valid payout amount greater than zero.");
+
+      return;
+    }
+
+    /*
+  --------------------------------------------------------
+  COURIER MUST HAVE AVAILABLE BALANCE
+  --------------------------------------------------------
+  */
+
+    if (!Number.isFinite(availableBalance) || availableBalance <= 0) {
+      setPayoutError("This courier has no available balance to pay out.");
+
+      return;
+    }
+
+    /*
+  --------------------------------------------------------
+  ADMIN CANNOT PAY MORE THAN AVAILABLE BALANCE
+  --------------------------------------------------------
+  */
+
+    if (requestedAmount > availableBalance) {
+      setPayoutError(
+        `The payout amount cannot exceed the available balance of ${formatPayoutCurrency(
+          availableBalance,
+        )}.`,
+      );
+
+      return;
+    }
+
+    /*
+  --------------------------------------------------------
+  COURIER NAME
+  --------------------------------------------------------
+  */
+
+    const courierName =
+      [courier?.firstName, courier?.lastName].filter(Boolean).join(" ") ||
+      courier?.name ||
+      "this courier";
+
+    /*
+  --------------------------------------------------------
+  FINAL CONFIRMATION
+  --------------------------------------------------------
+  */
+
+    const confirmed = window.confirm(
+      `Make an admin payout of ${formatPayoutCurrency(
+        requestedAmount,
+      )} to ${courierName}?\n\n` +
+        "No ₦100 courier-request fee will be charged.\n" +
+        "The ₦3,000 courier minimum does not apply.",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setPayoutSubmitting(true);
+
+      setPayoutError(null);
+
+      /*
+    ------------------------------------------------------
+    CALL APPSYNC
+    ------------------------------------------------------
+
+    This invokes:
+
+        adminMakePayout
+
+    which routes to:
+
+        processPayouts Lambda
+
+    with:
+
+        ADMIN_MANUAL
+        MANUAL_SINGLE
+    ------------------------------------------------------
+    */
+
+      const response = await client.graphql({
+        query: ADMIN_MAKE_PAYOUT,
+
+        variables: {
+          courierID: courierId,
+
+          requestedAmount,
+        },
+      });
+
+      const result = response?.data?.adminMakePayout;
+
+      if (!result) {
+        throw new Error("The payout service returned no response.");
+      }
+
+      /*
+    ------------------------------------------------------
+    THE LAMBDA RETURNS:
+
+        {
+          statusCode,
+          body
+        }
+
+    The body contains the detailed payout result.
+    ------------------------------------------------------
+    */
+
+      let bodyResult = result.body;
+
+      if (typeof bodyResult === "string") {
+        try {
+          bodyResult = JSON.parse(bodyResult);
+        } catch (parseError) {
+          console.warn("Could not parse payout response body:", parseError);
+        }
+      }
+
+      /*
+    ------------------------------------------------------
+    HANDLE BACKEND FAILURE
+    ------------------------------------------------------
+    */
+
+      if (Number(result.statusCode) >= 400 || bodyResult?.success === false) {
+        throw new Error(
+          bodyResult?.message || "The payout could not be initiated.",
+        );
+      }
+
+      /*
+    ------------------------------------------------------
+    SUCCESS
+    ------------------------------------------------------
+    */
+
+      setPayoutSuccess(
+        bodyResult?.message ||
+          "Payout successfully initiated. Awaiting Paystack transfer confirmation.",
+      );
+
+      /*
+    ------------------------------------------------------
+    REFRESH PAGE DATA
+    ------------------------------------------------------
+
+    The DataStore observers should also receive the
+    backend changes.
+
+    We explicitly refresh as well so the admin interface
+    immediately reflects the latest wallet/payout state.
+    ------------------------------------------------------
+    */
+
+      await fetchPayoutData({
+        showLoading: false,
+
+        showRefreshing: false,
+      });
+    } catch (payoutErrorValue) {
+      console.error("ADMIN MAKE PAYOUT ERROR:", payoutErrorValue);
+
+      setPayoutError(
+        payoutErrorValue?.message || "Unable to initiate the admin payout.",
+      );
+    } finally {
+      setPayoutSubmitting(false);
+    }
   };
 
   /*
@@ -804,6 +1210,7 @@ function CourierPayouts() {
         onTrack={handleTrack}
         onRefresh={handleRefresh}
         refreshing={refreshing}
+        onMakePayout={handleMakePayout}
       />
 
       {/* ==================================================
@@ -899,6 +1306,181 @@ function CourierPayouts() {
             />
           )}
         </>
+      )}
+
+      {/* ==================================================
+    ADMIN PAYOUT MODAL
+================================================== */}
+
+      {payoutModalOpen && (
+        <div
+          className="courierPayouts-payoutModalOverlay"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !payoutSubmitting) {
+              handleClosePayoutModal();
+            }
+          }}
+        >
+          <div
+            className="courierPayouts-payoutModal"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="admin-payout-title"
+          >
+            {/* ==================================================
+          MODAL HEADER
+      ================================================== */}
+
+            <div className="courierPayouts-payoutModalHeader">
+              <div>
+                <h2
+                  id="admin-payout-title"
+                  className="courierPayouts-payoutModalTitle"
+                >
+                  Make Payout
+                </h2>
+
+                <p className="courierPayouts-payoutModalSubtitle">
+                  Admin payout to this courier
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className="courierPayouts-payoutModalClose"
+                onClick={handleClosePayoutModal}
+                disabled={payoutSubmitting}
+                aria-label="Close payout dialog"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            {/* ==================================================
+          COURIER SUMMARY
+      ================================================== */}
+
+            <div className="courierPayouts-payoutCourierSummary">
+              <div className="courierPayouts-payoutCourierName">
+                {courier?.firstName || courier?.lastName
+                  ? [courier?.firstName, courier?.lastName]
+                      .filter(Boolean)
+                      .join(" ")
+                  : courier?.name || "Courier"}
+              </div>
+
+              <div className="courierPayouts-payoutAvailableBalance">
+                <FaWallet />
+
+                <span>
+                  Available balance:{" "}
+                  {formatPayoutCurrency(wallet?.availableBalance || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* ==================================================
+          PAYOUT AMOUNT
+      ================================================== */}
+
+            <label
+              htmlFor="admin-payout-amount"
+              className="courierPayouts-payoutAmountLabel"
+            >
+              Payout Amount
+            </label>
+
+            <div className="courierPayouts-payoutAmountRow">
+              <input
+                id="admin-payout-amount"
+                className="courierPayouts-payoutAmountInput"
+                type="text"
+                inputMode="decimal"
+                value={payoutAmountInput}
+                onChange={(event) => {
+                  setPayoutAmountInput(event.target.value);
+                  setPayoutError(null);
+                  setPayoutSuccess(null);
+                }}
+                placeholder="Enter amount"
+                disabled={payoutSubmitting}
+              />
+
+              <button
+                type="button"
+                className="courierPayouts-emptyWalletButton"
+                onClick={handleEmptyWallet}
+                disabled={
+                  payoutSubmitting || Number(wallet?.availableBalance || 0) <= 0
+                }
+              >
+                Empty Wallet
+              </button>
+            </div>
+
+            <p className="courierPayouts-payoutAmountNote">
+              Admin payouts have no ₦100 courier-request fee and no ₦3,000
+              minimum.
+            </p>
+
+            {/* ==================================================
+          ERROR
+      ================================================== */}
+
+            {payoutError && (
+              <div
+                className="courierPayouts-payoutMessage courierPayouts-payoutMessage-error"
+                role="alert"
+              >
+                <FaExclamationTriangle />
+
+                <span>{payoutError}</span>
+              </div>
+            )}
+
+            {/* ==================================================
+          SUCCESS
+      ================================================== */}
+
+            {payoutSuccess && (
+              <div
+                className="courierPayouts-payoutMessage courierPayouts-payoutMessage-success"
+                role="status"
+              >
+                <FaCheckCircle />
+
+                <span>{payoutSuccess}</span>
+              </div>
+            )}
+
+            {/* ==================================================
+          ACTIONS
+      ================================================== */}
+
+            <div className="courierPayouts-payoutModalActions">
+              <button
+                type="button"
+                className="courierPayouts-payoutCancelButton"
+                onClick={handleClosePayoutModal}
+                disabled={payoutSubmitting}
+              >
+                {payoutSuccess ? "Close" : "Cancel"}
+              </button>
+
+              {!payoutSuccess && (
+                <button
+                  type="button"
+                  className="courierPayouts-payoutSubmitButton"
+                  onClick={handleSubmitAdminPayout}
+                  disabled={payoutSubmitting}
+                >
+                  {payoutSubmitting ? "Processing..." : "Make Payout"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

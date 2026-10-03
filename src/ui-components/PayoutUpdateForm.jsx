@@ -40,9 +40,11 @@ export default function PayoutUpdateForm(props) {
     transferID: "",
     failureReason: "",
     payoutMethod: "",
+    payoutSource: "",
     processedAt: "",
     paidAt: "",
     failedAt: "",
+    walletRestoredAt: "",
   };
   const [courierID, setCourierID] = React.useState(initialValues.courierID);
   const [walletID, setWalletID] = React.useState(initialValues.walletID);
@@ -63,11 +65,17 @@ export default function PayoutUpdateForm(props) {
   const [payoutMethod, setPayoutMethod] = React.useState(
     initialValues.payoutMethod
   );
+  const [payoutSource, setPayoutSource] = React.useState(
+    initialValues.payoutSource
+  );
   const [processedAt, setProcessedAt] = React.useState(
     initialValues.processedAt
   );
   const [paidAt, setPaidAt] = React.useState(initialValues.paidAt);
   const [failedAt, setFailedAt] = React.useState(initialValues.failedAt);
+  const [walletRestoredAt, setWalletRestoredAt] = React.useState(
+    initialValues.walletRestoredAt
+  );
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     const cleanValues = payoutRecord
@@ -84,9 +92,11 @@ export default function PayoutUpdateForm(props) {
     setTransferID(cleanValues.transferID);
     setFailureReason(cleanValues.failureReason);
     setPayoutMethod(cleanValues.payoutMethod);
+    setPayoutSource(cleanValues.payoutSource);
     setProcessedAt(cleanValues.processedAt);
     setPaidAt(cleanValues.paidAt);
     setFailedAt(cleanValues.failedAt);
+    setWalletRestoredAt(cleanValues.walletRestoredAt);
     setErrors({});
   };
   const [payoutRecord, setPayoutRecord] = React.useState(payoutModelProp);
@@ -112,9 +122,11 @@ export default function PayoutUpdateForm(props) {
     transferID: [],
     failureReason: [],
     payoutMethod: [],
+    payoutSource: [],
     processedAt: [],
     paidAt: [],
     failedAt: [],
+    walletRestoredAt: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -170,9 +182,11 @@ export default function PayoutUpdateForm(props) {
           transferID,
           failureReason,
           payoutMethod,
+          payoutSource,
           processedAt,
           paidAt,
           failedAt,
+          walletRestoredAt,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -239,9 +253,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.courierID ?? value;
@@ -276,9 +292,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.walletID ?? value;
@@ -317,9 +335,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.amount ?? value;
@@ -354,9 +374,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -412,9 +434,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.bankName ?? value;
@@ -449,9 +473,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.accountNumber ?? value;
@@ -486,9 +512,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.reference ?? value;
@@ -523,9 +551,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.transferCode ?? value;
@@ -560,9 +590,11 @@ export default function PayoutUpdateForm(props) {
               transferID: value,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.transferID ?? value;
@@ -597,9 +629,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason: value,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.failureReason ?? value;
@@ -634,9 +668,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod: value,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.payoutMethod ?? value;
@@ -651,6 +687,61 @@ export default function PayoutUpdateForm(props) {
         hasError={errors.payoutMethod?.hasError}
         {...getOverrideProps(overrides, "payoutMethod")}
       ></TextField>
+      <SelectField
+        label="Payout source"
+        placeholder="Please select an option"
+        isDisabled={false}
+        value={payoutSource}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              payoutSource: value,
+              processedAt,
+              paidAt,
+              failedAt,
+              walletRestoredAt,
+            };
+            const result = onChange(modelFields);
+            value = result?.payoutSource ?? value;
+          }
+          if (errors.payoutSource?.hasError) {
+            runValidationTasks("payoutSource", value);
+          }
+          setPayoutSource(value);
+        }}
+        onBlur={() => runValidationTasks("payoutSource", payoutSource)}
+        errorMessage={errors.payoutSource?.errorMessage}
+        hasError={errors.payoutSource?.hasError}
+        {...getOverrideProps(overrides, "payoutSource")}
+      >
+        <option
+          children="Courier requested"
+          value="COURIER_REQUESTED"
+          {...getOverrideProps(overrides, "payoutSourceoption0")}
+        ></option>
+        <option
+          children="Admin manual"
+          value="ADMIN_MANUAL"
+          {...getOverrideProps(overrides, "payoutSourceoption1")}
+        ></option>
+        <option
+          children="System"
+          value="SYSTEM"
+          {...getOverrideProps(overrides, "payoutSourceoption2")}
+        ></option>
+      </SelectField>
       <TextField
         label="Processed at"
         isRequired={false}
@@ -673,9 +764,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt: value,
               paidAt,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.processedAt ?? value;
@@ -712,9 +805,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt: value,
               failedAt,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.paidAt ?? value;
@@ -751,9 +846,11 @@ export default function PayoutUpdateForm(props) {
               transferID,
               failureReason,
               payoutMethod,
+              payoutSource,
               processedAt,
               paidAt,
               failedAt: value,
+              walletRestoredAt,
             };
             const result = onChange(modelFields);
             value = result?.failedAt ?? value;
@@ -767,6 +864,47 @@ export default function PayoutUpdateForm(props) {
         errorMessage={errors.failedAt?.errorMessage}
         hasError={errors.failedAt?.hasError}
         {...getOverrideProps(overrides, "failedAt")}
+      ></TextField>
+      <TextField
+        label="Wallet restored at"
+        isRequired={false}
+        isReadOnly={false}
+        type="datetime-local"
+        value={walletRestoredAt && convertToLocal(new Date(walletRestoredAt))}
+        onChange={(e) => {
+          let value =
+            e.target.value === "" ? "" : new Date(e.target.value).toISOString();
+          if (onChange) {
+            const modelFields = {
+              courierID,
+              walletID,
+              amount,
+              status,
+              bankName,
+              accountNumber,
+              reference,
+              transferCode,
+              transferID,
+              failureReason,
+              payoutMethod,
+              payoutSource,
+              processedAt,
+              paidAt,
+              failedAt,
+              walletRestoredAt: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.walletRestoredAt ?? value;
+          }
+          if (errors.walletRestoredAt?.hasError) {
+            runValidationTasks("walletRestoredAt", value);
+          }
+          setWalletRestoredAt(value);
+        }}
+        onBlur={() => runValidationTasks("walletRestoredAt", walletRestoredAt)}
+        errorMessage={errors.walletRestoredAt?.errorMessage}
+        hasError={errors.walletRestoredAt?.hasError}
+        {...getOverrideProps(overrides, "walletRestoredAt")}
       ></TextField>
       <Flex
         justifyContent="space-between"

@@ -14,6 +14,7 @@ function CourierPayoutsHeader({
   refreshing = false,
   onBack,
   onRefresh,
+  onMakePayout,
 }) {
   /*
     ==========================================================
@@ -65,6 +66,20 @@ function CourierPayoutsHeader({
     }
 
     onRefresh();
+  };
+
+  /*
+    ==========================================================
+    MAKE PAYOUT HANDLER
+    ==========================================================
+    */
+
+  const handleMakePayout = () => {
+    if (!onMakePayout) {
+      return;
+    }
+
+    onMakePayout();
   };
 
   /*
@@ -130,27 +145,50 @@ function CourierPayoutsHeader({
         </div>
 
         {/* ==================================================
-                    REFRESH
+                    HEADER ACTIONS
                 ================================================== */}
 
-        {onRefresh && (
-          <button
-            type="button"
-            className="courierPayoutsHeader-refreshButton"
-            onClick={handleRefresh}
-            disabled={refreshing}
-          >
-            <FaSyncAlt
-              className={
-                refreshing
-                  ? "courierPayoutsHeader-refreshIcon spinning"
-                  : "courierPayoutsHeader-refreshIcon"
-              }
-            />
+        <div className="courierPayoutsHeader-actions">
+          {/* ==================================================
+                      MAKE PAYOUT
+                  ================================================== */}
 
-            <span>{refreshing ? "Refreshing..." : "Refresh"}</span>
-          </button>
-        )}
+          {onMakePayout && (
+            <button
+              type="button"
+              className="courierPayoutsHeader-payoutButton"
+              onClick={handleMakePayout}
+              disabled={refreshing}
+            >
+              <FaMoneyBillWave />
+
+              <span>Make Payout</span>
+            </button>
+          )}
+
+          {/* ==================================================
+                      REFRESH
+                  ================================================== */}
+
+          {onRefresh && (
+            <button
+              type="button"
+              className="courierPayoutsHeader-refreshButton"
+              onClick={handleRefresh}
+              disabled={refreshing}
+            >
+              <FaSyncAlt
+                className={
+                  refreshing
+                    ? "courierPayoutsHeader-refreshIcon spinning"
+                    : "courierPayoutsHeader-refreshIcon"
+                }
+              />
+
+              <span>{refreshing ? "Refreshing..." : "Refresh"}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* ==================================================

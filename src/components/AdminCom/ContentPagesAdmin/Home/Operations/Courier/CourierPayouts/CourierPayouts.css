@@ -397,6 +397,489 @@
     outline-offset: 3px;
 }
 
+/* ==================================================
+   ADMIN PAYOUT MODAL
+================================================== */
+
+.courierPayouts-payoutModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.courierPayouts-payoutModal {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+
+  overflow-y: auto;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+
+  padding: 24px;
+}
+
+
+/* ==================================================
+   MODAL HEADER
+================================================== */
+
+.courierPayouts-payoutModalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+}
+
+.courierPayouts-payoutModalTitle {
+  margin: 0;
+
+  font-size: 20px;
+  line-height: 1.2;
+}
+
+.courierPayouts-payoutModalSubtitle {
+  margin: 7px 0 0;
+
+  font-size: 13px;
+
+  color: #6b7280;
+}
+
+.courierPayouts-payoutModalClose {
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 18px;
+
+  padding: 4px;
+
+  color: #111827;
+
+  opacity: 1;
+}
+
+.courierPayouts-payoutModalClose:hover:not(:disabled) {
+  color: #374151;
+}
+
+.courierPayouts-payoutModalClose:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.courierPayouts-payoutModalClose:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+
+/* ==================================================
+   COURIER SUMMARY
+================================================== */
+
+.courierPayouts-payoutCourierSummary {
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background: #f8fafc;
+
+  border: 1px solid #e5e7eb;
+
+  margin-bottom: 18px;
+}
+
+.courierPayouts-payoutCourierName {
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #111827;
+}
+
+.courierPayouts-payoutAvailableBalance {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 8px;
+
+  font-size: 13px;
+
+  color: #4b5563;
+}
+
+
+/* ==================================================
+   PAYOUT AMOUNT
+================================================== */
+
+.courierPayouts-payoutAmountLabel {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  color: #111827;
+}
+
+.courierPayouts-payoutAmountRow {
+  display: flex;
+  align-items: stretch;
+
+  gap: 8px;
+}
+
+.courierPayouts-payoutAmountInput {
+  flex: 1;
+  min-width: 0;
+
+  height: 44px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  padding: 0 12px;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  outline: none;
+
+  box-sizing: border-box;
+}
+
+.courierPayouts-payoutAmountInput::placeholder {
+  color: #9ca3af;
+}
+
+.courierPayouts-payoutAmountInput:focus {
+  border-color: #9ca3af;
+
+  box-shadow: 0 0 0 2px rgba(17, 24, 39, 0.08);
+}
+
+.courierPayouts-payoutAmountInput:disabled {
+  background: #f3f4f6;
+
+  color: #9ca3af;
+
+  cursor: not-allowed;
+}
+
+.courierPayouts-emptyWalletButton {
+  height: 44px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  padding: 0 13px;
+
+  background: #f9fafb;
+
+  cursor: pointer;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  color: #374151;
+
+  opacity: 1;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.courierPayouts-emptyWalletButton:hover:not(:disabled) {
+  background: #f3f4f6;
+
+  border-color: #9ca3af;
+}
+
+.courierPayouts-emptyWalletButton:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.courierPayouts-emptyWalletButton:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+.courierPayouts-payoutAmountNote {
+  margin: 8px 0 0;
+
+  font-size: 11px;
+
+  color: #6b7280;
+
+  line-height: 1.5;
+}
+
+
+/* ==================================================
+   PAYOUT MESSAGES
+================================================== */
+
+.courierPayouts-payoutMessage {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 9px;
+
+  margin-top: 14px;
+
+  padding: 11px 12px;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+
+  line-height: 1.45;
+}
+
+.courierPayouts-payoutMessage svg {
+  flex-shrink: 0;
+
+  margin-top: 2px;
+}
+
+.courierPayouts-payoutMessage-error {
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  color: #b91c1c;
+}
+
+.courierPayouts-payoutMessage-success {
+  background: #f0fdf4;
+
+  border: 1px solid #bbf7d0;
+
+  color: #166534;
+}
+
+
+/* ==================================================
+   MODAL ACTIONS
+================================================== */
+
+.courierPayouts-payoutModalActions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 22px;
+}
+
+.courierPayouts-payoutCancelButton {
+  min-width: 90px;
+  height: 42px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  opacity: 1;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.courierPayouts-payoutCancelButton:hover:not(:disabled) {
+  background: #f9fafb;
+
+  border-color: #9ca3af;
+}
+
+.courierPayouts-payoutCancelButton:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.courierPayouts-payoutCancelButton:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.5;
+}
+
+.courierPayouts-payoutSubmitButton {
+  min-width: 130px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  opacity: 1;
+
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.courierPayouts-payoutSubmitButton:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.courierPayouts-payoutSubmitButton:focus-visible {
+  outline: 2px solid #111827;
+  outline-offset: 2px;
+}
+
+.courierPayouts-payoutSubmitButton:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.65;
+}
+
+
+/* ==================================================
+   PAYOUT MODAL RESPONSIVE
+================================================== */
+
+@media (max-width: 700px) {
+  .courierPayouts-payoutModal {
+    max-width: 460px;
+
+    padding: 22px;
+  }
+
+  .courierPayouts-payoutModalTitle {
+    font-size: 19px;
+  }
+
+  .courierPayouts-payoutModalSubtitle {
+    font-size: 12px;
+  }
+}
+
+
+@media (max-width: 500px) {
+  .courierPayouts-payoutModalOverlay {
+    align-items: flex-end;
+
+    padding: 0;
+  }
+
+  .courierPayouts-payoutModal {
+    max-width: none;
+
+    max-height: 92vh;
+
+    border-radius: 14px 14px 0 0;
+
+    padding: 20px;
+  }
+
+  .courierPayouts-payoutAmountRow {
+    flex-direction: column;
+  }
+
+  .courierPayouts-payoutAmountInput {
+    width: 100%;
+  }
+
+  .courierPayouts-emptyWalletButton {
+    width: 100%;
+  }
+
+  .courierPayouts-payoutModalActions {
+    width: 100%;
+  }
+
+  .courierPayouts-payoutCancelButton,
+  .courierPayouts-payoutSubmitButton {
+    flex: 1;
+  }
+}
+
+
+@media (max-width: 350px) {
+  .courierPayouts-payoutModal {
+    padding: 16px;
+  }
+
+  .courierPayouts-payoutModalTitle {
+    font-size: 18px;
+  }
+
+  .courierPayouts-payoutModalSubtitle {
+    font-size: 11px;
+  }
+
+  .courierPayouts-payoutCourierName {
+    font-size: 12px;
+  }
+
+  .courierPayouts-payoutAvailableBalance {
+    font-size: 12px;
+  }
+
+  .courierPayouts-payoutAmountInput {
+    font-size: 13px;
+  }
+
+  .courierPayouts-payoutAmountNote {
+    font-size: 10px;
+  }
+
+  .courierPayouts-payoutCancelButton,
+  .courierPayouts-payoutSubmitButton {
+    font-size: 12px;
+  }
+}
 
 /* ==========================================================
    RESPONSIVE

@@ -34,9 +34,11 @@ export declare type PayoutUpdateFormInputValues = {
     transferID?: string;
     failureReason?: string;
     payoutMethod?: string;
+    payoutSource?: string;
     processedAt?: string;
     paidAt?: string;
     failedAt?: string;
+    walletRestoredAt?: string;
 };
 export declare type PayoutUpdateFormValidationValues = {
     courierID?: ValidationFunction<string>;
@@ -50,9 +52,11 @@ export declare type PayoutUpdateFormValidationValues = {
     transferID?: ValidationFunction<string>;
     failureReason?: ValidationFunction<string>;
     payoutMethod?: ValidationFunction<string>;
+    payoutSource?: ValidationFunction<string>;
     processedAt?: ValidationFunction<string>;
     paidAt?: ValidationFunction<string>;
     failedAt?: ValidationFunction<string>;
+    walletRestoredAt?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type PayoutUpdateFormOverridesProps = {
@@ -68,9 +72,11 @@ export declare type PayoutUpdateFormOverridesProps = {
     transferID?: PrimitiveOverrideProps<TextFieldProps>;
     failureReason?: PrimitiveOverrideProps<TextFieldProps>;
     payoutMethod?: PrimitiveOverrideProps<TextFieldProps>;
+    payoutSource?: PrimitiveOverrideProps<SelectFieldProps>;
     processedAt?: PrimitiveOverrideProps<TextFieldProps>;
     paidAt?: PrimitiveOverrideProps<TextFieldProps>;
     failedAt?: PrimitiveOverrideProps<TextFieldProps>;
+    walletRestoredAt?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type PayoutUpdateFormProps = React.PropsWithChildren<{
     overrides?: PayoutUpdateFormOverridesProps | undefined | null;

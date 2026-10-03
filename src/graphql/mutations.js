@@ -23,6 +23,40 @@ export const verifyAtuaPayment = /* GraphQL */ `
     }
   }
 `;
+export const reversePayout = /* GraphQL */ `
+  mutation ReversePayout($input: ReversePayoutInput!) {
+    reversePayout(input: $input) {
+      success
+      payoutID
+      transactionID
+      walletID
+      payoutStatus
+      transactionStatus
+      restoredAmount
+      alreadyReversed
+      message
+      __typename
+    }
+  }
+`;
+export const adminMakePayout = /* GraphQL */ `
+  mutation AdminMakePayout($courierID: ID!, $requestedAmount: Float!) {
+    adminMakePayout(courierID: $courierID, requestedAmount: $requestedAmount) {
+      statusCode
+      body
+      __typename
+    }
+  }
+`;
+export const adminMakeAllPayouts = /* GraphQL */ `
+  mutation AdminMakeAllPayouts {
+    adminMakeAllPayouts {
+      statusCode
+      body
+      __typename
+    }
+  }
+`;
 export const createCompanyVehicle = /* GraphQL */ `
   mutation CreateCompanyVehicle(
     $input: CreateCompanyVehicleInput!
@@ -212,9 +246,11 @@ export const createPayout = /* GraphQL */ `
       transferID
       failureReason
       payoutMethod
+      payoutSource
       processedAt
       paidAt
       failedAt
+      walletRestoredAt
       createdAt
       updatedAt
       _version
@@ -242,9 +278,11 @@ export const updatePayout = /* GraphQL */ `
       transferID
       failureReason
       payoutMethod
+      payoutSource
       processedAt
       paidAt
       failedAt
+      walletRestoredAt
       createdAt
       updatedAt
       _version
@@ -272,9 +310,11 @@ export const deletePayout = /* GraphQL */ `
       transferID
       failureReason
       payoutMethod
+      payoutSource
       processedAt
       paidAt
       failedAt
+      walletRestoredAt
       createdAt
       updatedAt
       _version
@@ -544,6 +584,7 @@ export const createPayment = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -552,6 +593,7 @@ export const createPayment = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -711,6 +753,7 @@ export const updatePayment = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -719,6 +762,7 @@ export const updatePayment = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -878,6 +922,7 @@ export const deletePayment = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -886,6 +931,7 @@ export const deletePayment = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -1038,6 +1084,7 @@ export const createOffer = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -1046,6 +1093,7 @@ export const createOffer = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -1239,6 +1287,7 @@ export const updateOffer = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -1247,6 +1296,7 @@ export const updateOffer = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -1440,6 +1490,7 @@ export const deleteOffer = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -1448,6 +1499,7 @@ export const deleteOffer = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -1638,6 +1690,7 @@ export const createOrder = /* GraphQL */ `
       fundsStatus
       earningsAllocationStatus
       earningsAllocatedAt
+      maxiCountIncrementedAt
       fundsReleaseBlocked
       fundsHoldReason
       fundsHeldBy
@@ -1646,6 +1699,7 @@ export const createOrder = /* GraphQL */ `
       pickupFundsReleasedAt
       fundsReleasedAt
       fundsReleaseType
+      orderEnvironment
       assignedCourierId
       assignmentExpiresAt
       assignmentAttempts
@@ -1845,6 +1899,7 @@ export const updateOrder = /* GraphQL */ `
       fundsStatus
       earningsAllocationStatus
       earningsAllocatedAt
+      maxiCountIncrementedAt
       fundsReleaseBlocked
       fundsHoldReason
       fundsHeldBy
@@ -1853,6 +1908,7 @@ export const updateOrder = /* GraphQL */ `
       pickupFundsReleasedAt
       fundsReleasedAt
       fundsReleaseType
+      orderEnvironment
       assignedCourierId
       assignmentExpiresAt
       assignmentAttempts
@@ -2052,6 +2108,7 @@ export const deleteOrder = /* GraphQL */ `
       fundsStatus
       earningsAllocationStatus
       earningsAllocatedAt
+      maxiCountIncrementedAt
       fundsReleaseBlocked
       fundsHoldReason
       fundsHeldBy
@@ -2060,6 +2117,7 @@ export const deleteOrder = /* GraphQL */ `
       pickupFundsReleasedAt
       fundsReleasedAt
       fundsReleaseType
+      orderEnvironment
       assignedCourierId
       assignmentExpiresAt
       assignmentAttempts
@@ -2343,6 +2401,7 @@ export const createCourierReport = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -2351,6 +2410,7 @@ export const createCourierReport = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -2569,6 +2629,7 @@ export const updateCourierReport = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -2577,6 +2638,7 @@ export const updateCourierReport = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -2795,6 +2857,7 @@ export const deleteCourierReport = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -2803,6 +2866,7 @@ export const deleteCourierReport = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -3021,6 +3085,7 @@ export const createCourierReview = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -3029,6 +3094,7 @@ export const createCourierReview = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -3243,6 +3309,7 @@ export const updateCourierReview = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -3251,6 +3318,7 @@ export const updateCourierReview = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts
@@ -3465,6 +3533,7 @@ export const deleteCourierReview = /* GraphQL */ `
         fundsStatus
         earningsAllocationStatus
         earningsAllocatedAt
+        maxiCountIncrementedAt
         fundsReleaseBlocked
         fundsHoldReason
         fundsHeldBy
@@ -3473,6 +3542,7 @@ export const deleteCourierReview = /* GraphQL */ `
         pickupFundsReleasedAt
         fundsReleasedAt
         fundsReleaseType
+        orderEnvironment
         assignedCourierId
         assignmentExpiresAt
         assignmentAttempts

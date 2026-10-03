@@ -125,6 +125,12 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "financialOrderTrigger": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "forceDispatch": {
       "build": true,
       "dependsOn": [
@@ -189,6 +195,22 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "reconcilePayouts": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "releaseCourierMilestoneFunds": {
       "build": true,
       "dependsOn": [
@@ -222,6 +244,22 @@
       "service": "Lambda"
     },
     "resetCourierIfIdle": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "reversePayout": {
       "build": true,
       "dependsOn": [
         {
@@ -319,6 +357,22 @@
         }
       ]
     },
+    "AMPLIFY_function_financialOrderTrigger_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "financialOrderTrigger"
+        }
+      ]
+    },
+    "AMPLIFY_function_financialOrderTrigger_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "financialOrderTrigger"
+        }
+      ]
+    },
     "AMPLIFY_function_forceDispatch_deploymentBucketName": {
       "usedBy": [
         {
@@ -407,6 +461,30 @@
         }
       ]
     },
+    "AMPLIFY_function_reconcilePayouts_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reconcilePayouts"
+        }
+      ]
+    },
+    "AMPLIFY_function_reconcilePayouts_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reconcilePayouts"
+        }
+      ]
+    },
+    "AMPLIFY_function_reconcilePayouts_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reconcilePayouts"
+        }
+      ]
+    },
     "AMPLIFY_function_releaseCourierMilestoneFunds_deploymentBucketName": {
       "usedBy": [
         {
@@ -452,6 +530,22 @@
         {
           "category": "function",
           "resourceName": "resetCourierIfIdle"
+        }
+      ]
+    },
+    "AMPLIFY_function_reversePayout_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reversePayout"
+        }
+      ]
+    },
+    "AMPLIFY_function_reversePayout_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reversePayout"
         }
       ]
     },

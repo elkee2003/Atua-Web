@@ -2,6 +2,11 @@
 import { initSchema } from '@aws-amplify/datastore';
 import { schema } from './schema';
 
+const OrderEnvironment = {
+  "PRODUCTION": "PRODUCTION",
+  "TEST": "TEST"
+};
+
 const EarningsAllocationStatus = {
   "NOT_ALLOCATED": "NOT_ALLOCATED",
   "PROCESSING": "PROCESSING",
@@ -50,6 +55,12 @@ const PayoutStatus = {
   "PROCESSING": "PROCESSING",
   "PAID": "PAID",
   "FAILED": "FAILED"
+};
+
+const PayoutSource = {
+  "COURIER_REQUESTED": "COURIER_REQUESTED",
+  "ADMIN_MANUAL": "ADMIN_MANUAL",
+  "SYSTEM": "SYSTEM"
 };
 
 const OwnerType = {
@@ -115,7 +126,7 @@ const CourierReportStatus = {
   "DISMISSED": "DISMISSED"
 };
 
-const { CompanyVehicle, CourierCompany, Payout, Transaction, Wallet, Payment, Offer, Order, CourierReport, CourierReview, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails } = initSchema(schema);
+const { CompanyVehicle, CourierCompany, Payout, Transaction, Wallet, Payment, Offer, Order, CourierReport, CourierReview, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails, ProcessPayoutsResponse, ReversePayoutResponse } = initSchema(schema);
 
 export {
   CompanyVehicle,
@@ -131,6 +142,7 @@ export {
   CourierLiveLocation,
   Courier,
   User,
+  OrderEnvironment,
   EarningsAllocationStatus,
   FundsStatus,
   OrderPayoutStatus,
@@ -139,6 +151,7 @@ export {
   TransactionType,
   TransactionStatus,
   PayoutStatus,
+  PayoutSource,
   OwnerType,
   OfferStatus,
   CourierPreTransferUploadStatus,
@@ -148,5 +161,7 @@ export {
   OrderStatus,
   CourierReportStatus,
   VerifyAtuaPaymentResult,
-  VerifiedPaymentDetails
+  VerifiedPaymentDetails,
+  ProcessPayoutsResponse,
+  ReversePayoutResponse
 };

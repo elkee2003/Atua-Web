@@ -23,35 +23,57 @@
  *        ↓
  * allocateCourierEarnings
  *        ↓
- * null / empty → PROCESSING
+ * null / empty / FAILED → PROCESSING
+ *        ↓
+ * Find existing wallet
+ *        ↓
+ * If no wallet exists → CREATE wallet
+ *        ↓
+ * Find/create earnings transaction
+ *        ↓
+ * Apply earnings to pendingBalance
+ *        ↓
+ * Mark transaction COMPLETED
  *        ↓
  * PROCESSING → ALLOCATED
  *
- * WHAT THIS LAMBDA DOES
- * ---------------------
- * 1. Confirms the order exists.
- * 2. Confirms payment is PAID.
- * 3. Confirms a courier is assigned.
- * 4. Confirms courier earnings are greater than zero.
- * 5. Claims the allocation operation.
- * 6. Finds the courier.
- * 7. Finds the courier wallet.
- * 8. Creates/reuses the earnings transaction.
- * 9. Adds earnings to pendingBalance.
- * 10. Adds earnings to lifetimeEarnings.
- * 11. Finalizes the Order as ALLOCATED.
+ * ============================================================
  *
- * IMPORTANT
- * ---------
- * This Lambda DOES NOT move money into availableBalance.
+ * IMPORTANT FINANCIAL RULE
+ * ------------------------
  *
- * Courier earnings remain in pendingBalance until:
+ * Courier earnings DO NOT immediately become available.
  *
- * Micro / Moto:
+ * First allocation:
+ *
+ *     availableBalance = unchanged
+ *     pendingBalance   = pendingBalance + earnings
+ *     lifetimeEarnings = lifetimeEarnings + earnings
+ *
+ * Later:
+ *
  *     releaseFunds
- *
- * Maxi:
+ *     OR
  *     releaseCourierMilestoneFunds
+ *
+ * moves the money from pendingBalance to availableBalance.
+ *
+ * ============================================================
+ *
+ * IDEMPOTENCY / RETRY RULE
+ * ------------------------
+ *
+ * The earnings transaction uses:
+ *
+ *     EARNINGS-${orderID}
+ *
+ * as its unique business reference.
+ *
+ * This allows a retry to recognize that the same order has
+ * already created an earnings transaction.
+ *
+ * The Lambda must NEVER simply add the earnings again just
+ * because the order is being retried.
  *
  * ============================================================
  */
@@ -136,12 +158,19 @@ async function graphqlRequest(query, variables = {}) {
 // RESPONSE HELPERS
 // ============================================================
 
-function successResponse(body) {
+function successResponse(body, message = null) {
   return {
     statusCode: 200,
 
     body: JSON.stringify({
       success: true,
+
+      ...(message
+        ? {
+            message,
+          }
+        : {}),
+
       ...body,
     }),
   };
@@ -155,6 +184,7 @@ function errorResponse(error, extra = {}) {
 
     body: JSON.stringify({
       success: false,
+
       message: error?.message || "Failed to allocate courier earnings.",
 
       ...extra,
@@ -164,13 +194,6 @@ function errorResponse(error, extra = {}) {
 
 // ============================================================
 // NORMALIZE MONEY
-// ============================================================
-//
-// We use two decimal places for monetary calculations.
-//
-// Example:
-// 10000 → 10000.00
-//
 // ============================================================
 
 function normalizeMoney(value) {
@@ -212,12 +235,15 @@ async function getOrder(orderID) {
         earningsAllocatedAt
 
         assignedCourierId
-        assignmentStatus
 
         courierEarnings
-
-        earningsAllocationStatus
-        earningsAllocatedAt
+        totalPrice
+        operationalFare
+        commissionAmount
+        platformFee
+        platformServiceRevenue
+        vatAmount
+        platformNetRevenue
 
         fundsReleasedAmount
         pickupFundsReleasedAt
@@ -247,12 +273,7 @@ async function getCourier(courierID) {
     query GetCourier($id: ID!) {
       getCourier(id: $id) {
         id
-        userID
         walletID
-        firstName
-        lastName
-        email
-        phone
 
         _version
         _lastChangedAt
@@ -271,6 +292,24 @@ async function getCourier(courierID) {
 // ============================================================
 // GET WALLET BY ID
 // ============================================================
+//
+// IMPORTANT
+// ---------
+//
+// DO NOT request:
+//
+//     transactions
+//
+// by itself.
+//
+// `transactions` is a ModelTransactionConnection.
+//
+// If requested, GraphQL requires a selection set.
+//
+// This Lambda does not need the transactions connection when
+// retrieving a Wallet.
+//
+// ============================================================
 
 async function getWalletByID(walletID) {
   if (!walletID) {
@@ -281,14 +320,13 @@ async function getWalletByID(walletID) {
     query GetWallet($id: ID!) {
       getWallet(id: $id) {
         id
+
         ownerID
         ownerType
 
         availableBalance
         pendingBalance
         lifetimeEarnings
-
-        transactions
 
         _version
         _lastChangedAt
@@ -308,29 +346,44 @@ async function getWalletByID(walletID) {
 // GET WALLET BY OWNER
 // ============================================================
 //
-// This is the fallback if courier.walletID is missing.
+// Finds the courier wallet using:
+//
+//     ownerID   = Courier.id
+//     ownerType = COURIER
+//
+// IMPORTANT:
+//
+// There is deliberately NO:
+//
+//     transactions
+//
+// field in this query.
 //
 // ============================================================
 
-async function getWalletByOwner(courierID) {
+async function getWalletByOwner(ownerID, ownerType) {
+  if (!ownerID || !ownerType) {
+    return null;
+  }
+
   const query = `
     query ListWallets(
       $filter: ModelWalletFilterInput
+      $limit: Int
     ) {
       listWallets(
         filter: $filter
-        limit: 10
+        limit: $limit
       ) {
         items {
           id
+
           ownerID
           ownerType
 
           availableBalance
           pendingBalance
           lifetimeEarnings
-
-          transactions
 
           _version
           _lastChangedAt
@@ -343,106 +396,638 @@ async function getWalletByOwner(courierID) {
   const data = await graphqlRequest(query, {
     filter: {
       ownerID: {
-        eq: courierID,
+        eq: ownerID,
       },
 
       ownerType: {
-        eq: "COURIER",
+        eq: ownerType,
       },
     },
+
+    limit: 10,
   });
 
   const wallets = data?.listWallets?.items || [];
 
-  return (
-    wallets.find(
-      (wallet) =>
-        wallet &&
-        wallet._deleted !== true &&
-        wallet.ownerID === courierID &&
-        wallet.ownerType === "COURIER",
-    ) || null
-  );
+  // Ignore deleted records.
+  const activeWallet = wallets.find((item) => item && item._deleted !== true);
+
+  return activeWallet || null;
 }
 
 // ============================================================
-// FIND COURIER WALLET
+// CREATE COURIER WALLET
+// ============================================================
+//
+// A courier does NOT need to have a Wallet before receiving
+// their first earnings.
+//
+// The first allocation creates:
+//
+//     availableBalance = 0
+//     pendingBalance   = 0
+//     lifetimeEarnings = 0
+//
+// The actual earnings are added afterwards.
+//
 // ============================================================
 
-async function findCourierWallet(courier) {
-  let wallet = null;
-
-  // ----------------------------------------------------------
-  // First attempt:
-  // use walletID stored on the Courier.
-  // ----------------------------------------------------------
-
-  if (courier.walletID) {
-    wallet = await getWalletByID(courier.walletID);
+async function createCourierWallet(courierID) {
+  if (!courierID) {
+    throw new Error("Cannot create courier wallet without courierID.");
   }
 
-  // ----------------------------------------------------------
-  // Fallback:
-  // search by ownerID + ownerType.
-  // ----------------------------------------------------------
+  const mutation = `
+    mutation CreateWallet(
+      $input: CreateWalletInput!
+    ) {
+      createWallet(input: $input) {
+        id
+
+        ownerID
+        ownerType
+
+        availableBalance
+        pendingBalance
+        lifetimeEarnings
+
+        _version
+        _lastChangedAt
+        _deleted
+      }
+    }
+  `;
+
+  const input = {
+    ownerID: courierID,
+
+    ownerType: "COURIER",
+
+    availableBalance: 0,
+
+    pendingBalance: 0,
+
+    lifetimeEarnings: 0,
+  };
+
+  console.log(`Creating Wallet for courier ${courierID}.`);
+
+  const data = await graphqlRequest(mutation, {
+    input,
+  });
+
+  const wallet = data?.createWallet;
 
   if (!wallet) {
-    wallet = await getWalletByOwner(courier.id);
-  }
-
-  if (!wallet) {
-    throw new Error(`No wallet found for courier ${courier.id}.`);
-  }
-
-  // ----------------------------------------------------------
-  // Security check:
-  // make absolutely sure the wallet belongs to
-  // the courier.
-  // ----------------------------------------------------------
-
-  if (wallet.ownerID !== courier.id) {
     throw new Error(
-      `Wallet ${wallet.id} does not belong to courier ${courier.id}.`,
+      `Wallet creation returned no Wallet for courier ${courierID}.`,
     );
   }
 
-  if (wallet.ownerType !== "COURIER") {
-    throw new Error(`Wallet ${wallet.id} is not a COURIER wallet.`);
-  }
+  console.log("Courier Wallet created:", JSON.stringify(wallet));
 
   return wallet;
 }
 
 // ============================================================
-// GET TRANSACTION BY REFERENCE
+// UPDATE COURIER WALLET ID
 // ============================================================
 //
-// Earnings transactions use:
+// Once the Wallet exists, save its ID to:
 //
-// EARNINGS-${orderID}
+//     Courier.walletID
 //
-// This makes the operation idempotent.
+// This makes future allocations faster.
+//
+// `_version` is included when available for Amplify/DataStore
+// optimistic concurrency.
 //
 // ============================================================
 
-async function getTransactionByReference(reference) {
+async function updateCourierWalletID(courier, walletID) {
+  if (!courier) {
+    throw new Error("Cannot update walletID because Courier is missing.");
+  }
+
+  if (!walletID) {
+    throw new Error("Cannot update Courier.walletID without a walletID.");
+  }
+
+  // If the Courier already points to this exact Wallet,
+  // there is nothing to update.
+  if (courier.walletID === walletID) {
+    return courier;
+  }
+
+  const input = {
+    id: courier.id,
+
+    walletID,
+  };
+
+  if (courier._version !== undefined && courier._version !== null) {
+    input._version = courier._version;
+  }
+
+  const mutation = `
+    mutation UpdateCourier(
+      $input: UpdateCourierInput!
+    ) {
+      updateCourier(input: $input) {
+        id
+        walletID
+
+        _version
+        _lastChangedAt
+        _deleted
+      }
+    }
+  `;
+
+  console.log(`Saving Wallet ${walletID} to Courier ${courier.id}.`);
+
+  const data = await graphqlRequest(mutation, {
+    input,
+  });
+
+  const updatedCourier = data?.updateCourier;
+
+  if (!updatedCourier) {
+    throw new Error(
+      `Failed to save walletID ${walletID} to Courier ${courier.id}.`,
+    );
+  }
+
+  console.log("Courier.walletID updated:", JSON.stringify(updatedCourier));
+
+  return updatedCourier;
+}
+
+// ============================================================
+// FIND OR CREATE COURIER WALLET
+// ============================================================
+//
+// FLOW:
+//
+// 1. Courier.walletID exists
+//       ↓
+//    retrieve Wallet
+//
+// 2. If that fails
+//       ↓
+//    search Wallet by ownerID + ownerType
+//
+// 3. If found
+//       ↓
+//    repair Courier.walletID if necessary
+//
+// 4. If not found
+//       ↓
+//    create Wallet
+//
+// 5. Save new Wallet.id to Courier
+//
+// ============================================================
+
+async function findCourierWallet(courier) {
+  if (!courier) {
+    throw new Error("Courier was not found.");
+  }
+
+  let wallet = null;
+
+  let courierUpdated = false;
+
+  let walletCreated = false;
+
+  // ==========================================================
+  // STEP 1
+  // TRY COURIER.walletID
+  // ==========================================================
+
+  if (courier.walletID) {
+    console.log(`Trying Courier.walletID: ${courier.walletID}`);
+
+    wallet = await getWalletByID(courier.walletID);
+
+    if (wallet && wallet._deleted !== true) {
+      console.log(`Wallet found by Courier.walletID: ${wallet.id}`);
+
+      return {
+        wallet,
+
+        courier,
+
+        walletCreated: false,
+
+        courierUpdated: false,
+      };
+    }
+
+    console.warn(
+      `Courier.walletID ${courier.walletID} did not return an active Wallet.`,
+    );
+  }
+
+  // ==========================================================
+  // STEP 2
+  // FALLBACK OWNER LOOKUP
+  // ==========================================================
+
+  console.log(
+    `Searching for Courier wallet by ownerID for courier ${courier.id}.`,
+  );
+
+  wallet = await getWalletByOwner(courier.id, "COURIER");
+
+  // ==========================================================
+  // EXISTING WALLET FOUND
+  // ==========================================================
+
+  if (wallet) {
+    console.log(`Wallet found by owner lookup: ${wallet.id}`);
+
+    // --------------------------------------------------------
+    // Repair Courier.walletID if necessary.
+    // --------------------------------------------------------
+
+    if (courier.walletID !== wallet.id) {
+      console.log(
+        `Repairing Courier.walletID from ${
+          courier.walletID || "null"
+        } to ${wallet.id}.`,
+      );
+
+      const updatedCourier = await updateCourierWalletID(courier, wallet.id);
+
+      courier = updatedCourier;
+
+      courierUpdated = true;
+    }
+
+    return {
+      wallet,
+
+      courier,
+
+      walletCreated: false,
+
+      courierUpdated,
+    };
+  }
+
+  // ==========================================================
+  // STEP 3
+  // NO WALLET EXISTS
+  // ==========================================================
+  //
+  // This is normal for a courier receiving earnings for the
+  // first time.
+  //
+  // ==========================================================
+
+  console.log(
+    `No Wallet exists for courier ${courier.id}. Creating first Wallet.`,
+  );
+
+  wallet = await createCourierWallet(courier.id);
+
+  walletCreated = true;
+
+  // ==========================================================
+  // SAVE WALLET ID TO COURIER
+  // ==========================================================
+
+  const updatedCourier = await updateCourierWalletID(courier, wallet.id);
+
+  courier = updatedCourier;
+
+  courierUpdated = true;
+
+  console.log(`First Wallet setup completed for courier ${courier.id}.`);
+
+  return {
+    wallet,
+
+    courier,
+
+    walletCreated,
+
+    courierUpdated,
+  };
+}
+
+// ============================================================
+// UPDATE ORDER
+// ============================================================
+//
+// This helper is used for:
+//
+//     PROCESSING
+//     ALLOCATED
+//     FAILED
+//
+// `_version` should normally be supplied in the input by the
+// caller when updating a DataStore-enabled record.
+//
+// ============================================================
+
+async function updateOrder(orderID, input, condition = undefined) {
+  const mutation = `
+    mutation UpdateOrder(
+      $input: UpdateOrderInput!
+      $condition: ModelOrderConditionInput
+    ) {
+      updateOrder(
+        input: $input
+        condition: $condition
+      ) {
+        id
+
+        userID
+
+        paymentStatus
+        paymentID
+        paymentReference
+
+        status
+
+        fundsStatus
+        fundsReleaseBlocked
+        fundsHoldReason
+        fundsHeldBy
+        fundsHeldAt
+
+        payoutStatus
+
+        earningsAllocationStatus
+        earningsAllocatedAt
+
+        assignedCourierId
+
+        courierEarnings
+        totalPrice
+        operationalFare
+        commissionAmount
+        platformFee
+        platformServiceRevenue
+        vatAmount
+        platformNetRevenue
+
+        fundsReleasedAmount
+        pickupFundsReleasedAt
+        fundsReleasedAt
+        fundsReleaseType
+
+        _version
+        _lastChangedAt
+        _deleted
+      }
+    }
+  `;
+
+  const variables = {
+    input,
+  };
+
+  if (condition !== undefined) {
+    variables.condition = condition;
+  }
+
+  const data = await graphqlRequest(mutation, variables);
+
+  return data?.updateOrder;
+}
+
+// ============================================================
+// CLAIM ALLOCATION
+// ============================================================
+//
+// Allocation states:
+//
+//     null / undefined / ""
+//     NOT_ALLOCATED
+//     FAILED
+//
+//        ↓
+//
+//     PROCESSING
+//
+// IMPORTANT:
+//
+// The claim is performed using the Order `_version`.
+//
+// This prevents an old invocation from blindly overwriting a
+// newer Order version.
+//
+// ============================================================
+
+async function claimAllocation(order, previousStatus) {
+  const input = {
+    id: order.id,
+
+    earningsAllocationStatus: "PROCESSING",
+  };
+
+  if (order._version !== undefined && order._version !== null) {
+    input._version = order._version;
+  }
+
+  let condition;
+
+  // ----------------------------------------------------------
+  // NULL / UNDEFINED
+  // ----------------------------------------------------------
+  //
+  // Do not use attributeExists here.
+  //
+  // Your previous deployment showed that this schema/update
+  // path does not support using that operator for this field.
+  //
+  // `_version` is the concurrency protection.
+  //
+  // ----------------------------------------------------------
+
+  if (previousStatus === null || previousStatus === undefined) {
+    condition = undefined;
+  }
+
+  // ----------------------------------------------------------
+  // EMPTY STRING
+  // ----------------------------------------------------------
+  else if (previousStatus === "") {
+    condition = {
+      earningsAllocationStatus: {
+        eq: "",
+      },
+    };
+  }
+
+  // ----------------------------------------------------------
+  // ANY EXPLICIT STATUS
+  // ----------------------------------------------------------
+  else {
+    condition = {
+      earningsAllocationStatus: {
+        eq: previousStatus,
+      },
+    };
+  }
+
+  const variables = {
+    input,
+  };
+
+  if (condition !== undefined) {
+    variables.condition = condition;
+  }
+
+  const mutation = `
+    mutation UpdateOrder(
+      $input: UpdateOrderInput!
+      $condition: ModelOrderConditionInput
+    ) {
+      updateOrder(
+        input: $input
+        condition: $condition
+      ) {
+        id
+
+        earningsAllocationStatus
+        earningsAllocatedAt
+
+        _version
+        _lastChangedAt
+        _deleted
+      }
+    }
+  `;
+
+  try {
+    const data = await graphqlRequest(mutation, variables);
+
+    return data?.updateOrder || null;
+  } catch (error) {
+    console.error("Failed to claim earnings allocation:", error);
+
+    return null;
+  }
+}
+
+// ============================================================
+// FINALIZE ALLOCATION
+// ============================================================
+//
+// PROCESSING → ALLOCATED
+//
+// The condition prevents finalization of an Order that has
+// moved to another state.
+//
+// ============================================================
+
+async function finalizeAllocation(order) {
+  const input = {
+    id: order.id,
+
+    earningsAllocationStatus: "ALLOCATED",
+
+    earningsAllocatedAt: new Date().toISOString(),
+  };
+
+  if (order._version !== undefined && order._version !== null) {
+    input._version = order._version;
+  }
+
+  const condition = {
+    earningsAllocationStatus: {
+      eq: "PROCESSING",
+    },
+  };
+
+  return updateOrder(order.id, input, condition);
+}
+
+// ============================================================
+// MARK ALLOCATION FAILED
+// ============================================================
+
+async function markAllocationFailed(order) {
+  if (!order) {
+    return null;
+  }
+
+  const input = {
+    id: order.id,
+
+    earningsAllocationStatus: "FAILED",
+  };
+
+  if (order._version !== undefined && order._version !== null) {
+    input._version = order._version;
+  }
+
+  const condition = {
+    earningsAllocationStatus: {
+      eq: "PROCESSING",
+    },
+  };
+
+  try {
+    return await updateOrder(order.id, input, condition);
+  } catch (error) {
+    console.error("Failed to mark earnings allocation as FAILED:", error);
+
+    return null;
+  }
+}
+
+// ============================================================
+// TRANSACTION REFERENCE
+// ============================================================
+//
+// Every order has ONE earnings transaction:
+//
+//     EARNINGS-${orderID}
+//
+// This reference is the business-level idempotency key.
+//
+// ============================================================
+
+function getEarningsReference(orderID) {
+  return `EARNINGS-${orderID}`;
+}
+
+// ============================================================
+// LIST EARNINGS TRANSACTION
+// ============================================================
+
+async function getEarningsTransaction(orderID) {
+  const reference = getEarningsReference(orderID);
+
   const query = `
     query ListTransactions(
       $filter: ModelTransactionFilterInput
+      $limit: Int
     ) {
       listTransactions(
         filter: $filter
-        limit: 10
+        limit: $limit
       ) {
         items {
           id
+
           walletID
+
           type
           amount
+
           description
+
           orderID
           paymentID
+
           reference
+
           status
 
           _version
@@ -459,130 +1044,17 @@ async function getTransactionByReference(reference) {
         eq: reference,
       },
     },
+
+    limit: 10,
   });
 
   const transactions = data?.listTransactions?.items || [];
 
-  return (
-    transactions.find(
-      (transaction) =>
-        transaction &&
-        transaction._deleted !== true &&
-        transaction.reference === reference,
-    ) || null
+  const activeTransaction = transactions.find(
+    (item) => item && item._deleted !== true,
   );
-}
 
-// ============================================================
-// CLAIM ORDER ALLOCATION
-// ============================================================
-//
-// IMPORTANT:
-//
-// earningsAllocationStatus can initially be:
-//   null
-//   ""
-//   NOT_ALLOCATED
-//   FAILED
-//
-// Because the Paystack webhook intentionally does NOT
-// initialize earningsAllocationStatus.
-//
-// The first successful allocation therefore becomes:
-//
-// null → PROCESSING
-//
-// ============================================================
-
-async function claimAllocation(order, previousStatus) {
-  const mutation = `
-    mutation UpdateOrder(
-      $input: UpdateOrderInput!
-      $condition: ModelOrderConditionInput
-    ) {
-      updateOrder(
-        input: $input
-        condition: $condition
-      ) {
-        id
-
-        paymentStatus
-        paymentID
-        paymentReference
-
-        fundsStatus
-
-        earningsAllocationStatus
-        earningsAllocatedAt
-
-        assignedCourierId
-        courierEarnings
-
-        _version
-        _lastChangedAt
-      }
-    }
-  `;
-
-  const input = {
-    id: order.id,
-
-    earningsAllocationStatus: "PROCESSING",
-  };
-
-  // ----------------------------------------------------------
-  // Use optimistic concurrency whenever AppSync/DataStore
-  // provides a version.
-  // ----------------------------------------------------------
-
-  if (order._version !== undefined && order._version !== null) {
-    input._version = order._version;
-  }
-
-  // ----------------------------------------------------------
-  // IMPORTANT:
-  //
-  // We construct the condition based on the ACTUAL state
-  // we read.
-  //
-  // If the status is null, condition checks for null.
-  //
-  // If it is empty string, condition checks for empty string.
-  //
-  // If it is NOT_ALLOCATED, condition checks that.
-  //
-  // This prevents two Lambda invocations from both claiming
-  // the same order.
-  // ----------------------------------------------------------
-
-  let condition;
-
-  if (previousStatus === null || previousStatus === undefined) {
-    condition = {
-      earningsAllocationStatus: {
-        attributeExists: false,
-      },
-    };
-  } else if (previousStatus === "") {
-    condition = {
-      earningsAllocationStatus: {
-        eq: "",
-      },
-    };
-  } else {
-    condition = {
-      earningsAllocationStatus: {
-        eq: previousStatus,
-      },
-    };
-  }
-
-  const data = await graphqlRequest(mutation, {
-    input,
-    condition,
-  });
-
-  return data?.updateOrder;
+  return activeTransaction || null;
 }
 
 // ============================================================
@@ -604,17 +1076,24 @@ async function createEarningsTransaction({
         input: $input
       ) {
         id
+
         walletID
+
         type
         amount
+
         description
+
         orderID
         paymentID
+
         reference
+
         status
 
         _version
         _lastChangedAt
+        _deleted
       }
     }
   `;
@@ -626,7 +1105,7 @@ async function createEarningsTransaction({
 
     amount,
 
-    description: "Courier earnings allocated to pending balance",
+    description: "Courier earnings allocated from paid order.",
 
     orderID,
 
@@ -647,49 +1126,110 @@ async function createEarningsTransaction({
 // ============================================================
 // UPDATE TRANSACTION
 // ============================================================
+//
+// `_version` should be included in the input when the caller
+// has the current transaction version.
+//
+// ============================================================
 
-async function updateTransaction(transactionID, updates, version) {
+async function updateTransaction(transactionID, input, condition = undefined) {
   const mutation = `
     mutation UpdateTransaction(
       $input: UpdateTransactionInput!
+      $condition: ModelTransactionConditionInput
     ) {
       updateTransaction(
         input: $input
+        condition: $condition
       ) {
         id
+
         walletID
+
         type
         amount
+
         description
+
         orderID
         paymentID
+
         reference
+
         status
 
         _version
         _lastChangedAt
+        _deleted
       }
     }
   `;
 
-  const input = {
-    id: transactionID,
-    ...updates,
+  const variables = {
+    input: {
+      id: transactionID,
+
+      ...input,
+    },
   };
 
-  if (version !== undefined && version !== null) {
-    input._version = version;
+  if (condition !== undefined) {
+    variables.condition = condition;
   }
 
-  const data = await graphqlRequest(mutation, {
-    input,
-  });
+  const data = await graphqlRequest(mutation, variables);
 
-  return data?.updateTransaction;
+  return data?.updateTransaction || null;
+}
+
+// ============================================================
+// MARK TRANSACTION FAILED
+// ============================================================
+//
+// This is only used when the transaction has been created but
+// the allocation cannot be completed.
+//
+// IMPORTANT:
+//
+// Part 2 will make FAILED transactions recoverable for the
+// same order rather than permanently blocking the allocation.
+//
+// ============================================================
+
+async function markTransactionFailed(transaction) {
+  if (!transaction) {
+    return null;
+  }
+
+  try {
+    const input = {
+      status: "FAILED",
+    };
+
+    if (transaction._version !== undefined && transaction._version !== null) {
+      input._version = transaction._version;
+    }
+
+    return await updateTransaction(transaction.id, input);
+  } catch (error) {
+    console.error("Failed to mark transaction FAILED:", error);
+
+    return null;
+  }
 }
 
 // ============================================================
 // UPDATE WALLET
+// ============================================================
+//
+// IMPORTANT:
+//
+// availableBalance stays unchanged.
+//
+// pendingBalance increases.
+//
+// lifetimeEarnings increases.
+//
 // ============================================================
 
 async function updateWallet(
@@ -698,6 +1238,20 @@ async function updateWallet(
   pendingBalance,
   lifetimeEarnings,
 ) {
+  const input = {
+    id: wallet.id,
+
+    availableBalance: normalizeMoney(availableBalance),
+
+    pendingBalance: normalizeMoney(pendingBalance),
+
+    lifetimeEarnings: normalizeMoney(lifetimeEarnings),
+  };
+
+  if (wallet._version !== undefined && wallet._version !== null) {
+    input._version = wallet._version;
+  }
+
   const mutation = `
     mutation UpdateWallet(
       $input: UpdateWalletInput!
@@ -706,6 +1260,7 @@ async function updateWallet(
         input: $input
       ) {
         id
+
         ownerID
         ownerType
 
@@ -715,187 +1270,126 @@ async function updateWallet(
 
         _version
         _lastChangedAt
+        _deleted
       }
     }
   `;
-
-  const input = {
-    id: wallet.id,
-
-    availableBalance,
-
-    pendingBalance,
-
-    lifetimeEarnings,
-  };
-
-  // ----------------------------------------------------------
-  // Optimistic concurrency protection.
-  // ----------------------------------------------------------
-
-  if (wallet._version !== undefined && wallet._version !== null) {
-    input._version = wallet._version;
-  }
 
   const data = await graphqlRequest(mutation, {
     input,
   });
 
-  return data?.updateWallet;
+  return data?.updateWallet || null;
 }
 
 // ============================================================
-// FINALIZE ORDER
+// GET TRANSACTION BY ID
 // ============================================================
 //
-// PROCESSING → ALLOCATED
+// Used when a previous operation may already have modified
+// the transaction and we need the latest version/status.
 //
 // ============================================================
 
-async function finalizeAllocation(order, earningsAllocatedAt) {
-  const mutation = `
-    mutation UpdateOrder(
-      $input: UpdateOrderInput!
-      $condition: ModelOrderConditionInput
+async function getTransaction(transactionID) {
+  if (!transactionID) {
+    return null;
+  }
+
+  const query = `
+    query GetTransaction(
+      $id: ID!
     ) {
-      updateOrder(
-        input: $input
-        condition: $condition
+      getTransaction(
+        id: $id
       ) {
         id
 
-        earningsAllocationStatus
-        earningsAllocatedAt
+        walletID
 
-        paymentStatus
-        fundsStatus
+        type
+        amount
 
-        courierEarnings
+        description
+
+        orderID
+        paymentID
+
+        reference
+
+        status
 
         _version
         _lastChangedAt
+        _deleted
       }
     }
   `;
 
-  const input = {
-    id: order.id,
-
-    earningsAllocationStatus: "ALLOCATED",
-
-    earningsAllocatedAt,
-  };
-
-  if (order._version !== undefined && order._version !== null) {
-    input._version = order._version;
-  }
-
-  // ----------------------------------------------------------
-  // Only finalize if this Lambda currently owns the
-  // PROCESSING state.
-  // ----------------------------------------------------------
-
-  const condition = {
-    earningsAllocationStatus: {
-      eq: "PROCESSING",
-    },
-  };
-
-  const data = await graphqlRequest(mutation, {
-    input,
-    condition,
+  const data = await graphqlRequest(query, {
+    id: transactionID,
   });
 
-  return data?.updateOrder;
+  return data?.getTransaction || null;
 }
 
 // ============================================================
-// MARK ALLOCATION AS FAILED
+// CHECK WHETHER TRANSACTION IS ALREADY COMPLETED
 // ============================================================
 //
-// This is only used when we know the allocation did not
-// complete and we are confident that no wallet update needs
-// to remain active.
+// This helper is intentionally separate.
+//
+// If a previous invocation successfully completed the wallet
+// allocation and marked the transaction COMPLETED, a retry must
+// NOT add the same earnings to the wallet again.
 //
 // ============================================================
 
-async function markAllocationFailed(orderID, orderVersion) {
-  const mutation = `
-    mutation UpdateOrder(
-      $input: UpdateOrderInput!
-      $condition: ModelOrderConditionInput
-    ) {
-      updateOrder(
-        input: $input
-        condition: $condition
-      ) {
-        id
+async function isEarningsTransactionCompleted(orderID) {
+  const transaction = await getEarningsTransaction(orderID);
 
-        earningsAllocationStatus
-        earningsAllocatedAt
-
-        _version
-        _lastChangedAt
-      }
-    }
-  `;
-
-  const input = {
-    id: orderID,
-
-    earningsAllocationStatus: "FAILED",
-  };
-
-  if (orderVersion !== undefined && orderVersion !== null) {
-    input._version = orderVersion;
-  }
-
-  const condition = {
-    earningsAllocationStatus: {
-      eq: "PROCESSING",
-    },
-  };
-
-  const data = await graphqlRequest(mutation, {
-    input,
-    condition,
-  });
-
-  return data?.updateOrder;
-}
-
-// ============================================================
-// MARK TRANSACTION FAILED
-// ============================================================
-
-async function markTransactionFailed(transaction) {
   if (!transaction) {
-    return null;
+    return {
+      completed: false,
+
+      transaction: null,
+    };
   }
 
-  if (transaction.status === "FAILED") {
-    return transaction;
-  }
+  return {
+    completed: transaction.status === "COMPLETED",
 
-  try {
-    return await updateTransaction(
-      transaction.id,
-
-      {
-        status: "FAILED",
-
-        description: "Courier earnings allocation failed",
-      },
-
-      transaction._version,
-    );
-  } catch (error) {
-    console.error("Failed to mark earnings transaction as FAILED:", error);
-
-    return null;
-  }
+    transaction,
+  };
 }
 
+// ============================================================
+// END OF PART 1
+// ============================================================
+//
+// PART 2 CONTINUES WITH:
+//
+//     MAIN HANDLER
+//
+// INCLUDING THE IMPORTANT RETRY-SAFE FLOW:
+//
+//     get order
+//       ↓
+//     claim allocation
+//       ↓
+//     find/create wallet
+//       ↓
+//     find/create earnings transaction
+//       ↓
+//     detect already-completed transaction
+//       ↓
+//     update wallet ONLY when necessary
+//       ↓
+//     mark transaction COMPLETED
+//       ↓
+//     finalize order ALLOCATED
+//
+// ============================================================
 // ============================================================
 // MAIN HANDLER
 // ============================================================
@@ -903,37 +1397,39 @@ async function markTransactionFailed(transaction) {
 exports.handler = async (event) => {
   console.log("============================================================");
 
-  console.log("allocateCourierEarnings START");
+  console.log("allocateCourierEarnings invoked");
 
   console.log("Event:", JSON.stringify(event));
 
   console.log("============================================================");
 
-  // ----------------------------------------------------------
-  // Variables used for compensation/recovery.
-  // ----------------------------------------------------------
+  // ==========================================================
+  // STATE VARIABLES
+  // ==========================================================
 
   let order = null;
 
-  let wallet = null;
+  let courier = null;
 
-  let updatedWallet = null;
+  let wallet = null;
 
   let transaction = null;
 
-  let walletWasUpdated = false;
+  let allocationClaimed = false;
 
-  let orderWasFinalized = false;
+  let walletWasCreated = false;
+
+  let walletWasUpdated = false;
 
   let transactionWasCreated = false;
 
-  let earnings = 0;
+  let transactionWasCompleted = false;
 
-  let walletBeforeUpdate = null;
+  let orderWasFinalized = false;
 
   try {
     // ========================================================
-    // 1. GET ORDER ID
+    // GET ORDER ID
     // ========================================================
 
     const orderID =
@@ -946,10 +1442,10 @@ exports.handler = async (event) => {
       throw new Error("orderID is required.");
     }
 
-    console.log("Order ID:", orderID);
+    console.log(`Processing order: ${orderID}`);
 
     // ========================================================
-    // 2. GET ORDER
+    // GET ORDER
     // ========================================================
 
     order = await getOrder(orderID);
@@ -958,317 +1454,377 @@ exports.handler = async (event) => {
       throw new Error(`Order ${orderID} was not found.`);
     }
 
-    if (order._deleted === true) {
-      throw new Error(`Order ${orderID} has been deleted.`);
-    }
-
     console.log("Order retrieved:", JSON.stringify(order));
 
     // ========================================================
-    // 3. VERIFY PAYMENT
+    // PAYMENT CHECK
     // ========================================================
     //
-    // The Paystack webhook is responsible for setting:
-    //
-    // paymentStatus = PAID
-    //
-    // We do NOT require the webhook to set
-    // earningsAllocationStatus.
+    // Earnings can only be allocated after payment succeeds.
     //
     // ========================================================
 
     if (order.paymentStatus !== "PAID") {
-      throw new Error(
-        `Order ${orderID} is not PAID. Current paymentStatus: ${order.paymentStatus}`,
+      console.log(
+        `Order ${order.id} paymentStatus is ${order.paymentStatus}. Allocation skipped.`,
       );
+
+      return successResponse({
+        skipped: true,
+
+        reason: "Order payment is not PAID.",
+
+        orderID: order.id,
+      });
     }
 
     // ========================================================
-    // 4. VERIFY COURIER ASSIGNMENT
+    // COURIER CHECK
     // ========================================================
 
     if (!order.assignedCourierId) {
-      throw new Error(`Order ${orderID} has no assigned courier.`);
+      console.log(
+        `Order ${order.id} has no assigned courier. Allocation skipped.`,
+      );
+
+      return successResponse({
+        skipped: true,
+
+        reason: "Order has no assigned courier.",
+
+        orderID: order.id,
+      });
     }
 
     // ========================================================
-    // 5. VERIFY COURIER EARNINGS
+    // EARNINGS CHECK
     // ========================================================
 
-    earnings = normalizeMoney(order.courierEarnings);
+    const earnings = normalizeMoney(order.courierEarnings);
 
     if (earnings <= 0) {
       throw new Error(
-        `Order ${orderID} has invalid courier earnings: ${order.courierEarnings}`,
+        `Courier earnings are invalid for order ${order.id}: ${order.courierEarnings}`,
       );
     }
 
-    console.log("Courier earnings:", earnings);
+    console.log(`Courier earnings: ${earnings}`);
 
     // ========================================================
-    // 6. CHECK CURRENT ALLOCATION STATE
-    // ========================================================
-    //
-    // IMPORTANT:
-    //
-    // null / undefined / ""
-    //
-    // are all treated as a fresh allocation.
-    //
-    // This is exactly what we want because the Paystack
-    // webhook does not initialize this field.
-    //
+    // CURRENT ALLOCATION STATUS
     // ========================================================
 
     const currentAllocationStatus = order.earningsAllocationStatus;
 
-    console.log("Current earningsAllocationStatus:", currentAllocationStatus);
+    console.log(
+      `Current earningsAllocationStatus: ${currentAllocationStatus ?? "null"}`,
+    );
 
-    // --------------------------------------------------------
-    // Already allocated?
-    // --------------------------------------------------------
+    // ========================================================
+    // ALREADY ALLOCATED
+    // ========================================================
+    //
+    // If the Order already says ALLOCATED, there is nothing
+    // left for this Lambda to do.
+    //
+    // ========================================================
 
     if (currentAllocationStatus === "ALLOCATED") {
-      console.log(`Order ${orderID} is already ALLOCATED.`);
+      console.log(`Order ${order.id} is already ALLOCATED.`);
 
       return successResponse({
-        message: "Courier earnings were already allocated.",
+        skipped: true,
 
-        orderID,
+        reason: "Earnings already allocated.",
 
-        earnings,
-
-        earningsAllocationStatus: "ALLOCATED",
-
-        idempotent: true,
+        orderID: order.id,
       });
     }
 
-    // --------------------------------------------------------
-    // Currently processing?
-    // --------------------------------------------------------
-
-    if (currentAllocationStatus === "PROCESSING") {
-      console.log(`Order ${orderID} is already PROCESSING.`);
-
-      return successResponse({
-        message: "Courier earnings allocation is already processing.",
-
-        orderID,
-
-        earnings,
-
-        earningsAllocationStatus: "PROCESSING",
-
-        alreadyProcessing: true,
-      });
-    }
-
-    // --------------------------------------------------------
-    // Only these states can begin a new allocation:
+    // ========================================================
+    // IMPORTANT RETRY CHECK
+    // ========================================================
     //
-    // null
-    // undefined
-    // ""
-    // NOT_ALLOCATED
-    // FAILED
-    // --------------------------------------------------------
+    // Before claiming PROCESSING, check whether the earnings
+    // transaction was already COMPLETED.
+    //
+    // This protects against the following situation:
+    //
+    //     Wallet updated
+    //          ↓
+    //     Transaction completed
+    //          ↓
+    //     Order finalization failed
+    //          ↓
+    //     Lambda runs again
+    //
+    // The retry must NOT add the earnings a second time.
+    //
+    // ========================================================
 
-    const allowedInitialStates = [
-      null,
-      undefined,
-      "",
-      "NOT_ALLOCATED",
-      "FAILED",
-    ];
+    const previousTransactionState = await isEarningsTransactionCompleted(
+      order.id,
+    );
 
-    if (!allowedInitialStates.includes(currentAllocationStatus)) {
-      throw new Error(
-        `Order ${orderID} has an unexpected earningsAllocationStatus: ${currentAllocationStatus}`,
+    if (previousTransactionState.completed) {
+      transaction = previousTransactionState.transaction;
+
+      console.log(
+        `Earnings transaction ${transaction.id} is already COMPLETED.`,
+      );
+
+      // ------------------------------------------------------
+      // The financial allocation has already happened.
+      //
+      // We therefore DO NOT update the wallet again.
+      // ------------------------------------------------------
+
+      transactionWasCompleted = true;
+
+      // ------------------------------------------------------
+      // If the Order is not yet ALLOCATED, attempt to finalize
+      // it now.
+      // ------------------------------------------------------
+
+      if (currentAllocationStatus !== "ALLOCATED") {
+        console.log(
+          `Transaction is already completed. Attempting to finalize Order ${order.id}.`,
+        );
+
+        // ----------------------------------------------------
+        // If Order is not PROCESSING, claim it first.
+        // ----------------------------------------------------
+
+        if (currentAllocationStatus !== "PROCESSING") {
+          const claimedOrder = await claimAllocation(
+            order,
+            currentAllocationStatus,
+          );
+
+          if (!claimedOrder) {
+            throw new Error(
+              `Earnings transaction is already COMPLETED, but Order ${order.id} could not be claimed for finalization.`,
+            );
+          }
+
+          allocationClaimed = true;
+
+          order = {
+            ...order,
+            ...claimedOrder,
+          };
+        }
+
+        // ----------------------------------------------------
+        // Finalize the already-completed allocation.
+        // ----------------------------------------------------
+
+        const finalizedOrder = await finalizeAllocation(order);
+
+        if (!finalizedOrder) {
+          throw new Error(
+            `Earnings transaction ${transaction.id} is already COMPLETED, but Order ${order.id} could not be finalized.`,
+          );
+        }
+
+        order = finalizedOrder;
+
+        orderWasFinalized = true;
+      }
+
+      // ------------------------------------------------------
+      // Return without touching the wallet.
+      // ------------------------------------------------------
+
+      return successResponse(
+        {
+          orderID: order.id,
+
+          courierID: order.assignedCourierId,
+
+          walletID: transaction.walletID,
+
+          transactionID: transaction.id,
+
+          amount: earnings,
+
+          transactionStatus: transaction.status,
+
+          earningsAllocationStatus: order.earningsAllocationStatus,
+
+          alreadyAllocated: true,
+        },
+
+        "Courier earnings had already been allocated. No duplicate wallet credit was made.",
       );
     }
 
     // ========================================================
-    // 7. CLAIM THE ALLOCATION
+    // ALREADY PROCESSING
     // ========================================================
     //
-    // This changes:
-    //
-    // null → PROCESSING
-    //
-    // or:
-    //
-    // NOT_ALLOCATED → PROCESSING
-    //
-    // or:
-    //
-    // FAILED → PROCESSING
-    //
-    // The conditional update prevents another Lambda
-    // invocation from claiming the same order simultaneously.
+    // If another invocation currently owns PROCESSING, do not
+    // blindly perform another allocation.
     //
     // ========================================================
 
-    console.log(`Claiming earnings allocation for ${orderID}...`);
+    if (currentAllocationStatus === "PROCESSING") {
+      console.log(`Order ${order.id} is already PROCESSING.`);
+
+      return successResponse({
+        skipped: true,
+
+        reason: "Earnings allocation is already processing.",
+
+        orderID: order.id,
+      });
+    }
+
+    // ========================================================
+    // CLAIM ALLOCATION
+    // ========================================================
+    //
+    // Possible previous states:
+    //
+    //     null
+    //     undefined
+    //     ""
+    //     NOT_ALLOCATED
+    //     FAILED
+    //
+    // All of these can be claimed again.
+    //
+    // ========================================================
+
+    console.log(
+      `Claiming allocation for order ${order.id}: ${
+        currentAllocationStatus ?? "null"
+      } -> PROCESSING`,
+    );
 
     const claimedOrder = await claimAllocation(order, currentAllocationStatus);
 
     if (!claimedOrder) {
       throw new Error(
-        `Failed to claim earnings allocation for order ${orderID}.`,
+        `Could not claim earnings allocation for order ${order.id}. Another invocation may have claimed it first.`,
       );
     }
-
-    console.log("Allocation claimed:", JSON.stringify(claimedOrder));
 
     // --------------------------------------------------------
     // IMPORTANT:
     //
-    // From this point forward, use the newly returned Order
-    // version for subsequent Order updates.
+    // Only mark allocationClaimed AFTER the conditional
+    // mutation succeeds.
     // --------------------------------------------------------
 
-    order = claimedOrder;
+    allocationClaimed = true;
+
+    order = {
+      ...order,
+      ...claimedOrder,
+    };
+
+    console.log("Allocation claimed successfully. Order is now PROCESSING.");
 
     // ========================================================
-    // 8. GET COURIER
+    // GET COURIER
     // ========================================================
 
-    const courier = await getCourier(order.assignedCourierId);
+    courier = await getCourier(order.assignedCourierId);
 
     if (!courier) {
       throw new Error(`Courier ${order.assignedCourierId} was not found.`);
     }
 
-    if (courier._deleted === true) {
-      throw new Error(`Courier ${order.assignedCourierId} has been deleted.`);
-    }
-
-    console.log("Courier:", JSON.stringify(courier));
+    console.log("Courier retrieved:", JSON.stringify(courier));
 
     // ========================================================
-    // 9. GET COURIER WALLET
-    // ========================================================
-
-    wallet = await findCourierWallet(courier);
-
-    console.log("Courier wallet:", JSON.stringify(wallet));
-
-    // ========================================================
-    // 10. VALIDATE WALLET BALANCES
-    // ========================================================
-
-    const currentAvailableBalance = normalizeMoney(wallet.availableBalance);
-
-    const currentPendingBalance = normalizeMoney(wallet.pendingBalance);
-
-    const currentLifetimeEarnings = normalizeMoney(wallet.lifetimeEarnings);
-
-    if (currentAvailableBalance < 0) {
-      throw new Error(`Wallet ${wallet.id} has a negative availableBalance.`);
-    }
-
-    if (currentPendingBalance < 0) {
-      throw new Error(`Wallet ${wallet.id} has a negative pendingBalance.`);
-    }
-
-    if (currentLifetimeEarnings < 0) {
-      throw new Error(`Wallet ${wallet.id} has a negative lifetimeEarnings.`);
-    }
-
-    // ========================================================
-    // 11. SAVE WALLET STATE
+    // FIND OR CREATE WALLET
     // ========================================================
     //
-    // If something fails after the wallet is updated, this
-    // allows us to attempt a compensating rollback.
+    // This handles:
+    //
+    //     existing Courier.walletID
+    //     existing Wallet by owner
+    //     first-time Wallet creation
     //
     // ========================================================
 
-    walletBeforeUpdate = {
-      availableBalance: currentAvailableBalance,
+    const walletResult = await findCourierWallet(courier);
 
-      pendingBalance: currentPendingBalance,
+    wallet = walletResult.wallet;
 
-      lifetimeEarnings: currentLifetimeEarnings,
+    courier = walletResult.courier;
 
-      _version: wallet._version,
-    };
-
-    // ========================================================
-    // 12. CALCULATE NEW WALLET BALANCES
-    // ========================================================
-    //
-    // IMPORTANT:
-    //
-    // availableBalance DOES NOT change.
-    //
-    // pendingBalance increases.
-    //
-    // lifetimeEarnings increases.
-    //
-    // Example:
-    //
-    // available = 20,000
-    // pending   = 5,000
-    // earnings  = 10,000
-    //
-    // becomes:
-    //
-    // available = 20,000
-    // pending   = 15,000
-    // lifetime  = lifetime + 10,000
-    //
-    // ========================================================
-
-    const newAvailableBalance = currentAvailableBalance;
-
-    const newPendingBalance = normalizeMoney(currentPendingBalance + earnings);
-
-    const newLifetimeEarnings = normalizeMoney(
-      currentLifetimeEarnings + earnings,
-    );
+    walletWasCreated = walletResult.walletCreated;
 
     console.log(
-      "Wallet calculation:",
+      "Wallet resolution result:",
       JSON.stringify({
-        currentAvailableBalance,
-        currentPendingBalance,
-        currentLifetimeEarnings,
+        walletID: wallet?.id || null,
 
-        earnings,
+        walletCreated: walletWasCreated,
 
-        newAvailableBalance,
-        newPendingBalance,
-        newLifetimeEarnings,
+        courierWalletID: courier?.walletID || null,
+
+        courierUpdated: walletResult.courierUpdated,
       }),
     );
 
-    // ========================================================
-    // 13. EARNINGS TRANSACTION REFERENCE
-    // ========================================================
-
-    const transactionReference = `EARNINGS-${order.id}`;
-
-    // ========================================================
-    // 14. CHECK WHETHER EARNINGS TRANSACTION ALREADY EXISTS
-    // ========================================================
-    //
-    // This is important for idempotency.
-    //
-    // If the Lambda runs twice, we must NOT create:
-    //
-    // EARNINGS-ORD-123
-    // EARNINGS-ORD-123
-    //
-    // twice.
-    //
-    // ========================================================
-
-    transaction = await getTransactionByReference(transactionReference);
+    if (!wallet) {
+      throw new Error(
+        `Wallet was not found or created for courier ${courier.id}.`,
+      );
+    }
 
     // ========================================================
-    // 15. VALIDATE EXISTING TRANSACTION
+    // VALIDATE WALLET OWNER
+    // ========================================================
+
+    if (wallet.ownerID !== courier.id) {
+      throw new Error(
+        `Wallet ${wallet.id} does not belong to courier ${courier.id}.`,
+      );
+    }
+
+    if (wallet.ownerType !== "COURIER") {
+      throw new Error(
+        `Wallet ${wallet.id} has ownerType ${wallet.ownerType}, expected COURIER.`,
+      );
+    }
+
+    // ========================================================
+    // READ CURRENT WALLET BALANCES
+    // ========================================================
+
+    const currentAvailable = normalizeMoney(wallet.availableBalance);
+
+    const currentPending = normalizeMoney(wallet.pendingBalance);
+
+    const currentLifetime = normalizeMoney(wallet.lifetimeEarnings);
+
+    console.log("Current wallet balances:", {
+      availableBalance: currentAvailable,
+
+      pendingBalance: currentPending,
+
+      lifetimeEarnings: currentLifetime,
+    });
+
+    // ========================================================
+    // FIND EXISTING EARNINGS TRANSACTION
+    // ========================================================
+    //
+    // Reference:
+    //
+    //     EARNINGS-${orderID}
+    //
+    // ========================================================
+
+    transaction = await getEarningsTransaction(order.id);
+
+    // ========================================================
+    // EXISTING TRANSACTION
     // ========================================================
 
     if (transaction) {
@@ -1278,80 +1834,190 @@ exports.handler = async (event) => {
       );
 
       // ------------------------------------------------------
-      // It must belong to this wallet.
+      // WALLET MUST MATCH
       // ------------------------------------------------------
 
       if (transaction.walletID !== wallet.id) {
         throw new Error(
-          `Existing transaction ${transaction.id} belongs to wallet ${transaction.walletID}, not wallet ${wallet.id}.`,
+          `Existing earnings transaction ${transaction.id} belongs to wallet ${transaction.walletID}, expected ${wallet.id}.`,
         );
       }
 
       // ------------------------------------------------------
-      // It must be a CREDIT.
+      // TYPE MUST BE CREDIT
       // ------------------------------------------------------
 
       if (transaction.type !== "CREDIT") {
         throw new Error(
-          `Existing transaction ${transaction.id} is not a CREDIT transaction.`,
+          `Existing earnings transaction ${transaction.id} has type ${transaction.type}, expected CREDIT.`,
         );
       }
 
       // ------------------------------------------------------
-      // Amount must match the order's courier earnings.
+      // AMOUNT MUST MATCH
       // ------------------------------------------------------
 
       const transactionAmount = normalizeMoney(transaction.amount);
 
       if (transactionAmount !== earnings) {
         throw new Error(
-          `Existing transaction amount ${transactionAmount} does not match courier earnings ${earnings}.`,
+          `Existing earnings transaction ${transaction.id} has amount ${transactionAmount}, expected ${earnings}.`,
         );
       }
 
       // ------------------------------------------------------
-      // If it is already COMPLETED, something unusual happened.
+      // COMPLETED
+      // ------------------------------------------------------
       //
-      // Allocation transactions should remain PENDING until
-      // releaseFunds / releaseCourierMilestoneFunds.
+      // This should normally have been caught by the earlier
+      // isEarningsTransactionCompleted() check.
+      //
+      // We keep this second protection here.
+      //
       // ------------------------------------------------------
 
       if (transaction.status === "COMPLETED") {
-        throw new Error(
-          `Transaction ${transaction.id} is already COMPLETED while order allocation is not finalized. Manual reconciliation is required.`,
+        console.log(
+          `Transaction ${transaction.id} is already COMPLETED. Wallet will not be credited again.`,
+        );
+
+        transactionWasCompleted = true;
+
+        // ----------------------------------------------------
+        // Finalize Order if necessary.
+        // ----------------------------------------------------
+
+        if (order.earningsAllocationStatus !== "PROCESSING") {
+          const reClaimedOrder = await claimAllocation(
+            order,
+            order.earningsAllocationStatus,
+          );
+
+          if (!reClaimedOrder) {
+            throw new Error(
+              `Transaction ${transaction.id} is COMPLETED but Order ${order.id} could not be claimed for finalization.`,
+            );
+          }
+
+          order = {
+            ...order,
+            ...reClaimedOrder,
+          };
+        }
+
+        const finalizedOrder = await finalizeAllocation(order);
+
+        if (!finalizedOrder) {
+          throw new Error(
+            `Transaction ${transaction.id} is COMPLETED but Order ${order.id} could not be finalized.`,
+          );
+        }
+
+        order = finalizedOrder;
+
+        orderWasFinalized = true;
+
+        return successResponse(
+          {
+            orderID: order.id,
+
+            courierID: order.assignedCourierId,
+
+            walletID: wallet.id,
+
+            transactionID: transaction.id,
+
+            amount: earnings,
+
+            availableBalance: wallet.availableBalance,
+
+            pendingBalance: wallet.pendingBalance,
+
+            lifetimeEarnings: wallet.lifetimeEarnings,
+
+            walletCreated: walletWasCreated,
+
+            earningsAllocationStatus: order.earningsAllocationStatus,
+
+            alreadyAllocated: true,
+          },
+
+          "Courier earnings were already allocated. No duplicate wallet credit was made.",
         );
       }
 
       // ------------------------------------------------------
-      // A FAILED transaction cannot simply be reused because
-      // its historical failure should remain meaningful.
+      // FAILED
+      // ------------------------------------------------------
       //
-      // Create/reconcile carefully instead.
+      // IMPORTANT CHANGE:
+      //
+      // A FAILED transaction for THIS SAME ORDER is recoverable.
+      //
+      // We do not create another EARNINGS-${orderID}
+      // transaction.
+      //
+      // Instead, we reset it to PENDING.
+      //
       // ------------------------------------------------------
 
       if (transaction.status === "FAILED") {
-        throw new Error(
-          `Transaction ${transaction.id} is already FAILED. Manual reconciliation is required before allocating order ${order.id}.`,
+        console.log(
+          `Recovering FAILED earnings transaction ${transaction.id}.`,
+        );
+
+        const resetInput = {
+          status: "PENDING",
+        };
+
+        if (
+          transaction._version !== undefined &&
+          transaction._version !== null
+        ) {
+          resetInput._version = transaction._version;
+        }
+
+        transaction = await updateTransaction(transaction.id, resetInput);
+
+        if (!transaction) {
+          throw new Error(
+            `Failed to recover earnings transaction ${transaction.id}.`,
+          );
+        }
+
+        console.log(
+          "FAILED earnings transaction recovered:",
+          JSON.stringify(transaction),
         );
       }
 
       // ------------------------------------------------------
-      // PENDING is the expected state.
+      // PENDING
       // ------------------------------------------------------
+      else if (transaction.status === "PENDING") {
+        console.log(
+          `Reusing existing PENDING earnings transaction ${transaction.id}.`,
+        );
+      }
 
-      if (transaction.status !== "PENDING") {
+      // ------------------------------------------------------
+      // UNKNOWN STATUS
+      // ------------------------------------------------------
+      else {
         throw new Error(
-          `Transaction ${transaction.id} has unexpected status ${transaction.status}.`,
+          `Existing earnings transaction ${transaction.id} has unsupported status ${transaction.status}.`,
         );
       }
     }
 
     // ========================================================
-    // 16. CREATE TRANSACTION IF NECESSARY
+    // CREATE TRANSACTION IF NONE EXISTS
     // ========================================================
 
     if (!transaction) {
-      console.log("Creating earnings transaction...");
+      const transactionReference = getEarningsReference(order.id);
+
+      console.log(`Creating earnings transaction ${transactionReference}.`);
 
       transaction = await createEarningsTransaction({
         walletID: wallet.id,
@@ -1375,105 +2041,206 @@ exports.handler = async (event) => {
     }
 
     // ========================================================
-    // 17. UPDATE WALLET
+    // FINAL TRANSACTION VALIDATION
+    // ========================================================
+
+    if (transaction.walletID !== wallet.id) {
+      throw new Error(
+        `Transaction ${transaction.id} wallet mismatch after transaction resolution.`,
+      );
+    }
+
+    if (normalizeMoney(transaction.amount) !== earnings) {
+      throw new Error(
+        `Transaction ${transaction.id} amount mismatch after transaction resolution.`,
+      );
+    }
+
+    if (transaction.status !== "PENDING") {
+      throw new Error(
+        `Transaction ${transaction.id} is not PENDING after transaction resolution. Current status: ${transaction.status}`,
+      );
+    }
+
+    // ========================================================
+    // CALCULATE NEW WALLET BALANCES
     // ========================================================
     //
-    // This is where the actual accounting allocation occurs.
+    // IMPORTANT:
     //
-    // Money moves:
+    // availableBalance stays unchanged.
     //
-    // pendingBalance += courierEarnings
+    // pendingBalance increases by earnings.
     //
-    // lifetimeEarnings += courierEarnings
-    //
-    // availableBalance remains unchanged.
+    // lifetimeEarnings increases by earnings.
     //
     // ========================================================
 
-    console.log(`Updating wallet ${wallet.id}...`);
+    const newAvailable = currentAvailable;
 
-    updatedWallet = await updateWallet(
+    const newPending = normalizeMoney(currentPending + earnings);
+
+    const newLifetime = normalizeMoney(currentLifetime + earnings);
+
+    console.log("Calculated wallet balances:", {
+      availableBalance: newAvailable,
+
+      pendingBalance: newPending,
+
+      lifetimeEarnings: newLifetime,
+    });
+
+    // ========================================================
+    // UPDATE WALLET
+    // ========================================================
+    //
+    // At this point:
+    //
+    //     Transaction = PENDING
+    //
+    // We now apply the actual financial balance change.
+    //
+    // ========================================================
+
+    console.log(`Updating wallet ${wallet.id}.`);
+
+    const updatedWallet = await updateWallet(
       wallet,
 
-      newAvailableBalance,
+      newAvailable,
 
-      newPendingBalance,
+      newPending,
 
-      newLifetimeEarnings,
+      newLifetime,
     );
 
     if (!updatedWallet) {
-      throw new Error(`Failed to update wallet ${wallet.id}.`);
+      throw new Error("Wallet update returned no Wallet.");
     }
 
     walletWasUpdated = true;
 
-    console.log("Wallet updated:", JSON.stringify(updatedWallet));
+    wallet = updatedWallet;
+
+    console.log("Wallet updated successfully:", JSON.stringify(wallet));
 
     // ========================================================
-    // 18. FINALIZE ORDER
+    // MARK TRANSACTION COMPLETED
+    // ========================================================
+    //
+    // This is extremely important for retry safety.
+    //
+    // Once this succeeds:
+    //
+    //     EARNINGS-${orderID}
+    //
+    // becomes the record that tells a future invocation:
+    //
+    //     "The wallet has already been credited."
+    //
+    // ========================================================
+
+    console.log(`Marking earnings transaction ${transaction.id} COMPLETED.`);
+
+    const completedTransactionInput = {
+      status: "COMPLETED",
+    };
+
+    if (transaction._version !== undefined && transaction._version !== null) {
+      completedTransactionInput._version = transaction._version;
+    }
+
+    const completedTransaction = await updateTransaction(
+      transaction.id,
+      completedTransactionInput,
+    );
+
+    if (!completedTransaction) {
+      throw new Error(
+        `Failed to mark earnings transaction ${transaction.id} as COMPLETED after wallet update.`,
+      );
+    }
+
+    transaction = completedTransaction;
+
+    transactionWasCompleted = true;
+
+    console.log(
+      "Earnings transaction marked COMPLETED:",
+      JSON.stringify(transaction),
+    );
+
+    // ========================================================
+    // FINALIZE ORDER
     // ========================================================
     //
     // PROCESSING → ALLOCATED
     //
-    // This is the final accounting state.
+    // At this point the financial allocation has already been
+    // recorded in the Wallet and Transaction.
     //
     // ========================================================
 
-    const earningsAllocatedAt = new Date().toISOString();
+    console.log(`Finalizing earnings allocation for order ${order.id}.`);
 
-    console.log(`Finalizing earnings allocation for order ${order.id}...`);
-
-    const finalizedOrder = await finalizeAllocation(order, earningsAllocatedAt);
+    const finalizedOrder = await finalizeAllocation(order);
 
     if (!finalizedOrder) {
       throw new Error(
-        `Failed to finalize earnings allocation for order ${order.id}.`,
+        `Wallet and transaction were updated, but Order ${order.id} could not be finalized.`,
       );
     }
 
+    order = finalizedOrder;
+
     orderWasFinalized = true;
 
-    console.log("Order allocation finalized:", JSON.stringify(finalizedOrder));
+    console.log("Order finalized successfully:", JSON.stringify(order));
 
     // ========================================================
-    // 19. SUCCESS
+    // SUCCESS
     // ========================================================
 
     console.log("============================================================");
 
-    console.log("allocateCourierEarnings SUCCESS");
+    console.log(
+      `Courier earnings successfully allocated for order ${order.id}.`,
+    );
 
     console.log("============================================================");
 
-    return successResponse({
-      message: "Courier earnings successfully allocated.",
+    return successResponse(
+      {
+        orderID: order.id,
 
-      orderID: order.id,
+        courierID: order.assignedCourierId,
 
-      courierID: order.assignedCourierId,
+        walletID: wallet.id,
 
-      walletID: wallet.id,
+        transactionID: transaction.id,
 
-      earnings,
+        amount: earnings,
 
-      earningsAllocationStatus: "ALLOCATED",
+        availableBalance: wallet.availableBalance,
 
-      transactionID: transaction.id,
+        pendingBalance: wallet.pendingBalance,
 
-      transactionReference,
+        lifetimeEarnings: wallet.lifetimeEarnings,
 
-      wallet: {
-        availableBalance: newAvailableBalance,
+        walletCreated: walletWasCreated,
 
-        pendingBalance: newPendingBalance,
+        transactionCreated: transactionWasCreated,
 
-        lifetimeEarnings: newLifetimeEarnings,
+        transactionStatus: transaction.status,
+
+        earningsAllocationStatus: order.earningsAllocationStatus,
       },
-    });
+
+      "Courier earnings allocated successfully.",
+    );
   } catch (error) {
     // ========================================================
-    // ERROR / COMPENSATION
+    // ERROR LOGGING
     // ========================================================
 
     console.error(
@@ -1489,117 +2256,81 @@ exports.handler = async (event) => {
     );
 
     // ========================================================
-    // COMPENSATING ROLLBACK
+    // IMPORTANT PARTIAL-FAILURE RULE
     // ========================================================
     //
-    // If wallet was changed but the Order could not be
-    // finalized, we attempt to restore the wallet to exactly
-    // what it was before allocation.
+    // If the wallet was already updated, DO NOT try to mark
+    // the allocation as FAILED.
     //
-    // This prevents:
+    // Why?
     //
-    // wallet.pendingBalance increased
-    // BUT
-    // order remains PROCESSING
+    // Because the financial operation may already have happened.
+    //
+    // A retry must be allowed to inspect the transaction and
+    // determine whether the wallet was already credited.
     //
     // ========================================================
 
     if (
-      walletWasUpdated &&
-      !orderWasFinalized &&
-      wallet &&
-      walletBeforeUpdate &&
-      updatedWallet
+      allocationClaimed &&
+      order &&
+      !walletWasUpdated &&
+      !transactionWasCompleted &&
+      !orderWasFinalized
     ) {
-      console.warn("Attempting wallet rollback...");
+      console.log(
+        `Attempting to mark order ${order.id} earnings allocation as FAILED.`,
+      );
 
-      try {
-        const rollbackWallet = await updateWallet(
-          updatedWallet,
-
-          walletBeforeUpdate.availableBalance,
-
-          walletBeforeUpdate.pendingBalance,
-
-          walletBeforeUpdate.lifetimeEarnings,
-        );
-
-        if (rollbackWallet) {
-          console.log(
-            "Wallet rollback successful:",
-            JSON.stringify(rollbackWallet),
-          );
-
-          walletWasUpdated = false;
-        }
-      } catch (rollbackError) {
-        console.error("CRITICAL: Wallet rollback failed.", rollbackError);
-
-        // ----------------------------------------------------
-        // IMPORTANT:
-        //
-        // We do NOT mark the Order FAILED here because the
-        // wallet may still contain the allocated earnings.
-        //
-        // Leaving PROCESSING is safer than creating a false
-        // FAILED state that could cause another allocation.
-        // ----------------------------------------------------
-
-        return errorResponse(error, {
-          orderID: order?.id,
-
-          courierID: order?.assignedCourierId,
-
-          reconciliationRequired: true,
-
-          reason:
-            "Wallet was updated but rollback failed. Manual reconciliation is required before retrying.",
-        });
-      }
+      await markAllocationFailed(order);
     }
 
     // ========================================================
-    // TRANSACTION COMPENSATION
+    // TRANSACTION FAILURE
     // ========================================================
     //
-    // If we created the transaction but the wallet was rolled
-    // back, mark the transaction FAILED.
+    // Only mark the transaction FAILED when the wallet was NOT
+    // updated.
+    //
+    // If the wallet was already updated, we do not want to
+    // incorrectly mark the financial record FAILED.
     //
     // ========================================================
 
-    if (transaction && !walletWasUpdated && !orderWasFinalized) {
+    if (
+      transaction &&
+      !walletWasUpdated &&
+      !transactionWasCompleted &&
+      !orderWasFinalized &&
+      transaction.status === "PENDING"
+    ) {
+      console.log(
+        `Attempting to mark transaction ${transaction.id} as FAILED.`,
+      );
+
       await markTransactionFailed(transaction);
     }
 
     // ========================================================
-    // MARK ORDER ALLOCATION FAILED
-    // ========================================================
-    //
-    // We only do this after we have confirmed that the wallet
-    // does not remain changed.
-    //
-    // ========================================================
-
-    if (order && !walletWasUpdated && !orderWasFinalized) {
-      try {
-        await markAllocationFailed(order.id, order._version);
-
-        console.log(`Order ${order.id} marked as FAILED.`);
-      } catch (statusError) {
-        console.error("Could not mark allocation as FAILED:", statusError);
-      }
-    }
-
-    // ========================================================
-    // FINAL ERROR RESPONSE
+    // RETURN ERROR
     // ========================================================
 
     return errorResponse(error, {
       orderID: order?.id || null,
 
-      courierID: order?.assignedCourierId || null,
+      walletID: wallet?.id || null,
 
-      reconciliationRequired: false,
+      transactionID: transaction?.id || null,
+
+      walletWasCreated,
+
+      walletWasUpdated,
+
+      transactionWasCreated,
+
+      transactionWasCompleted,
+
+      orderWasFinalized,
     });
   }
 };
