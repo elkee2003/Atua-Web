@@ -8,27 +8,56 @@ function ContentTabsAdmin({ unreadCount }) {
 
   return (
     <>
-      {/* ===========================
-                Desktop Sidebar
-            =========================== */}
+      {/* =========================================================
+          DESKTOP SIDEBAR
+      ========================================================= */}
+
       <aside className="admin-sidebar">
-        <div className="admin-logoClick" onClick={() => navigate("/")}>
+        {/* =======================================================
+            ATUA LOGO
+        ======================================================= */}
+
+        <div
+          className="admin-logoClick"
+          onClick={() => navigate("/")}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              navigate("/");
+            }
+          }}
+          aria-label="Go to Atua home"
+        >
           <img src="/AtuaSoloLogoTrans.png" alt="Atua Logo" />
         </div>
 
+        {/* =======================================================
+            DESKTOP NAVIGATION
+        ======================================================= */}
+
         <nav>
           <ul>
+            {/* ===================================================
+                HOME
+            =================================================== */}
+
             <li>
               <NavLink
                 to="/admin/home"
                 className={({ isActive }) => (isActive ? "active-link" : "")}
               >
                 <div className="admin-nav-container">
-                  <FaHome />
+                  <FaHome aria-hidden="true" />
+
                   <span>Home</span>
                 </div>
               </NavLink>
             </li>
+
+            {/* ===================================================
+                ALERTS
+            =================================================== */}
 
             <li>
               <NavLink
@@ -36,17 +65,29 @@ function ContentTabsAdmin({ unreadCount }) {
                 className={({ isActive }) => (isActive ? "active-link" : "")}
               >
                 <div className="admin-nav-container">
-                  <FaBell />
+                  <FaBell aria-hidden="true" />
+
                   <span>Alerts</span>
 
+                  {/* ---------------------------------------------
+                      UNREAD ALERT BADGE
+                  --------------------------------------------- */}
+
                   {unreadCount > 0 && (
-                    <span className="adminNotification-badge">
-                      {unreadCount}
+                    <span
+                      className="adminNotification-badge"
+                      aria-label={`${unreadCount} unread alerts`}
+                    >
+                      {unreadCount > 99 ? "99+" : unreadCount}
                     </span>
                   )}
                 </div>
               </NavLink>
             </li>
+
+            {/* ===================================================
+                PROFILE
+            =================================================== */}
 
             <li>
               <NavLink
@@ -54,7 +95,8 @@ function ContentTabsAdmin({ unreadCount }) {
                 className={({ isActive }) => (isActive ? "active-link" : "")}
               >
                 <div className="admin-nav-container">
-                  <FaUser />
+                  <FaUser aria-hidden="true" />
+
                   <span>Profile</span>
                 </div>
               </NavLink>
@@ -63,38 +105,62 @@ function ContentTabsAdmin({ unreadCount }) {
         </nav>
       </aside>
 
-      {/* ===========================
-                Mobile Bottom Navigation
-            =========================== */}
+      {/* =========================================================
+          MOBILE BOTTOM NAVIGATION
+      ========================================================= */}
 
       <div className="admin-bottom-nav">
+        {/* =======================================================
+            HOME
+        ======================================================= */}
+
         <NavLink
           to="/admin/home"
           className={({ isActive }) => (isActive ? "active-link" : "")}
         >
-          <FaHome />
+          <FaHome aria-hidden="true" />
+
           <span>Home</span>
         </NavLink>
+
+        {/* =======================================================
+            ALERTS
+        ======================================================= */}
 
         <NavLink
           to="/admin/alert"
           className={({ isActive }) => (isActive ? "active-link" : "")}
         >
           <div className="adminBottomNavBellCon">
-            <FaBell />
+            <FaBell aria-hidden="true" />
+
             <span>Alerts</span>
 
+            {/* ---------------------------------------------
+                UNREAD ALERT BADGE
+            --------------------------------------------- */}
+
             {unreadCount > 0 && (
-              <span className="adminNotification-badge">{unreadCount}</span>
+              <span
+                className="adminNotification-badge"
+                aria-label={`${unreadCount} unread alerts`}
+              >
+                {unreadCount > 99 ? "99+" : unreadCount}
+              </span>
             )}
           </div>
         </NavLink>
+
+        {/* =======================================================
+            PROFILE
+        ======================================================= */}
 
         <NavLink
           to="/admin/profile"
           className={({ isActive }) => (isActive ? "active-link" : "")}
         >
-          <FaUser />
+          <FaUser aria-hidden="true" />
+
           <span>Profile</span>
         </NavLink>
       </div>

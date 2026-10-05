@@ -4,6 +4,8 @@
  * Any changes to this file will be overwritten when running amplify pull. *
  **************************************************************************/
 
+export { default as AdminAlertCreateForm } from "./AdminAlertCreateForm";
+export { default as AdminAlertUpdateForm } from "./AdminAlertUpdateForm";
 export { default as CourierCompanyCreateForm } from "./CourierCompanyCreateForm";
 export { default as CourierCompanyUpdateForm } from "./CourierCompanyUpdateForm";
 export { default as CourierCreateForm } from "./CourierCreateForm";
