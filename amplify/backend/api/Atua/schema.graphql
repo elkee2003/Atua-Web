@@ -29,9 +29,21 @@ type CourierCompany @model @auth(rules: [{ allow: public }]) {
 }
 
 # ---------------- ENUMS ----------------
+enum PaystackEnvironment {
+  TEST
+  LIVE
+}
+
 enum OrderEnvironment {
   PRODUCTION
   TEST
+}
+
+enum PaymentMethodStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+  FAILED
 }
 
 enum EarningsAllocationStatus {
@@ -100,6 +112,7 @@ enum OfferStatus {
   ACTIVE
   ACCEPTED
   REJECTED
+  CANCELLED
 }
 
 enum CourierPreTransferUploadStatus {
@@ -130,8 +143,50 @@ enum MediaUploadStatus {
   FAILED
 }
 
+enum RefundStatus {
+  NONE
+  PENDING
+  PROCESSING
+  NEEDS_ATTENTION
+  PROCESSED
+  FAILED
+}
+
+enum CancellationStage {
+  BEFORE_ACCEPTANCE
+  ACCEPTED
+  COURIER_ARRIVED
+  PICKUP_STARTED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+}
+
+enum CancellationReason {
+  CHANGED_MIND
+  WRONG_ADDRESS
+  WRONG_ORDER
+  TOO_EXPENSIVE
+  TOO_LONG_TO_WAIT
+  NO_LONGER_NEEDED
+  COURIER_DELAY
+  COURIER_REQUEST
+  SYSTEM_ERROR
+  OTHER
+}
+
+enum CancellationStatus {
+  NONE
+  REQUESTED
+  PROCESSING
+  COMPLETED
+  FAILED
+  REJECTED
+}
+
 enum OrderStatus {
   BIDDING
+  AWAITING_PAYMENT
   READY_FOR_PICKUP
   ACCEPTED
   ARRIVED_PICKUP
@@ -155,6 +210,85 @@ enum CourierReportStatus {
 }
 
 # ---------------- MODELS ----------------
+type PaymentMethod
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "owner", identityClaim: "sub" }
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+
+  # Cognito user's sub.
+  # This is used by @auth to ensure the payment method
+  # belongs to the currently authenticated user.
+  owner: String!
+    @index(name: "byPaymentMethodOwner", queryField: "paymentMethodsByOwner")
+
+  # Atua User.id.
+  # This lets our backend easily relate the payment method
+  # to the existing User model.
+  userID: ID!
+    @index(name: "byPaymentMethodUser", queryField: "paymentMethodsByUser")
+
+  # TEST or LIVE Paystack
+  paystackEnvironment: PaystackEnvironment
+
+  # Payment provider.
+  # Currently PAYSTACK.
+  provider: String!
+
+  # Paystack reusable authorization.
+  #
+  # IMPORTANT:
+  # This is NOT a card number, CVV or PIN.
+  # It is the Paystack authorization token/code that
+  # Paystack gives us after a successful reusable card payment.
+  authorizationCode: String!
+
+  # Paystack's unique signature for the card authorization.
+  #
+  # Used to prevent saving the same card multiple times.
+  signature: String!
+
+  # Safe card information for displaying in Atua.
+  # We NEVER store the full PAN/card number.
+  cardType: String
+  last4: String
+  expMonth: String
+  expYear: String
+
+  # Additional Paystack metadata.
+  bank: String
+  countryCode: String
+  channel: String
+
+  # Whether Paystack says this authorization can be reused.
+  reusable: Boolean!
+
+  # Email used when the authorization was created.
+  #
+  # Paystack requires the same email when charging
+  # a reusable authorization.
+  email: String!
+
+  # Whether this is the user's default card.
+  isDefault: Boolean!
+
+  status: PaymentMethodStatus!
+
+  # Set when the user deletes/deactivates the card.
+  deactivatedAt: AWSDateTime
+
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
 type Payout @model @auth(rules: [{ allow: public }]) {
   id: ID!
 
@@ -162,7 +296,16 @@ type Payout @model @auth(rules: [{ allow: public }]) {
 
   walletID: ID @index(name: "byWallet")
 
+  # The amount actually sent to the courier bank.
+  # Does NOT include Atua fee.
   amount: Float!
+
+  # Atua fee charged for this payout.
+  payoutFee: Float
+
+  # Total amount deducted from the courier wallet.
+  # = amount + payoutFee
+  totalWalletDebit: Float
 
   status: PayoutStatus
 
@@ -203,6 +346,7 @@ type Transaction @model @auth(rules: [{ allow: public }]) {
   id: ID!
 
   walletID: ID! @index(name: "byWallet")
+  payoutID: ID @index(name: "byPayout")
 
   type: TransactionType
   # CREDIT | DEBIT
@@ -213,7 +357,11 @@ type Transaction @model @auth(rules: [{ allow: public }]) {
   orderID: ID @index(name: "byOrder")
   paymentID: ID @index(name: "byPayment")
 
-  reference: String @index(name: "byTransactionReference")
+  reference: String
+    @index(
+      name: "byTransactionReference"
+      queryField: "transactionsByReference"
+    )
 
   status: TransactionStatus # PENDING | COMPLETED
 }
@@ -266,6 +414,57 @@ type Offer @model @auth(rules: [{ allow: public }]) {
   status: OfferStatus # ACTIVE | ACCEPTED | REJECTED
 }
 
+type OrderCancellation
+  @model
+  @auth(
+    rules: [
+      { allow: owner, ownerField: "userID", identityClaim: "sub" }
+      {
+        allow: private
+        provider: iam
+        operations: [create, read, update, delete]
+      }
+    ]
+  ) {
+  id: ID!
+
+  orderID: ID! @index(name: "byOrder")
+
+  userID: ID!
+
+  courierID: ID
+
+  status: CancellationStatus!
+
+  stage: CancellationStage!
+
+  reason: CancellationReason
+  reasonNote: String
+
+  originalAmount: Float!
+  cancellationFee: Float!
+  refundAmount: Float!
+
+  refundStatus: RefundStatus!
+  refundReference: String
+  paymentReference: String @index(name: "byPaymentReference")
+
+  cancellationRequestedAt: AWSDateTime!
+  cancellationProcessedAt: AWSDateTime
+  refundRequestedAt: AWSDateTime
+  refundedAt: AWSDateTime
+
+  courierReversed: Boolean!
+  courierEarningsReversed: Boolean!
+  walletReversed: Boolean!
+  assignmentReversed: Boolean!
+
+  errorMessage: String
+
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
+}
+
 type Order @model @auth(rules: [{ allow: public }]) {
   id: ID!
 
@@ -291,6 +490,25 @@ type Order @model @auth(rules: [{ allow: public }]) {
   transportationType: String
   vehicleClass: String
   status: OrderStatus
+
+  # ------- FOR CANCELLING ORDERS -------
+  cancellationStatus: CancellationStatus
+  refundStatus: RefundStatus
+
+  cancellationFee: Float
+  refundAmount: Float
+
+  cancellationReason: CancellationReason
+  cancellationReasonNote: String
+
+  cancellationStage: CancellationStage
+
+  cancellationRequestedAt: AWSDateTime
+  cancellationProcessedAt: AWSDateTime
+
+  refundReference: String
+  refundRequestedAt: AWSDateTime
+  refundedAt: AWSDateTime
 
   # ------- FOR MAXI -------
   hasNewOffer: Boolean
@@ -756,6 +974,9 @@ type User @model @auth(rules: [{ allow: public }]) {
   courierReports: [CourierReport] @hasMany(indexName: "byUser", fields: ["id"])
   Orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
   payments: [Payment] @hasMany(indexName: "byUser", fields: ["id"])
+
+  paymentMethods: [PaymentMethod]
+    @hasMany(indexName: "byPaymentMethodUser", fields: ["id"])
 }
 
 # ---------------- WALLET AND PAYMENT STRUCTURE ----------------
@@ -786,9 +1007,58 @@ type VerifiedPaymentDetails {
   paidAt: AWSDateTime
 }
 
+# ==========================================================
+# SAVED PAYMENT METHOD RESPONSES
+# ==========================================================
+
+type ChargeAtuaPaymentMethodResult @aws_cognito_user_pools {
+  success: Boolean!
+  message: String!
+  reference: String
+  orderId: ID
+}
+
+type DeleteSavedPaymentMethodResult @aws_cognito_user_pools {
+  success: Boolean!
+  message: String!
+  paymentMethodId: ID
+}
+
 type Mutation {
   verifyAtuaPayment(orderId: ID!, reference: String!): VerifyAtuaPaymentResult
     @function(name: "verifyAtuaPayment-${env}")
+  # ==========================================================
+  # CHARGE A SAVED PAYSTACK PAYMENT METHOD
+  # ==========================================================
+
+  chargeAtuaPaymentMethod(
+    orderId: ID!
+    paymentMethodId: ID!
+  ): ChargeAtuaPaymentMethodResult
+    @auth(rules: [{ allow: private, provider: userPools }])
+    @function(name: "chargeAtuaPaymentMethod-${env}")
+
+  # ==========================================================
+  # DELETE A SAVED PAYSTACK PAYMENT METHOD
+  # ==========================================================
+
+  deleteSavedPaymentMethod(
+    paymentMethodId: ID!
+  ): DeleteSavedPaymentMethodResult
+    @auth(rules: [{ allow: private, provider: userPools }])
+    @function(name: "deletePaymentMethod-${env}")
+
+  cancelOrder(
+    orderID: ID!
+    reason: CancellationReason
+    reasonNote: String
+  ): OrderCancellation
+    @auth(rules: [{ allow: private, provider: userPools }])
+    @function(name: "cancelOrder-${env}")
+
+  permanentlyDeleteOrder(orderID: ID!): Boolean
+    @auth(rules: [{ allow: private, provider: userPools }])
+    @function(name: "deleteOrder-${env}")
 
   reversePayout(input: ReversePayoutInput!): ReversePayoutResponse
     @function(name: "reversePayout-${env}")

@@ -13,19 +13,21 @@ import GoogleMapsProvider from "../../../Providers/ClientProvider/GoogleMapsProv
 import SearchResult from "../../components/Send/ContentPages/Home/SearchResult/SearchResult";
 import Checkout from "../../components/Send/ContentPages/Home/SearchResult/Checkout";
 import Payment from "../../components/Send/ContentPages/Home/PaymentCom/Payment";
-import OrderTrackingScreen from "../../components/Send/ContentPages/Home/OrderTrackingScreen/OrderTrackingScreen";
-import RecipientTrackingPage from "../../components/Send/ContentPages/RecipientTracking/RecipientTracking";
 
 // Order Page
 import OrderHistoryMain from "../../components/Send/ContentPages/OrderHistory/OrderHistoryMain/OrderHistoryMain";
-import OrderHistoryList from "../../components/Send/ContentPages/OrderHistory/OrderHistoryList/OrderHistoryList";
-import OrderLiveUpdate from "../../components/Send/ContentPages/OrderHistory/OrderLiveUpdate/OrderLiveUpdate";
+import OrderDetails from "../../components/Send/ContentPages/OrderHistory/OrderDetails/OrderDetails";
+
+import OrderTrackingScreen from "../../components/Send/ContentPages/OrderHistory/OrderTrackingScreen/OrderTrackingScreen";
+
+import RecipientTrackingPage from "../../components/Send/ContentPages/RecipientTracking/RecipientTracking";
 
 // Profile Page
 import UserProfile from "../../components/Send/ContentPages/Profile/Profile";
 import EditProfile from "../../components/Send/ContentPages/Profile/EditProfile/EditProfile";
-import ReviewProfileEdit from "../../components/Send/ContentPages/Profile/EditProfile/ReviewProfile";
+import ReviewUserProfileEdit from "../../components/Send/ContentPages/Profile/EditProfile/ReviewUserProfile";
 import AddressPage from "../../components/Send/ContentPages/Profile/EditProfile/AddressPage";
+import ReviewUserProfile from "../../components/Send/ContentPages/Profile/ReviewUserProfile/ReviewUserProfile";
 
 // Profile Buttons
 
@@ -75,8 +77,14 @@ const SendRoutes = () => (
         {/* OrderHistory Main */}
         <Route path="orders" element={<OrderHistoryMain />} />
 
-        {/* Order Live Update */}
-        <Route path="order_live_update" element={<OrderHistoryMain />} />
+        {/* Order Tracking Screen*/}
+        <Route
+          path="order_tracking/:orderId"
+          element={<OrderTrackingScreen />}
+        />
+
+        {/* Order Details */}
+        <Route path="order_details/:orderId" element={<OrderDetails />} />
 
         {/* User Profile */}
         <Route path="profile" element={<UserProfile />} />
@@ -85,7 +93,9 @@ const SendRoutes = () => (
 
         <Route path="address_page" element={<AddressPage />} />
 
-        <Route path="review_edit" element={<ReviewProfileEdit />} />
+        <Route path="review_edit" element={<ReviewUserProfileEdit />} />
+
+        <Route path="review_profile" element={<ReviewUserProfile />} />
 
         {/* User Profile Options Buttons */}
 

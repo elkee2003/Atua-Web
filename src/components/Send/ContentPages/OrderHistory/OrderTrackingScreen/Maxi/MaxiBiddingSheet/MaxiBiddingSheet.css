@@ -1,0 +1,534 @@
+
+/* =====================================================
+   MAXI BIDDING CONTAINER
+===================================================== */
+
+.maxi-bidding-container {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  width: 100%;
+  min-width: 0;
+  color: #0f172a;
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.maxi-bidding-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 2px 0 4px;
+}
+
+.maxi-bidding-title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+}
+
+.maxi-bidding-subtitle {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.maxi-offer-count {
+  flex-shrink: 0;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* =====================================================
+   STATUS PILL
+===================================================== */
+
+.maxi-bidding-status {
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 7px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.maxi-bidding-status-waiting {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.maxi-bidding-status-active {
+  background: #ecfdf5;
+  color: #166534;
+}
+
+.maxi-bidding-status-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #10b981;
+}
+
+.maxi-bidding-status-waiting .maxi-bidding-status-dot {
+  background: #f59e0b;
+}
+
+/* =====================================================
+   OFFER LIST
+===================================================== */
+
+.maxi-offer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  max-height: 430px;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 2px 3px 8px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.maxi-offer-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.maxi-offer-list::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #d1d5db;
+}
+
+/* =====================================================
+   OFFER CARD
+===================================================== */
+
+.maxi-offer-card {
+  flex-shrink: 0;
+  padding: 14px;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  background: #f9fafb;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.maxi-offer-card-latest {
+  border-color: #d1fae5;
+  background: #fff;
+}
+
+.maxi-offer-card-selected {
+  border-color: #00c853;
+  box-shadow: 0 0 0 2px rgba(0, 200, 83, 0.08);
+}
+
+.maxi-offer-card-main {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.maxi-offer-avatar {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background: #eef2f7;
+  object-fit: cover;
+}
+
+.maxi-offer-courier-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.maxi-offer-name-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.maxi-offer-name-row h3 {
+  margin: 0;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.maxi-latest-badge {
+  padding: 3px 6px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.maxi-offer-vehicle {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.maxi-offer-vehicle-meta {
+  margin: 3px 0 0;
+  color: #9ca3af;
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+
+.maxi-offer-sender {
+  margin: 5px 0 0;
+  color: #64748b;
+  font-size: 9px;
+}
+
+.maxi-offer-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.maxi-offer-price-label {
+  color: #9ca3af;
+  font-size: 9px;
+}
+
+.maxi-offer-price strong {
+  color: #111827;
+  font-size: 14px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   OFFER ACTIONS
+===================================================== */
+
+.maxi-offer-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.maxi-accept-button,
+.maxi-counter-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.maxi-accept-button {
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+}
+
+.maxi-accept-button:hover:not(:disabled) {
+  background: #374151;
+}
+
+.maxi-counter-button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #111827;
+}
+
+.maxi-counter-button:hover:not(:disabled) {
+  border-color: #00c853;
+  background: #f0fdf4;
+}
+
+.maxi-accept-button:disabled,
+.maxi-counter-button:disabled,
+.maxi-send-counter-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.maxi-offer-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 18px;
+  border: 1px dashed #dbe3eb;
+  border-radius: 15px;
+  background: #f9fafb;
+  text-align: center;
+}
+
+.maxi-offer-empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.maxi-offer-empty h3 {
+  margin: 12px 0 0;
+  color: #111827;
+  font-size: 14px;
+}
+
+.maxi-offer-empty p {
+  max-width: 270px;
+  margin: 7px 0 0;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.maxi-offer-empty .maxi-offer-expiry {
+  color: #9ca3af;
+  font-size: 10px;
+}
+
+/* =====================================================
+   COUNTER INPUT
+===================================================== */
+
+.maxi-counter-form {
+  padding: 13px;
+  border: 1px solid #f1f5f9;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.04);
+}
+
+.maxi-counter-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #374151;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.maxi-counter-input-row {
+  display: flex;
+  align-items: stretch;
+  gap: 9px;
+}
+
+.maxi-counter-input-row input {
+  flex: 1;
+  min-width: 0;
+  width: 0;
+  padding: 11px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  outline: none;
+  background: #f3f4f6;
+  color: #111827;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.maxi-counter-input-row input:focus {
+  border-color: #00c853;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(0, 200, 83, 0.1);
+}
+
+.maxi-send-counter-button {
+  flex-shrink: 0;
+  padding: 0 17px;
+  border: none;
+  border-radius: 10px;
+  background: #111827;
+  color: #fff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.maxi-send-counter-button:hover:not(:disabled) {
+  background: #374151;
+}
+
+/* =====================================================
+   WAITING MESSAGE
+===================================================== */
+
+.maxi-waiting-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px;
+  border-radius: 11px;
+  background: #f8fafc;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.maxi-waiting-spinner {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 2px solid #e5e7eb;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: maxi-spinner 0.8s linear infinite;
+}
+
+@keyframes maxi-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =====================================================
+   ORDER HISTORY
+===================================================== */
+
+.maxi-order-history-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 2px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 11px;
+  background: #f8fafc;
+  color: #334155;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.maxi-order-history-button:hover {
+  border-color: #cbd5e1;
+  background: #f1f5f9;
+}
+
+.maxi-order-history-button span {
+  font-size: 16px;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+  .maxi-bidding-title {
+    font-size: 17px;
+  }
+
+  .maxi-offer-list {
+    max-height: 380px;
+  }
+
+  .maxi-offer-card {
+    padding: 12px;
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+  .maxi-bidding-container {
+    gap: 12px;
+  }
+
+  .maxi-offer-list {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .maxi-offer-card {
+    padding: 13px;
+  }
+
+  .maxi-offer-price strong {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .maxi-bidding-title {
+    font-size: 16px;
+  }
+
+  .maxi-bidding-subtitle {
+    font-size: 10px;
+  }
+
+  .maxi-offer-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .maxi-offer-card-main {
+    gap: 9px;
+  }
+
+  .maxi-offer-name-row h3 {
+    font-size: 12px;
+  }
+
+  .maxi-offer-price strong {
+    font-size: 12px;
+  }
+
+  .maxi-accept-button,
+  .maxi-counter-button {
+    padding: 9px 8px;
+    font-size: 10px;
+  }
+}

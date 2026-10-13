@@ -1,8 +1,30 @@
+
 import { MediaUploadStatus, Order } from "../src/models";
 import { DataStore } from "aws-amplify/datastore";
 import { uploadData } from "aws-amplify/storage";
-import * as Crypto from "expo-crypto";
-import * as ImageManipulator from "expo-image-manipulator";
+import imageCompression from "browser-image-compression";
+
+// ======================================================
+// HELPERS
+// ======================================================
+
+const generateFileId = () => {
+  return crypto.randomUUID();
+};
+
+const getBlobFromUri = async (uri) => {
+  const response = await fetch(uri);
+
+  if (!response.ok) {
+    throw new Error(`Failed to read media: ${response.status}`);
+  }
+
+  return response.blob();
+};
+
+// ======================================================
+// UPLOAD SENDER PHOTOS
+// ======================================================
 
 export const uploadSenderPhotos = async (photos, userId) => {
   if (!photos?.length) return [];
@@ -11,85 +33,117 @@ export const uploadSenderPhotos = async (photos, userId) => {
 
   for (const photo of photos) {
     try {
-      const manipulated = await ImageManipulator.manipulateAsync(
-        photo.uri,
-        [{ resize: { width: 900 } }],
-        { compress: 0.7, format: ImageManipulator.SaveFormat.JPEG },
+      // Convert the selected/local image URI to a File.
+      const originalBlob = photo.file
+        ? photo.file
+        : await getBlobFromUri(photo.uri);
+
+      const originalFile = new File(
+        [originalBlob],
+        photo.name || "sender-evidence.jpg",
+        {
+          type: originalBlob.type || "image/jpeg",
+        },
       );
 
-      const response = await fetch(manipulated.uri);
-      const blob = await response.blob();
+      // Resize and compress in the browser.
+      const compressedFile = await imageCompression(originalFile, {
+        maxWidthOrHeight: 900,
+        initialQuality: 0.7,
+        useWebWorker: true,
+        fileType: "image/jpeg",
+      });
 
-      const key = `public/orders/${userId}/senderPreTransferPhotos/${Crypto.randomUUID()}.jpg`;
+      const key =
+        `public/orders/${userId}/senderPreTransferPhotos/` +
+        `${generateFileId()}.jpg`;
 
       const result = await uploadData({
         path: key,
-        data: blob,
-        options: { contentType: "image/jpeg" },
+        data: compressedFile,
+        options: {
+          contentType: "image/jpeg",
+        },
       }).result;
 
       uploaded.push(result.path);
-    } catch (err) {
-      console.log("Photo upload failed:", err);
+    } catch (error) {
+      console.error("Photo upload failed:", error);
     }
   }
 
   return uploaded;
 };
 
+// ======================================================
+// UPLOAD SENDER VIDEO
+// ======================================================
+
 export const uploadSenderVideo = async (video, userId) => {
-  if (!video?.uri) return null;
+  if (!video?.uri && !video?.file) return null;
 
   try {
-    const response = await fetch(video.uri);
-    const blob = await response.blob();
+    const blob = video.file
+      ? video.file
+      : await getBlobFromUri(video.uri);
 
-    const key = `public/orders/${userId}/senderPreTransferVideo/${Crypto.randomUUID()}.mp4`;
+    // Preserve the video type where possible.
+    const contentType = blob.type || "video/mp4";
+    const extension = contentType.includes("webm")
+      ? "webm"
+      : contentType.includes("quicktime")
+        ? "mov"
+        : "mp4";
+
+    const key =
+      `public/orders/${userId}/senderPreTransferVideo/` +
+      `${generateFileId()}.${extension}`;
 
     const result = await uploadData({
       path: key,
       data: blob,
-      options: { contentType: "video/mp4" },
+      options: {
+        contentType,
+      },
     }).result;
 
     return result.path;
-  } catch (err) {
-    console.log("Video upload failed:", err);
+  } catch (error) {
+    console.error("Video upload failed:", error);
     return null;
   }
 };
 
+// ======================================================
+// UPLOAD ALL EVIDENCE
+// ======================================================
+
 export const uploadEvidence = async (order, photos, video) => {
   try {
+    // Tell the driver that evidence is being uploaded.
     await DataStore.save(
       Order.copyOf(order, (updated) => {
         updated.mediaUploadStatus = MediaUploadStatus.UPLOADING;
       }),
     );
-    // on the drivers side do it in such a way driver sees "Sender evidence uploading... ". An example:
-    // if mediaUploadStatus === PENDING
-    //    "Preparing sender evidence..."
-
-    // if mediaUploadStatus === UPLOADING
-    //    "Sender evidence uploading..."
-
-    // if mediaUploadStatus === COMPLETE
-    //    show photos + video
-
-    // if mediaUploadStatus === FAILED
-    //    "Sender evidence failed to upload"
 
     const [uploadedPhotos, uploadedVideo] = await Promise.all([
       uploadSenderPhotos(photos, order.userID),
       uploadSenderVideo(video, order.userID),
     ]);
 
+    // Save the uploaded S3 paths and clear local references.
+    const latestOrder = await DataStore.query(Order, order.id);
+
+    if (!latestOrder) {
+      throw new Error("Order not found while saving evidence.");
+    }
+
     await DataStore.save(
-      Order.copyOf(order, (updated) => {
+      Order.copyOf(latestOrder, (updated) => {
         updated.senderPreTransferPhotos = uploadedPhotos;
         updated.senderPreTransferVideo = uploadedVideo;
 
-        // remove local paths after upload
         updated.senderPreTransferLocalPhotos = null;
         updated.senderPreTransferLocalVideo = null;
 
@@ -99,12 +153,20 @@ export const uploadEvidence = async (order, photos, video) => {
 
     console.log("Evidence upload complete");
   } catch (error) {
-    console.log("Evidence upload error", error);
+    console.error("Evidence upload error:", error);
 
-    await DataStore.save(
-      Order.copyOf(order, (updated) => {
-        updated.mediaUploadStatus = MediaUploadStatus.FAILED;
-      }),
-    );
+    try {
+      const latestOrder = await DataStore.query(Order, order.id);
+
+      if (latestOrder) {
+        await DataStore.save(
+          Order.copyOf(latestOrder, (updated) => {
+            updated.mediaUploadStatus = MediaUploadStatus.FAILED;
+          }),
+        );
+      }
+    } catch (saveError) {
+      console.error("Failed to save evidence upload status:", saveError);
+    }
   }
 };

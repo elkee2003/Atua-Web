@@ -32,6 +32,12 @@ function CourierPayoutCard({ payout, onView }) {
 
   const amount = Number(payout.amount ?? 0);
 
+  const payoutFee = Number(payout.payoutFee ?? 0);
+
+  const totalWalletDebit = Number(
+    payout.totalWalletDebit ?? amount + payoutFee,
+  );
+
   const status = payout.status || "PENDING";
 
   const bankName = payout.bankName || "Bank not specified";
@@ -235,6 +241,20 @@ function CourierPayoutCard({ payout, onView }) {
                 ================================================== */}
 
         <div className="courierPayoutCard-amount">{formatCurrency(amount)}</div>
+
+        <div className="courierPayoutCard-financialDetails">
+          <div className="courierPayoutCard-financialRow">
+            <span>Atua fee</span>
+
+            <strong>{formatCurrency(payoutFee)}</strong>
+          </div>
+
+          <div className="courierPayoutCard-financialRow">
+            <span>Wallet debit</span>
+
+            <strong>{formatCurrency(totalWalletDebit)}</strong>
+          </div>
+        </div>
 
         {/* ==================================================
                     STATUS

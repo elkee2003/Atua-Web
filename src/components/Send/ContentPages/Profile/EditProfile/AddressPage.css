@@ -1,0 +1,1116 @@
+
+/* =========================================================
+   ADDRESS PAGE — ATUA
+   ========================================================= */
+
+.addressPage-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #f5f5f3;
+  color: #171717;
+  overflow-x: hidden;
+  padding-bottom: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.addressPage-container *,
+.addressPage-container *::before,
+.addressPage-container *::after {
+  box-sizing: border-box;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.addressPage-header {
+  width: 100%;
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 26px;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e5e2;
+}
+
+.addressPage-backButton {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #f0f0ed;
+  color: #171717;
+  font-size: 19px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addressPage-backButton:hover {
+  background: #e7e7e3;
+}
+
+.addressPage-headerCenter {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressPage-title {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+}
+
+.addressPage-headerSubtitle {
+  margin: 5px 0 0;
+  color: #777777;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.addressPage-stepIndicator {
+  min-width: 62px;
+  height: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 0 12px;
+  border-radius: 25px;
+  background: #111111;
+  color: #ffffff;
+}
+
+.addressPage-stepNumber {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.addressPage-stepTotal {
+  color: #d0d0d0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* =========================================================
+   PROGRESS INDICATOR
+   ========================================================= */
+
+.addressPage-progressContainer {
+  width: 100%;
+  padding: 17px 26px 16px;
+  background: #ffffff;
+  border-bottom: 1px solid #ececea;
+}
+
+.addressPage-progressTrack {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #e4e4e0;
+}
+
+.addressPage-progressFill {
+  width: 66.666%;
+  height: 100%;
+  border-radius: inherit;
+  background: #171717;
+}
+
+.addressPage-progressLabels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.addressPage-progressText,
+.addressPage-progressTextActive {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.addressPage-progressText {
+  color: #969696;
+  font-weight: 500;
+}
+
+.addressPage-progressTextActive {
+  color: #171717;
+  font-weight: 700;
+}
+
+/* =========================================================
+   MAIN CONTENT
+   ========================================================= */
+
+.addressPage-content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 26px 90px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* =========================================================
+   FORM SECTIONS
+   ========================================================= */
+
+.addressPage-section {
+  width: 100%;
+  min-width: 0;
+  padding: 22px;
+  border: 1px solid #e1e1dd;
+  border-radius: 24px;
+  background: #ffffff;
+}
+
+.addressPage-fieldHeader {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: 18px;
+}
+
+.addressPage-fieldNumber {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 17px;
+  background: #f0f0ed;
+  color: #252525;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.addressPage-fieldHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressPage-fieldTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.2px;
+}
+
+.addressPage-fieldSubtitle {
+  margin: 4px 0 0;
+  color: #858585;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* =========================================================
+   EXACT ADDRESS INPUT
+   ========================================================= */
+
+.addressPage-inputWrapper {
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 0 17px;
+  border: 1px solid #deded9;
+  border-radius: 20px;
+  background: #f8f8f6;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.addressPage-inputWrapper:focus-within {
+  border-color: #b7b7b0;
+  box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.04);
+}
+
+.addressPage-inputIcon {
+  flex-shrink: 0;
+  color: #777777;
+  font-size: 19px;
+}
+
+.addressPage-input {
+  width: 100%;
+  min-width: 0;
+  height: 54px;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #171717;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.addressPage-input::placeholder {
+  color: #929292;
+  font-weight: 400;
+}
+
+.addressPage-fieldHint {
+  margin: 12px 0 0;
+  color: #888888;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   GOOGLE PLACES SEARCH
+   ========================================================= */
+
+.addressPage-googleContainer {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 15px;
+  border: 1px solid #deded9;
+  border-radius: 20px;
+  background: #f8f8f6;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.addressPage-googleContainer:focus-within {
+  border-color: #b7b7b0;
+  box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.04);
+}
+
+.addressPage-googleInputIcon {
+  flex-shrink: 0;
+  color: #858585;
+  font-size: 18px;
+}
+
+.addressPage-googleContainer > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressPage-googleInput {
+  width: 100%;
+  height: 54px;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #171717;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.addressPage-googleInput::placeholder {
+  color: #8b93a1;
+  opacity: 1;
+  font-weight: 500;
+}
+
+.addressPage-clearButton {
+  width: 29px;
+  height: 29px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #898989;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.addressPage-clearButton:hover {
+  background: #555555;
+}
+
+/* Google Places dropdown */
+
+.pac-container {
+  z-index: 10000 !important;
+  margin-top: 5px;
+  overflow: hidden;
+  border: 1px solid #e2e2de !important;
+  border-radius: 14px !important;
+  background: #ffffff !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.pac-item {
+  min-height: 42px;
+  padding: 10px 12px !important;
+  border-top: 1px solid #eeeeeb !important;
+  color: #333333 !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+  cursor: pointer;
+}
+
+.pac-item:first-child {
+  border-top: none !important;
+}
+
+.pac-item:hover {
+  background: #f5f5f3 !important;
+}
+
+.pac-item-query {
+  color: #171717 !important;
+  font-size: 12px !important;
+}
+
+.pac-icon {
+  margin-right: 8px !important;
+}
+
+/* =========================================================
+   LOCATION EXPLANATION
+   ========================================================= */
+
+.addressPage-locationHint {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.addressPage-locationHintIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #858585;
+  font-size: 15px;
+}
+
+.addressPage-locationHintText {
+  margin: 0;
+  color: #858585;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   SELECTED LOCATION CARD
+   ========================================================= */
+
+.addressPage-selectedAddressCard {
+  width: 100%;
+  padding: 20px 21px;
+  border: 1px solid #dce3da;
+  border-radius: 24px;
+  background: #f6f8f5;
+}
+
+.addressPage-selectedAddressHeader {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.addressPage-selectedAddressIcon {
+  width: 47px;
+  height: 47px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: #1d2920;
+  color: #ffffff;
+  font-size: 18px;
+}
+
+.addressPage-selectedAddressHeaderText {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressPage-selectedAddressTitle {
+  margin: 0;
+  color: #202720;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.addressPage-selectedAddressSubtitle {
+  margin: 4px 0 0;
+  color: #858b84;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.addressPage-selectedAddressDivider {
+  width: 100%;
+  height: 1px;
+  margin: 17px 0;
+  background: #dce1da;
+}
+
+.addressPage-selectedAddressBody {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.addressPage-selectedAddressLocationIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #465247;
+  font-size: 17px;
+}
+
+.addressPage-selectedAddressText {
+  margin: 0;
+  color: #414741;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   LOCATION NOT SELECTED
+   ========================================================= */
+
+.addressPage-locationEmptyCard {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 19px;
+  border: 1px solid #e1e1dd;
+  border-radius: 22px;
+  background: #ffffff;
+}
+
+.addressPage-emptyLocationIcon {
+  width: 45px;
+  height: 45px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #f0f0ed;
+  color: #6f6f6f;
+  font-size: 18px;
+}
+
+.addressPage-emptyLocationText {
+  flex: 1;
+  min-width: 0;
+}
+
+.addressPage-emptyLocationTitle {
+  margin: 0;
+  color: #292929;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.addressPage-emptyLocationSubtitle {
+  margin: 4px 0 0;
+  color: #888888;
+  font-size: 11.5px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   VALIDATION ERROR
+   ========================================================= */
+
+.addressPage-errorContainer {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #f1d2d0;
+  border-radius: 13px;
+  background: #fff5f4;
+}
+
+.addressPage-errorIcon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #c43b34;
+  font-size: 15px;
+}
+
+.addressPage-error {
+  margin: 0;
+  color: #b52c26;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   CONTINUE FOOTER
+   Matches the compact Edit Profile button style
+   ========================================================= */
+
+.addressPage-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  width: 100%;
+  flex-shrink: 0;
+  padding: 10px 26px 12px;
+  border-top: 1px solid #e5e5e1;
+  background: #f5f5f3;
+}
+
+.addressPage-nextButton {
+  width: 100%;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 9px 8px 17px;
+  border: none;
+  border-radius: 20px;
+  background: #111111;
+  color: #ffffff;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.17);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.addressPage-nextButton:hover {
+  background: #202020;
+}
+
+.addressPage-nextButton:active {
+  transform: scale(0.99);
+}
+
+.addressPage-nextButtonTextContainer {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-left: 1px;
+}
+
+.addressPage-nextButtonLabel {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.addressPage-nextButtonSubLabel {
+  color: #b8b8b8;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.addressPage-nextButtonIconContainer {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  background: #292929;
+  color: #ffffff;
+  font-size: 21px;
+}
+
+/* =========================================================
+   DESKTOP
+   ========================================================= */
+
+@media (min-width: 901px) {
+  .addressPage-header {
+    padding-right: 34px;
+    padding-left: 34px;
+  }
+
+  .addressPage-progressContainer {
+    padding-right: 34px;
+    padding-left: 34px;
+  }
+
+  .addressPage-content {
+    padding-top: 28px;
+    padding-right: 34px;
+    padding-left: 34px;
+    gap: 20px;
+  }
+
+  .addressPage-footer {
+    padding-right: max(34px, calc((100% - 932px) / 2));
+    padding-left: max(34px, calc((100% - 932px) / 2));
+  }
+
+  .addressPage-section {
+    padding: 24px;
+  }
+}
+
+/* =========================================================
+   TABLET AND MOBILE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .addressPage-container {
+    min-height: calc(100vh - 85px);
+    min-height: calc(100dvh - 85px);
+  }
+
+  .addressPage-header {
+    min-height: 78px;
+    gap: 12px;
+    padding: 12px 20px;
+  }
+
+  .addressPage-backButton {
+    width: 48px;
+    height: 48px;
+    font-size: 17px;
+  }
+
+  .addressPage-title {
+    font-size: 21px;
+  }
+
+  .addressPage-headerSubtitle {
+    font-size: 12px;
+  }
+
+  .addressPage-stepIndicator {
+    min-width: 57px;
+    height: 42px;
+  }
+
+  .addressPage-stepNumber {
+    font-size: 16px;
+  }
+
+  .addressPage-progressContainer {
+    padding: 15px 20px 14px;
+  }
+
+  .addressPage-content {
+    padding: 18px 20px 90px;
+    gap: 16px;
+  }
+
+  .addressPage-section {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .addressPage-fieldHeader {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .addressPage-fieldNumber {
+    width: 44px;
+    height: 44px;
+    border-radius: 15px;
+    font-size: 13px;
+  }
+
+  .addressPage-fieldTitle {
+    font-size: 16px;
+  }
+
+  .addressPage-fieldSubtitle {
+    font-size: 11.5px;
+  }
+
+  .addressPage-footer {
+    bottom: 25px;
+    padding: 10px 20px 12px;
+  }
+
+  .addressPage-nextButton {
+    min-height: 62px;
+    border-radius: 19px;
+  }
+
+  .addressPage-nextButtonIconContainer {
+    width: 45px;
+    height: 45px;
+    border-radius: 14px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+  .addressPage-header {
+    min-height: 76px;
+    gap: 10px;
+    padding: 11px 15px;
+  }
+
+  .addressPage-backButton {
+    width: 43px;
+    height: 43px;
+    font-size: 16px;
+  }
+
+  .addressPage-title {
+    font-size: 19px;
+    letter-spacing: -0.3px;
+  }
+
+  .addressPage-headerSubtitle {
+    margin-top: 3px;
+    font-size: 11px;
+  }
+
+  .addressPage-stepIndicator {
+    min-width: 51px;
+    height: 38px;
+    gap: 3px;
+    padding: 0 9px;
+  }
+
+  .addressPage-stepNumber {
+    font-size: 15px;
+  }
+
+  .addressPage-stepTotal {
+    font-size: 12px;
+  }
+
+  .addressPage-progressContainer {
+    padding: 13px 16px 12px;
+  }
+
+  .addressPage-progressTrack {
+    height: 5px;
+  }
+
+  .addressPage-progressLabels {
+    margin-top: 8px;
+  }
+
+  .addressPage-progressText,
+  .addressPage-progressTextActive {
+    font-size: 11px;
+  }
+
+  .addressPage-content {
+    padding: 16px 16px 90px;
+    gap: 14px;
+  }
+
+  .addressPage-section {
+    padding: 17px;
+    border-radius: 21px;
+  }
+
+  .addressPage-fieldHeader {
+    gap: 11px;
+    margin-bottom: 14px;
+  }
+
+  .addressPage-fieldNumber {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 12px;
+  }
+
+  .addressPage-fieldTitle {
+    font-size: 15px;
+  }
+
+  .addressPage-fieldSubtitle {
+    font-size: 11px;
+  }
+
+  .addressPage-inputWrapper,
+  .addressPage-googleContainer {
+    min-height: 54px;
+    gap: 10px;
+    padding-right: 13px;
+    padding-left: 13px;
+    border-radius: 18px;
+  }
+
+  .addressPage-input {
+    height: 50px;
+    font-size: 13px;
+  }
+
+  .addressPage-inputIcon {
+    font-size: 17px;
+  }
+
+  .addressPage-googleInput {
+    height: 50px;
+    font-size: 13px;
+  }
+
+  .addressPage-googleInputIcon {
+    font-size: 16px;
+  }
+
+  .addressPage-clearButton {
+    width: 27px;
+    height: 27px;
+    font-size: 12px;
+  }
+
+  .addressPage-fieldHint,
+  .addressPage-locationHintText {
+    font-size: 10.5px;
+  }
+
+  .addressPage-locationHint {
+    gap: 8px;
+    margin-top: 11px;
+  }
+
+  .addressPage-locationHintIcon {
+    font-size: 14px;
+  }
+
+  .addressPage-selectedAddressCard {
+    padding: 17px;
+    border-radius: 21px;
+  }
+
+  .addressPage-selectedAddressIcon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    font-size: 16px;
+  }
+
+  .addressPage-selectedAddressTitle {
+    font-size: 14px;
+  }
+
+  .addressPage-selectedAddressSubtitle {
+    font-size: 11px;
+  }
+
+  .addressPage-selectedAddressDivider {
+    margin: 14px 0;
+  }
+
+  .addressPage-selectedAddressText {
+    font-size: 12px;
+  }
+
+  .addressPage-locationEmptyCard {
+    gap: 12px;
+    padding: 16px;
+    border-radius: 20px;
+  }
+
+  .addressPage-emptyLocationIcon {
+    width: 41px;
+    height: 41px;
+    border-radius: 13px;
+    font-size: 16px;
+  }
+
+  .addressPage-emptyLocationTitle {
+    font-size: 13px;
+  }
+
+  .addressPage-emptyLocationSubtitle {
+    font-size: 10.5px;
+  }
+
+  .addressPage-footer {
+    bottom: 25px;
+    padding: 9px 16px 11px;
+  }
+
+  .addressPage-nextButton {
+    min-height: 59px;
+    padding: 7px 8px 7px 15px;
+    border-radius: 19px;
+  }
+
+  .addressPage-nextButtonLabel {
+    font-size: 15px;
+  }
+
+  .addressPage-nextButtonSubLabel {
+    font-size: 10px;
+  }
+
+  .addressPage-nextButtonIconContainer {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+    font-size: 19px;
+  }
+}
+
+/* =========================================================
+   EXTRA SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 430px) {
+  .addressPage-content {
+    padding: 14px 13px 90px;
+    gap: 12px;
+  }
+
+  .addressPage-section {
+    padding: 15px;
+    border-radius: 19px;
+  }
+
+  .addressPage-fieldHeader {
+    margin-bottom: 13px;
+  }
+
+  .addressPage-fieldNumber {
+    width: 39px;
+    height: 39px;
+    border-radius: 13px;
+  }
+
+  .addressPage-inputWrapper,
+  .addressPage-googleContainer {
+    min-height: 51px;
+    padding-right: 11px;
+    padding-left: 11px;
+    border-radius: 16px;
+  }
+
+  .addressPage-input {
+    height: 47px;
+  }
+
+  .addressPage-googleInput {
+    height: 47px;
+  }
+
+  .addressPage-selectedAddressCard {
+    padding: 15px;
+    border-radius: 19px;
+  }
+
+  .addressPage-footer {
+    padding-right: 13px;
+    padding-left: 13px;
+  }
+}
+
+@media (max-width: 360px) {
+  .addressPage-header {
+    gap: 8px;
+    padding-right: 11px;
+    padding-left: 11px;
+  }
+
+  .addressPage-backButton {
+    width: 39px;
+    height: 39px;
+    font-size: 14px;
+  }
+
+  .addressPage-title {
+    font-size: 17px;
+  }
+
+  .addressPage-headerSubtitle {
+    font-size: 10px;
+  }
+
+  .addressPage-stepIndicator {
+    min-width: 46px;
+    height: 35px;
+    padding: 0 7px;
+  }
+
+  .addressPage-progressContainer {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .addressPage-content {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .addressPage-section {
+    padding: 13px;
+  }
+
+  .addressPage-fieldTitle {
+    font-size: 14px;
+  }
+
+  .addressPage-fieldSubtitle {
+    font-size: 10px;
+  }
+
+  .addressPage-input,
+  .addressPage-googleInput {
+    font-size: 12px;
+  }
+
+  .addressPage-footer {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .addressPage-nextButton {
+    min-height: 56px;
+  }
+
+  .addressPage-nextButtonIconContainer {
+    width: 40px;
+    height: 40px;
+  }
+}

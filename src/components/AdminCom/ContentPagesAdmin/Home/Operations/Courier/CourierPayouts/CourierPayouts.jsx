@@ -51,14 +51,28 @@ const client = generateClient();
 
 /*
 ==========================================================
-ADMIN MAKE PAYOUT MUTATION
+ADMIN PAYOUT RULES
 ==========================================================
+*/
 
+const ADMIN_PAYOUT_FEE = 100;
+
+const PAYSTACK_MIN_TRANSFER_AMOUNT = 50;
+
+const ADMIN_MIN_WALLET_BALANCE =
+  ADMIN_PAYOUT_FEE + PAYSTACK_MIN_TRANSFER_AMOUNT;
+
+/*
+==========================================================
 Business rules enforced by the Lambda:
 
-- Admin payout has NO ₦100 courier-request fee.
-- Admin payout has NO ₦3,000 minimum.
-- Requested amount cannot exceed current available balance.
+- Admin payout has a flat ₦100 Atua payout fee.
+- Admin payout has NO ₦3,000 business minimum.
+- Paystack transfer amount must be at least ₦50.
+- Therefore, the minimum wallet balance for an admin payout
+  is ₦150 (₦50 transfer + ₦100 Atua fee).
+- Requested amount cannot exceed:
+    available balance - ₦100 Atua fee.
 - The backend remains the final authority on the balance.
 ==========================================================
 */
@@ -171,6 +185,8 @@ ADMIN PAYOUT MODAL
   const [payoutError, setPayoutError] = useState(null);
 
   const [payoutSuccess, setPayoutSuccess] = useState(null);
+
+  const [payoutConfirmation, setPayoutConfirmation] = useState(null);
 
   /*
   ==========================================================
@@ -544,6 +560,8 @@ adminMakePayout AppSync mutation.
 
     setPayoutSuccess(null);
 
+    setPayoutConfirmation(null);
+
     setPayoutModalOpen(true);
   };
 
@@ -572,6 +590,8 @@ CLOSE ADMIN PAYOUT MODAL
     setPayoutError(null);
 
     setPayoutSuccess(null);
+
+    setPayoutConfirmation(null);
   };
 
   /*
@@ -579,31 +599,42 @@ CLOSE ADMIN PAYOUT MODAL
 EMPTY WALLET
 ==========================================================
 
-"Empty Wallet" simply fills the current available balance
-into the amount field.
+"Empty Wallet" means:
 
-The backend STILL checks the live wallet balance before
-actually processing the payout.
+    payout amount
+        =
+    available wallet balance
+        -
+    ₦100 Atua payout fee
 
-This prevents the frontend from becoming the authority
-on the wallet balance.
+The backend remains the final authority.
+
 ==========================================================
 */
 
   const handleEmptyWallet = () => {
     const availableBalance = Number(wallet?.availableBalance || 0);
 
-    if (!Number.isFinite(availableBalance) || availableBalance <= 0) {
-      setPayoutError("This courier has no available balance to pay out.");
+    if (
+      !Number.isFinite(availableBalance) ||
+      availableBalance < ADMIN_MIN_WALLET_BALANCE
+    ) {
+      setPayoutError(
+        `This courier needs at least ₦${ADMIN_MIN_WALLET_BALANCE.toLocaleString(
+          "en-NG",
+        )} available to make an admin payout.`,
+      );
 
       return;
     }
 
+    const maximumPayoutAmount = Number(
+      (availableBalance - ADMIN_PAYOUT_FEE).toFixed(2),
+    );
+
     setPayoutError(null);
-
     setPayoutSuccess(null);
-
-    setPayoutAmountInput(String(availableBalance));
+    setPayoutAmountInput(String(maximumPayoutAmount));
   };
 
   /*
@@ -681,16 +712,62 @@ SUBMIT ADMIN PAYOUT
     }
 
     /*
-  --------------------------------------------------------
-  ADMIN CANNOT PAY MORE THAN AVAILABLE BALANCE
-  --------------------------------------------------------
-  */
+      --------------------------------------------------------
+      ADMIN PAYOUT FEE + MAXIMUM PAYOUT
+      --------------------------------------------------------
 
-    if (requestedAmount > availableBalance) {
+      The requested amount is the amount sent to the courier.
+
+      The ₦100 Atua fee is additional.
+
+      Therefore:
+
+          total wallet debit
+              =
+          requested amount + ₦100
+
+      The requested amount cannot exceed:
+
+          available balance - ₦100
+
+      --------------------------------------------------------
+    */
+
+    const totalWalletDebit = Number(
+      (requestedAmount + ADMIN_PAYOUT_FEE).toFixed(2),
+    );
+
+    const maximumPayoutAmount = Number(
+      (availableBalance - ADMIN_PAYOUT_FEE).toFixed(2),
+    );
+
+    if (availableBalance < ADMIN_MIN_WALLET_BALANCE) {
       setPayoutError(
-        `The payout amount cannot exceed the available balance of ${formatPayoutCurrency(
-          availableBalance,
+        `This courier needs at least ₦${ADMIN_MIN_WALLET_BALANCE.toLocaleString(
+          "en-NG",
+        )} available to make an admin payout.`,
+      );
+
+      return;
+    }
+
+    if (requestedAmount < PAYSTACK_MIN_TRANSFER_AMOUNT) {
+      setPayoutError(
+        `Admin payout must be at least ₦${PAYSTACK_MIN_TRANSFER_AMOUNT.toLocaleString(
+          "en-NG",
         )}.`,
+      );
+
+      return;
+    }
+
+    if (requestedAmount > maximumPayoutAmount) {
+      setPayoutError(
+        `The payout amount cannot exceed ${formatPayoutCurrency(
+          maximumPayoutAmount,
+        )} because the ₦${ADMIN_PAYOUT_FEE.toLocaleString(
+          "en-NG",
+        )} Atua payout fee must also be deducted from the wallet.`,
       );
 
       return;
@@ -708,22 +785,32 @@ SUBMIT ADMIN PAYOUT
       "this courier";
 
     /*
-  --------------------------------------------------------
-  FINAL CONFIRMATION
-  --------------------------------------------------------
-  */
+      --------------------------------------------------------
+      OPEN IN-MODAL CONFIRMATION
+      --------------------------------------------------------
+    */
 
-    const confirmed = window.confirm(
-      `Make an admin payout of ${formatPayoutCurrency(
-        requestedAmount,
-      )} to ${courierName}?\n\n` +
-        "No ₦100 courier-request fee will be charged.\n" +
-        "The ₦3,000 courier minimum does not apply.",
-    );
+    setPayoutConfirmation({
+      requestedAmount,
+      totalWalletDebit,
+      courierName,
+    });
 
-    if (!confirmed) {
+    return;
+  };
+
+  /*
+==========================================================
+CONFIRM ADMIN PAYOUT
+==========================================================
+*/
+
+  const handleConfirmAdminPayout = async () => {
+    if (!courierId || !payoutConfirmation) {
       return;
     }
+
+    const { requestedAmount } = payoutConfirmation;
 
     try {
       setPayoutSubmitting(true);
@@ -755,7 +842,6 @@ SUBMIT ADMIN PAYOUT
 
         variables: {
           courierID: courierId,
-
           requestedAmount,
         },
       });
@@ -768,14 +854,7 @@ SUBMIT ADMIN PAYOUT
 
       /*
     ------------------------------------------------------
-    THE LAMBDA RETURNS:
-
-        {
-          statusCode,
-          body
-        }
-
-    The body contains the detailed payout result.
+    PARSE LAMBDA RESPONSE
     ------------------------------------------------------
     */
 
@@ -807,6 +886,8 @@ SUBMIT ADMIN PAYOUT
     ------------------------------------------------------
     */
 
+      setPayoutConfirmation(null);
+
       setPayoutSuccess(
         bodyResult?.message ||
           "Payout successfully initiated. Awaiting Paystack transfer confirmation.",
@@ -827,7 +908,6 @@ SUBMIT ADMIN PAYOUT
 
       await fetchPayoutData({
         showLoading: false,
-
         showRefreshing: false,
       });
     } catch (payoutErrorValue) {
@@ -1381,8 +1461,8 @@ SUBMIT ADMIN PAYOUT
             </div>
 
             {/* ==================================================
-          PAYOUT AMOUNT
-      ================================================== */}
+                PAYOUT AMOUNT
+            ================================================== */}
 
             <label
               htmlFor="admin-payout-amount"
@@ -1412,17 +1492,163 @@ SUBMIT ADMIN PAYOUT
                 className="courierPayouts-emptyWalletButton"
                 onClick={handleEmptyWallet}
                 disabled={
-                  payoutSubmitting || Number(wallet?.availableBalance || 0) <= 0
+                  payoutSubmitting ||
+                  Number(wallet?.availableBalance || 0) <
+                    ADMIN_MIN_WALLET_BALANCE
                 }
               >
                 Empty Wallet
               </button>
             </div>
 
+            {(() => {
+              const normalizedPreviewInput = String(payoutAmountInput || "")
+                .replace(/,/g, "")
+                .trim();
+
+              const previewAmount = Number(normalizedPreviewInput);
+
+              if (!Number.isFinite(previewAmount) || previewAmount <= 0) {
+                return null;
+              }
+
+              const previewTotalWalletDebit = Number(
+                (previewAmount + ADMIN_PAYOUT_FEE).toFixed(2),
+              );
+
+              const previewRemainingBalance = Number(
+                (
+                  Number(wallet?.availableBalance || 0) -
+                  previewTotalWalletDebit
+                ).toFixed(2),
+              );
+
+              return (
+                <div className="courierPayouts-payoutPreview">
+                  <div className="courierPayouts-payoutPreviewRow">
+                    <span>Payout amount</span>
+                    <strong>{formatPayoutCurrency(previewAmount)}</strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutPreviewRow">
+                    <span>Atua payout fee</span>
+                    <strong>{formatPayoutCurrency(ADMIN_PAYOUT_FEE)}</strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutPreviewRow">
+                    <span>Total wallet deduction</span>
+                    <strong>
+                      {formatPayoutCurrency(previewTotalWalletDebit)}
+                    </strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutPreviewRow">
+                    <span>Courier receives</span>
+                    <strong>{formatPayoutCurrency(previewAmount)}</strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutPreviewRow">
+                    <span>Remaining wallet balance</span>
+                    <strong>
+                      {formatPayoutCurrency(
+                        Math.max(previewRemainingBalance, 0),
+                      )}
+                    </strong>
+                  </div>
+                </div>
+              );
+            })()}
+
             <p className="courierPayouts-payoutAmountNote">
-              Admin payouts have no ₦100 courier-request fee and no ₦3,000
-              minimum.
+              Admin payouts have a flat ₦100 Atua fee. The ₦3,000 courier
+              minimum does not apply. The courier receives the requested amount,
+              while the ₦100 fee is deducted separately from the wallet. Any
+              Paystack transfer fee is covered by Atua from the ₦100 fee.
             </p>
+
+            {payoutConfirmation && (
+              <div className="courierPayouts-payoutConfirmation">
+                <div className="courierPayouts-payoutConfirmationHeader">
+                  <div className="courierPayouts-payoutConfirmationIcon">
+                    <FaCheckCircle />
+                  </div>
+
+                  <div>
+                    <h3 className="courierPayouts-payoutConfirmationTitle">
+                      Confirm Payout
+                    </h3>
+
+                    <p className="courierPayouts-payoutConfirmationSubtitle">
+                      Please review the payout details before continuing.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="courierPayouts-payoutConfirmationCard">
+                  <div className="courierPayouts-payoutConfirmationRow">
+                    <span>Courier</span>
+
+                    <strong>{payoutConfirmation.courierName}</strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutConfirmationRow">
+                    <span>Courier receives</span>
+
+                    <strong>
+                      {formatPayoutCurrency(payoutConfirmation.requestedAmount)}
+                    </strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutConfirmationRow">
+                    <span>Atua payout fee</span>
+
+                    <strong>{formatPayoutCurrency(ADMIN_PAYOUT_FEE)}</strong>
+                  </div>
+
+                  <div className="courierPayouts-payoutConfirmationRow courierPayouts-payoutConfirmationTotal">
+                    <span>Total wallet deduction</span>
+
+                    <strong>
+                      {formatPayoutCurrency(
+                        payoutConfirmation.totalWalletDebit,
+                      )}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="courierPayouts-payoutConfirmationNotice">
+                  The ₦3,000 courier-request minimum does not apply. This is an
+                  admin payout.
+                </div>
+
+                <div className="courierPayouts-payoutConfirmationActions">
+                  <button
+                    type="button"
+                    className="courierPayouts-payoutCancelButton"
+                    onClick={() => {
+                      if (payoutSubmitting) {
+                        return;
+                      }
+
+                      setPayoutConfirmation(null);
+                      setPayoutError(null);
+                    }}
+                    disabled={payoutSubmitting}
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    type="button"
+                    className="courierPayouts-payoutConfirmButton"
+                    onClick={handleConfirmAdminPayout}
+                    disabled={payoutSubmitting}
+                  >
+                    {payoutSubmitting ? "Processing..." : "Confirm Payout"}
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* ==================================================
           ERROR
@@ -1458,27 +1684,29 @@ SUBMIT ADMIN PAYOUT
           ACTIONS
       ================================================== */}
 
-            <div className="courierPayouts-payoutModalActions">
-              <button
-                type="button"
-                className="courierPayouts-payoutCancelButton"
-                onClick={handleClosePayoutModal}
-                disabled={payoutSubmitting}
-              >
-                {payoutSuccess ? "Close" : "Cancel"}
-              </button>
-
-              {!payoutSuccess && (
+            {!payoutConfirmation && (
+              <div className="courierPayouts-payoutModalActions">
                 <button
                   type="button"
-                  className="courierPayouts-payoutSubmitButton"
-                  onClick={handleSubmitAdminPayout}
+                  className="courierPayouts-payoutCancelButton"
+                  onClick={handleClosePayoutModal}
                   disabled={payoutSubmitting}
                 >
-                  {payoutSubmitting ? "Processing..." : "Make Payout"}
+                  {payoutSuccess ? "Close" : "Cancel"}
                 </button>
-              )}
-            </div>
+
+                {!payoutSuccess && (
+                  <button
+                    type="button"
+                    className="courierPayouts-payoutSubmitButton"
+                    onClick={handleSubmitAdminPayout}
+                    disabled={payoutSubmitting}
+                  >
+                    {payoutSubmitting ? "Processing..." : "Make Payout"}
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

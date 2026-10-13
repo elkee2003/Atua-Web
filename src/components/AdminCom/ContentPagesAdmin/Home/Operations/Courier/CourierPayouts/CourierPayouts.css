@@ -646,6 +646,41 @@
   line-height: 1.5;
 }
 
+.courierPayouts-payoutPreview {
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-top: 10px;
+  padding: 10px 12px;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+
+  background: #f8fafc;
+}
+
+.courierPayouts-payoutPreviewRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 4px 0;
+
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.courierPayouts-payoutPreviewRow strong {
+  color: #111827;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
 
 /* ==================================================
    PAYOUT MESSAGES
@@ -690,6 +725,205 @@
   color: #166534;
 }
 
+/* ==================================================
+   PAYOUT CONFIRMATION
+================================================== */
+
+.courierPayouts-payoutConfirmation {
+  margin-top: 18px;
+
+  padding: 16px;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #f8fafc;
+
+  box-sizing: border-box;
+}
+
+.courierPayouts-payoutConfirmationHeader {
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  margin-bottom: 14px;
+}
+
+.courierPayouts-payoutConfirmationIcon {
+  width: 34px;
+
+  height: 34px;
+
+  flex: 0 0 34px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #ecfdf5;
+
+  color: #059669;
+
+  font-size: 15px;
+}
+
+.courierPayouts-payoutConfirmationTitle {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+.courierPayouts-payoutConfirmationSubtitle {
+  margin: 3px 0 0;
+
+  color: #6b7280;
+
+  font-size: 11px;
+
+  line-height: 1.45;
+}
+
+.courierPayouts-payoutConfirmationCard {
+  overflow: hidden;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+}
+
+.courierPayouts-payoutConfirmationRow {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 16px;
+
+  padding: 11px 12px;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  color: #6b7280;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+.courierPayouts-payoutConfirmationRow:last-child {
+  border-bottom: none;
+}
+
+.courierPayouts-payoutConfirmationRow strong {
+  color: #111827;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  text-align: right;
+
+  white-space: nowrap;
+}
+
+.courierPayouts-payoutConfirmationTotal {
+  background: #f8fafc;
+}
+
+.courierPayouts-payoutConfirmationTotal span {
+  color: #374151;
+
+  font-weight: 600;
+}
+
+.courierPayouts-payoutConfirmationTotal strong {
+  font-size: 13px;
+}
+
+.courierPayouts-payoutConfirmationNotice {
+  margin-top: 11px;
+
+  padding: 9px 11px;
+
+  border-radius: 7px;
+
+  background: #f9fafb;
+
+  color: #6b7280;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+.courierPayouts-payoutConfirmationActions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 10px;
+
+  margin-top: 16px;
+}
+
+.courierPayouts-payoutConfirmButton {
+  min-width: 130px;
+
+  height: 42px;
+
+  padding: 0 16px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition:
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.courierPayouts-payoutConfirmButton:hover:not(:disabled) {
+  background: #1f2937;
+}
+
+.courierPayouts-payoutConfirmButton:focus-visible {
+  outline: 2px solid #111827;
+
+  outline-offset: 2px;
+}
+
+.courierPayouts-payoutConfirmButton:disabled {
+  cursor: not-allowed;
+
+  opacity: 0.65;
+}
 
 /* ==================================================
    MODAL ACTIONS
@@ -847,6 +1081,29 @@
   .courierPayouts-payoutCancelButton,
   .courierPayouts-payoutSubmitButton {
     flex: 1;
+  }
+
+  .courierPayouts-payoutConfirmation {
+    padding: 14px;
+  }
+
+  .courierPayouts-payoutConfirmationRow {
+    align-items: flex-start;
+
+    gap: 10px;
+  }
+
+  .courierPayouts-payoutConfirmationActions {
+    width: 100%;
+  }
+
+  .courierPayouts-payoutConfirmationActions
+    .courierPayouts-payoutCancelButton,
+  .courierPayouts-payoutConfirmationActions
+    .courierPayouts-payoutConfirmButton {
+    flex: 1;
+
+    min-width: 0;
   }
 }
 

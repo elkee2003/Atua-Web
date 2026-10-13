@@ -1,0 +1,325 @@
+
+/* =====================================================
+   TRACKING CONTENT
+===================================================== */
+
+.default-tracking-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  gap: 14px;
+  box-sizing: border-box;
+  color: #0f172a;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.tracking-status-container {
+  padding: 6px 0 4px;
+  margin-bottom: 2px;
+}
+
+.tracking-status-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.tracking-status-dot {
+  position: relative;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+.tracking-status-title {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 0.1px;
+  line-height: 1.4;
+}
+
+.tracking-status-subtitle {
+  margin: 7px 0 0 17px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+/* =====================================================
+   ORDER HISTORY
+===================================================== */
+
+.tracking-order-history {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+  color: #334155;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.tracking-order-history:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.tracking-order-history span {
+  color: #64748b;
+  font-size: 17px;
+}
+
+/* =====================================================
+   CANCEL ORDER
+===================================================== */
+
+.tracking-cancel-button {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  background: #fef2f2;
+  color: #d64545;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tracking-cancel-button:hover {
+  border-color: #fca5a5;
+  background: #fee2e2;
+}
+
+.tracking-cancel-button:active {
+  transform: scale(0.99);
+}
+
+/* =====================================================
+   COURIER CARD
+===================================================== */
+
+.tracking-driver-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  width: 100%;
+  min-width: 0;
+  margin-top: 2px;
+  padding: 16px;
+  box-sizing: border-box;
+  border: 1px solid #f1f5f9;
+  border-radius: 17px;
+  background: #fff;
+  box-shadow: 0 5px 16px rgba(15, 23, 42, 0.06);
+  animation: tracking-driver-enter 0.35s ease both;
+}
+
+.tracking-driver-image {
+  display: block;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border: 1px solid #f1f5f9;
+  border-radius: 50%;
+  background: #f1f5f9;
+  object-fit: cover;
+}
+
+.tracking-driver-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tracking-driver-name {
+  margin: 1px 0 0;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.tracking-driver-subtitle {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.tracking-driver-meta {
+  margin: 3px 0 0;
+  color: #94a3b8;
+  font-size: 10px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   PHONE NUMBER
+===================================================== */
+
+.tracking-phone-button {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  max-width: 100%;
+  margin-top: 9px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tracking-phone-number {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.tracking-copy-hint {
+  color: #94a3b8;
+  font-size: 10px;
+}
+
+.tracking-phone-button:hover .tracking-phone-number {
+  text-decoration: underline;
+}
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.tracking-price-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  margin-top: 11px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #e8f5e9;
+}
+
+.tracking-price-text {
+  color: #2e7d32;
+  font-size: 13px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   ANIMATION
+===================================================== */
+
+@keyframes tracking-driver-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+  .tracking-status-title {
+    font-size: 18px;
+  }
+
+  .tracking-driver-card {
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .tracking-driver-image {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 700px) {
+  .default-tracking-content {
+    gap: 12px;
+  }
+
+  .tracking-status-title {
+    font-size: 18px;
+  }
+
+  .tracking-status-subtitle {
+    font-size: 12px;
+  }
+
+  .tracking-driver-card {
+    padding: 15px;
+    border-radius: 15px;
+  }
+}
+
+/* =====================================================
+   SMALL PHONES
+===================================================== */
+
+@media (max-width: 420px) {
+  .tracking-status-title {
+    font-size: 16px;
+  }
+
+  .tracking-status-subtitle {
+    font-size: 11px;
+  }
+
+  .tracking-driver-card {
+    gap: 11px;
+    padding: 12px;
+  }
+
+  .tracking-driver-image {
+    width: 46px;
+    height: 46px;
+  }
+
+  .tracking-driver-name {
+    font-size: 14px;
+  }
+}

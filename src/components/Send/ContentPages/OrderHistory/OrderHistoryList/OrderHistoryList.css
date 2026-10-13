@@ -1,36 +1,94 @@
-/* CARD */
+
+/* =========================================
+   ORDER HISTORY LIST CARD
+========================================= */
+
 .orderHistoryList-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 18px;
+  width: 100%;
+  box-sizing: border-box;
   margin-bottom: 18px;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #ffffff;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .orderHistoryList-cardActive {
   border: 1px solid #e5e7eb;
 }
 
-/* HEADER */
+/* =========================================
+   COLLAPSIBLE SUMMARY
+========================================= */
+
+.orderHistoryList-summary {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
 .orderHistoryList-topRow {
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .orderHistoryList-date {
-  font-size: 13px;
   color: #6b7280;
+  font-size: 13px;
 }
 
-/* STATUS */
+.orderHistoryList-badges {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Live badge */
+
+.orderHistoryList-liveBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: 8px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: #ff3b30;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.orderHistoryList-liveDot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+/* Status badges */
+
 .orderHistoryList-statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 4px 10px;
   border-radius: 20px;
+  color: #ffffff;
   font-size: 12px;
   font-weight: 600;
-  color: #fff;
+  white-space: nowrap;
 }
 
 .orderHistoryList-statusDelivered {
@@ -49,114 +107,292 @@
   background: #dc2626;
 }
 
-/* SUMMARY */
+/* Recipient */
+
 .orderHistoryList-recipient {
-  font-size: 18px;
-  font-weight: 600;
   margin-top: 12px;
   color: #111827;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
+
+/* Price and transportation */
 
 .orderHistoryList-bottomRow {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   margin-top: 10px;
 }
 
 .orderHistoryList-price {
+  color: #111827;
   font-size: 18px;
   font-weight: 700;
-  color: #111827;
 }
 
 .orderHistoryList-transport {
-  font-size: 13px;
   color: #6b7280;
+  font-size: 13px;
   text-transform: capitalize;
+  overflow-wrap: anywhere;
+  text-align: right;
 }
+
+/* Expand hint */
 
 .orderHistoryList-expandHint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   margin-top: 8px;
-  font-size: 12px;
   color: #9ca3af;
+  font-size: 12px;
 }
 
-/* COLLAPSIBLE ANIMATION */
-.orderHistoryList-collapsible {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.35s ease;
+.orderHistoryList-expandHint svg {
+  font-size: 11px;
 }
 
-.orderHistoryList-collapsible.expanded {
-  max-height: 500px; /* enough space */
+/* =========================================
+   EXPANDED CONTENT
+========================================= */
+
+.orderHistoryList-expanded {
+  margin-top: 10px;
 }
 
-/* EXPANDED CONTENT */
-.orderHistoryList-expandedContent {
-  margin-top: 12px;
+.orderHistoryList-sectionHeading {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.orderHistoryList-sectionHeading svg {
+  color: #6b7280;
+  font-size: 13px;
 }
 
 .orderHistoryList-details {
-  font-size: 14px;
+  margin-top: 8px;
+  margin-bottom: 0;
   color: #6b7280;
+  font-size: 14px;
   line-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .orderHistoryList-divider {
   height: 1px;
-  background: #f3f4f6;
   margin: 14px 0;
+  background: #f3f4f6;
 }
 
-/* BUTTONS */
+/* =========================================
+   ACTION BUTTONS
+========================================= */
+
 .orderHistoryList-buttonRow {
   display: flex;
   gap: 10px;
+  margin-top: 14px;
+}
+
+.orderHistoryList-primaryButton,
+.orderHistoryList-secondaryButton,
+.orderHistoryList-payButton,
+.orderHistoryList-dangerButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.orderHistoryList-buttonRow > button {
+  flex: 1;
+  min-width: 0;
 }
 
 .orderHistoryList-primaryButton {
-  flex: 1;
   background: #2563eb;
-  color: white;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
+  color: #ffffff;
+}
+
+.orderHistoryList-primaryButton:hover {
+  background: #1d4ed8;
 }
 
 .orderHistoryList-secondaryButton {
-  flex: 1;
   background: #f3f4f6;
   color: #111827;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
 }
 
-/* DANGER */
+.orderHistoryList-secondaryButton:hover {
+  background: #e5e7eb;
+}
+
+/* =========================================
+   PAYMENT NOTICE
+========================================= */
+
+.orderHistoryList-paymentNotice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff7ed;
+}
+
+.orderHistoryList-paymentNoticeIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: #ffedd5;
+  color: #ea580c;
+  font-size: 14px;
+}
+
+.orderHistoryList-paymentNotice h4 {
+  margin: 0 0 4px;
+  color: #9a3412;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.orderHistoryList-paymentNotice p {
+  margin: 0;
+  color: #7c2d12;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+/* =========================================
+   PAY BUTTON
+========================================= */
+
+.orderHistoryList-payButton {
+  margin-top: 12px;
+  background: #16a34a;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.orderHistoryList-payButton:hover {
+  background: #15803d;
+}
+
+/* =========================================
+   DELETE BUTTON
+========================================= */
+
 .orderHistoryList-dangerButton {
   margin-top: 12px;
   background: #fef2f2;
   color: #dc2626;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
   font-weight: 600;
-  cursor: pointer;
 }
 
-/* WARNING */
-.orderHistoryList-warningButton {
-  margin-top: 12px;
-  background: #fff7ed;
-  color: #ea580c;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
+.orderHistoryList-dangerButton:hover {
+  background: #fee2e2;
+}
+
+/* Disabled buttons */
+
+.orderHistoryList-primaryButton:disabled,
+.orderHistoryList-secondaryButton:disabled,
+.orderHistoryList-payButton:disabled,
+.orderHistoryList-dangerButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+  .orderHistoryList-card {
+    margin-bottom: 12px;
+    padding: 15px;
+    border-radius: 16px;
+  }
+
+  .orderHistoryList-topRow {
+    gap: 8px;
+  }
+
+  .orderHistoryList-date {
+    padding-top: 3px;
+    font-size: 11px;
+  }
+
+  .orderHistoryList-badges {
+    gap: 5px;
+  }
+
+  .orderHistoryList-liveBadge {
+    margin-left: 0;
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .orderHistoryList-statusBadge {
+    padding: 4px 7px;
+    font-size: 10px;
+  }
+
+  .orderHistoryList-recipient {
+    margin-top: 11px;
+    font-size: 16px;
+  }
+
+  .orderHistoryList-price {
+    font-size: 17px;
+  }
+
+  .orderHistoryList-transport {
+    font-size: 11px;
+  }
+
+  .orderHistoryList-expandHint {
+    font-size: 11px;
+  }
+
+  .orderHistoryList-details {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .orderHistoryList-primaryButton,
+  .orderHistoryList-secondaryButton,
+  .orderHistoryList-payButton,
+  .orderHistoryList-dangerButton {
+    min-height: 42px;
+    padding: 10px;
+    font-size: 12px;
+  }
 }

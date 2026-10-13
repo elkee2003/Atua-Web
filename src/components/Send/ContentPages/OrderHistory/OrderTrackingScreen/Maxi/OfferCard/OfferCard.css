@@ -1,0 +1,208 @@
+
+/* =====================================================
+   OFFER CARD
+===================================================== */
+
+.maxi-offer-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  background: #f9fafb;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.maxi-offer-card-latest {
+  border-color: #4caf50;
+  background: #e8f5e9;
+}
+
+/* =====================================================
+   COURIER AVATAR
+===================================================== */
+
+.maxi-offer-avatar {
+  display: block;
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #eef2f7;
+  object-fit: cover;
+}
+
+/* =====================================================
+   COURIER DETAILS
+===================================================== */
+
+.maxi-offer-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.maxi-offer-name {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.maxi-offer-vehicle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 11px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.maxi-offer-price {
+  margin: 5px 0 0;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.maxi-offer-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
+.maxi-offer-accept-button,
+.maxi-offer-counter-button {
+  min-width: 76px;
+  padding: 8px 11px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.maxi-offer-accept-button {
+  border: 1px solid #111827;
+  background: #111827;
+  color: #fff;
+}
+
+.maxi-offer-accept-button:hover:not(:disabled) {
+  background: #374151;
+}
+
+.maxi-offer-counter-button {
+  border: 1px solid #111827;
+  background: transparent;
+  color: #111827;
+}
+
+.maxi-offer-counter-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.maxi-offer-accept-button:disabled,
+.maxi-offer-counter-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1000px) {
+  .maxi-offer-card {
+    gap: 10px;
+    padding: 13px;
+  }
+
+  .maxi-offer-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .maxi-offer-accept-button,
+  .maxi-offer-counter-button {
+    min-width: 68px;
+    padding: 8px;
+  }
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+  .maxi-offer-card {
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+  }
+
+  .maxi-offer-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .maxi-offer-name {
+    font-size: 13px;
+  }
+
+  .maxi-offer-vehicle {
+    font-size: 10px;
+  }
+
+  .maxi-offer-price {
+    font-size: 14px;
+  }
+
+  .maxi-offer-actions {
+    gap: 5px;
+  }
+
+  .maxi-offer-accept-button,
+  .maxi-offer-counter-button {
+    min-width: 62px;
+    padding: 7px 8px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .maxi-offer-card {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .maxi-offer-avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .maxi-offer-accept-button,
+  .maxi-offer-counter-button {
+    min-width: 55px;
+    padding: 7px 5px;
+    font-size: 9px;
+  }
+}

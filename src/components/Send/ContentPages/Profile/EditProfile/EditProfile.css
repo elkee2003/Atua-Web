@@ -1,0 +1,1291 @@
+
+/* ============================================================
+   ATUA — EDIT PROFILE
+   EditProfile.css
+   ============================================================ */
+
+.editProfile-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #f5f5f3;
+  color: #171717;
+  overflow-x: hidden;
+  padding-bottom: 0;
+}
+
+.editProfile-container *,
+.editProfile-container *::before,
+.editProfile-container *::after {
+  box-sizing: border-box;
+}
+
+.editProfile-container button,
+.editProfile-container input {
+  font-family: inherit;
+}
+
+.editProfile-container button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.editProfile-header {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  padding: 13px 23px;
+  background: #fff;
+  border-bottom: 1px solid #e4e4e1;
+}
+
+.editProfile-headerIconButton {
+  width: 61px;
+  height: 61px;
+  flex: 0 0 61px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #f0f0ee;
+  color: #111;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.editProfile-headerIconButton:hover {
+  background: #e7e7e4;
+}
+
+.editProfile-headerCenter {
+  flex: 1;
+  min-width: 0;
+  margin: 0 18px;
+}
+
+.editProfile-title {
+  margin: 0;
+  color: #111;
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+}
+
+.editProfile-headerSubtitle {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.editProfile-signoutButton {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #171717;
+  font-size: 19px;
+  cursor: pointer;
+  transition: background 0.18s ease;
+}
+
+.editProfile-signoutButton:hover {
+  background: #f0f0ee;
+}
+
+.editProfile-signoutButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+
+.editProfile-content {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px 18px 90px;
+}
+
+/* ============================================================
+   PROFILE PHOTO CARD
+   ============================================================ */
+
+.editProfile-photoSection {
+  position: relative;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 26px 20px;
+  margin: 0 0 18px;
+  background: #fff;
+  border: 1.5px solid #e1e1de;
+  border-radius: 28px;
+}
+
+.editProfile-profilePicContainer {
+  position: relative;
+  width: 193px;
+  height: 193px;
+  flex: 0 0 193px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding: 0;
+  border: 5px solid #fff;
+  border-radius: 50%;
+  background: #e8e8e5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.editProfile-profilePicContainer:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+}
+
+.editProfile-profilePicContainer:active {
+  transform: scale(0.99);
+}
+
+.editProfile-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.editProfile-placeholderContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #e8e8e5;
+}
+
+.editProfile-placeholderIconCircle {
+  width: 98px;
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #dededb;
+}
+
+.editProfile-placeholderIcon {
+  color: #6b6b6b;
+  font-size: 56px;
+}
+
+.editProfile-addPhotoText {
+  display: block;
+  margin: 10px 0 0;
+  color: #444;
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.editProfile-cameraIconContainer {
+  position: absolute;
+  right: -2px;
+  bottom: 7px;
+  width: 51px;
+  height: 51px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.22);
+  pointer-events: none;
+  transition: transform 0.18s ease;
+}
+
+.editProfile-profilePicContainer:hover .editProfile-cameraIconContainer {
+  transform: scale(1.04);
+}
+
+.editProfile-cameraIcon {
+  color: #fff;
+  font-size: 19px;
+}
+
+.editProfile-photoTitle {
+  margin: 18px 0 0;
+  color: #171717;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 800;
+  text-align: center;
+}
+
+.editProfile-photoHint {
+  margin: 6px 0 0;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 500;
+  text-align: center;
+}
+
+.editProfile-imageError {
+  margin: 10px 0 0;
+  color: #c62828;
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ============================================================
+   PERSONAL INFORMATION CARD
+   ============================================================ */
+
+.editProfile-section {
+  width: 100%;
+  margin-top: 18px;
+  padding: 25px;
+  background: #fff;
+  border: 1.5px solid #e1e1de;
+  border-radius: 28px;
+}
+
+.editProfile-sectionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 23px;
+}
+
+.editProfile-sectionIcon {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  border-radius: 17px;
+  background: #f0f0ee;
+}
+
+.editProfile-sectionIconGlyph {
+  color: #222;
+  font-size: 24px;
+}
+
+.editProfile-sectionTitle {
+  margin: 0;
+  color: #171717;
+  font-size: 19px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.editProfile-sectionSubtitle {
+  margin: 4px 0 0;
+  color: #888;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================================
+   FORM FIELDS
+   ============================================================ */
+
+.editProfile-field {
+  margin-bottom: 20px;
+}
+
+.editProfile-field:last-child {
+  margin-bottom: 0;
+}
+
+.editProfile-fieldLabel {
+  display: block;
+  margin-bottom: 10px;
+  color: #353535;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+.editProfile-inputWrapper {
+  width: 100%;
+  min-height: 79px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background: #f8f8f6;
+  border: 1.5px solid #dcdcd8;
+  border-radius: 22px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.editProfile-inputWrapper:focus-within {
+  border-color: #252525;
+  box-shadow: 0 0 0 1px #252525;
+}
+
+.editProfile-inputIcon {
+  flex: 0 0 auto;
+  margin-right: 16px;
+  color: #777;
+  font-size: 24px;
+}
+
+.editProfile-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 74px;
+  flex: 1;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #171717;
+  font-size: 17px;
+  line-height: 1.4;
+  font-weight: 600;
+}
+
+.editProfile-input::placeholder {
+  color: #a0a0a0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.editProfile-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   VALIDATION ERROR
+   ============================================================ */
+
+.editProfile-errorContainer {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  margin-top: 13px;
+  padding: 13px 15px;
+  border: 1px solid #ffd9d9;
+  border-radius: 14px;
+  background: #fff3f3;
+}
+
+.editProfile-errorIcon {
+  flex: 0 0 auto;
+  margin: 2px 10px 0 0;
+  color: #c90707;
+  font-size: 15px;
+}
+
+.editProfile-error {
+  flex: 1;
+  margin: 0;
+  color: #c90707;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+/* ============================================================
+   CONTINUE FOOTER
+   ============================================================ */
+
+.editProfile-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  width: 100%;
+  padding: 15px 18px 16px;
+  background: #f5f5f3;
+  border-top: 1px solid #e3e3e0;
+}
+
+.editProfile-nextButton {
+  width: 100%;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 13px;
+  padding: 0 13px 0 28px;
+  border: none;
+  border-radius: 28px;
+  background: #111;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.16);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.editProfile-nextButton:hover {
+  background: #202020;
+}
+
+.editProfile-nextButton:active {
+  transform: translateY(1px);
+}
+
+.editProfile-nextButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.editProfile-nextButtonTextContainer {
+  min-width: 0;
+  flex: 1;
+}
+
+.editProfile-nextButtonLabel {
+  display: block;
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.editProfile-nextButtonSubLabel {
+  display: block;
+  margin-top: 4px;
+  color: #aaa;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.editProfile-nextButtonIconContainer {
+  width: 69px;
+  height: 69px;
+  flex: 0 0 69px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22px;
+  background: #2b2b2b;
+}
+
+.editProfile-nextButtonIcon {
+  color: #fff;
+  font-size: 27px;
+}
+
+.editProfile-bottomSpacer {
+  height: 16px;
+}
+
+.editProfile-hiddenFileInput {
+  display: none;
+}
+
+/* ============================================================
+   PHOTO SELECTION MODAL
+   ============================================================ */
+
+.editProfile-photoModalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.48);
+  backdrop-filter: blur(3px);
+}
+
+.editProfile-photoModal {
+  width: min(100%, 394px);
+  padding: 21px;
+  background: #fff;
+  border: 1px solid #e7e7e4;
+  border-radius: 23px;
+  box-shadow: 0 12px 37px rgba(0, 0, 0, 0.2);
+}
+
+.editProfile-photoModalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.editProfile-photoModalTitle {
+  margin: 0;
+  color: #171717;
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 800;
+}
+
+.editProfile-photoModalSubtitle {
+  margin: 6px 0 0;
+  color: #898989;
+  font-size: 11px;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.editProfile-photoModalClose {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: #f0f0ee;
+  color: #444;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.editProfile-photoModalClose:hover {
+  background: #e6e6e3;
+}
+
+.editProfile-photoModalOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.editProfile-photoOption {
+  width: 100%;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #e3e3e0;
+  border-radius: 14px;
+  background: #f8f8f6;
+  color: #202020;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+  transition: background 0.18s ease;
+}
+
+.editProfile-photoOption:hover {
+  background: #f0f0ee;
+}
+
+.editProfile-photoOptionIcon {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 11px;
+  border-radius: 11px;
+  background: #fff;
+  font-size: 15px;
+}
+
+.editProfile-removePhotoOption {
+  color: #c90707;
+  background: #fff5f5;
+  border-color: #ffd9d9;
+}
+
+.editProfile-removePhotoOption:hover {
+  background: #ffeded;
+}
+
+.editProfile-photoCancelButton {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 13px;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.editProfile-photoCancelButton:hover {
+  background: #292929;
+}
+
+/* ============================================================
+   DESKTOP
+   ============================================================ */
+
+@media (min-width: 901px) {
+  .editProfile-content {
+  padding: 10px 26px 90px;
+}
+
+  .editProfile-photoSection {
+    min-height: 303px;
+  }
+
+  .editProfile-profilePicContainer {
+    width: 168px;
+    height: 168px;
+    flex-basis: 168px;
+  }
+
+  .editProfile-placeholderIconCircle {
+    width: 86px;
+    height: 86px;
+  }
+
+  .editProfile-placeholderIcon {
+    font-size: 48px;
+  }
+
+  .editProfile-photoTitle {
+    font-size: 16px;
+  }
+
+  .editProfile-photoHint {
+    font-size: 11px;
+  }
+
+  .editProfile-section {
+    padding: 22px;
+  }
+
+  .editProfile-footer {
+    padding: 13px 23px 15px;
+  }
+
+  .editProfile-nextButton {
+    max-width: 794px;
+    min-height: 75px;
+    margin: 0 auto;
+    padding-left: 22px;
+    border-radius: 22px;
+  }
+
+  .editProfile-nextButtonLabel {
+    font-size: 17px;
+  }
+
+  .editProfile-nextButtonSubLabel {
+    font-size: 11px;
+  }
+
+  .editProfile-nextButtonIconContainer {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+    border-radius: 18px;
+  }
+
+  .editProfile-nextButtonIcon {
+    font-size: 22px;
+  }
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .editProfile-container {
+    min-height: calc(100vh - 85px);
+  }
+
+  .editProfile-header {
+    min-height: 84px;
+    padding: 11px 23px;
+  }
+
+  .editProfile-headerIconButton {
+    width: 61px;
+    height: 61px;
+    flex-basis: 61px;
+  }
+
+  .editProfile-title {
+    font-size: 25px;
+  }
+
+  .editProfile-headerSubtitle {
+    font-size: 14px;
+  }
+
+  .editProfile-content {
+    max-width: none;
+    padding: 25px 26px 90px;
+  }
+
+  .editProfile-photoSection {
+    min-height: 320px;
+    margin-bottom: 18px;
+  }
+
+  .editProfile-profilePicContainer {
+    width: 168px;
+    height: 168px;
+    flex-basis: 168px;
+  }
+
+  .editProfile-placeholderIconCircle {
+    width: 86px;
+    height: 86px;
+  }
+
+  .editProfile-placeholderIcon {
+    font-size: 48px;
+  }
+
+  .editProfile-cameraIconContainer {
+    width: 47px;
+    height: 47px;
+  }
+
+  .editProfile-section {
+    padding: 24px;
+  }
+
+  .editProfile-footer {
+    bottom: 85px;
+    padding: 15px 26px 16px;
+  }
+
+  .editProfile-nextButton {
+    min-height: 92px;
+  }
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+  .editProfile-header {
+    min-height: 84px;
+    padding: 11px 23px;
+  }
+
+  .editProfile-headerIconButton {
+    width: 61px;
+    height: 61px;
+    flex-basis: 61px;
+    font-size: 22px;
+  }
+
+  .editProfile-headerCenter {
+    margin-left: 18px;
+    margin-right: 10px;
+  }
+
+  .editProfile-title {
+    font-size: 25px;
+    letter-spacing: -0.7px;
+  }
+
+  .editProfile-headerSubtitle {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .editProfile-signoutButton {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+    font-size: 17px;
+  }
+
+ .editProfile-content {
+  padding: 10px 26px 90px;
+}
+
+  .editProfile-photoSection {
+    min-height: 320px;
+    padding: 25px 15px;
+    margin-bottom: 18px;
+    border-radius: 28px;
+  }
+
+  .editProfile-profilePicContainer {
+    width: 193px;
+    height: 193px;
+    flex-basis: 193px;
+    border-width: 5px;
+  }
+
+  .editProfile-placeholderIconCircle {
+    width: 92px;
+    height: 92px;
+  }
+
+  .editProfile-placeholderIcon {
+    font-size: 52px;
+  }
+
+  .editProfile-addPhotoText {
+    font-size: 14px;
+  }
+
+  .editProfile-cameraIconContainer {
+    right: -2px;
+    bottom: 7px;
+    width: 51px;
+    height: 51px;
+    border-width: 4px;
+  }
+
+  .editProfile-cameraIcon {
+    font-size: 19px;
+  }
+
+  .editProfile-photoTitle {
+    margin-top: 18px;
+    font-size: 17px;
+  }
+
+  .editProfile-photoHint {
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  .editProfile-section {
+    margin-top: 18px;
+    padding: 24px;
+    border-radius: 28px;
+  }
+
+  .editProfile-sectionHeader {
+    margin-bottom: 23px;
+  }
+
+  .editProfile-sectionIcon {
+    width: 56px;
+    height: 56px;
+    flex-basis: 56px;
+    margin-right: 15px;
+    border-radius: 17px;
+  }
+
+  .editProfile-sectionIconGlyph {
+    font-size: 24px;
+  }
+
+  .editProfile-sectionTitle {
+    font-size: 19px;
+  }
+
+  .editProfile-sectionSubtitle {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  .editProfile-field {
+    margin-bottom: 20px;
+  }
+
+  .editProfile-fieldLabel {
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  .editProfile-inputWrapper {
+    min-height: 79px;
+    padding: 0 20px;
+    border-radius: 22px;
+  }
+
+  .editProfile-inputIcon {
+    margin-right: 16px;
+    font-size: 24px;
+  }
+
+  .editProfile-input {
+    min-height: 74px;
+    font-size: 17px;
+  }
+
+  .editProfile-input::placeholder {
+    font-size: 15px;
+  }
+
+  .editProfile-footer {
+    bottom: 85px;
+    padding: 15px 26px 16px;
+  }
+
+  .editProfile-nextButton {
+    min-height: 92px;
+    padding: 0 11px 0 28px;
+    border-radius: 28px;
+  }
+
+  .editProfile-nextButtonLabel {
+    font-size: 20px;
+  }
+
+  .editProfile-nextButtonSubLabel {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  .editProfile-nextButtonIconContainer {
+    width: 69px;
+    height: 69px;
+    flex-basis: 69px;
+    border-radius: 22px;
+  }
+
+  .editProfile-nextButtonIcon {
+    font-size: 27px;
+  }
+
+  .editProfile-bottomSpacer {
+    height: 16px;
+  }
+}
+
+/* ============================================================
+   SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 430px) {
+  .editProfile-header {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .editProfile-headerIconButton {
+    width: 51px;
+    height: 51px;
+    flex-basis: 51px;
+    font-size: 20px;
+  }
+
+  .editProfile-headerCenter {
+    margin-left: 13px;
+    margin-right: 6px;
+  }
+
+  .editProfile-title {
+    font-size: 20px;
+  }
+
+  .editProfile-headerSubtitle {
+    font-size: 11px;
+  }
+
+  .editProfile-signoutButton {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+    font-size: 16px;
+  }
+
+  .editProfile-content {
+    padding: 10px 26px 90px;
+}
+
+  .editProfile-photoSection {
+    min-height: 287px;
+    padding: 20px 11px;
+    border-radius: 24px;
+  }
+
+  .editProfile-profilePicContainer {
+    width: 164px;
+    height: 164px;
+    flex-basis: 164px;
+  }
+
+  .editProfile-placeholderIconCircle {
+    width: 82px;
+    height: 82px;
+  }
+
+  .editProfile-placeholderIcon {
+    font-size: 46px;
+  }
+
+  .editProfile-addPhotoText {
+    margin-top: 7px;
+    font-size: 12px;
+  }
+
+  .editProfile-cameraIconContainer {
+    width: 44px;
+    height: 44px;
+    font-size: 16px;
+  }
+
+  .editProfile-photoTitle {
+    margin-top: 16px;
+    font-size: 16px;
+  }
+
+  .editProfile-photoHint {
+    font-size: 11px;
+  }
+
+  .editProfile-section {
+    padding: 18px;
+    border-radius: 24px;
+  }
+
+  .editProfile-sectionHeader {
+    margin-bottom: 19px;
+  }
+
+  .editProfile-sectionIcon {
+    width: 46px;
+    height: 46px;
+    flex-basis: 46px;
+    margin-right: 11px;
+    border-radius: 14px;
+  }
+
+  .editProfile-sectionIconGlyph {
+    font-size: 20px;
+  }
+
+  .editProfile-sectionTitle {
+    font-size: 16px;
+  }
+
+  .editProfile-sectionSubtitle {
+    font-size: 11px;
+  }
+
+  .editProfile-field {
+    margin-bottom: 17px;
+  }
+
+  .editProfile-fieldLabel {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .editProfile-inputWrapper {
+    min-height: 62px;
+    padding: 0 14px;
+    border-radius: 17px;
+  }
+
+  .editProfile-inputIcon {
+    margin-right: 11px;
+    font-size: 19px;
+  }
+
+  .editProfile-input {
+    min-height: 59px;
+    font-size: 14px;
+  }
+
+  .editProfile-input::placeholder {
+    font-size: 11px;
+  }
+
+  .editProfile-footer {
+    padding: 11px 16px 13px;
+  }
+
+  .editProfile-nextButton {
+    min-height: 72px;
+    padding-left: 18px;
+    border-radius: 23px;
+  }
+
+  .editProfile-nextButtonLabel {
+    font-size: 17px;
+  }
+
+  .editProfile-nextButtonSubLabel {
+    font-size: 11px;
+  }
+
+  .editProfile-nextButtonIconContainer {
+    width: 53px;
+    height: 53px;
+    flex-basis: 53px;
+    border-radius: 17px;
+  }
+
+  .editProfile-nextButtonIcon {
+    font-size: 21px;
+  }
+}
+
+/* ============================================================
+   VERY SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 360px) {
+  .editProfile-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .editProfile-headerIconButton {
+    width: 43px;
+    height: 43px;
+    flex-basis: 43px;
+    font-size: 17px;
+  }
+
+  .editProfile-headerCenter {
+    margin-left: 9px;
+    margin-right: 3px;
+  }
+
+  .editProfile-title {
+    font-size: 17px;
+  }
+
+  .editProfile-headerSubtitle {
+    font-size: 10px;
+  }
+
+  .editProfile-content {
+    padding: 10px 26px 90px;
+}
+
+  .editProfile-photoSection {
+    min-height: 262px;
+    padding: 16px 8px;
+  }
+
+  .editProfile-profilePicContainer {
+    width: 144px;
+    height: 144px;
+    flex-basis: 144px;
+  }
+
+  .editProfile-placeholderIconCircle {
+    width: 72px;
+    height: 72px;
+  }
+
+  .editProfile-placeholderIcon {
+    font-size: 40px;
+  }
+
+  .editProfile-cameraIconContainer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .editProfile-section {
+    padding: 13px;
+  }
+
+  .editProfile-sectionTitle {
+    font-size: 14px;
+  }
+
+  .editProfile-sectionSubtitle {
+    font-size: 10px;
+  }
+
+  .editProfile-inputWrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .editProfile-input {
+    font-size: 12px;
+  }
+
+  .editProfile-footer {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .editProfile-nextButton {
+    min-height: 62px;
+    padding-left: 14px;
+    border-radius: 19px;
+  }
+
+  .editProfile-nextButtonLabel {
+    font-size: 15px;
+  }
+
+  .editProfile-nextButtonSubLabel {
+    font-size: 9px;
+  }
+
+  .editProfile-nextButtonIconContainer {
+    width: 45px;
+    height: 45px;
+    flex-basis: 45px;
+    border-radius: 14px;
+  }
+
+  .editProfile-nextButtonIcon {
+    font-size: 18px;
+  }
+}
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+.editProfile-headerIconButton:focus-visible,
+.editProfile-signoutButton:focus-visible,
+.editProfile-profilePicContainer:focus-visible,
+.editProfile-nextButton:focus-visible,
+.editProfile-photoModalClose:focus-visible,
+.editProfile-photoOption:focus-visible,
+.editProfile-photoCancelButton:focus-visible {
+  outline: 3px solid #26e600;
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editProfile-container *,
+  .editProfile-container *::before,
+  .editProfile-container *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

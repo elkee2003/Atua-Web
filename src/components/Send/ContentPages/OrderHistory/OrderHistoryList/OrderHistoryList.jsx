@@ -1,176 +1,327 @@
+import { generateClient } from "aws-amplify/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DataStore } from "aws-amplify/datastore";
-import { Order } from "../../../../../../src/models";
-import "./orderHistoryList.css";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaClock,
+  FaCreditCard,
+  FaMapMarkerAlt,
+  FaRegFileAlt,
+  FaTrashAlt,
+} from "react-icons/fa";
+import "./OrderHistoryList.css";
+
+const client = generateClient();
 
 const OrderHistoryList = ({ order, refreshOrders }) => {
-  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate();
 
-  const isLive = order.status === "ACCEPTED";
+  const [expanded, setExpanded] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
+
+  // Transportation type
+  const transportationType = String(
+    order?.transportationType || "",
+  ).toUpperCase();
+
+  const isMaxi = transportationType === "MAXI";
+
+  const isMicroOrMoto = [
+    "MOTO_EXPRESS",
+    "MOTO_BATCH",
+    "MICRO_EXPRESS",
+    "MICRO_BATCH",
+  ].includes(transportationType);
+
+  // Maxi live bidding
+  const showLiveBadge =
+    isMaxi &&
+    order?.status === "BIDDING" &&
+    order?.hasNewOffer &&
+    order?.lastOfferSenderType !== "USER";
+
+  // Active order
+  const isLive = order?.status === "ACCEPTED";
+
+  // Micro / Moto awaiting payment
+  const isAwaitingPayment =
+    isMicroOrMoto && order?.status === "AWAITING_PAYMENT";
+
+  // Delete eligibility
+  const isMaxiUnpaid =
+    isMaxi &&
+    (order?.status === "BIDDING" ||
+      (order?.status === "ACCEPTED" && order?.paymentStatus !== "PAID"));
+
+  const canDelete =
+    isMaxiUnpaid || (isMicroOrMoto && order?.status === "AWAITING_PAYMENT");
 
   const toggleExpand = () => {
-    setExpanded((prev) => !prev);
+    setExpanded((previous) => !previous);
   };
 
-  const goToOrderDetails = (e) => {
-    e.stopPropagation();
-    navigate(`/orderdetails/${order.id}`);
+  // Navigation
+  const goToOrderDetails = () => {
+    if (!order?.id) return;
+
+    navigate(`/send/order_details/${order.id}`);
   };
 
-  const goToTracking = (e) => {
-    e.stopPropagation();
-    navigate(`/order-tracking/${order.id}`);
+  const goToTracking = () => {
+    if (!order?.id) return;
+
+    navigate(`/send/order_tracking/${order.id}`);
   };
 
-  const deleteOrder = async (e) => {
-    e.stopPropagation();
+  const goToPayment = () => {
+    if (!isAwaitingPayment || !order?.id) return;
 
-    const confirm = window.confirm(
-      "Are you sure you want to permanently delete this order?"
-    );
-    if (!confirm) return;
+    navigate("/send/payment", {
+      state: { orderId: order.id },
+    });
+  };
+
+  // Delete order through the backend mutation
+  const deleteOrder = async () => {
+    if (!canDelete || actionLoading || !order?.id) return;
 
     try {
-      const orderToDelete = await DataStore.query(Order, order.id);
-      if (orderToDelete) {
-        await DataStore.delete(orderToDelete);
-        refreshOrders?.();
+      setActionLoading(true);
+
+      const mutation = /* GraphQL */ `
+        mutation PermanentlyDeleteOrder($orderID: ID!) {
+          permanentlyDeleteOrder(orderID: $orderID)
+        }
+      `;
+
+      const result = await client.graphql({
+        query: mutation,
+        authMode: "userPool",
+        variables: {
+          orderID: order.id,
+        },
+      });
+
+      const deleted = result?.data?.permanentlyDeleteOrder;
+
+      if (deleted !== true) {
+        throw new Error("The order could not be deleted.");
       }
+
+      refreshOrders?.();
     } catch (error) {
-      console.log("Delete error:", error);
+      console.error("Delete order error:", error);
+
+      const errorMessage =
+        error?.errors?.[0]?.message ||
+        error?.graphQLErrors?.[0]?.message ||
+        error?.message ||
+        "We could not delete this order. Please try again.";
+
+      window.alert(`Unable to Delete Order\n\n${errorMessage}`);
+    } finally {
+      setActionLoading(false);
     }
   };
 
-  const cancelOrder = async (e) => {
-    e.stopPropagation();
+  const confirmDelete = () => {
+    if (!canDelete || actionLoading) return;
 
-    const confirm = window.confirm("Do you want to cancel this delivery?");
-    if (!confirm) return;
+    const isUnpaidMaxi =
+      isMaxi &&
+      (order?.status === "BIDDING" ||
+        (order?.status === "ACCEPTED" && order?.paymentStatus !== "PAID"));
 
-    try {
-      const orderToCancel = await DataStore.query(Order, order.id);
-      if (orderToCancel) {
-        await DataStore.save(
-          Order.copyOf(orderToCancel, (updated) => {
-            updated.status = "READY_FOR_PICKUP";
-            updated.assignedCourierId = null;
-          })
-        );
-        refreshOrders?.();
-      }
-    } catch (error) {
-      console.log("Cancel error:", error);
+    let message = "Are you sure you want to permanently delete this order?";
+
+    if (isAwaitingPayment) {
+      message =
+        "This order has not been paid for yet. Are you sure you want to permanently delete it?";
+    } else if (isUnpaidMaxi && order?.status === "BIDDING") {
+      message =
+        "This Maxi order is still bidding. Are you sure you want to permanently delete it?";
+    } else if (isUnpaidMaxi) {
+      message =
+        "This Maxi order has been accepted but has not been paid for. Are you sure you want to permanently delete it?";
+    }
+
+    if (window.confirm(message)) {
+      deleteOrder();
     }
   };
 
+  // Status styling
   const getStatusClass = () => {
-    switch (order.status) {
+    switch (order?.status) {
       case "DELIVERED":
         return "orderHistoryList-statusDelivered";
+
       case "ACCEPTED":
-      case "PICKEDUP":
+      case "PICKED_UP":
         return "orderHistoryList-statusActive";
+
       case "CANCELLED":
         return "orderHistoryList-statusCancelled";
+
       default:
         return "orderHistoryList-statusPending";
     }
   };
 
+  const getStatusLabel = () => {
+    if (isAwaitingPayment) {
+      return "AWAITING PAYMENT";
+    }
+
+    return order?.status || "UNKNOWN";
+  };
+
+  const getOrderPrice = () => {
+    if (order?.totalPrice != null) {
+      return Number(order.totalPrice).toLocaleString();
+    }
+
+    if (order?.initialOfferPrice != null) {
+      return Number(order.initialOfferPrice).toLocaleString();
+    }
+
+    return "0";
+  };
+
+  const formattedDate = order?.createdAt
+    ? String(order.createdAt).substring(0, 10)
+    : "";
+
   return (
-    <div
+    <article
       className={`orderHistoryList-card ${
         isLive ? "orderHistoryList-cardActive" : ""
       }`}
-      onClick={toggleExpand}
     >
-      {/* HEADER */}
-      <div className="orderHistoryList-topRow">
-        <span className="orderHistoryList-date">
-          {order?.createdAt?.substring(0, 10)}
-        </span>
-
-        <div
-          className={`orderHistoryList-statusBadge ${getStatusClass()}`}
-        >
-          {order.status}
-        </div>
-      </div>
-
-      {/* SUMMARY */}
-      <h3 className="orderHistoryList-recipient">
-        {order.recipientName}
-      </h3>
-
-      <div className="orderHistoryList-bottomRow">
-        <span className="orderHistoryList-price">
-          ₦
-          {order?.totalPrice?.toLocaleString() ||
-            order?.initialOfferPrice?.toLocaleString()}
-        </span>
-
-        <span className="orderHistoryList-transport">
-          {order.transportationType}
-        </span>
-      </div>
-
-      <p className="orderHistoryList-expandHint">
-        {expanded ? "Click to collapse ▲" : "Click to expand ▼"}
-      </p>
-
-      {/* COLLAPSIBLE CONTENT */}
-      <div
-        className={`orderHistoryList-collapsible ${
-          expanded ? "expanded" : ""
-        }`}
+      {/* Collapsed order summary */}
+      <button
+        type="button"
+        className="orderHistoryList-summary"
+        onClick={toggleExpand}
+        aria-expanded={expanded}
       >
-        <div className="orderHistoryList-expandedContent">
+        <div className="orderHistoryList-topRow">
+          <span className="orderHistoryList-date">{formattedDate}</span>
+
+          <div className="orderHistoryList-badges">
+            {showLiveBadge && (
+              <span className="orderHistoryList-liveBadge">
+                <span className="orderHistoryList-liveDot" />
+                LIVE
+              </span>
+            )}
+
+            <span
+              className={`orderHistoryList-statusBadge ${getStatusClass()}`}
+            >
+              {getStatusLabel()}
+            </span>
+          </div>
+        </div>
+
+        <div className="orderHistoryList-recipient">
+          {order?.recipientName || "Recipient"}
+        </div>
+
+        <div className="orderHistoryList-bottomRow">
+          <span className="orderHistoryList-price">₦{getOrderPrice()}</span>
+
+          <span className="orderHistoryList-transport">
+            {order?.transportationType || ""}
+          </span>
+        </div>
+
+        <div className="orderHistoryList-expandHint">
+          <span>{expanded ? "Tap to collapse" : "Tap to expand"}</span>
+
+          {expanded ? <FaChevronUp /> : <FaChevronDown />}
+        </div>
+      </button>
+
+      {/* Expanded content */}
+      {expanded && (
+        <div className="orderHistoryList-expanded">
+          <div className="orderHistoryList-sectionHeading">
+            <FaRegFileAlt />
+            <span>Order Details</span>
+          </div>
+
           <p className="orderHistoryList-details">
-            {order.orderDetails}
+            {order?.orderDetails || "No order details available."}
           </p>
 
           <div className="orderHistoryList-divider" />
 
-          {/* BUTTONS */}
+          {isAwaitingPayment && (
+            <div className="orderHistoryList-paymentNotice">
+              <div className="orderHistoryList-paymentNoticeIcon">
+                <FaCreditCard />
+              </div>
+
+              <div>
+                <h4>Payment Required</h4>
+                <p>
+                  This order has not been paid for yet. Complete payment to
+                  continue with your delivery.
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="orderHistoryList-buttonRow">
             <button
+              type="button"
               className="orderHistoryList-primaryButton"
+              disabled={actionLoading}
               onClick={goToTracking}
             >
+              <FaMapMarkerAlt />
               Track
             </button>
 
             <button
+              type="button"
               className="orderHistoryList-secondaryButton"
+              disabled={actionLoading}
               onClick={goToOrderDetails}
             >
+              <FaRegFileAlt />
               Details
             </button>
           </div>
 
-          {/* CONDITIONAL ACTIONS */}
-          {order.status === "READY_FOR_PICKUP" && (
+          {isAwaitingPayment && (
             <button
-              className="orderHistoryList-dangerButton"
-              onClick={deleteOrder}
+              type="button"
+              className="orderHistoryList-payButton"
+              disabled={actionLoading}
+              onClick={goToPayment}
             >
-              Delete Order
+              <FaCreditCard />
+              Pay ₦{getOrderPrice()}
             </button>
           )}
 
-          {order.status === "ACCEPTED" && (
+          {canDelete && (
             <button
-              className="orderHistoryList-warningButton"
-              onClick={cancelOrder}
+              type="button"
+              className="orderHistoryList-dangerButton"
+              disabled={actionLoading}
+              onClick={confirmDelete}
             >
-              Cancel Delivery
+              <FaTrashAlt />
+              {actionLoading ? "Deleting..." : "Delete Order"}
             </button>
           )}
         </div>
-      </div>
-    </div>
+      )}
+    </article>
   );
 };
 

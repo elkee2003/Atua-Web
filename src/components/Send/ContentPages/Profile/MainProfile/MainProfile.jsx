@@ -22,8 +22,6 @@ const MainProfile = () => {
 
   const { dbUser, authUser } = useAuthContext();
 
-  console.log("dbuser:", dbUser)
-
   const [loading, setLoading] = useState(true);
 
   const fetchImageUrl = async () => {
@@ -103,16 +101,11 @@ const MainProfile = () => {
     <div className="mainProfile-container">
       {/* HEADER */}
       <div className="mainProfile-header">
-        <button onClick={() => navigate(-1)}> {/* ✅ go back */}
-          ← Back
-        </button>
+        <button onClick={() => navigate(-1)}> {/* ✅ go back */}← Back</button>
 
         <h2>Profile</h2>
 
-        <button
-          className="mainProfile-logout"
-          onClick={handleSignOut}
-        >
+        <button className="mainProfile-logout" onClick={handleSignOut}>
           Logout
         </button>
       </div>
@@ -167,7 +160,7 @@ const MainProfile = () => {
 
           <button
             className="mainProfile-secondaryBtn"
-            onClick={() => navigate("/profile/info")} // ✅ updated
+            onClick={() => navigate("/send/review_profile")}
           >
             View Information
           </button>

@@ -1,0 +1,1118 @@
+
+/* =========================================================
+   REVIEW USER PROFILE — MODERATE SIZING
+   ========================================================= */
+
+.reviewUserCom-container {
+  --review-bg: #f5f5f3;
+  --review-white: #ffffff;
+  --review-black: #151515;
+  --review-muted: #858585;
+  --review-border: #e3e3e0;
+  --review-soft: #f6f6f4;
+  --review-green: #397b58;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  background: var(--review-bg);
+  color: var(--review-black);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.reviewUserCom-container *,
+.reviewUserCom-container *::before,
+.reviewUserCom-container *::after {
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.reviewUserCom-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 24px;
+  background: var(--review-white);
+  border-bottom: 1px solid var(--review-border);
+}
+
+.reviewUserCom-headerIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background: #f0f0ee;
+  color: var(--review-black);
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reviewUserCom-headerIconButton:hover:not(:disabled) {
+  background: #e8e8e5;
+}
+
+.reviewUserCom-headerIconButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.reviewUserCom-headerCenter {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+}
+
+.reviewUserCom-headerSubtitle {
+  margin: 5px 0 0;
+  color: var(--review-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.reviewUserCom-stepIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: 0 0 auto;
+  min-width: 58px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 24px;
+  background: var(--review-black);
+  color: var(--review-white);
+}
+
+.reviewUserCom-stepNumber {
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.reviewUserCom-stepTotal {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* PROGRESS */
+
+.reviewUserCom-progressContainer {
+  width: 100%;
+  padding: 18px 24px 16px;
+  background: var(--review-white);
+}
+
+.reviewUserCom-progressTrack {
+  width: 100%;
+  height: 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #e9e9e6;
+}
+
+.reviewUserCom-progressFillComplete {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--review-black);
+}
+
+.reviewUserCom-progressLabels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 9px;
+}
+
+.reviewUserCom-progressText,
+.reviewUserCom-progressTextActive {
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.reviewUserCom-progressText {
+  color: #999995;
+}
+
+.reviewUserCom-progressTextActive {
+  color: var(--review-black);
+}
+
+/* MAIN CONTENT */
+
+.reviewUserCom-content {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  width: 100%;
+  max-width: 900px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 22px 24px 16px;
+}
+
+.reviewUserCom-content h2,
+.reviewUserCom-content h3,
+.reviewUserCom-content p {
+  overflow-wrap: anywhere;
+}
+
+/* COMPLETION CARD */
+
+.reviewUserCom-completionCard {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+  padding: 19px;
+  border: 1px solid #292929;
+  border-radius: 25px;
+  background: #171717;
+  color: var(--review-white);
+}
+
+.reviewUserCom-completionIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  border-radius: 17px;
+  background: var(--review-white);
+  color: var(--review-black);
+}
+
+.reviewUserCom-completionIcon {
+  font-size: 23px;
+}
+
+.reviewUserCom-completionContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-completionTitle {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.reviewUserCom-completionText {
+  margin: 0;
+  color: #bdbdbd;
+  font-size: 12px;
+  font-weight: 450;
+  line-height: 1.55;
+}
+
+/* PROFILE PHOTO AND INFORMATION CARDS */
+
+.reviewUserCom-photoCard,
+.reviewUserCom-infoCard {
+  width: 100%;
+  min-width: 0;
+  padding: 21px;
+  border: 1px solid var(--review-border);
+  border-radius: 25px;
+  background: var(--review-white);
+}
+
+/* PHOTO CARD */
+
+.reviewUserCom-photoCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reviewUserCom-photoCardTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.reviewUserCom-photoCardSubtitle {
+  margin: 5px 0 0;
+  color: var(--review-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.reviewUserCom-removePhotoButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 30px;
+  padding: 6px 9px;
+  border: 1px solid #eadbdb;
+  border-radius: 10px;
+  background: #fff7f7;
+  color: #b33c3c;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.reviewUserCom-removePhotoButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.reviewUserCom-removePhotoIcon {
+  font-size: 11px;
+}
+
+.reviewUserCom-photoCardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 0 1px;
+}
+
+.reviewUserCom-reviewProfilePicContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 145px;
+  width: 145px;
+  height: 145px;
+  padding: 5px;
+  overflow: hidden;
+  border: 1px solid #eeeeeb;
+  border-radius: 50%;
+  background: var(--review-white);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 10%);
+}
+
+.reviewUserCom-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--review-white);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewUserCom-reviewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 3px solid var(--review-white);
+  border-radius: 50%;
+  background: #e9e9e6;
+}
+
+.reviewUserCom-reviewPlaceholderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  background: #dededb;
+  color: #777773;
+}
+
+.reviewUserCom-reviewPlaceholderGlyph {
+  font-size: 36px;
+}
+
+.reviewUserCom-photoStatus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+}
+
+.reviewUserCom-statusDot,
+.reviewUserCom-statusDotMuted {
+  display: inline-block;
+  flex: 0 0 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.reviewUserCom-statusDot {
+  background: var(--review-green);
+}
+
+.reviewUserCom-statusDotMuted {
+  background: #aaa;
+}
+
+.reviewUserCom-photoStatusText,
+.reviewUserCom-photoStatusTextMuted {
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.reviewUserCom-photoStatusText {
+  color: var(--review-green);
+}
+
+.reviewUserCom-photoStatusTextMuted {
+  color: #929292;
+}
+
+/* CARD HEADERS */
+
+.reviewUserCom-cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.reviewUserCom-cardHeaderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  background: #f0f0ee;
+  color: #262626;
+}
+
+.reviewUserCom-cardHeaderIconGlyph {
+  font-size: 18px;
+}
+
+.reviewUserCom-cardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.reviewUserCom-cardSubtitle {
+  margin: 4px 0 0;
+  color: var(--review-muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+/* INFORMATION ROWS */
+
+.reviewUserCom-infoList {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 21px;
+  background: var(--review-soft);
+}
+
+.reviewUserCom-infoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 76px;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--review-border);
+}
+
+.reviewUserCom-infoRowLast {
+  border-bottom: none;
+}
+
+.reviewUserCom-infoIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--review-white);
+  color: #777773;
+}
+
+.reviewUserCom-infoIcon {
+  font-size: 18px;
+}
+
+.reviewUserCom-infoContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-infoLabel {
+  display: block;
+  margin-bottom: 4px;
+  color: #90908b;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+}
+
+.reviewUserCom-infoValue {
+  margin: 0;
+  color: #262626;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.reviewUserCom-infoCheck {
+  flex: 0 0 auto;
+  color: var(--review-green);
+  font-size: 19px;
+}
+
+/* LOCATION CONFIRMATION */
+
+.reviewUserCom-locationConfirmation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid var(--review-border);
+  border-radius: 23px;
+  background: #f4f4f2;
+}
+
+.reviewUserCom-locationConfirmationIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  background: #e9e9e6;
+  color: #333;
+}
+
+.reviewUserCom-locationConfirmationGlyph {
+  font-size: 19px;
+}
+
+.reviewUserCom-locationConfirmationContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-locationConfirmationTitle {
+  margin: 0 0 5px;
+  color: #333;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.reviewUserCom-locationConfirmationText {
+  margin: 0;
+  color: #858580;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.reviewUserCom-locationConfirmationCheck {
+  flex: 0 0 auto;
+  color: var(--review-green);
+  font-size: 19px;
+}
+
+/* FINAL MESSAGE */
+
+.reviewUserCom-finalMessage {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  padding: 15px 17px;
+  border: 1px solid #e8e8e5;
+  border-radius: 20px;
+  background: #efefed;
+}
+
+.reviewUserCom-finalMessageIcon {
+  flex: 0 0 auto;
+  color: #777773;
+  font-size: 18px;
+}
+
+.reviewUserCom-finalMessageText {
+  margin: 0;
+  color: #74746f;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.reviewUserCom-bottomSpacer {
+  width: 100%;
+  height: 105px;
+  flex: 0 0 auto;
+}
+
+/* FIXED SAVE FOOTER */
+
+.reviewUserCom-footer {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: 0;
+  left: 270px;
+  display: flex;
+  justify-content: center;
+  width: auto;
+  padding: 15px 24px 20px;
+  border-top: 1px solid #e7e7e4;
+  background: rgb(245 245 243 / 96%);
+  backdrop-filter: blur(12px);
+}
+
+.reviewUserCom-saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  max-width: 850px;
+  min-height: 78px;
+  padding: 11px 11px 11px 22px;
+  border: 1px solid #292929;
+  border-radius: 27px;
+  background: #111;
+  color: var(--review-white);
+  text-align: left;
+  box-shadow: 0 5px 12px rgb(0 0 0 / 13%);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.reviewUserCom-saveButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.reviewUserCom-saveButton:disabled,
+.reviewUserCom-saveButtonDisabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.reviewUserCom-saveButtonTextContainer,
+.reviewUserCom-savingTextContainer {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.reviewUserCom-saveButtonLabel {
+  color: var(--review-white);
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.reviewUserCom-saveButtonSubLabel {
+  color: #bcbcbc;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.reviewUserCom-saveButtonIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 58px;
+  width: 58px;
+  height: 58px;
+  border-radius: 20px;
+  background: #292929;
+  color: var(--review-white);
+}
+
+.reviewUserCom-saveButtonIcon {
+  font-size: 20px;
+}
+
+.reviewUserCom-savingState {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.reviewUserCom-spinner {
+  flex: 0 0 auto;
+  font-size: 20px;
+  animation: reviewUserCom-spin 0.9s linear infinite;
+}
+
+@keyframes reviewUserCom-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* TABLET */
+
+@media (max-width: 1100px) {
+  .reviewUserCom-header {
+    padding: 17px 20px;
+  }
+
+  .reviewUserCom-progressContainer {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .reviewUserCom-content {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .reviewUserCom-footer {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .reviewUserCom-photoCard,
+  .reviewUserCom-infoCard {
+    padding: 19px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .reviewUserCom-footer {
+    left: 0;
+    bottom: 85px;
+    padding: 12px 18px 15px;
+  }
+
+  .reviewUserCom-bottomSpacer {
+    height: 120px;
+  }
+}
+
+@media (max-width: 600px) {
+  .reviewUserCom-header {
+    gap: 11px;
+    padding: 15px 16px;
+  }
+
+  .reviewUserCom-headerIconButton {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+  }
+
+  .reviewUserCom-title {
+    font-size: 20px;
+    letter-spacing: -0.3px;
+  }
+
+  .reviewUserCom-headerSubtitle {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  .reviewUserCom-stepIndicator {
+    min-width: 53px;
+    height: 38px;
+    padding: 0 10px;
+  }
+
+  .reviewUserCom-stepNumber {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-stepTotal {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-progressContainer {
+    padding: 15px 16px 14px;
+  }
+
+  .reviewUserCom-progressTrack {
+    height: 5px;
+  }
+
+  .reviewUserCom-progressLabels {
+    margin-top: 8px;
+  }
+
+  .reviewUserCom-progressText,
+  .reviewUserCom-progressTextActive {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-content {
+    gap: 14px;
+    padding: 17px 16px 12px;
+  }
+
+  .reviewUserCom-completionCard {
+    gap: 12px;
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .reviewUserCom-completionIconContainer {
+    flex-basis: 46px;
+    width: 46px;
+    height: 46px;
+    border-radius: 15px;
+  }
+
+  .reviewUserCom-completionIcon {
+    font-size: 20px;
+  }
+
+  .reviewUserCom-completionTitle {
+    margin-bottom: 5px;
+    font-size: 15px;
+  }
+
+  .reviewUserCom-completionText {
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  .reviewUserCom-photoCard,
+  .reviewUserCom-infoCard {
+    padding: 17px;
+    border-radius: 22px;
+  }
+
+  .reviewUserCom-photoCardTitle {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-photoCardSubtitle {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-photoCardBody {
+    gap: 11px;
+    padding-top: 18px;
+  }
+
+  .reviewUserCom-reviewProfilePicContainer {
+    flex-basis: 125px;
+    width: 125px;
+    height: 125px;
+  }
+
+  .reviewUserCom-reviewPlaceholderGlyph {
+    font-size: 31px;
+  }
+
+  .reviewUserCom-photoStatusText,
+  .reviewUserCom-photoStatusTextMuted {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-cardHeader {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .reviewUserCom-cardHeaderIcon {
+    flex-basis: 43px;
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+  }
+
+  .reviewUserCom-cardHeaderIconGlyph {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-cardTitle {
+    font-size: 15px;
+  }
+
+  .reviewUserCom-cardSubtitle {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-infoList {
+    border-radius: 18px;
+  }
+
+  .reviewUserCom-infoRow {
+    gap: 10px;
+    min-height: 68px;
+    padding: 11px 12px;
+  }
+
+  .reviewUserCom-infoIconContainer {
+    flex-basis: 39px;
+    width: 39px;
+    height: 39px;
+    border-radius: 12px;
+  }
+
+  .reviewUserCom-infoIcon {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-infoLabel {
+    margin-bottom: 3px;
+    font-size: 9px;
+  }
+
+  .reviewUserCom-infoValue {
+    font-size: 13px;
+  }
+
+  .reviewUserCom-infoCheck {
+    font-size: 17px;
+  }
+
+  .reviewUserCom-locationConfirmation {
+    gap: 10px;
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .reviewUserCom-locationConfirmationIcon {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 13px;
+  }
+
+  .reviewUserCom-locationConfirmationGlyph {
+    font-size: 17px;
+  }
+
+  .reviewUserCom-locationConfirmationTitle {
+    font-size: 13px;
+  }
+
+  .reviewUserCom-locationConfirmationText {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-locationConfirmationCheck {
+    font-size: 17px;
+  }
+
+  .reviewUserCom-finalMessage {
+    gap: 9px;
+    padding: 13px;
+    border-radius: 17px;
+  }
+
+  .reviewUserCom-finalMessageIcon {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-finalMessageText {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-footer {
+    padding: 11px 16px 13px;
+  }
+
+  .reviewUserCom-saveButton {
+    gap: 10px;
+    min-height: 68px;
+    padding: 9px 9px 9px 18px;
+    border-radius: 23px;
+  }
+
+  .reviewUserCom-saveButtonLabel {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-saveButtonSubLabel {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-saveButtonIconContainer {
+    flex-basis: 50px;
+    width: 50px;
+    height: 50px;
+    border-radius: 17px;
+  }
+
+  .reviewUserCom-saveButtonIcon {
+    font-size: 18px;
+  }
+
+  .reviewUserCom-bottomSpacer {
+    height: 105px;
+  }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 380px) {
+  .reviewUserCom-header {
+    gap: 9px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-headerIconButton {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .reviewUserCom-title {
+    font-size: 18px;
+  }
+
+  .reviewUserCom-headerSubtitle {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-stepIndicator {
+    min-width: 47px;
+    height: 34px;
+    padding: 0 8px;
+  }
+
+  .reviewUserCom-stepNumber {
+    font-size: 14px;
+  }
+
+  .reviewUserCom-progressContainer {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-content {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-completionCard {
+    gap: 9px;
+    padding: 13px;
+  }
+
+  .reviewUserCom-completionIconContainer {
+    flex-basis: 41px;
+    width: 41px;
+    height: 41px;
+    border-radius: 13px;
+  }
+
+  .reviewUserCom-completionTitle {
+    font-size: 14px;
+  }
+
+  .reviewUserCom-completionText {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-photoCard,
+  .reviewUserCom-infoCard {
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .reviewUserCom-infoRow {
+    gap: 8px;
+    padding: 10px 8px;
+  }
+
+  .reviewUserCom-infoIconContainer {
+    flex-basis: 35px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .reviewUserCom-infoValue {
+    font-size: 12px;
+  }
+
+  .reviewUserCom-infoCheck {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-locationConfirmation {
+    gap: 8px;
+    padding: 11px;
+  }
+
+  .reviewUserCom-locationConfirmationIcon {
+    flex-basis: 35px;
+    width: 35px;
+    height: 35px;
+  }
+
+  .reviewUserCom-locationConfirmationText {
+    font-size: 9px;
+  }
+
+  .reviewUserCom-footer {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-saveButton {
+    padding-left: 14px;
+  }
+
+  .reviewUserCom-saveButtonLabel {
+    font-size: 15px;
+  }
+
+  .reviewUserCom-saveButtonIconContainer {
+    flex-basis: 45px;
+    width: 45px;
+    height: 45px;
+    border-radius: 15px;
+  }
+}

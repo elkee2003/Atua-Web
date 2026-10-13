@@ -292,6 +292,48 @@
     white-space: nowrap;
 }
 
+/* ==========================================================
+   FINANCIAL DETAILS
+========================================================== */
+
+.courierPayoutCard-financialDetails {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+
+    margin-top: 5px;
+}
+
+.courierPayoutCard-financialRow {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 6px;
+
+    font-size: 8px;
+
+    line-height: 1.3;
+}
+
+.courierPayoutCard-financialRow span {
+    color: #94a3b8;
+
+    font-weight: 500;
+}
+
+.courierPayoutCard-financialRow strong {
+    color: #475569;
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
 
 /* ==========================================================
    STATUS
@@ -542,6 +584,18 @@
         font-size: 13px;
     }
 
+    .courierPayoutCard-financialDetails {
+        align-items: flex-end;
+    }
+
+    .courierPayoutCard-financialRow {
+        font-size: 7.5px;
+    }
+
+    .courierPayoutCard-financialRow strong {
+        font-size: 7.5px;
+    }
+
 
     .courierPayoutCard-status {
         min-height: 25px;
@@ -656,6 +710,20 @@
         font-size: 13px;
     }
 
+    .courierPayoutCard-financialDetails {
+        margin-top: 0;
+
+        gap: 2px;
+    }
+
+    .courierPayoutCard-financialRow {
+        font-size: 7px;
+    }
+
+    .courierPayoutCard-financialRow strong {
+        font-size: 7px;
+    }
+
 
     .courierPayoutCard-status {
         min-height: 24px;
@@ -739,6 +807,14 @@
 
     .courierPayoutCard-amount {
         font-size: 12px;
+    }
+
+    .courierPayoutCard-financialRow {
+        font-size: 6.8px;
+    }
+
+    .courierPayoutCard-financialRow strong {
+        font-size: 6.8px;
     }
 
 

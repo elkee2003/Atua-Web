@@ -1,0 +1,716 @@
+
+/* =========================================================
+   REVIEW USER PROFILE
+   ========================================================= */
+
+.reviewUserCom-container {
+  --review-bg: #f5f5f3;
+  --review-white: #ffffff;
+  --review-black: #151515;
+  --review-muted: #858585;
+  --review-border: #e3e3e0;
+  --review-soft: #f6f6f4;
+  --review-green: #397b58;
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 100%;
+  background: var(--review-bg);
+  color: var(--review-black);
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.reviewUserCom-container *,
+.reviewUserCom-container *::before,
+.reviewUserCom-container *::after {
+  box-sizing: border-box;
+}
+
+/* HEADER */
+
+.reviewUserCom-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 22px;
+  background: var(--review-white);
+  border-bottom: 1px solid var(--review-border);
+}
+
+.reviewUserCom-headerIconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  background: #f0f0ee;
+  color: #111827;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.reviewUserCom-headerIconButton:hover {
+  background: #e7e7e4;
+}
+
+.reviewUserCom-headerCenter {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.3px;
+}
+
+.reviewUserCom-headerSubtitle {
+  margin: 4px 0 0;
+  color: var(--review-muted);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+/* MAIN CONTENT */
+
+.reviewUserCom-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 850px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 20px 22px 16px;
+}
+
+.reviewUserCom-content h2,
+.reviewUserCom-content h3,
+.reviewUserCom-content p {
+  overflow-wrap: anywhere;
+}
+
+/* PROFILE PHOTO CARD */
+
+.reviewUserCom-photoCard,
+.reviewUserCom-infoCard {
+  width: 100%;
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--review-border);
+  border-radius: 22px;
+  background: var(--review-white);
+  box-shadow: 0 3px 9px rgb(0 0 0 / 3%);
+}
+
+.reviewUserCom-photoCardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.reviewUserCom-photoCardTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.reviewUserCom-photoCardSubtitle {
+  margin: 5px 0 0;
+  color: var(--review-muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.reviewUserCom-photoCardBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 13px;
+  padding: 4px 0 2px;
+}
+
+.reviewUserCom-reviewProfilePicContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 125px;
+  width: 125px;
+  height: 125px;
+  padding: 4px;
+  overflow: hidden;
+  border: 1px solid #eeeeeb;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 8%);
+}
+
+.reviewUserCom-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.reviewUserCom-reviewPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #e5e7eb;
+}
+
+.reviewUserCom-reviewPlaceholderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65%;
+  height: 65%;
+  border-radius: 50%;
+  background: #dededb;
+  color: #9ca3af;
+}
+
+.reviewUserCom-reviewPlaceholderGlyph {
+  font-size: 34px;
+}
+
+.reviewUserCom-photoCardBody .reviewUserCom-photoCardHeader {
+  justify-content: center;
+  width: 100%;
+  text-align: center;
+}
+
+/* CONTACT AND ADDRESS CARD HEADERS */
+
+.reviewUserCom-cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 17px;
+}
+
+.reviewUserCom-cardHeaderIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.reviewUserCom-cardHeaderIconGlyph {
+  font-size: 17px;
+}
+
+.reviewUserCom-cardTitle {
+  margin: 0;
+  color: #111827;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.reviewUserCom-cardSubtitle {
+  margin: 4px 0 0;
+  color: var(--review-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+/* INFORMATION LIST */
+
+.reviewUserCom-infoList {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 17px;
+  background: var(--review-soft);
+}
+
+.reviewUserCom-infoRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-width: 0;
+  min-height: 70px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--review-border);
+}
+
+.reviewUserCom-infoRowLast {
+  border-bottom: none;
+}
+
+.reviewUserCom-infoIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #111827;
+}
+
+.reviewUserCom-infoIcon {
+  font-size: 17px;
+}
+
+.reviewUserCom-infoContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-infoLabel {
+  display: block;
+  margin-bottom: 4px;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.reviewUserCom-infoValue {
+  margin: 0;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.reviewUserCom-infoCheck {
+  flex: 0 0 auto;
+  color: var(--review-green);
+  font-size: 17px;
+}
+
+/* LOCATION CONFIRMATION */
+
+.reviewUserCom-locationConfirmation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--review-border);
+  border-radius: 20px;
+  background: #f4f4f2;
+}
+
+.reviewUserCom-locationConfirmationIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background: #e9e9e6;
+  color: var(--review-green);
+}
+
+.reviewUserCom-locationConfirmationGlyph {
+  font-size: 18px;
+}
+
+.reviewUserCom-locationConfirmationContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.reviewUserCom-locationConfirmationTitle {
+  margin: 0 0 5px;
+  color: #333333;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.reviewUserCom-locationConfirmationText {
+  margin: 0;
+  color: #777773;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* SPACE BELOW CONTENT FOR FIXED BUTTON */
+
+.reviewUserCom-bottomSpacer {
+  flex: 0 0 auto;
+  width: 100%;
+  height: 95px;
+}
+
+/* BOTTOM CONFIRM BUTTON */
+
+.reviewUserCom-footer {
+  position: fixed;
+  z-index: 30;
+  right: 0;
+  bottom: 0;
+  left: 270px;
+  display: flex;
+  justify-content: center;
+  width: auto;
+  padding: 14px 22px 18px;
+  border-top: 1px solid #e5e7eb;
+  background: rgb(255 255 255 / 96%);
+  backdrop-filter: blur(10px);
+}
+
+.reviewUserCom-saveButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 850px;
+  min-height: 54px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 16px;
+  background: #111827;
+  color: #ffffff;
+  font-family: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.reviewUserCom-saveButton:hover {
+  background: #252d3b;
+}
+
+.reviewUserCom-saveButton:active {
+  transform: scale(0.99);
+}
+
+.reviewUserCom-saveButtonTextContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.reviewUserCom-saveButtonLabel {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.reviewUserCom-saveButtonSubLabel {
+  color: #d1d5db;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.reviewUserCom-saveButtonIconContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: #292f3b;
+  color: #ffffff;
+}
+
+.reviewUserCom-saveButtonIcon {
+  font-size: 17px;
+}
+
+/* TABLET */
+
+@media (max-width: 1100px) {
+  .reviewUserCom-header {
+    padding: 15px 20px;
+  }
+
+  .reviewUserCom-content {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .reviewUserCom-footer {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 900px) {
+  .reviewUserCom-footer {
+    left: 0;
+    bottom: 85px;
+    padding: 10px 18px 12px;
+  }
+
+  .reviewUserCom-bottomSpacer {
+    height: 100px;
+  }
+}
+
+@media (max-width: 600px) {
+  .reviewUserCom-header {
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  .reviewUserCom-headerIconButton {
+    flex-basis: 38px;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    font-size: 15px;
+  }
+
+  .reviewUserCom-title {
+    font-size: 18px;
+  }
+
+  .reviewUserCom-headerSubtitle {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-content {
+    gap: 13px;
+    padding: 16px 16px 12px;
+  }
+
+  .reviewUserCom-photoCard,
+  .reviewUserCom-infoCard {
+    padding: 16px;
+    border-radius: 19px;
+  }
+
+  .reviewUserCom-photoCardTitle {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-photoCardBody {
+    gap: 11px;
+  }
+
+  .reviewUserCom-reviewProfilePicContainer {
+    flex-basis: 112px;
+    width: 112px;
+    height: 112px;
+  }
+
+  .reviewUserCom-reviewPlaceholderGlyph {
+    font-size: 30px;
+  }
+
+  .reviewUserCom-cardHeader {
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .reviewUserCom-cardHeaderIcon {
+    flex-basis: 40px;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+
+  .reviewUserCom-cardHeaderIconGlyph {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-cardTitle {
+    font-size: 14px;
+  }
+
+  .reviewUserCom-cardSubtitle {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-infoList {
+    border-radius: 15px;
+  }
+
+  .reviewUserCom-infoRow {
+    gap: 9px;
+    min-height: 64px;
+    padding: 10px;
+  }
+
+  .reviewUserCom-infoIconContainer {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+  }
+
+  .reviewUserCom-infoIcon {
+    font-size: 15px;
+  }
+
+  .reviewUserCom-infoLabel {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-infoValue {
+    font-size: 13px;
+  }
+
+  .reviewUserCom-infoCheck {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-locationConfirmation {
+    gap: 10px;
+    padding: 13px;
+    border-radius: 17px;
+  }
+
+  .reviewUserCom-locationConfirmationIcon {
+    flex-basis: 37px;
+    width: 37px;
+    height: 37px;
+    border-radius: 11px;
+  }
+
+  .reviewUserCom-locationConfirmationGlyph {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-locationConfirmationTitle {
+    font-size: 13px;
+  }
+
+  .reviewUserCom-locationConfirmationText {
+    font-size: 11px;
+  }
+
+  .reviewUserCom-footer {
+    padding: 9px 16px 11px;
+  }
+
+  .reviewUserCom-saveButton {
+    min-height: 49px;
+    padding: 9px 13px;
+    border-radius: 14px;
+  }
+
+  .reviewUserCom-saveButtonLabel {
+    font-size: 14px;
+  }
+
+  .reviewUserCom-saveButtonSubLabel {
+    font-size: 9px;
+  }
+
+  .reviewUserCom-saveButtonIconContainer {
+    flex-basis: 27px;
+    width: 27px;
+    height: 27px;
+    border-radius: 8px;
+  }
+
+  .reviewUserCom-saveButtonIcon {
+    font-size: 15px;
+  }
+
+  .reviewUserCom-bottomSpacer {
+    height: 90px;
+  }
+}
+
+/* SMALL PHONES */
+
+@media (max-width: 380px) {
+  .reviewUserCom-header {
+    gap: 8px;
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-headerIconButton {
+    flex-basis: 34px;
+    width: 34px;
+    height: 34px;
+  }
+
+  .reviewUserCom-title {
+    font-size: 16px;
+  }
+
+  .reviewUserCom-headerSubtitle {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-content {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .reviewUserCom-photoCard,
+  .reviewUserCom-infoCard {
+    padding: 13px;
+    border-radius: 17px;
+  }
+
+  .reviewUserCom-infoRow {
+    gap: 7px;
+    padding: 9px 8px;
+  }
+
+  .reviewUserCom-infoIconContainer {
+    flex-basis: 32px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .reviewUserCom-infoValue {
+    font-size: 12px;
+  }
+
+  .reviewUserCom-locationConfirmation {
+    gap: 8px;
+    padding: 11px;
+  }
+
+  .reviewUserCom-locationConfirmationText {
+    font-size: 10px;
+  }
+
+  .reviewUserCom-footer {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
