@@ -1,0 +1,266 @@
+
+.maxiCategoriesPage {
+  min-height: 100%;
+  box-sizing: border-box;
+  padding: 32px;
+  background: #f9fafb;
+  color: #111827;
+}
+
+.maxiCategoriesHeader {
+  margin-bottom: 24px;
+}
+
+.maxiCategoriesTitle {
+  margin: 0 0 8px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #111827;
+}
+
+.maxiCategoriesSubtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.maxiCategoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding-bottom: 40px;
+}
+
+.maxiCategoryCard {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.maxiCategoryCard:hover {
+  box-shadow: 0 6px 18px rgb(0 0 0 / 8%);
+}
+
+.maxiCategoryImageWrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.maxiCategoryImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.maxiCategoryContent {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.maxiCategoryTitle {
+  margin: 0 0 4px;
+  font-size: 18px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #111827;
+}
+
+.maxiCategoryCapacity {
+  margin: 0 0 8px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.maxiCategoryDescription {
+  flex: 1;
+  margin: 0 0 18px;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.maxiCategoryButtons {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.maxiGalleryButton,
+.maxiSelectButton {
+  min-height: 42px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.maxiGalleryButton {
+  flex: 1;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.maxiGalleryButton:hover {
+  background: #e5e7eb;
+}
+
+.maxiSelectButton {
+  flex-shrink: 0;
+  min-width: 88px;
+  background: #111827;
+  color: #fff;
+}
+
+.maxiSelectButton:hover:not(:disabled) {
+  background: #374151;
+}
+
+.maxiSelectButton:disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.maxiGalleryButton:focus-visible,
+.maxiSelectButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+/* Loading */
+
+.maxiCategoriesLoading {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  color: #6b7280;
+}
+
+.maxiCategoriesLoading p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.maxiLoadingSpinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #111827;
+  border-radius: 50%;
+  animation: maxiCategoriesSpin 0.8s linear infinite;
+}
+
+@keyframes maxiCategoriesSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .maxiCategoriesPage {
+    padding: 24px;
+  }
+
+  .maxiCategoriesGrid {
+    gap: 16px;
+  }
+
+  .maxiCategoryImageWrapper {
+    height: 180px;
+  }
+
+  .maxiCategoryContent {
+    padding: 16px;
+  }
+
+  .maxiCategoryButtons {
+    flex-wrap: wrap;
+  }
+
+  .maxiGalleryButton {
+    min-width: 0;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .maxiCategoriesPage {
+    padding: 20px 16px;
+    padding-bottom: calc(
+      var(--client-bottom-nav-height, 85px) + 24px
+    );
+  }
+
+  .maxiCategoriesHeader {
+    margin-bottom: 20px;
+  }
+
+  .maxiCategoriesTitle {
+    font-size: 22px;
+  }
+
+  .maxiCategoriesGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+
+  .maxiCategoryImageWrapper {
+    height: 200px;
+  }
+
+  .maxiCategoryContent {
+    padding: 16px;
+  }
+
+  .maxiCategoryButtons {
+    flex-wrap: nowrap;
+  }
+
+  .maxiGalleryButton,
+  .maxiSelectButton {
+    min-height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maxiCategoryCard,
+  .maxiGalleryButton,
+  .maxiSelectButton {
+    transition: none;
+  }
+
+  .maxiLoadingSpinner {
+    animation-duration: 1.5s;
+  }
+}

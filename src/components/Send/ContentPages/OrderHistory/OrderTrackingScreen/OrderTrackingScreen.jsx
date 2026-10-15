@@ -648,10 +648,7 @@ const OrderTrackingScreen = ({ orderId: receivedOrderId }) => {
         );
       }
 
-      navigate("/screens/payment", {
-        replace: true,
-        state: { orderId: updatedOrder.id },
-      });
+      navigate(`/send/payment/${updatedOrder.id}`);
     } catch (error) {
       console.error("ACCEPT OFFER ERROR:", error);
       window.alert(error?.message || "Unable to accept this offer.");
@@ -742,9 +739,8 @@ const OrderTrackingScreen = ({ orderId: receivedOrderId }) => {
         );
 
         if (proceed) {
-          navigate("/screens/payment", {
+          navigate(`/send/payment/${latestOrder.id}`, {
             replace: true,
-            state: { orderId: latestOrder.id },
           });
         }
       } catch (error) {

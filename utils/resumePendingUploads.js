@@ -1,4 +1,4 @@
-import { MediaUploadStatus, Order } from "../src/models";
+import { MediaUploadStatus, Order } from "@/src/models";
 import { DataStore } from "aws-amplify/datastore";
 
 export const resumePendingUploads = async (uploadEvidence) => {

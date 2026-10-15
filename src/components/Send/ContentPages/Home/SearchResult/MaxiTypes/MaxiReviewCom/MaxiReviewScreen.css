@@ -1,0 +1,1025 @@
+
+/* =========================================================
+   MAXI REVIEW SCREEN
+   Component-specific styles for MaxiReviewScreen.jsx
+   ========================================================= */
+
+/* Main screen */
+.maxiReviewScreenContainer {
+  min-height: 100%;
+  width: 100%;
+  min-width: 0;
+  background-color: #F4F6F8;
+  box-sizing: border-box;
+}
+
+.maxiReviewScreenContainer *,
+.maxiReviewScreenContainer *::before,
+.maxiReviewScreenContainer *::after {
+  box-sizing: border-box;
+}
+
+/* Screen */
+.maxiReviewScreenScreen {
+  flex: 1 1 0%;
+  min-width: 0;
+  background-color: #F4F6F8;
+}
+
+/* Scroll content */
+.maxiReviewScreenScrollContent {
+  width: 100%;
+  min-width: 0;
+  padding: 18px 20px 40px;
+  box-sizing: border-box;
+}
+
+/* Bottom spacer */
+.maxiReviewScreenBottomSpacer {
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.maxiReviewScreenHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-left: 2px;
+  padding-right: 2px;
+  min-width: 0;
+}
+
+.maxiReviewScreenHeaderIcon {
+  display: flex;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 13px;
+  background-color: #FFF1E8;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #FFE1CC;
+}
+
+.maxiReviewScreenHeaderText {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.maxiReviewScreenEyebrow {
+  display: block;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.6px;
+  color: #F97316;
+  margin-bottom: 4px;
+}
+
+.maxiReviewScreenTitle {
+  display: block;
+  max-width: 100%;
+  font-size: 25px;
+  line-height: 30px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.7px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.maxiReviewScreenSubtitle {
+  display: block;
+  margin-top: 5px;
+  font-size: 11px;
+  line-height: 17px;
+  font-weight: 400;
+  color: #7A8492;
+  max-width: 310px;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* =========================================================
+   CARDS
+   ========================================================= */
+
+.maxiReviewScreenCard {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  background-color: #FFFFFF;
+  border-radius: 18px;
+  padding: 17px;
+  margin-bottom: 14px;
+  border: 1px solid #E8ECF0;
+  box-shadow: 0 5px 28px rgba(17, 24, 39, 0.045);
+}
+
+.maxiReviewScreenCardHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.maxiReviewScreenSectionIcon {
+  display: flex;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+  background-color: #FFF4EC;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #FFE5D3;
+}
+
+.maxiReviewScreenHeaderFlex {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.maxiReviewScreenSectionTitle {
+  display: block;
+  max-width: 100%;
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 800;
+  color: #17202B;
+  letter-spacing: -0.15px;
+  overflow-wrap: break-word;
+}
+
+.maxiReviewScreenSectionSubtitle {
+  display: block;
+  max-width: 100%;
+  margin-top: 2px;
+  font-size: 9px;
+  line-height: 13px;
+  font-weight: 400;
+  color: #8A94A3;
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   FIELD TEXT
+   ========================================================= */
+
+.maxiReviewScreenFieldLabel {
+  display: block;
+  font-size: 8px;
+  line-height: 11px;
+  font-weight: 800;
+  letter-spacing: 1.05px;
+  color: #98A2B0;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.maxiReviewScreenFieldValue {
+  display: block;
+  min-width: 0;
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 700;
+  color: #202936;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.maxiReviewScreenFieldMeta {
+  display: block;
+  margin-top: 3px;
+  font-size: 9px;
+  line-height: 14px;
+  font-weight: 500;
+  color: #8993A1;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.maxiReviewScreenInfoValue {
+  display: block;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 800;
+  color: #1C2530;
+}
+
+.maxiReviewScreenMoneyValue {
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 800;
+  color: #E85F0E;
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   TRIP OVERVIEW / ROUTE
+   ========================================================= */
+
+.maxiReviewScreenRouteContainer {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-bottom: 17px;
+  min-width: 0;
+}
+
+.maxiReviewScreenLocationRow {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.maxiReviewScreenLocationIndicator {
+  display: flex;
+  flex: 0 0 24px;
+  width: 24px;
+  align-items: center;
+  padding-top: 4px;
+}
+
+.maxiReviewScreenOriginDot {
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #F97316;
+  border: 2px solid #FFE1CD;
+}
+
+.maxiReviewScreenDestinationDot {
+  flex: 0 0 9px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: #17202B;
+  border: 2px solid #DDE2E7;
+}
+
+.maxiReviewScreenRouteLine {
+  width: 1px;
+  height: 27px;
+  background-color: #D8DEE5;
+  margin-left: 11.5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.maxiReviewScreenLocationContent {
+  flex: 1 1 0%;
+  min-width: 0;
+  padding-left: 7px;
+  padding-bottom: 2px;
+}
+
+/* =========================================================
+   INFO GRID
+   ========================================================= */
+
+.maxiReviewScreenInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  min-width: 0;
+  background-color: #F8FAFB;
+  border-radius: 13px;
+  border: 1px solid #EDF0F3;
+  overflow: hidden;
+}
+
+.maxiReviewScreenInfoItem {
+  min-width: 0;
+  padding: 12px;
+}
+
+.maxiReviewScreenInfoItemDivider {
+  width: 1px;
+  background-color: #E6EAEF;
+}
+
+/* =========================================================
+   DETAIL ROWS
+   ========================================================= */
+
+.maxiReviewScreenDetailRows {
+  width: 100%;
+  min-width: 0;
+}
+
+.maxiReviewScreenDetailRow {
+  display: flex;
+  min-height: 39px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.maxiReviewScreenDetailRow > .maxiReviewScreenFieldLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.maxiReviewScreenDetailRow > .maxiReviewScreenFieldValue,
+.maxiReviewScreenDetailRow > .maxiReviewScreenMoneyValue {
+  flex: 0 1 auto;
+  min-width: 0;
+  text-align: right;
+}
+
+.maxiReviewScreenRowDivider {
+  height: 1px;
+  width: 100%;
+  background-color: #F0F2F4;
+}
+
+/* =========================================================
+   DESCRIPTION
+   ========================================================= */
+
+.maxiReviewScreenDescriptionBox {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #F8FAFB;
+  border: 1px solid #EDF0F3;
+}
+
+.maxiReviewScreenDescriptionText {
+  display: block;
+  font-size: 11px;
+  line-height: 17px;
+  font-weight: 500;
+  color: #424C59;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* =========================================================
+   LOADING & HANDLING
+   ========================================================= */
+
+.maxiReviewScreenHandlingBlock {
+  min-width: 0;
+  padding: 13px;
+  background-color: #FAFBFC;
+  border-radius: 14px;
+  border: 1px solid #EDF0F2;
+  margin-bottom: 10px;
+}
+
+.maxiReviewScreenHandlingBlockLast {
+  margin-bottom: 0;
+}
+
+.maxiReviewScreenHandlingHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 7px;
+}
+
+.maxiReviewScreenHandlingIcon {
+  display: flex;
+  flex: 0 0 27px;
+  width: 27px;
+  height: 27px;
+  border-radius: 9px;
+  background-color: #FFF1E8;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.maxiReviewScreenHandlingTitle {
+  font-size: 11px;
+  font-weight: 800;
+  color: #28323E;
+}
+
+/* =========================================================
+   RECIPIENT
+   ========================================================= */
+
+.maxiReviewScreenRecipientCard {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  padding: 13px;
+  background-color: #F8FAFB;
+  border-radius: 14px;
+  border: 1px solid #EDF0F3;
+}
+
+.maxiReviewScreenAvatar {
+  display: flex;
+  flex: 0 0 43px;
+  width: 43px;
+  height: 43px;
+  border-radius: 14px;
+  background-color: #17202B;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.maxiReviewScreenAvatarText {
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.maxiReviewScreenRecipientInfo {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.maxiReviewScreenRecipientName {
+  display: block;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 800;
+  color: #202936;
+  margin-bottom: 4px;
+  overflow-wrap: break-word;
+}
+
+.maxiReviewScreenPhoneRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  margin-top: 2px;
+}
+
+.maxiReviewScreenPhoneText {
+  margin-left: 5px;
+  min-width: 0;
+  font-size: 9px;
+  line-height: 14px;
+  font-weight: 500;
+  color: #697586;
+  overflow-wrap: break-word;
+}
+
+/* =========================================================
+   PRICE AND OFFER
+   ========================================================= */
+
+.maxiReviewScreenPriceCard {
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  background-color: #121A24;
+  border-radius: 21px;
+  padding: 19px;
+  margin-bottom: 14px;
+  border: 1px solid #25313E;
+  box-shadow: 0 8px 36px rgba(11, 16, 22, 0.15);
+}
+
+.maxiReviewScreenPriceHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.maxiReviewScreenPriceEyebrow {
+  display: block;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  color: #F97316;
+  margin-bottom: 4px;
+}
+
+.maxiReviewScreenPriceTitle {
+  display: block;
+  font-size: 16px;
+  line-height: 21px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.25px;
+}
+
+.maxiReviewScreenPriceIcon {
+  display: flex;
+  flex: 0 0 38px;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background-color: #252F3B;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #303C49;
+}
+
+.maxiReviewScreenRangeContainer {
+  min-width: 0;
+  background-color: #19232E;
+  border-radius: 14px;
+  padding: 13px 14px;
+  border: 1px solid #263340;
+}
+
+.maxiReviewScreenRangeLabel {
+  display: block;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 1.05px;
+  color: #8491A0;
+  margin-bottom: 5px;
+}
+
+.maxiReviewScreenPriceRange {
+  display: block;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.3px;
+  overflow-wrap: break-word;
+}
+
+.maxiReviewScreenOfferDescription {
+  display: block;
+  font-size: 9px;
+  line-height: 14px;
+  font-weight: 400;
+  color: #8E9AA8;
+  margin-top: 12px;
+}
+
+.maxiReviewScreenOfferControl {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  min-width: 0;
+  margin-top: 16px;
+}
+
+.maxiReviewScreenAdjustBtn {
+  display: flex;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 13px;
+  background-color: #26313D;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #34404D;
+  color: #FFFFFF;
+  cursor: pointer;
+}
+
+.maxiReviewScreenOfferInputContainer {
+  display: flex;
+  flex: 1 1 0%;
+  min-width: 0;
+  height: 50px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  padding: 0 13px;
+  border-radius: 14px;
+  background-color: #FFFFFF;
+  border: 2px solid #FFFFFF;
+}
+
+.maxiReviewScreenOfferInputContainerError {
+  border-color: #F87171;
+}
+
+.maxiReviewScreenCurrencyPrefix {
+  flex: 0 0 auto;
+  font-size: 17px;
+  font-weight: 800;
+  color: #F97316;
+  margin-right: 2px;
+}
+
+.maxiReviewScreenOfferInput {
+  flex: 1 1 0%;
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 800;
+  color: #17202B;
+  text-align: center;
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.maxiReviewScreenOfferInput::-webkit-outer-spin-button,
+.maxiReviewScreenOfferInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.maxiReviewScreenValidationContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.maxiReviewScreenValidationText {
+  font-size: 9px;
+  line-height: 13px;
+  font-weight: 600;
+  color: #F87171;
+}
+
+.maxiReviewScreenHelperContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.maxiReviewScreenHelperText {
+  font-size: 8px;
+  line-height: 12px;
+  font-weight: 500;
+  color: #7F8B99;
+}
+
+/* =========================================================
+   PHOTO / VIDEO UPLOAD BUTTONS
+   ========================================================= */
+
+.maxiReviewScreenUploadBtn {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  min-height: 62px;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background-color: #17202B;
+  border-radius: 14px;
+  border: 1px solid #25313D;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.maxiReviewScreenUploadIcon {
+  display: flex;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background-color: #F97316;
+  align-items: center;
+  justify-content: center;
+}
+
+.maxiReviewScreenUploadContent {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+.maxiReviewScreenUploadText {
+  display: block;
+  font-size: 11px;
+  line-height: 15px;
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.maxiReviewScreenUploadSubtext {
+  display: block;
+  font-size: 8px;
+  line-height: 12px;
+  font-weight: 400;
+  color: #8D99A7;
+  margin-top: 2px;
+}
+
+/* =========================================================
+   CARGO PHOTO PREVIEWS
+   ========================================================= */
+
+.maxiReviewScreenMediaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding-top: 12px;
+  padding-bottom: 2px;
+}
+
+.maxiReviewScreenPhotoWrapper {
+  position: relative;
+  display: block;
+  flex: 0 0 78px;
+  width: 78px;
+  height: 78px;
+  padding: 0;
+  border-radius: 13px;
+  overflow: hidden;
+  margin: 0;
+  background-color: #E9EDF1;
+  border: 1px solid #E1E6EA;
+  cursor: pointer;
+}
+
+.maxiReviewScreenPreviewImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.maxiReviewScreenPhotoIndex {
+  display: flex;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 4px;
+  border-radius: 7px;
+  background-color: rgba(17, 24, 39, 0.78);
+  align-items: center;
+  justify-content: center;
+}
+
+.maxiReviewScreenPhotoIndexText {
+  color: #FFFFFF;
+  font-size: 8px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   CARGO VIDEO PREVIEW
+   ========================================================= */
+
+.maxiReviewScreenVideoPreview {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 190px;
+  margin-top: 12px;
+  padding: 0;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #111827;
+  border: 1px solid #E2E6EA;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.maxiReviewScreenVideoThumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.maxiReviewScreenPlayOverlay {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(10, 15, 20, 0.25);
+}
+
+.maxiReviewScreenPlayButton {
+  display: flex;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background-color: rgba(249, 115, 22, 0.95);
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.maxiReviewScreenVideoPreviewLabel {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 8px;
+  font-weight: 700;
+  color: #FFFFFF;
+  background-color: rgba(10, 15, 20, 0.6);
+  padding: 4px 8px;
+  border-radius: 7px;
+}
+
+/* =========================================================
+   PHOTO COUNT / VIDEO STATUS BADGES
+   ========================================================= */
+
+.maxiReviewScreenCountBadge {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 25px;
+  height: 25px;
+  padding: 0 7px;
+  border-radius: 9px;
+  background-color: #FFF1E8;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #FFE0CC;
+}
+
+.maxiReviewScreenCountBadgeText {
+  font-size: 9px;
+  font-weight: 800;
+  color: #E85F0E;
+}
+
+.maxiReviewScreenStatusBadge {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 5px;
+  padding: 0 8px;
+  height: 25px;
+  border-radius: 9px;
+  background-color: #ECFDF3;
+  border: 1px solid #D1FAE5;
+}
+
+.maxiReviewScreenStatusDot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background-color: #22C55E;
+}
+
+.maxiReviewScreenStatusText {
+  font-size: 7px;
+  font-weight: 800;
+  color: #15803D;
+  letter-spacing: 0.3px;
+}
+
+/* =========================================================
+   CAMERA MODAL
+   ========================================================= */
+
+.maxiReviewScreenCameraModal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: #000000;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* =========================================================
+   BUTTON NORMALIZATION
+   ========================================================= */
+
+.maxiReviewScreenAdjustBtn,
+.maxiReviewScreenUploadBtn,
+.maxiReviewScreenPhotoWrapper,
+.maxiReviewScreenVideoPreview {
+  font: inherit;
+  border-style: solid;
+}
+
+.maxiReviewScreenAdjustBtn,
+.maxiReviewScreenUploadBtn,
+.maxiReviewScreenPhotoWrapper,
+.maxiReviewScreenVideoPreview {
+  cursor: pointer;
+}
+
+.maxiReviewScreenAdjustBtn,
+.maxiReviewScreenUploadBtn,
+.maxiReviewScreenPhotoWrapper,
+.maxiReviewScreenVideoPreview {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.maxiReviewScreenAdjustBtn:focus-visible,
+.maxiReviewScreenUploadBtn:focus-visible,
+.maxiReviewScreenPhotoWrapper:focus-visible,
+.maxiReviewScreenVideoPreview:focus-visible {
+  outline: 2px solid #F97316;
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   RESPONSIVE LAYOUT
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .maxiReviewScreenContainer {
+    width: 100%;
+  }
+
+  .maxiReviewScreenScrollContent {
+    padding: 18px 16px 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .maxiReviewScreenScrollContent {
+    padding: 16px 12px 32px;
+  }
+
+  .maxiReviewScreenHeader {
+    margin-bottom: 20px;
+  }
+
+  .maxiReviewScreenTitle {
+    font-size: 22px;
+    line-height: 28px;
+  }
+
+  .maxiReviewScreenCard {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .maxiReviewScreenPriceCard {
+    padding: 16px;
+  }
+
+  .maxiReviewScreenAdjustBtn {
+    flex-basis: 38px;
+    width: 38px;
+    height: 42px;
+  }
+
+  .maxiReviewScreenOfferInputContainer {
+    margin: 0 7px;
+    padding: 0 8px;
+  }
+
+  .maxiReviewScreenPriceRange {
+    font-size: 16px;
+    overflow-wrap: break-word;
+  }
+}
+
+@media (max-width: 380px) {
+  .maxiReviewScreenScrollContent {
+    padding-right: 9px;
+    padding-left: 9px;
+  }
+
+  .maxiReviewScreenCard {
+    padding: 12px;
+  }
+
+  .maxiReviewScreenTitle {
+    font-size: 20px;
+    line-height: 25px;
+  }
+
+  .maxiReviewScreenSectionSubtitle {
+    font-size: 8px;
+  }
+
+  .maxiReviewScreenOfferControl {
+    margin-top: 12px;
+  }
+
+  .maxiReviewScreenPriceCard {
+    padding: 12px;
+  }
+
+  .maxiReviewScreenOfferInput {
+    font-size: 17px;
+  }
+}

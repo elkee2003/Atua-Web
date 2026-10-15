@@ -61,25 +61,25 @@ const OrderHistoryList = ({ order, refreshOrders }) => {
     setExpanded((previous) => !previous);
   };
 
-  // Navigation
+  // Navigation to order details
   const goToOrderDetails = () => {
     if (!order?.id) return;
 
     navigate(`/send/order_details/${order.id}`);
   };
 
+  // Navigation to order tracking
   const goToTracking = () => {
     if (!order?.id) return;
 
     navigate(`/send/order_tracking/${order.id}`);
   };
 
+  // Navigate to payment when the order is awaiting payment
   const goToPayment = () => {
     if (!isAwaitingPayment || !order?.id) return;
 
-    navigate("/send/payment", {
-      state: { orderId: order.id },
-    });
+    navigate(`/send/payment/${order.id}`);
   };
 
   // Delete order through the backend mutation

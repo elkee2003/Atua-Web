@@ -36,7 +36,9 @@ const ConfirmEmail = () => {
       });
 
       alert("Email verified successfully!");
-      navigate("/signin");
+
+      localStorage.removeItem("signupEmail");
+      navigate("/", { state: { scrollTo: "signIn" } });
     } catch (error) {
       alert(error?.message || "Verification failed");
     } finally {

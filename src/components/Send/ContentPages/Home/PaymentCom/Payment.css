@@ -1,0 +1,826 @@
+/* =====================================================
+   ATUA PAYMENT PAGE
+   Converted from React Native styles.js
+   All classes are scoped to the payment page.
+===================================================== */
+
+/* Main */
+
+.atua-payment {
+  min-height: 100vh;
+  width: 100%;
+  background: #F8F9FB;
+  color: #111827;
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.atua-payment *,
+.atua-payment *::before,
+.atua-payment *::after {
+  box-sizing: border-box;
+}
+
+.atua-payment button,
+.atua-payment input {
+  font: inherit;
+}
+
+.atua-payment button {
+  cursor: pointer;
+}
+
+.atua-payment button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+/* Header */
+
+.atua-payment-header {
+  height: 58px;
+  min-height: 58px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.atua-payment-header h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  text-align: center;
+}
+
+.atua-payment-back {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #111827;
+  flex-shrink: 0;
+}
+
+.atua-payment-back:hover:not(:disabled) {
+  background: #F3F4F6;
+}
+
+.atua-payment-header-spacer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* Main responsive layout */
+
+.atua-payment-layout {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px 18px 30px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+  gap: 24px;
+}
+
+.atua-payment-main {
+  min-width: 0;
+  width: 100%;
+}
+
+/* Amount card */
+
+.atua-payment-amount-card {
+  background: #111827;
+  border-radius: 20px;
+  padding: 26px 22px;
+  margin-bottom: 18px;
+  color: #FFFFFF;
+}
+
+.atua-payment-muted {
+  display: block;
+  font-size: 13px;
+  color: #6B7280;
+  line-height: 1.5;
+}
+
+.atua-payment-amount-card > .atua-payment-muted {
+  margin-bottom: 8px;
+  color: #D1D5DB;
+}
+
+.atua-payment-amount {
+  display: block;
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.25;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #FFFFFF;
+  overflow-wrap: anywhere;
+}
+
+.atua-payment-order-reference {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid #374151;
+  min-width: 0;
+}
+
+.atua-payment-order-reference span {
+  font-size: 12px;
+  color: #9CA3AF;
+  flex-shrink: 0;
+}
+
+.atua-payment-order-reference strong {
+  min-width: 0;
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+  color: #E5E7EB;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Generic cards */
+
+.atua-payment-card {
+  padding: 18px;
+  margin-bottom: 16px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+  min-width: 0;
+}
+
+.atua-payment-card h2 {
+  margin: 0 0 18px;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Payment summary */
+
+.atua-payment-summary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.atua-payment-summary-row > span {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #6B7280;
+}
+
+.atua-payment-summary-row > strong {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #374151;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.atua-payment-divider {
+  height: 1px;
+  background: #E5E7EB;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.atua-payment-summary-row.atua-payment-total-row {
+  margin-bottom: 0;
+}
+
+.atua-payment-total-row > strong:first-child {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+}
+
+.atua-payment-total-row > strong:last-child {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111827;
+}
+
+/* Saved payment methods */
+
+.atua-payment-method-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.atua-payment-method-heading h2 {
+  margin-bottom: 18px;
+}
+
+.atua-payment-spin {
+  flex-shrink: 0;
+  margin-top: -16px;
+  color: #6B7280;
+  animation: atua-payment-rotate 1s linear infinite;
+}
+
+@keyframes atua-payment-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.atua-payment-card > .atua-payment-muted {
+  margin-bottom: 16px;
+}
+
+.atua-payment-method {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  background: #FFFFFF;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  min-width: 0;
+}
+
+.atua-payment-method:hover {
+  border-color: #9CA3AF;
+}
+
+.atua-payment-method.is-selected {
+  border-color: #111827;
+  background: #F9FAFB;
+}
+
+.atua-payment-method input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #111827;
+  cursor: pointer;
+}
+
+.atua-payment-method > svg {
+  color: #374151;
+  flex-shrink: 0;
+}
+
+.atua-payment-method-details {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.atua-payment-method-details strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  overflow-wrap: anywhere;
+}
+
+.atua-payment-method-details small {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #6B7280;
+}
+
+.atua-payment-selected {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  color: #166534;
+}
+
+/* Buttons */
+
+.atua-payment-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 12px 18px;
+  border: 1px solid #D1D5DB;
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.atua-payment-secondary:hover:not(:disabled) {
+  background: #F3F4F6;
+  border-color: #9CA3AF;
+}
+
+.atua-payment-saved-button {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.atua-payment-new-card {
+  width: 100%;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #111827;
+  border-radius: 12px;
+  background: #FFFFFF;
+  color: #111827;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s ease;
+}
+
+.atua-payment-new-card:hover:not(:disabled) {
+  background: #F3F4F6;
+}
+
+.atua-payment-new-card svg {
+  flex-shrink: 0;
+}
+
+/* Security card */
+
+.atua-payment-security {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px;
+  margin-bottom: 18px;
+  background: #F0FDF4;
+  border: 1px solid #DCFCE7;
+  border-radius: 16px;
+}
+
+.atua-payment-security > svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #166534;
+}
+
+.atua-payment-security > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.atua-payment-security strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #166534;
+}
+
+.atua-payment-security p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 19px;
+  color: #4B5563;
+}
+
+/* Powered by Paystack */
+
+.atua-payment-powered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin: 4px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: #6B7280;
+  text-align: center;
+}
+
+.atua-payment-powered svg {
+  flex-shrink: 0;
+}
+
+/* Desktop payment sidebar */
+
+.atua-payment-sidebar {
+  position: sticky;
+  top: 20px;
+  padding: 20px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 16px;
+}
+
+.atua-payment-sidebar-total {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.atua-payment-sidebar-total span {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.atua-payment-sidebar-total strong {
+  font-size: 27px;
+  line-height: 1.3;
+  font-weight: 800;
+  color: #111827;
+  overflow-wrap: anywhere;
+}
+
+.atua-payment-pay-button {
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 14px;
+  background: #111827;
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.atua-payment-pay-button:hover:not(:disabled) {
+  background: #1F2937;
+}
+
+.atua-payment-pay-button:focus-visible,
+.atua-payment-secondary:focus-visible,
+.atua-payment-new-card:focus-visible,
+.atua-payment-back:focus-visible {
+  outline: 3px solid #93C5FD;
+  outline-offset: 3px;
+}
+
+.atua-payment-pay-button svg {
+  flex-shrink: 0;
+}
+
+.atua-payment-disclaimer {
+  margin: 9px 0 0;
+  padding: 0 4px;
+  font-size: 10.5px;
+  line-height: 15px;
+  color: #9CA3AF;
+  text-align: center;
+}
+
+/* Loading and error states */
+
+.atua-payment-state {
+  flex: 1;
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  text-align: center;
+}
+
+.atua-payment-state > p {
+  margin: 14px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #6B7280;
+}
+
+.atua-payment-state > svg {
+  color: #6B7280;
+}
+
+.atua-payment-state h2 {
+  margin: 15px 0 0;
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #111827;
+}
+
+.atua-payment-state .atua-payment-secondary {
+  min-width: 140px;
+  min-height: 48px;
+  margin-top: 22px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #111827;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.atua-payment-state .atua-payment-secondary:hover:not(:disabled) {
+  background: #1F2937;
+}
+
+.atua-payment-spinner,
+.atua-payment-button-spinner {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  border: 3px solid #E5E7EB;
+  border-top-color: #111827;
+  border-radius: 50%;
+  animation: atua-payment-rotate 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+.atua-payment-button-spinner {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #FFFFFF;
+}
+
+.atua-payment-state .atua-payment-spinner + p {
+  margin-top: 14px;
+}
+
+/* Payment notice modal */
+
+.atua-payment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(17, 24, 39, 0.58);
+  overflow-y: auto;
+}
+
+.atua-payment-modal {
+  width: 100%;
+  max-width: 430px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 28px 24px 24px;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.atua-payment-modal-icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.atua-payment-modal h2 {
+  margin: 0 0 12px;
+  font-size: 19px;
+  line-height: 1.4;
+  font-weight: 700;
+  color: #111827;
+}
+
+.atua-payment-modal > p {
+  margin: 0 0 22px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #4B5563;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.atua-payment-modal .atua-payment-pay-button {
+  min-height: 48px;
+}
+
+/* Tablet */
+
+@media (max-width: 900px) {
+  .atua-payment-layout {
+    max-width: 720px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+    padding: 20px 18px 30px;
+  }
+
+  .atua-payment-sidebar {
+    position: static;
+    margin-top: 0;
+  }
+
+  .atua-payment-sidebar-total {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .atua-payment-sidebar-total strong {
+    font-size: 23px;
+    text-align: right;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  .atua-payment-header {
+    height: 56px;
+    min-height: 56px;
+    padding: 0 12px;
+  }
+
+  .atua-payment-header h1 {
+    font-size: 16px;
+  }
+
+  .atua-payment-layout {
+    padding: 16px 14px 24px;
+    gap: 4px;
+  }
+
+  .atua-payment-amount-card {
+    padding: 23px 19px;
+    border-radius: 18px;
+    margin-bottom: 16px;
+  }
+
+  .atua-payment-amount {
+    font-size: clamp(27px, 7vw, 34px);
+  }
+
+  .atua-payment-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .atua-payment-card h2 {
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+
+  .atua-payment-summary-row {
+    gap: 10px;
+    margin-bottom: 13px;
+  }
+
+  .atua-payment-summary-row > span,
+  .atua-payment-summary-row > strong {
+    font-size: 13px;
+  }
+
+  .atua-payment-total-row > strong:first-child {
+    font-size: 15px;
+  }
+
+  .atua-payment-total-row > strong:last-child {
+    font-size: 17px;
+  }
+
+  .atua-payment-method {
+    padding: 12px 10px;
+    gap: 9px;
+  }
+
+  .atua-payment-method > svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .atua-payment-method-details strong {
+    font-size: 12px;
+  }
+
+  .atua-payment-method-details small {
+    font-size: 10px;
+  }
+
+  .atua-payment-selected {
+    font-size: 10px;
+  }
+
+  .atua-payment-security {
+    padding: 14px;
+    gap: 11px;
+  }
+
+  .atua-payment-sidebar {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .atua-payment-sidebar-total strong {
+    font-size: 21px;
+  }
+
+  .atua-payment-pay-button {
+    min-height: 54px;
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+
+  .atua-payment-disclaimer {
+    padding: 0 8px;
+  }
+
+  .atua-payment-modal {
+    padding: 24px 19px 20px;
+    border-radius: 16px;
+  }
+}
+
+/* Small mobile */
+
+@media (max-width: 380px) {
+  .atua-payment-layout {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .atua-payment-amount-card {
+    padding: 20px 16px;
+  }
+
+  .atua-payment-amount {
+    font-size: 27px;
+  }
+
+  .atua-payment-card {
+    padding: 14px;
+  }
+
+  .atua-payment-method {
+    flex-wrap: wrap;
+  }
+
+  .atua-payment-method-details {
+    flex-basis: calc(100% - 80px);
+  }
+
+  .atua-payment-selected {
+    margin-left: 35px;
+  }
+}
+
+/* Reduced motion accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .atua-payment *,
+  .atua-payment *::before,
+  .atua-payment *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

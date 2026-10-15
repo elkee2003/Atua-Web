@@ -1,62 +1,126 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import "../SendStyles/HomeScreen.css";
-import { FaSearchLocation } from "react-icons/fa";
+import { FaSearchLocation, FaClock, FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { DataStore } from "aws-amplify/datastore";
-import { Courier } from "../../../../../models";
+import { getCurrentUser } from "aws-amplify/auth";
+import { Courier, User } from "../../../../../models";
 
 function HomeScreen() {
-  const [map, setMap] = useState(null);
   const [currentPosition, setCurrentPosition] = useState(null);
   const [couriers, setCouriers] = useState([]);
+  const [lastDestination, setLastDestination] = useState("");
+  const [homeAddress, setHomeAddress] = useState("");
+
   const navigate = useNavigate();
 
+  // Load the last destination from browser storage.
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) =>
-          setCurrentPosition({
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          }),
-        (err) => {
-          console.error(err);
-          setCurrentPosition({ lat: 6.5244, lng: 3.3792 });
-        },
-        { enableHighAccuracy: true },
-      );
+    try {
+      const destination = localStorage.getItem("lastDestination");
+
+      if (destination) {
+        setLastDestination(destination);
+      }
+    } catch (error) {
+      console.error("Failed to load last destination:", error);
     }
   }, []);
 
-  console.log({ currentPosition });
-
-  // ✅ Fetch couriers from Amplify DataStore
-  const fetchCouriers = async () => {
-    try {
-      const onlineCouriers = await DataStore.query(Courier, (c) =>
-        c.isOnline.eq(true),
-      );
-      setCouriers(onlineCouriers);
-      console.log("couriers:", couriers);
-    } catch (error) {
-      console.error("Failed to fetch couriers:", error);
-    }
-  };
-
+  // Fetch the signed-in customer's home address from the User model.
   useEffect(() => {
+    let isMounted = true;
+
+    const fetchHomeAddress = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+
+        // Amplify userId corresponds to the Cognito user's sub.
+        const users = await DataStore.query(User, (u) =>
+          u.sub.eq(currentUser.userId),
+        );
+
+        const profile = users.find((user) => user.sub === currentUser.userId);
+
+        if (isMounted && profile) {
+          setHomeAddress(profile.address || profile.exactAddress || "");
+        }
+      } catch (error) {
+        console.error("Failed to load customer home address:", error);
+      }
+    };
+
+    fetchHomeAddress();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Get the customer's current location.
+  useEffect(() => {
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by this browser.");
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setCurrentPosition({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error("Failed to get current location:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 30000,
+      },
+    );
+  }, []);
+
+  // Fetch online couriers and observe updates.
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCouriers = async () => {
+      try {
+        const onlineCouriers = await DataStore.query(Courier, (c) =>
+          c.isOnline.eq(true),
+        );
+
+        if (isMounted) {
+          setCouriers(onlineCouriers);
+        }
+      } catch (error) {
+        console.error("Failed to fetch couriers:", error);
+      }
+    };
+
     fetchCouriers();
 
-    const subscription = DataStore.observe(Courier).subscribe(({ opType }) => {
-      if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
-        fetchCouriers();
-      }
+    const subscription = DataStore.observe(Courier).subscribe({
+      next: ({ opType }) => {
+        if (["INSERT", "UPDATE", "DELETE"].includes(opType)) {
+          fetchCouriers();
+        }
+      },
+      error: (error) => {
+        console.error("Courier observer error:", error);
+      },
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
-  // ✅ Get marker icon image based on courier type
+  // Get the marker image based on transportation type.
   const getImage = (type) => {
     switch (type) {
       case "Micro X":
@@ -72,21 +136,51 @@ function HomeScreen() {
     }
   };
 
+  const truncateAddress = (value) => {
+    if (!value) return "";
+
+    return value.length > 30 ? `${value.substring(0, 30)}...` : value;
+  };
+
+  const handleDestinationSearch = () => {
+    navigate("/send/destination_search");
+  };
+
+  const handleLastDestinationPress = () => {
+    navigate("/send/destination_search", {
+      state: { lastDestination },
+    });
+  };
+
+  const handleHomePress = () => {
+    navigate("/send/destination_search", {
+      state: { address: homeAddress },
+    });
+  };
+
   return (
     <div className="homeScreenContainer">
+      {/* Map */}
       {currentPosition ? (
         <div className="homeScreenMapCard">
           <GoogleMap
             mapContainerClassName="homeScreenMap"
             center={currentPosition}
             zoom={14}
-            onLoad={setMap}
-            onUnmount={() => setMap(null)}
+            options={{
+              streetViewControl: false,
+              mapTypeControl: false,
+              fullscreenControl: false,
+            }}
           >
             <Marker position={currentPosition} />
 
             {couriers
-              .filter((c) => c.lat && c.lng)
+              .filter(
+                (courier) =>
+                  typeof courier.lat === "number" &&
+                  typeof courier.lng === "number",
+              )
               .map((courier) => (
                 <Marker
                   key={courier.id}
@@ -96,7 +190,7 @@ function HomeScreen() {
                   }}
                   icon={{
                     url: getImage(courier.transportationType),
-                    scaledSize: new window.google.maps.Size(50, 70),
+                    scaledSize: new window.google.maps.Size(40, 50),
                   }}
                 />
               ))}
@@ -106,15 +200,51 @@ function HomeScreen() {
         <div className="homeScreenLoading">Loading map...</div>
       )}
 
+      {/* Search panel */}
       <div className="homeScreenSearchContainer">
         <button
+          type="button"
           className="homeScreenSearchCard"
-          onClick={() => navigate("/send/destination_search")}
+          onClick={handleDestinationSearch}
         >
           <span className="homeScreenSearchText">What's the destination?</span>
 
           <FaSearchLocation className="homeScreenSearchIcon" />
         </button>
+
+        {/* Last destination */}
+        {lastDestination && (
+          <button
+            type="button"
+            className="homeScreenDestinationRow"
+            onClick={handleLastDestinationPress}
+          >
+            <span className="homeScreenDestinationIcon">
+              <FaClock />
+            </span>
+
+            <span className="homeScreenDestinationText">
+              {truncateAddress(lastDestination)}
+            </span>
+          </button>
+        )}
+
+        {/* Customer's saved home address */}
+        {homeAddress && (
+          <button
+            type="button"
+            className="homeScreenDestinationRow"
+            onClick={handleHomePress}
+          >
+            <span className="homeScreenDestinationIcon homeScreenHomeIcon">
+              <FaHome />
+            </span>
+
+            <span className="homeScreenDestinationText">
+              {truncateAddress(homeAddress)}
+            </span>
+          </button>
+        )}
       </div>
     </div>
   );

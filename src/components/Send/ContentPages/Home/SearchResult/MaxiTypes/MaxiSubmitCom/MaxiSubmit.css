@@ -1,0 +1,73 @@
+
+/* ======================================================
+   MAXI SUBMIT
+   ====================================================== */
+
+.maxiSubmitContainer {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-right: 20px;
+  padding-left: 20px;
+  background: #f8fafc;
+}
+
+/* ======================================================
+   SUBMIT BUTTON
+   ====================================================== */
+
+.maxiSubmitButton {
+  display: flex;
+  width: 100%;
+  min-height: 56px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 75px;
+  padding: 18px 20px;
+  border: none;
+  border-radius: 16px;
+  background: #16a34a;
+  color: #fff;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    opacity 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.maxiSubmitButton:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.maxiSubmitButton:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.maxiSubmitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ======================================================
+   RESPONSIVE STYLES
+   ====================================================== */
+
+@media (max-width: 600px) {
+  .maxiSubmitContainer {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .maxiSubmitButton {
+    margin-bottom: 40px;
+    padding: 16px;
+    font-size: 15px;
+  }
+}

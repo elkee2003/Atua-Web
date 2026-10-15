@@ -1,31 +1,68 @@
 
-import { MediaUploadStatus, Order } from "../src/models";
 import { DataStore } from "aws-amplify/datastore";
 import { uploadData } from "aws-amplify/storage";
-import imageCompression from "browser-image-compression";
+import { MediaUploadStatus, Order } from "../src/models";
 
-// ======================================================
-// HELPERS
-// ======================================================
-
-const generateFileId = () => {
-  return crypto.randomUUID();
-};
-
-const getBlobFromUri = async (uri) => {
-  const response = await fetch(uri);
-
-  if (!response.ok) {
-    throw new Error(`Failed to read media: ${response.status}`);
+// Generate a unique filename using the browser's Crypto API.
+const generateUUID = () => {
+  if (globalThis.crypto?.randomUUID) {
+    return globalThis.crypto.randomUUID();
   }
 
-  return response.blob();
+  throw new Error("crypto.randomUUID() is not supported in this browser.");
 };
 
-// ======================================================
-// UPLOAD SENDER PHOTOS
-// ======================================================
+// Resize and compress an image using browser Canvas APIs.
+const compressImage = (file, maxWidth = 900, quality = 0.7) =>
+  new Promise((resolve, reject) => {
+    const image = new Image();
+    const objectUrl = URL.createObjectURL(file);
 
+    image.onload = () => {
+      try {
+        const scale = Math.min(1, maxWidth / image.width);
+        const canvas = document.createElement("canvas");
+
+        canvas.width = Math.round(image.width * scale);
+        canvas.height = Math.round(image.height * scale);
+
+        const context = canvas.getContext("2d");
+
+        if (!context) {
+          throw new Error("Could not create canvas context.");
+        }
+
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+        canvas.toBlob(
+          (blob) => {
+            URL.revokeObjectURL(objectUrl);
+
+            if (!blob) {
+              reject(new Error("Image compression failed."));
+              return;
+            }
+
+            resolve(blob);
+          },
+          "image/jpeg",
+          quality,
+        );
+      } catch (error) {
+        URL.revokeObjectURL(objectUrl);
+        reject(error);
+      }
+    };
+
+    image.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Could not load image for compression."));
+    };
+
+    image.src = objectUrl;
+  });
+
+// Upload sender photos to S3.
 export const uploadSenderPhotos = async (photos, userId) => {
   if (!photos?.length) return [];
 
@@ -33,34 +70,22 @@ export const uploadSenderPhotos = async (photos, userId) => {
 
   for (const photo of photos) {
     try {
-      // Convert the selected/local image URI to a File.
-      const originalBlob = photo.file
-        ? photo.file
-        : await getBlobFromUri(photo.uri);
+      // Supports a browser File, Blob, or an object containing a File/Blob.
+      const file = photo instanceof Blob ? photo : photo?.file;
 
-      const originalFile = new File(
-        [originalBlob],
-        photo.name || "sender-evidence.jpg",
-        {
-          type: originalBlob.type || "image/jpeg",
-        },
-      );
+      if (!file) {
+        throw new Error(
+          "Invalid photo. Expected a File, Blob, or { file: File } object.",
+        );
+      }
 
-      // Resize and compress in the browser.
-      const compressedFile = await imageCompression(originalFile, {
-        maxWidthOrHeight: 900,
-        initialQuality: 0.7,
-        useWebWorker: true,
-        fileType: "image/jpeg",
-      });
+      const compressedBlob = await compressImage(file, 900, 0.7);
 
-      const key =
-        `public/orders/${userId}/senderPreTransferPhotos/` +
-        `${generateFileId()}.jpg`;
+      const key = `public/orders/${userId}/senderPreTransferPhotos/${generateUUID()}.jpg`;
 
       const result = await uploadData({
         path: key,
-        data: compressedFile,
+        data: compressedBlob,
         options: {
           contentType: "image/jpeg",
         },
@@ -75,35 +100,27 @@ export const uploadSenderPhotos = async (photos, userId) => {
   return uploaded;
 };
 
-// ======================================================
-// UPLOAD SENDER VIDEO
-// ======================================================
-
+// Upload sender video to S3.
 export const uploadSenderVideo = async (video, userId) => {
-  if (!video?.uri && !video?.file) return null;
+  if (!video) return null;
 
   try {
-    const blob = video.file
-      ? video.file
-      : await getBlobFromUri(video.uri);
+    // Accept a File, Blob, or an object containing a File/Blob.
+    const file = video instanceof Blob ? video : video?.file;
 
-    // Preserve the video type where possible.
-    const contentType = blob.type || "video/mp4";
-    const extension = contentType.includes("webm")
-      ? "webm"
-      : contentType.includes("quicktime")
-        ? "mov"
-        : "mp4";
+    if (!file) {
+      throw new Error(
+        "Invalid video. Expected a File, Blob, or { file: File } object.",
+      );
+    }
 
-    const key =
-      `public/orders/${userId}/senderPreTransferVideo/` +
-      `${generateFileId()}.${extension}`;
+    const key = `public/orders/${userId}/senderPreTransferVideo/${generateUUID()}.mp4`;
 
     const result = await uploadData({
       path: key,
-      data: blob,
+      data: file,
       options: {
-        contentType,
+        contentType: "video/mp4",
       },
     }).result;
 
@@ -114,13 +131,9 @@ export const uploadSenderVideo = async (video, userId) => {
   }
 };
 
-// ======================================================
-// UPLOAD ALL EVIDENCE
-// ======================================================
-
+// Upload evidence and update the order's upload status.
 export const uploadEvidence = async (order, photos, video) => {
   try {
-    // Tell the driver that evidence is being uploaded.
     await DataStore.save(
       Order.copyOf(order, (updated) => {
         updated.mediaUploadStatus = MediaUploadStatus.UPLOADING;
@@ -132,18 +145,12 @@ export const uploadEvidence = async (order, photos, video) => {
       uploadSenderVideo(video, order.userID),
     ]);
 
-    // Save the uploaded S3 paths and clear local references.
-    const latestOrder = await DataStore.query(Order, order.id);
-
-    if (!latestOrder) {
-      throw new Error("Order not found while saving evidence.");
-    }
-
     await DataStore.save(
-      Order.copyOf(latestOrder, (updated) => {
+      Order.copyOf(order, (updated) => {
         updated.senderPreTransferPhotos = uploadedPhotos;
         updated.senderPreTransferVideo = uploadedVideo;
 
+        // Clear local evidence references after the upload attempt.
         updated.senderPreTransferLocalPhotos = null;
         updated.senderPreTransferLocalVideo = null;
 
@@ -156,17 +163,13 @@ export const uploadEvidence = async (order, photos, video) => {
     console.error("Evidence upload error:", error);
 
     try {
-      const latestOrder = await DataStore.query(Order, order.id);
-
-      if (latestOrder) {
-        await DataStore.save(
-          Order.copyOf(latestOrder, (updated) => {
-            updated.mediaUploadStatus = MediaUploadStatus.FAILED;
-          }),
-        );
-      }
-    } catch (saveError) {
-      console.error("Failed to save evidence upload status:", saveError);
+      await DataStore.save(
+        Order.copyOf(order, (updated) => {
+          updated.mediaUploadStatus = MediaUploadStatus.FAILED;
+        }),
+      );
+    } catch (statusError) {
+      console.error("Failed to update evidence upload status:", statusError);
     }
   }
 };

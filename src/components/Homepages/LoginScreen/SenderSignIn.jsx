@@ -16,11 +16,14 @@ const SignIn = () => {
 
   const onSignIn = async (data) => {
     if (loading) return;
+
     setLoading(true);
 
     try {
+      const email = data.email?.trim().toLowerCase();
+
       const { isSignedIn } = await signIn({
-        username: data.email,
+        username: email,
         password: data.password,
       });
 
@@ -28,16 +31,17 @@ const SignIn = () => {
         const session = await fetchAuthSession();
         const accessToken = session.tokens?.accessToken?.toString();
 
+        if (!accessToken) {
+          throw new Error("Unable to retrieve your session. Please try again.");
+        }
+
         const payload = JSON.parse(atob(accessToken.split(".")[1]));
         const userGroups = payload["cognito:groups"] || [];
         const userRole = payload["custom:role"] || "";
 
         const allowedRole = "user";
 
-        if (
-          userGroups.includes(allowedRole) ||
-          userRole === allowedRole
-        ) {
+        if (userGroups.includes(allowedRole) || userRole === allowedRole) {
           navigate("/send/home");
         } else {
           alert("Wrong app for this account");
@@ -45,16 +49,15 @@ const SignIn = () => {
         }
       }
     } catch (error) {
-      alert(error.message);
+      alert(error?.message || "Sign in failed");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
-    <section className="login-section">
+    <section id="signIn" className="login-section">
       <div className="login-wrapper">
-
         <div className="login-left">
           <h1>Welcome Back</h1>
           <p>
@@ -95,11 +98,7 @@ const SignIn = () => {
               }}
             />
 
-            <CustomButton
-              text="Sign In"
-              onClick={handleSubmit(onSignIn)}
-              loading={loading}
-            />
+            <CustomButton text="Sign In" type="submit" loading={loading} />
 
             <div className="login-links">
               <span onClick={() => navigate("/sender_forgot_password")}>
@@ -112,7 +111,6 @@ const SignIn = () => {
             </div>
           </form>
         </div>
-
       </div>
     </section>
   );

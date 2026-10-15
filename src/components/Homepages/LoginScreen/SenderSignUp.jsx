@@ -14,38 +14,50 @@ const SignUp = () => {
   const navigate = useNavigate();
 
   const onSignUp = async (data) => {
+    if (loading) return;
+
     if (!agree) {
       alert("Please agree to terms");
       return;
     }
 
+    const email = data.email?.trim().toLowerCase();
+
+    if (!email) {
+      alert("Email is required");
+      return;
+    }
+
     setLoading(true);
+
+    // Save before the asynchronous signup request.
+    localStorage.setItem("signupEmail", email);
 
     try {
       await signUp({
-        username: data.email,
+        username: email,
         password: data.password,
         options: {
           userAttributes: {
-            email: data.email,
+            email,
             "custom:role": "user",
           },
           autoSignIn: true,
         },
       });
 
-      navigate(`/sender_confirm_email?username=${data.email}`);
+      navigate(`/sender_confirm_email?username=${encodeURIComponent(email)}`);
     } catch (error) {
-      alert(error.message);
+      console.error("Signup error:", error);
+      alert(error?.message || "Unable to create account");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
     <section className="login-section">
       <div className="login-wrapper login-reverse">
-
         <div className="login-left">
           <h1>Join Atua</h1>
           <p>Start sending packages with speed and confidence.</p>
@@ -92,8 +104,7 @@ const SignUp = () => {
               isPassword
               rules={{
                 validate: (value) =>
-                  value === getValues("password") ||
-                  "Passwords do not match",
+                  value === getValues("password") || "Passwords do not match",
               }}
             />
 
@@ -108,19 +119,15 @@ const SignUp = () => {
 
             <CustomButton
               text="Create Account"
-              onClick={handleSubmit(onSignUp)}
+              type="submit"
               loading={loading}
             />
 
-            <p
-              className="login-switch"
-              onClick={() => navigate("/")}
-            >
+            <p className="login-switch" onClick={() => navigate("/")}>
               Already have an account? Sign In
             </p>
           </form>
         </div>
-
       </div>
     </section>
   );

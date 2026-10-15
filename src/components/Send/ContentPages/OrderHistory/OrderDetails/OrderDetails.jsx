@@ -871,9 +871,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           {isActiveOrder && (
             <button
               className="od-button od-button--primary"
-              onClick={() =>
-                navigate(`/screens/orderTrackingScreen/${order.id}`)
-              }
+              onClick={() => navigate(`/send/order_tracking/${order.id}`)}
             >
               Track Order <FaArrowRight />
             </button>

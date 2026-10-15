@@ -14,6 +14,18 @@ import SearchResult from "../../components/Send/ContentPages/Home/SearchResult/S
 import Checkout from "../../components/Send/ContentPages/Home/SearchResult/Checkout";
 import Payment from "../../components/Send/ContentPages/Home/PaymentCom/Payment";
 
+// Maxi
+import MaxiTypes from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiTypeCategories/MaxiVehicleCategories";
+import MaxiVehicleGallery from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiTypeCategories/MaxiVehicleGallery/MaxiVehicleGallery";
+
+import MaxiCargoDetails from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiDetails/MaxiCargoDetailsCom/MaxiCargoDetails";
+
+import MaxiLoadingDetails from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiDetails/MaxiLoadingDetailsCom/MaxiLoadingDetails";
+
+import MaxiRecipient from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiDetails/MaxiRecipientCom/MaxiRecipient";
+
+import MaxiSubmit from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiSubmitCom/MaxiSubmit";
+
 // Order Page
 import OrderHistoryMain from "../../components/Send/ContentPages/OrderHistory/OrderHistoryMain/OrderHistoryMain";
 import OrderDetails from "../../components/Send/ContentPages/OrderHistory/OrderDetails/OrderDetails";
@@ -58,6 +70,27 @@ const SendRoutes = () => (
 
         {/* Checkout*/}
         <Route path="checkout" element={<Checkout />} />
+
+        {/* Maxi Type */}
+        <Route path="maxitypes" element={<MaxiTypes />} />
+
+        {/* Maxi Vehicle Gallery */}
+        <Route path="maxi_vehicle_gallery" element={<MaxiVehicleGallery />} />
+
+        {/* Maxi Vehicle Gallery */}
+        <Route path="maxi_vehicle_gallery" element={<MaxiVehicleGallery />} />
+
+        {/* Maxi Cargo Details */}
+        <Route path="maxicargodetails" element={<MaxiCargoDetails />} />
+
+        {/* Maxi Loading Details */}
+        <Route path="maxi_loading_details" element={<MaxiLoadingDetails />} />
+
+        {/* Maxi Recipient */}
+        <Route path="maxi_recipient_details" element={<MaxiRecipient />} />
+
+        {/* Maxi Submit */}
+        <Route path="maxi_submit" element={<MaxiSubmit />} />
 
         {/* Payment*/}
         <Route path="payment/:orderId" element={<Payment />} />

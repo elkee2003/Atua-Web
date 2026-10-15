@@ -1,0 +1,121 @@
+/* =====================================================
+   SAVED PAYMENT METHODS
+   ===================================================== */
+.saved-payment-methods {
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 18px;
+  background: #f8f9fb;
+  color: #111827;
+  box-sizing: border-box;
+}
+.saved-payment-methods *,
+.saved-payment-methods *::before,
+.saved-payment-methods *::after { box-sizing: border-box; }
+.saved-payment-methods .saved-payment-methods__section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 12px;
+}
+.saved-payment-methods .saved-payment-methods__section-header-content { flex: 1; min-width: 0; padding-right: 12px; }
+.saved-payment-methods .saved-payment-methods__section-title { margin: 0 0 4px; font-size: 15px; font-weight: 700; line-height: 1.35; color: #111827; }
+.saved-payment-methods .saved-payment-methods__section-subtitle { margin: 0; font-size: 12px; line-height: 17px; color: #6b7280; }
+.saved-payment-methods .saved-payment-methods__loading-container {
+  min-height: 90px; padding: 18px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 16px; text-align: center;
+}
+.saved-payment-methods .saved-payment-methods__loading-spinner { flex-shrink: 0; animation: saved-payment-spin .75s linear infinite; }
+.saved-payment-methods .saved-payment-methods__loading-text { margin: 9px 0 0; font-size: 12px; color: #6b7280; }
+@keyframes saved-payment-spin { to { transform: rotate(360deg); } }
+.saved-payment-methods .saved-payment-methods__payment-methods-list { display: flex; flex-direction: column; width: 100%; min-width: 0; margin-bottom: 12px; }
+.saved-payment-methods .saved-payment-methods__payment-method-card {
+  display: flex; align-items: stretch; width: 100%; min-width: 0; min-height: 88px;
+  margin-bottom: 10px; overflow: hidden; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 16px;
+  transition: border-color .18s ease, opacity .18s ease;
+}
+.saved-payment-methods .saved-payment-methods__payment-method-card:last-child { margin-bottom: 0; }
+.saved-payment-methods .saved-payment-methods__payment-method-card-selected { border: 1.5px solid #111827; }
+.saved-payment-methods .saved-payment-methods__payment-method-card-disabled { opacity: .55; }
+.saved-payment-methods .saved-payment-methods__payment-method-select-area {
+  display: flex; flex: 1; min-width: 0; flex-direction: row; align-items: center;
+  padding: 14px 15px; border: 0; background: transparent; color: inherit;
+  font: inherit; text-align: left; cursor: pointer;
+}
+.saved-payment-methods .saved-payment-methods__payment-method-select-area:disabled { cursor: not-allowed; }
+.saved-payment-methods .saved-payment-methods__payment-method-select-area:focus-visible,
+.saved-payment-methods .saved-payment-methods__delete-button:focus-visible,
+.saved-payment-methods .saved-payment-methods__pay-button:focus-visible,
+.saved-payment-methods .saved-payment-methods__new-card-button:focus-visible { outline: 2px solid #374151; outline-offset: 2px; }
+.saved-payment-methods .saved-payment-methods__radio-outer {
+  display: flex; flex-shrink: 0; align-items: center; justify-content: center;
+  width: 21px; height: 21px; margin-right: 13px; border: 1.5px solid #d1d5db; border-radius: 50%;
+}
+.saved-payment-methods .saved-payment-methods__radio-outer-selected { border-color: #111827; }
+.saved-payment-methods .saved-payment-methods__radio-inner { width: 11px; height: 11px; border-radius: 50%; background: #111827; }
+.saved-payment-methods .saved-payment-methods__card-information { display: flex; flex: 1; min-width: 0; flex-direction: column; overflow-wrap: anywhere; }
+.saved-payment-methods .saved-payment-methods__card-top-row { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; min-width: 0; margin-bottom: 5px; }
+.saved-payment-methods .saved-payment-methods__card-brand { min-width: 0; flex-shrink: 1; font-size: 13.5px; font-weight: 700; line-height: 1.35; color: #111827; }
+.saved-payment-methods .saved-payment-methods__card-number { margin-bottom: 4px; font-size: 13px; font-weight: 600; line-height: 1.35; letter-spacing: .4px; color: #374151; }
+.saved-payment-methods .saved-payment-methods__card-expiry { font-size: 11px; line-height: 1.4; color: #6b7280; }
+.saved-payment-methods .saved-payment-methods__card-bank { margin-top: 2px; overflow: hidden; font-size: 10.5px; line-height: 1.4; color: #9ca3af; text-overflow: ellipsis; white-space: nowrap; }
+.saved-payment-methods .saved-payment-methods__default-badge { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; margin-left: 8px; padding: 3px 7px; border-radius: 6px; background: #f3f4f6; }
+.saved-payment-methods .saved-payment-methods__default-badge-text { font-size: 9.5px; font-weight: 700; line-height: 1.3; color: #374151; white-space: nowrap; }
+.saved-payment-methods .saved-payment-methods__delete-button {
+  display: flex; flex-shrink: 0; align-self: center; align-items: center; justify-content: center;
+  width: 48px; min-width: 48px; min-height: 72px; border: 0; border-left: 1px solid #e5e7eb;
+  border-radius: 0; background: #fff; color: #dc2626; cursor: pointer;
+}
+.saved-payment-methods .saved-payment-methods__delete-button:hover:not(:disabled) { background: #fef2f2; color: #b91c1c; }
+.saved-payment-methods .saved-payment-methods__delete-button:disabled { cursor: not-allowed; opacity: .55; }
+.saved-payment-methods .saved-payment-methods__pay-button {
+  display: flex; flex-direction: row; align-items: center; justify-content: center;
+  width: 100%; min-height: 52px; margin-top: 2px; padding: 0 18px;
+  border: 0; border-radius: 14px; background: #111827; color: #fff; cursor: pointer;
+  transition: background .18s ease, opacity .18s ease;
+}
+.saved-payment-methods .saved-payment-methods__pay-button:hover:not(:disabled) { background: #1f2937; }
+.saved-payment-methods .saved-payment-methods__pay-button:disabled { opacity: .55; cursor: not-allowed; }
+.saved-payment-methods .saved-payment-methods__pay-button-text { flex: 1; margin: 0 10px; font-size: 14.5px; font-weight: 700; line-height: 1.4; color: #fff; text-align: center; }
+.saved-payment-methods .saved-payment-methods__new-card-button {
+  display: flex; flex-direction: row; align-items: center; justify-content: center;
+  width: 100%; min-height: 48px; margin-top: 10px; padding: 0 18px;
+  border: 1px solid #d1d5db; border-radius: 14px; background: #fff; color: #111827; cursor: pointer;
+  transition: border-color .18s ease, background .18s ease, opacity .18s ease;
+}
+.saved-payment-methods .saved-payment-methods__new-card-button:hover:not(:disabled) { border-color: #9ca3af; background: #f9fafb; }
+.saved-payment-methods .saved-payment-methods__new-card-button:disabled { opacity: .55; cursor: not-allowed; }
+.saved-payment-methods .saved-payment-methods__new-card-button-text { margin-left: 7px; font-size: 13.5px; font-weight: 700; line-height: 1.4; color: #111827; }
+.saved-payment-methods .saved-payment-methods__empty-container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px 22px; margin-bottom: 12px; border: 1px solid #e5e7eb;
+  border-radius: 16px; background: #fff; text-align: center;
+}
+.saved-payment-methods .saved-payment-methods__empty-icon { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; margin-bottom: 10px; border-radius: 50%; background: #f3f4f6; color: #6b7280; }
+.saved-payment-methods .saved-payment-methods__empty-title { margin: 0 0 5px; font-size: 14px; font-weight: 700; line-height: 1.4; color: #111827; }
+.saved-payment-methods .saved-payment-methods__empty-text { max-width: 290px; margin: 0; font-size: 11.5px; line-height: 17px; color: #6b7280; }
+.saved-payment-methods .saved-payment-methods__error-container { display: flex; align-items: flex-start; gap: 10px; padding: 14px; margin-bottom: 12px; border: 1px solid #fecaca; border-radius: 16px; background: #fef2f2; }
+.saved-payment-methods .saved-payment-methods__error-icon { flex-shrink: 0; margin-top: 1px; color: #dc2626; }
+.saved-payment-methods .saved-payment-methods__error-content { flex: 1; min-width: 0; }
+.saved-payment-methods .saved-payment-methods__error-title { margin: 0 0 4px; font-size: 13px; font-weight: 700; line-height: 1.4; color: #991b1b; }
+.saved-payment-methods .saved-payment-methods__error-text { margin: 0; font-size: 11.5px; line-height: 17px; color: #6b7280; overflow-wrap: anywhere; }
+.saved-payment-methods .saved-payment-methods__retry-button { display: inline-flex; align-items: center; justify-content: center; min-width: 90px; min-height: 36px; margin-top: 10px; padding: 0 14px; border: 0; border-radius: 9px; background: #111827; color: #fff; font-size: 11.5px; font-weight: 700; cursor: pointer; }
+.saved-payment-methods .saved-payment-methods__retry-button:disabled { opacity: .55; cursor: not-allowed; }
+.saved-payment-methods .saved-payment-methods__security-note { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 10px; margin-top: 12px; color: #6b7280; }
+.saved-payment-methods .saved-payment-methods__security-note-text { flex: 1; margin: 0; font-size: 10.5px; line-height: 15px; color: #6b7280; text-align: center; }
+@media (max-width: 480px) {
+  .saved-payment-methods .saved-payment-methods__payment-method-card { min-height: 82px; border-radius: 13px; }
+  .saved-payment-methods .saved-payment-methods__payment-method-select-area { padding: 12px 10px; }
+  .saved-payment-methods .saved-payment-methods__radio-outer { width: 19px; height: 19px; margin-right: 9px; }
+  .saved-payment-methods .saved-payment-methods__radio-inner { width: 10px; height: 10px; }
+  .saved-payment-methods .saved-payment-methods__card-brand { font-size: 12.5px; }
+  .saved-payment-methods .saved-payment-methods__card-number { font-size: 12px; }
+  .saved-payment-methods .saved-payment-methods__default-badge { margin-left: 2px; padding: 3px 5px; }
+  .saved-payment-methods .saved-payment-methods__default-badge-text { font-size: 9px; }
+  .saved-payment-methods .saved-payment-methods__delete-button { width: 40px; min-width: 40px; }
+  .saved-payment-methods .saved-payment-methods__pay-button { min-height: 49px; padding: 0 12px; }
+  .saved-payment-methods .saved-payment-methods__pay-button-text { font-size: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .saved-payment-methods *, .saved-payment-methods *::before, .saved-payment-methods *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

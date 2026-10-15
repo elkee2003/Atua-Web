@@ -127,6 +127,13 @@ function Checkout() {
 
       const order = await DataStore.save(
         new Order({
+          /* Environment */
+
+          // REAL customer orders must be PRODUCTION.
+          // TEST orders should explicitly use TEST.
+          orderEnvironment: "PRODUCTION",
+          // orderEnvironment: "TEST",
+
           /* Recipient */
 
           recipientName: recipientName.trim(),
@@ -191,6 +198,10 @@ function Checkout() {
 
           userID: dbUser.id,
 
+          /* Order Status */
+
+          status: "AWAITING_PAYMENT",
+
           /* Payment */
 
           paymentStatus: "PENDING",
@@ -210,11 +221,12 @@ function Checkout() {
       setLoading(false);
     }
   };
+
   return (
     <div className="checkoutPage">
       {/* ======================================================
             HEADER
-        ====================================================== */}
+      ====================================================== */}
 
       <div className="checkoutHeader">
         <button
@@ -236,7 +248,7 @@ function Checkout() {
 
       {/* ======================================================
             CONTENT
-        ====================================================== */}
+      ====================================================== */}
 
       <div className="checkoutContent">
         {/* Recipient */}
@@ -350,7 +362,7 @@ function Checkout() {
 
       {/* ======================================================
             FOOTER
-        ====================================================== */}
+      ====================================================== */}
 
       <div className="checkoutFooter">
         <button
