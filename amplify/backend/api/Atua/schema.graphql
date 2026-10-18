@@ -469,6 +469,10 @@ type Order @model @auth(rules: [{ allow: public }]) {
   id: ID!
 
   # ---------------- BASIC INFO ----------------
+  senderName: String
+  senderNumber: String
+  senderNumber2: String
+
   recipientName: String
   recipientNumber: String
   recipientNumber2: String

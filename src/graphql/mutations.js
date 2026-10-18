@@ -619,6 +619,9 @@ export const createPayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -800,6 +803,9 @@ export const updatePayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -981,6 +987,9 @@ export const deletePayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1155,6 +1164,9 @@ export const createOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1370,6 +1382,9 @@ export const updateOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1585,6 +1600,9 @@ export const deleteOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1911,6 +1929,9 @@ export const createOrder = /* GraphQL */ `
   ) {
     createOrder(input: $input, condition: $condition) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2132,6 +2153,9 @@ export const updateOrder = /* GraphQL */ `
   ) {
     updateOrder(input: $input, condition: $condition) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2353,6 +2377,9 @@ export const deleteOrder = /* GraphQL */ `
   ) {
     deleteOrder(input: $input, condition: $condition) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2658,6 +2685,9 @@ export const createCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2898,6 +2928,9 @@ export const updateCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3138,6 +3171,9 @@ export const deleteCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3378,6 +3414,9 @@ export const createCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3614,6 +3653,9 @@ export const updateCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3850,6 +3892,9 @@ export const deleteCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2

@@ -8,9 +8,10 @@ import AdminHome from "../../components/AdminCom/ContentPagesAdmin/Home/AdminHom
 import ControlTower from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/ControlTower/ControlTower";
 import Alerts from "../../components/AdminCom/ContentPagesAdmin/Alerts/Alerts";
 import Profile from "../../components/AdminCom/ContentPagesAdmin/Profile/Profile";
-import UsersDashboard from "../../components/AdminCom/ContentPagesAdmin/Profile/UsersDashboard/UsersDashboard";
+// import UsersDashboard from "../../components/AdminCom/ContentPagesAdmin/Profile/UsersDashboard/UsersDashboard";
 import CourierDashboard from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierDashboard/CourierDashboard";
 import UserDashboard from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/User/UserDashboard";
+import Orders from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Order/OrderDashboard/OrderDashboard";
 import CourierFullProfile from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierFullProfile/CourierFullProfile";
 import CourierOrders from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierOrders/CourierOrders";
 import CourierAnalytics from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierAnalytics/CourierAnalytics";
@@ -20,8 +21,12 @@ import CourierReviews from "../../components/AdminCom/ContentPagesAdmin/Home/Ope
 import CourierReports from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierReports/CourierReports";
 import CourierDocuments from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierDocuments/CourierDocuments";
 import CourierLiveTrackingPage from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierLiveTracking/CourierLiveTracking";
-import OrderDetails from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Order/OrderDetails/OrderDetails";
+import CourierOrderDetails from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Courier/CourierOrders/Components/CourierOrderDetails/OrderDetails";
 import UserFullProfile from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/User/FullDetails.jsx/UserFullProfile";
+import OrderDetails from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Order/OrderDetails/OrderDetails";
+import OrderLiveTracking from "../../components/AdminCom/ContentPagesAdmin/Home/Operations/Order/OrderLiveTracking/OrderLiveTracking";
+
+import PaymentsAndFunds from "../../components/AdminCom/ContentPagesAdmin/Home/Finance/Payments/PaymentsAndFunds/PaymentsAndFunds";
 
 const AdminRoutes = () => (
   <GoogleMapsProvider>
@@ -40,12 +45,16 @@ const AdminRoutes = () => (
         <Route path="profile" element={<Profile />} />
 
         {/* Users Dashboard */}
-        <Route path="users_dashboard" element={<UsersDashboard />} />
+        {/* <Route path="users_dashboard" element={<UsersDashboard />} /> */}
+
+        {/* User Dashboard */}
+        <Route path="user_dashboard" element={<UserDashboard />} />
 
         {/* Courier Dashboard */}
         <Route path="courier_dashboard" element={<CourierDashboard />} />
-        {/* User Dashboard */}
-        <Route path="user_dashboard" element={<UserDashboard />} />
+
+        {/* Orders*/}
+        <Route path="orders" element={<Orders />} />
 
         {/* Full Courier Profile */}
         <Route
@@ -79,11 +88,23 @@ const AdminRoutes = () => (
           element={<CourierLiveTrackingPage />}
         />
 
-        {/* Order Details */}
-        <Route path="order_details/:id" element={<OrderDetails />} />
+        {/* Courier Order Details */}
+        <Route
+          path="courier_order_details/:id"
+          element={<CourierOrderDetails />}
+        />
 
         {/* Full User Profile */}
         <Route path="user_full_profile/:id" element={<UserFullProfile />} />
+
+        {/* Order Details */}
+        <Route path="order_details/:id" element={<OrderDetails />} />
+
+        {/* Order Live Tracking */}
+        <Route path="order_livetracing/:id" element={<OrderLiveTracking />} />
+
+        {/* Payments & Funds */}
+        <Route path="payments" element={<PaymentsAndFunds />} />
 
         {/* for invalid route */}
         <Route

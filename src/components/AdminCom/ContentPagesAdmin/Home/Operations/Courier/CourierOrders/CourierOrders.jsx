@@ -677,7 +677,7 @@ function CourierOrders() {
       return;
     }
 
-    navigate(`/admin/order_details/${order.id}`);
+    navigate(`/admin/courier_order_details/${order.id}`);
   };
 
   /*

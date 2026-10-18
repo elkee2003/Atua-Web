@@ -1518,6 +1518,27 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "senderName": {
+                    "name": "senderName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "senderNumber": {
+                    "name": "senderNumber",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "senderNumber2": {
+                    "name": "senderNumber2",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "recipientName": {
                     "name": "recipientName",
                     "isArray": false,
@@ -4486,5 +4507,5 @@ export const schema = {
         }
     },
     "codegenVersion": "3.4.4",
-    "version": "12d70129f949b8093f6882bb1d8a6ac0"
+    "version": "fadc6dff6492ed1be5a6f683615e879f"
 };

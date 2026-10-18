@@ -1086,6 +1086,9 @@ export const getPayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1437,6 +1440,9 @@ export const getOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2013,6 +2019,9 @@ export const getOrder = /* GraphQL */ `
   query GetOrder($id: ID!) {
     getOrder(id: $id) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2236,6 +2245,9 @@ export const listOrders = /* GraphQL */ `
     listOrders(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2391,6 +2403,9 @@ export const syncOrders = /* GraphQL */ `
     ) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2548,6 +2563,9 @@ export const ordersByAssignedCourierId = /* GraphQL */ `
     ) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2707,6 +2725,9 @@ export const ordersByAssignmentStatusAndAssignmentExpiresAt = /* GraphQL */ `
     ) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2864,6 +2885,9 @@ export const ordersByRecipientTrackingToken = /* GraphQL */ `
     ) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3021,6 +3045,9 @@ export const ordersByUserID = /* GraphQL */ `
     ) {
       items {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3249,6 +3276,9 @@ export const getCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3671,6 +3701,9 @@ export const getCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2

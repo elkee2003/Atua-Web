@@ -516,6 +516,9 @@ export const onCreatePayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -694,6 +697,9 @@ export const onUpdatePayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -872,6 +878,9 @@ export const onDeletePayment = /* GraphQL */ `
       reference
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1043,6 +1052,9 @@ export const onCreateOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1255,6 +1267,9 @@ export const onUpdateOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1467,6 +1482,9 @@ export const onDeleteOffer = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -1790,6 +1808,9 @@ export const onCreateOrder = /* GraphQL */ `
   subscription OnCreateOrder($filter: ModelSubscriptionOrderFilterInput) {
     onCreateOrder(filter: $filter) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2008,6 +2029,9 @@ export const onUpdateOrder = /* GraphQL */ `
   subscription OnUpdateOrder($filter: ModelSubscriptionOrderFilterInput) {
     onUpdateOrder(filter: $filter) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2226,6 +2250,9 @@ export const onDeleteOrder = /* GraphQL */ `
   subscription OnDeleteOrder($filter: ModelSubscriptionOrderFilterInput) {
     onDeleteOrder(filter: $filter) {
       id
+      senderName
+      senderNumber
+      senderNumber2
       recipientName
       recipientNumber
       recipientNumber2
@@ -2530,6 +2557,9 @@ export const onCreateCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -2769,6 +2799,9 @@ export const onUpdateCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3008,6 +3041,9 @@ export const onDeleteCourierReport = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3247,6 +3283,9 @@ export const onCreateCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3482,6 +3521,9 @@ export const onUpdateCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2
@@ -3717,6 +3759,9 @@ export const onDeleteCourierReview = /* GraphQL */ `
       orderID
       order {
         id
+        senderName
+        senderNumber
+        senderNumber2
         recipientName
         recipientNumber
         recipientNumber2

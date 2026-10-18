@@ -762,6 +762,9 @@ type EagerOrder = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly senderName?: string | null;
+  readonly senderNumber?: string | null;
+  readonly senderNumber2?: string | null;
   readonly recipientName?: string | null;
   readonly recipientNumber?: string | null;
   readonly recipientNumber2?: string | null;
@@ -904,6 +907,9 @@ type LazyOrder = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
+  readonly senderName?: string | null;
+  readonly senderNumber?: string | null;
+  readonly senderNumber2?: string | null;
   readonly recipientName?: string | null;
   readonly recipientNumber?: string | null;
   readonly recipientNumber2?: string | null;
