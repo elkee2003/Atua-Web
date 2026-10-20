@@ -38,7 +38,10 @@ export default function MaxiReviewScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const {
-    maxiReviewScreenRecipientName,
+    senderName,
+    senderNumber,
+    senderNumber2,
+    recipientName,
     recipientNumber,
     recipientNumber2,
     orderDetails,
@@ -446,6 +449,54 @@ export default function MaxiReviewScreen() {
           </div>
         </div>
 
+        {/* SENDER */}
+        <div className="maxiReviewScreenCard">
+          <div className="maxiReviewScreenCardHeader">
+            <div className="maxiReviewScreenSectionIcon">
+              <UserRound size={17} color="#F97316" strokeWidth={2} />
+            </div>
+
+            <div>
+              <span className="maxiReviewScreenSectionTitle">Sender</span>
+              <span className="maxiReviewScreenSectionSubtitle">
+                Pickup contact information
+              </span>
+            </div>
+          </div>
+
+          <div className="maxiReviewScreenRecipientCard">
+            <div className="maxiReviewScreenAvatar">
+              <span className="maxiReviewScreenAvatarText">
+                {senderName?.charAt(0)?.toUpperCase() || "S"}
+              </span>
+            </div>
+
+            <div className="maxiReviewScreenRecipientInfo">
+              <span className="maxiReviewScreenRecipientName">
+                {senderName || "Sender"}
+              </span>
+
+              <div className="maxiReviewScreenPhoneRow">
+                <Phone size={13} color="#64748B" strokeWidth={2} />
+
+                <span className="maxiReviewScreenPhoneText">
+                  {senderNumber || "No phone number"}
+                </span>
+              </div>
+
+              {senderNumber2 && (
+                <div className="maxiReviewScreenPhoneRow">
+                  <Phone size={13} color="#64748B" strokeWidth={2} />
+
+                  <span className="maxiReviewScreenPhoneText">
+                    Backup: {senderNumber2}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
         {/* RECIPIENT */}
         <div className="maxiReviewScreenCard">
           <div className="maxiReviewScreenCardHeader">
@@ -464,13 +515,13 @@ export default function MaxiReviewScreen() {
           <div className="maxiReviewScreenRecipientCard">
             <div className="maxiReviewScreenAvatar">
               <span className="maxiReviewScreenAvatarText">
-                {maxiReviewScreenRecipientName?.charAt(0)?.toUpperCase() || "R"}
+                {recipientName?.charAt(0)?.toUpperCase() || "R"}
               </span>
             </div>
 
             <div className="maxiReviewScreenRecipientInfo">
               <span className="maxiReviewScreenRecipientName">
-                {maxiReviewScreenRecipientName || "Recipient"}
+                {recipientName || "Recipient"}
               </span>
 
               <div className="maxiReviewScreenPhoneRow">

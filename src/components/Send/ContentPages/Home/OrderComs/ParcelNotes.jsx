@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 
@@ -11,20 +11,48 @@ function ParcelNotes() {
   const navigate = useNavigate();
 
   const {
+    senderName,
+    senderNumber,
+    senderNumber2,
     recipientName,
     recipientNumber,
     recipientNumber2,
     orderDetails,
+    setSenderName,
+    setSenderNumber,
+    setSenderNumber2,
     setRecipientName,
     setRecipientNumber,
     setRecipientNumber2,
     setOrderDetails,
   } = useOrderContext();
 
-  useAuthContext();
+  const { dbUser } = useAuthContext();
 
   const [recipientNameError, setRecipientNameError] = useState("");
   const [recipientNumberError, setRecipientNumberError] = useState("");
+  const [senderNameError, setSenderNameError] = useState("");
+  const [senderNumberError, setSenderNumberError] = useState("");
+
+  // useEffect to autofill sender details
+
+  useEffect(() => {
+    if (!dbUser) return;
+
+    const fullName = [dbUser.firstName, dbUser.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+
+    // Populate sender details only when the fields are empty.
+    if (!senderName?.trim() && fullName) {
+      setSenderName(fullName);
+    }
+
+    if (!senderNumber?.trim() && dbUser.phoneNumber) {
+      setSenderNumber(dbUser.phoneNumber);
+    }
+  }, [dbUser, senderName, senderNumber, setSenderName, setSenderNumber]);
 
   /* ==========================================================
       VALIDATION
@@ -33,15 +61,35 @@ function ParcelNotes() {
   const validate = () => {
     let hasError = false;
 
-    if (!recipientName.trim() || recipientName.trim().length < 2) {
+    // Sender name
+    if (!senderName?.trim() || senderName.trim().length < 2) {
+      setSenderNameError("Sender name must be at least 2 characters.");
+      hasError = true;
+    } else {
+      setSenderNameError("");
+    }
+
+    // Sender phone number
+    if (!senderNumber?.trim() || senderNumber.trim().length < 11) {
+      setSenderNumberError(
+        "Sender phone number must be at least 11 characters.",
+      );
+      hasError = true;
+    } else {
+      setSenderNumberError("");
+    }
+
+    // Recipient name
+    if (!recipientName?.trim() || recipientName.trim().length < 2) {
       setRecipientNameError("Recipient name must be at least 2 characters.");
       hasError = true;
     } else {
       setRecipientNameError("");
     }
 
-    if (!recipientNumber || recipientNumber.length < 11) {
-      setRecipientNumberError("Phone number must be at least 11 digits.");
+    // Recipient phone number
+    if (!recipientNumber?.trim() || recipientNumber.trim().length < 11) {
+      setRecipientNumberError("Phone number must be at least 11 characters.");
       hasError = true;
     } else {
       setRecipientNumberError("");
@@ -61,7 +109,10 @@ function ParcelNotes() {
   };
 
   const isFormValid =
-    recipientName.trim().length >= 2 && recipientNumber.length >= 11;
+    senderName.trim().length >= 2 &&
+    senderNumber.trim().length >= 11 &&
+    recipientName.trim().length >= 2 &&
+    recipientNumber.trim().length >= 11;
 
   return (
     <div className="parcelNotesPage">
@@ -75,15 +126,75 @@ function ParcelNotes() {
         <div>
           <h1 className="parcelNotesTitle">New Delivery</h1>
 
-          <p className="parcelNotesSubtitle">
-            Enter recipient and package details
-          </p>
+          <p className="parcelNotesSubtitle">Enter Package Details</p>
         </div>
       </div>
 
       {/* ================= Form Card ================= */}
 
       <div className="parcelNotesCard">
+        {/* ================= Sender Details ================= */}
+
+        <div className="parcelNotesInputGroup">
+          <label className="parcelNotesLabel">Sender Name</label>
+
+          <input
+            type="text"
+            value={senderName}
+            placeholder="e.g. John Doe"
+            onChange={(e) => {
+              setSenderName(e.target.value);
+              setSenderNameError("");
+            }}
+            className={
+              senderNameError
+                ? "parcelNotesInputField parcelNotesInputError"
+                : "parcelNotesInputField"
+            }
+          />
+
+          {senderNameError && (
+            <span className="parcelNotesErrorText">{senderNameError}</span>
+          )}
+        </div>
+
+        <div className="parcelNotesInputGroup">
+          <label className="parcelNotesLabel">Sender Phone Number</label>
+
+          <input
+            type="tel"
+            value={senderNumber}
+            placeholder="e.g. 08012345678"
+            onChange={(e) => {
+              setSenderNumber(e.target.value);
+              setSenderNumberError("");
+            }}
+            className={
+              senderNumberError
+                ? "parcelNotesInputField parcelNotesInputError"
+                : "parcelNotesInputField"
+            }
+          />
+
+          {senderNumberError && (
+            <span className="parcelNotesErrorText">{senderNumberError}</span>
+          )}
+        </div>
+
+        <div className="parcelNotesInputGroup">
+          <label className="parcelNotesLabel">
+            Sender Backup Number (Optional)
+          </label>
+
+          <input
+            type="tel"
+            value={senderNumber2}
+            placeholder="e.g. 07012345678"
+            onChange={(e) => setSenderNumber2(e.target.value)}
+            className="parcelNotesInputField"
+          />
+        </div>
+
         {/* Recipient Name */}
 
         <div className="parcelNotesInputGroup">

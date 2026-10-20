@@ -34,9 +34,14 @@ const MaxiSubmit = () => {
   } = useLocationContext();
 
   const {
+    senderName,
+    senderNumber,
+    senderNumber2,
+
     recipientName,
     recipientNumber,
     recipientNumber2,
+
     orderDetails,
     transportationType,
     vehicleClass,
@@ -80,7 +85,33 @@ const MaxiSubmit = () => {
         return;
       }
 
-      // Calculate the freight pricing.
+      // Validate sender details.
+      if (!senderName?.trim() || senderName.trim().length < 2) {
+        window.alert("Sender Required: Please enter the sender's name.");
+        return;
+      }
+
+      if (!senderNumber || senderNumber.replace(/\D/g, "").length < 11) {
+        window.alert(
+          "Sender Phone Required: Please enter a valid sender phone number with at least 11 digits.",
+        );
+        return;
+      }
+
+      // Validate recipient details.
+      if (!recipientName?.trim() || recipientName.trim().length < 2) {
+        window.alert("Recipient Required: Please enter the recipient's name.");
+        return;
+      }
+
+      if (!recipientNumber || recipientNumber.replace(/\D/g, "").length < 11) {
+        window.alert(
+          "Recipient Phone Required: Please enter a valid recipient phone number with at least 11 digits.",
+        );
+        return;
+      }
+
+      // Calculate freight pricing.
       const pricing = freightPricingEngine({
         type: vehicleClass,
         distanceKm: totalKm,
@@ -108,10 +139,7 @@ const MaxiSubmit = () => {
         return;
       }
 
-      // ======================================================
-      // CAPTURE MEDIA BEFORE RESETTING CONTEXT
-      // ======================================================
-
+      // Capture media before resetting context.
       const mediaPhotos = [...(senderPreTransferPhotos || [])];
       const mediaVideo = senderPreTransferVideo;
 
@@ -119,31 +147,30 @@ const MaxiSubmit = () => {
 
       const mediaStatus = hasSenderMedia ? MediaUploadStatus.PENDING : null;
 
-      // ======================================================
-      // CREATE ORDER
-      // ======================================================
-
+      // Create the Maxi order.
       const newOrder = await DataStore.save(
         new Order({
-          //   orderEnvironment: "TEST",
           orderEnvironment: "PRODUCTION",
 
-          // For test orders, use:
-          // orderEnvironment: "TEST",
+          // Sender details.
+          senderName: senderName.trim(),
+          senderNumber: senderNumber.trim(),
+          senderNumber2: senderNumber2?.trim() || null,
 
-          // BASIC INFORMATION
-          recipientName,
-          recipientNumber,
-          recipientNumber2,
+          // Recipient details.
+          recipientName: recipientName.trim(),
+          recipientNumber: recipientNumber.trim(),
+          recipientNumber2: recipientNumber2?.trim() || null,
+
           orderDetails,
 
-          // PICKUP LOCATION
+          // Pickup location.
           originAddress: originAddress?.data?.description,
           originState,
           originLat: parseFloat(originLat),
           originLng: parseFloat(originLng),
 
-          // DESTINATION
+          // Destination.
           destinationAddress: destinationAddress?.data?.description,
           destinationState,
           destinationLat: parseFloat(destinationLat),
@@ -155,13 +182,13 @@ const MaxiSubmit = () => {
           transportationType,
           vehicleClass,
 
-          // ORDER STATUS
+          // Order status.
           status: "BIDDING",
           paymentStatus: "PENDING",
           payoutStatus: "NOT_PAID",
           fundsStatus: "HELD",
 
-          // PRICING
+          // Pricing.
           loadCategory,
           isInterState,
 
@@ -175,41 +202,35 @@ const MaxiSubmit = () => {
           fragileSurcharge: pricing.extras.fragileSurcharge,
           extrasTotal: pricing.extrasTotal,
 
-          // WEIGHT
+          // Weight.
           declaredWeightBracket,
 
-          // PICKUP LOADING
+          // Pickup loading.
           pickupLoadingResponsibility,
           pickupFloorLevel,
           pickupFloorLevelPrice,
           pickupHasElevator,
 
-          // DROPOFF UNLOADING
+          // Dropoff unloading.
           dropoffUnloadingResponsibility,
           dropoffFloorLevel,
           dropoffFloorLevelPrice,
           dropoffHasElevator,
 
-          // SENDER CUSTODY EVIDENCE
+          // Sender custody evidence.
           mediaUploadStatus: mediaStatus,
-
           senderPreTransferLocalPhotos: mediaPhotos.map((photo) => photo.uri),
-
           senderPreTransferLocalVideo: mediaVideo?.uri || null,
-
           senderPreTransferRecordedAt:
             senderPreTransferRecordedAt?.toISOString?.() ||
             new Date().toISOString(),
 
-          // USER RELATION
+          // Authenticated user.
           userID: dbUser.id,
         }),
       );
 
-      // ======================================================
-      // CREATE INITIAL OFFER
-      // ======================================================
-
+      // Create the initial offer.
       await DataStore.save(
         new Offer({
           orderID: newOrder.id,
@@ -219,33 +240,21 @@ const MaxiSubmit = () => {
         }),
       );
 
-      // ======================================================
-      // UPDATE ORDER CONTEXT
-      // ======================================================
-
+      // Update order context.
       setOrders(newOrder);
 
-      // ======================================================
-      // UPLOAD EVIDENCE IN THE BACKGROUND
-      // ======================================================
-
+      // Upload evidence in the background.
       if (hasSenderMedia) {
         setTimeout(() => {
           uploadEvidence(newOrder, mediaPhotos, mediaVideo);
         }, 0);
       }
 
-      // ======================================================
-      // RESET FORM AND LOCATION CONTEXTS
-      // ======================================================
-
+      // Reset form and location contexts.
       resetAllOrderFields();
       resetAllLocationFields();
 
-      // ======================================================
-      // SUCCESS AND NAVIGATION
-      // ======================================================
-
+      // Navigate to order tracking.
       navigate(`/send/order_tracking/${newOrder.id}`, {
         replace: true,
       });

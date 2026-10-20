@@ -1,175 +1,198 @@
 
+import { MediaUploadStatus, Order } from "../src/models";
 import { DataStore } from "aws-amplify/datastore";
 import { uploadData } from "aws-amplify/storage";
-import { MediaUploadStatus, Order } from "../src/models";
 
-// Generate a unique filename using the browser's Crypto API.
-const generateUUID = () => {
+const createId = () => {
   if (globalThis.crypto?.randomUUID) {
     return globalThis.crypto.randomUUID();
   }
 
-  throw new Error("crypto.randomUUID() is not supported in this browser.");
+  throw new Error("Secure unique ID generation is not supported by this browser.");
 };
 
-// Resize and compress an image using browser Canvas APIs.
-const compressImage = (file, maxWidth = 900, quality = 0.7) =>
-  new Promise((resolve, reject) => {
-    const image = new Image();
-    const objectUrl = URL.createObjectURL(file);
+const getBlob = async (media) => {
+  if (media instanceof Blob) return media;
 
-    image.onload = () => {
-      try {
-        const scale = Math.min(1, maxWidth / image.width);
-        const canvas = document.createElement("canvas");
+  if (media?.file instanceof Blob) return media.file;
 
-        canvas.width = Math.round(image.width * scale);
-        canvas.height = Math.round(image.height * scale);
-
-        const context = canvas.getContext("2d");
-
-        if (!context) {
-          throw new Error("Could not create canvas context.");
-        }
-
-        context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-        canvas.toBlob(
-          (blob) => {
-            URL.revokeObjectURL(objectUrl);
-
-            if (!blob) {
-              reject(new Error("Image compression failed."));
-              return;
-            }
-
-            resolve(blob);
-          },
-          "image/jpeg",
-          quality,
-        );
-      } catch (error) {
-        URL.revokeObjectURL(objectUrl);
-        reject(error);
-      }
-    };
-
-    image.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      reject(new Error("Could not load image for compression."));
-    };
-
-    image.src = objectUrl;
-  });
-
-// Upload sender photos to S3.
-export const uploadSenderPhotos = async (photos, userId) => {
-  if (!photos?.length) return [];
-
-  const uploaded = [];
-
-  for (const photo of photos) {
-    try {
-      // Supports a browser File, Blob, or an object containing a File/Blob.
-      const file = photo instanceof Blob ? photo : photo?.file;
-
-      if (!file) {
-        throw new Error(
-          "Invalid photo. Expected a File, Blob, or { file: File } object.",
-        );
-      }
-
-      const compressedBlob = await compressImage(file, 900, 0.7);
-
-      const key = `public/orders/${userId}/senderPreTransferPhotos/${generateUUID()}.jpg`;
-
-      const result = await uploadData({
-        path: key,
-        data: compressedBlob,
-        options: {
-          contentType: "image/jpeg",
-        },
-      }).result;
-
-      uploaded.push(result.path);
-    } catch (error) {
-      console.error("Photo upload failed:", error);
-    }
+  if (!media?.uri) {
+    throw new Error("Evidence is missing its file or URI.");
   }
 
-  return uploaded;
+  const response = await fetch(media.uri);
+
+  if (!response.ok) {
+    throw new Error(`Could not read evidence: ${response.status}`);
+  }
+
+  return response.blob();
 };
 
-// Upload sender video to S3.
-export const uploadSenderVideo = async (video, userId) => {
+const compressPhoto = async (media) => {
+  const original = await getBlob(media);
+  const bitmap = await createImageBitmap(original);
+
+  try {
+    const maxWidth = 1200;
+    const scale = Math.min(1, maxWidth / bitmap.width);
+    const canvas = document.createElement("canvas");
+
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+
+    const context = canvas.getContext("2d");
+
+    if (!context) {
+      throw new Error("Could not prepare the evidence photo.");
+    }
+
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error("Could not compress the evidence photo."));
+        },
+        "image/jpeg",
+        0.78,
+      );
+    });
+  } finally {
+    bitmap.close();
+  }
+};
+
+const uploadPhoto = async (photo, userId) => {
+  const blob = await compressPhoto(photo);
+  const path = `public/orders/${userId}/senderPreTransferPhotos/${createId()}.jpg`;
+
+  const result = await uploadData({
+    path,
+    data: blob,
+    options: { contentType: "image/jpeg" },
+  }).result;
+
+  if (!result?.path) {
+    throw new Error("Photo upload did not return a storage path.");
+  }
+
+  return result.path;
+};
+
+const uploadVideo = async (video, userId) => {
   if (!video) return null;
 
-  try {
-    // Accept a File, Blob, or an object containing a File/Blob.
-    const file = video instanceof Blob ? video : video?.file;
+  const blob = await getBlob(video);
+  const contentType = blob.type || "video/mp4";
+  const extension = contentType.includes("webm") ? "webm" : "mp4";
 
-    if (!file) {
-      throw new Error(
-        "Invalid video. Expected a File, Blob, or { file: File } object.",
-      );
-    }
+  const path = `public/orders/${userId}/senderPreTransferVideo/${createId()}.${extension}`;
 
-    const key = `public/orders/${userId}/senderPreTransferVideo/${generateUUID()}.mp4`;
+  const result = await uploadData({
+    path,
+    data: blob,
+    options: { contentType },
+  }).result;
 
-    const result = await uploadData({
-      path: key,
-      data: file,
-      options: {
-        contentType: "video/mp4",
-      },
-    }).result;
-
-    return result.path;
-  } catch (error) {
-    console.error("Video upload failed:", error);
-    return null;
+  if (!result?.path) {
+    throw new Error("Video upload did not return a storage path.");
   }
+
+  return result.path;
 };
 
-// Upload evidence and update the order's upload status.
-export const uploadEvidence = async (order, photos, video) => {
+export const uploadEvidence = async (order, photos = [], video = null) => {
+  if (!order?.id || !order?.userID) {
+    throw new Error("A valid order with userID is required.");
+  }
+
+  const requestedPhotos = Array.isArray(photos) ? photos : [];
+  const hasVideo = Boolean(video);
+
+  if (!requestedPhotos.length && !hasVideo) {
+    return true;
+  }
+
   try {
+    const latestOrder = await DataStore.query(Order, order.id);
+
+    if (!latestOrder) {
+      throw new Error("Order could not be found.");
+    }
+
+    if (latestOrder.userID !== order.userID) {
+      throw new Error("Order owner does not match the upload owner.");
+    }
+
+    // Save retry information before starting uploads.
+    // Store only serializable references here, not File/Blob objects.
     await DataStore.save(
-      Order.copyOf(order, (updated) => {
+      Order.copyOf(latestOrder, (updated) => {
         updated.mediaUploadStatus = MediaUploadStatus.UPLOADING;
       }),
     );
 
-    const [uploadedPhotos, uploadedVideo] = await Promise.all([
-      uploadSenderPhotos(photos, order.userID),
-      uploadSenderVideo(video, order.userID),
-    ]);
+    // Fail the entire operation if any requested file fails.
+    const uploadedPhotos = await Promise.all(
+      requestedPhotos.map((photo) => uploadPhoto(photo, order.userID)),
+    );
+
+    const uploadedVideo = hasVideo
+      ? await uploadVideo(video, order.userID)
+      : null;
+
+    if (uploadedPhotos.length !== requestedPhotos.length) {
+      throw new Error("Not all sender photos uploaded successfully.");
+    }
+
+    if (hasVideo && !uploadedVideo) {
+      throw new Error("Sender video upload did not complete.");
+    }
+
+    const currentOrder = await DataStore.query(Order, order.id);
+
+    if (!currentOrder) {
+      throw new Error("Order disappeared before upload completion was saved.");
+    }
 
     await DataStore.save(
-      Order.copyOf(order, (updated) => {
-        updated.senderPreTransferPhotos = uploadedPhotos;
-        updated.senderPreTransferVideo = uploadedVideo;
+      Order.copyOf(currentOrder, (updated) => {
+        updated.senderPreTransferPhotos = [
+          ...(currentOrder.senderPreTransferPhotos || []),
+          ...uploadedPhotos,
+        ];
 
-        // Clear local evidence references after the upload attempt.
+        if (uploadedVideo) {
+          updated.senderPreTransferVideo = uploadedVideo;
+        }
+
         updated.senderPreTransferLocalPhotos = null;
         updated.senderPreTransferLocalVideo = null;
-
         updated.mediaUploadStatus = MediaUploadStatus.COMPLETE;
       }),
     );
 
-    console.log("Evidence upload complete");
+    console.log("Sender evidence upload complete:", order.id);
+    return true;
   } catch (error) {
-    console.error("Evidence upload error:", error);
+    console.error("Sender evidence upload failed:", order.id, error);
 
     try {
-      await DataStore.save(
-        Order.copyOf(order, (updated) => {
-          updated.mediaUploadStatus = MediaUploadStatus.FAILED;
-        }),
-      );
-    } catch (statusError) {
-      console.error("Failed to update evidence upload status:", statusError);
+      const currentOrder = await DataStore.query(Order, order.id);
+
+      if (currentOrder) {
+        await DataStore.save(
+          Order.copyOf(currentOrder, (updated) => {
+            updated.mediaUploadStatus = MediaUploadStatus.FAILED;
+          }),
+        );
+      }
+    } catch (saveError) {
+      console.error("Could not save failed upload status:", saveError);
     }
+
+    return false;
   }
 };

@@ -39,6 +39,9 @@ function Checkout() {
   } = useLocationContext();
 
   const {
+    senderName,
+    senderNumber,
+    senderNumber2,
     recipientName,
     recipientNumber,
     recipientNumber2,
@@ -75,6 +78,16 @@ function Checkout() {
   const validateOrder = () => {
     if (!dbUser?.id) {
       window.alert("We could not identify your account. Please try again.");
+      return false;
+    }
+
+    if (!senderName?.trim()) {
+      window.alert("Please enter the sender's name.");
+      return false;
+    }
+
+    if (!senderNumber?.trim()) {
+      window.alert("Please enter the sender's phone number.");
       return false;
     }
 
@@ -134,12 +147,14 @@ function Checkout() {
           orderEnvironment: "PRODUCTION",
           // orderEnvironment: "TEST",
 
-          /* Recipient */
+          // Sender
+          senderName: senderName?.trim() || null,
+          senderNumber: senderNumber?.trim() || null,
+          senderNumber2: senderNumber2?.trim() || null,
 
+          // Recipient
           recipientName: recipientName.trim(),
-
           recipientNumber: recipientNumber.trim(),
-
           recipientNumber2: recipientNumber2?.trim() || null,
 
           orderDetails: orderDetails?.trim() || null,
@@ -251,6 +266,29 @@ function Checkout() {
       ====================================================== */}
 
       <div className="checkoutContent">
+        {/* Sender */}
+
+        <div className="checkoutCard">
+          <h2 className="checkoutSectionTitle">Sender</h2>
+
+          <div className="checkoutRow">
+            <span className="checkoutLabel">Name</span>
+            <span className="checkoutValue">{senderName}</span>
+          </div>
+
+          <div className="checkoutRow">
+            <span className="checkoutLabel">Phone</span>
+            <span className="checkoutValue">{senderNumber}</span>
+          </div>
+
+          {senderNumber2 && (
+            <div className="checkoutRow">
+              <span className="checkoutLabel">Backup</span>
+              <span className="checkoutValue">{senderNumber2}</span>
+            </div>
+          )}
+        </div>
+
         {/* Recipient */}
 
         <div className="checkoutCard">
