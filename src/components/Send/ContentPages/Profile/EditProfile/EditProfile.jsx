@@ -186,6 +186,9 @@ const EditProfile = () => {
     try {
       setIsSigningOut(true);
       await signOut();
+      navigate("/", {
+        replace: true,
+      });
     } catch (error) {
       console.error("Error signing out:", error);
       window.alert("We couldn't sign you out. Please try again.");

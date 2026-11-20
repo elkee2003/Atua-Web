@@ -163,6 +163,70 @@
     white-space: pre-wrap;
 }
 
+
+/* =========================================================
+   PAYMENT RESPONSIBILITY
+========================================================= */
+
+.checkoutPaymentResponsibility {
+    border: 1px solid #E5E7EB;
+}
+
+.checkoutPaymentResponsibilityRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    min-width: 0;
+}
+
+.checkoutPaymentResponsibilityIcon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 12px;
+    background: #F3F4F6;
+
+    color: #374151;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.checkoutPaymentResponsibilityContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.checkoutPaymentResponsibilityLabel {
+    color: #6B7280;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.checkoutPaymentResponsibilityValue {
+    color: #111827;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.checkoutPaymentResponsibilityDescription {
+    margin: 0;
+    color: #6B7280;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+
 /* =========================================================
    ROUTE
 ========================================================= */

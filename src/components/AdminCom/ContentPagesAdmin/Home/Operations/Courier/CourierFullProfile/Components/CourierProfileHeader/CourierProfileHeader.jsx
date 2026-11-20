@@ -18,10 +18,12 @@ function CourierProfileHeader({
 
   approvalLoading = false,
   blockLoading = false,
+  debtRestrictionLoading = false,
   resetLoading = false,
 
   onApprove,
   onBlock,
+  onDebtRestriction,
   onForceReset,
   onTrack,
 }) {
@@ -64,6 +66,7 @@ function CourierProfileHeader({
   const isOnline = Boolean(courier.isOnline);
   const isApproved = Boolean(courier.isApproved);
   const isBlocked = Boolean(courier.isBlocked);
+  const isDebtRestricted = Boolean(courier.debtRestrictionActive);
 
   /*
   ==========================================================
@@ -127,6 +130,20 @@ function CourierProfileHeader({
     }
 
     onBlock();
+  };
+
+  /*
+==========================================================
+DEBT RESTRICTION / UNRESTRICTION
+==========================================================
+*/
+
+  const handleDebtRestriction = () => {
+    if (!onDebtRestriction || debtRestrictionLoading) {
+      return;
+    }
+
+    onDebtRestriction();
   };
 
   /*
@@ -301,6 +318,45 @@ function CourierProfileHeader({
             <FaMapMarkerAlt />
 
             <span>Track Courier</span>
+          </button>
+
+          {/* ==================================================
+      DEBT RESTRICTION / UNRESTRICTION
+  ================================================== */}
+
+          <button
+            type="button"
+            className={`
+      courierProfileHeader-blockButton
+      ${isDebtRestricted ? "courierProfileHeader-unblockButton" : ""}
+    `}
+            onClick={handleDebtRestriction}
+            disabled={debtRestrictionLoading || !onDebtRestriction}
+            title={
+              isDebtRestricted
+                ? "Remove the courier's debt restriction"
+                : "Manually restrict this courier because of outstanding debt"
+            }
+          >
+            {debtRestrictionLoading ? (
+              <>
+                <span className="courierProfileHeader-buttonSpinner" />
+
+                <span>Updating...</span>
+              </>
+            ) : isDebtRestricted ? (
+              <>
+                <FaCheckCircle />
+
+                <span>Unrestrict Courier</span>
+              </>
+            ) : (
+              <>
+                <FaBan />
+
+                <span>Restrict Courier</span>
+              </>
+            )}
           </button>
 
           {/* ==================================================

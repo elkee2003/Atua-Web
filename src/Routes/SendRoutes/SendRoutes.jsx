@@ -13,6 +13,7 @@ import GoogleMapsProvider from "../../../Providers/ClientProvider/GoogleMapsProv
 import SearchResult from "../../components/Send/ContentPages/Home/SearchResult/SearchResult";
 import Checkout from "../../components/Send/ContentPages/Home/SearchResult/Checkout";
 import Payment from "../../components/Send/ContentPages/Home/PaymentCom/Payment";
+import ReceiverPayment from "../../components/Send/ContentPages/Home/PaymentCom/ReceiverPayment/ReceiverPayment";
 
 // Maxi
 import MaxiTypes from "../../components/Send/ContentPages/Home/SearchResult/MaxiTypes/MaxiTypeCategories/MaxiVehicleCategories";
@@ -94,6 +95,9 @@ const SendRoutes = () => (
 
         {/* Payment*/}
         <Route path="payment/:orderId" element={<Payment />} />
+
+        {/* Receiver Payment*/}
+        <Route path="receiver_payment/:orderId" element={<ReceiverPayment />} />
 
         {/* Order Tracking Screen*/}
         <Route

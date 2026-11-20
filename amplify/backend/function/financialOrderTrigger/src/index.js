@@ -1,6 +1,6 @@
 /* Amplify Params - DO NOT EDIT
-	ENV
-	REGION
+    ENV
+    REGION
 Amplify Params - DO NOT EDIT */
 
 /**
@@ -8,201 +8,212 @@ Amplify Params - DO NOT EDIT */
  *
  * PURPOSE
  * -------
- * This Lambda is the financial event router for Atua Orders.
+ * Routes Order DynamoDB Stream events to the correct financial Lambdas.
  *
- * It is triggered by the Order DynamoDB Stream.
+ * This Lambda is a ROUTER. It does not:
+ * - Calculate courier earnings.
+ * - Update wallet balances.
+ * - Create financial transactions.
+ * - Process Paystack payments.
+ * - Record cash collections.
  *
- * It DOES NOT perform wallet, transaction, payout, or balance calculations.
- *
- * Instead, it determines which existing financial Lambda should handle
- * the Order event:
- *
+ * It routes to:
  * 1. allocateCourierEarnings
  * 2. releaseFunds
  * 3. releaseCourierMilestoneFunds
  *
  *
- * FINANCIAL FLOW
- * --------------
- *
- * PAYMENT PAID + COURIER ASSIGNED
- *        ↓
- * allocateCourierEarnings
- *
- * MAXI + PICKED_UP
- *        ↓
- * releaseCourierMilestoneFunds
- *        milestone = PICKED_UP
- *
- * MICRO/MOTO + DELIVERED
- *        ↓
- * releaseFunds
- *
- * MAXI + DELIVERED
- *        ↓
- * releaseCourierMilestoneFunds
- *        milestone = DELIVERED
- *
- *
- * IMPORTANT ROUTING RULE
- * ----------------------
- *
- * MICRO and MOTO orders:
- *
- *     → releaseFunds
- *
- * MAXI orders:
- *
- *     → releaseCourierMilestoneFunds
- *
- * These release paths are completely separate.
- *
- * A MAXI order must NEVER invoke releaseFunds.
- *
- * A MICRO/MOTO order must NEVER invoke
- * releaseCourierMilestoneFunds.
- *
- *
- * IMPORTANT
- * ---------
- * earningsAllocationStatus can be NULL/undefined in actual Order records.
- *
- * Therefore:
- *
- *     null
- *     undefined
- *     ""
- *     NOT_ALLOCATED
- *
- * are treated as "not yet allocated".
- *
- * We deliberately do NOT force the Order field to NOT_ALLOCATED here.
- *
- *
- * IDEMPOTENCY
- * ----------
- * The existing financial Lambdas are responsible for protecting their own
- * financial operations.
- *
- * This trigger also checks state transitions so that an Order that remains
- * DELIVERED, for example, does not cause a release Lambda to be called again
- * on every unrelated Order modification.
- *
- *
- * DYNAMODB STREAM
+ * FINANCIAL RULES
  * ---------------
- * The Order table is configured with:
+ * Only an order with:
  *
- *     NEW_AND_OLD_IMAGES
+ *   paymentMethod === "PAYSTACK"
+ *   paymentStatus === "PAID"
  *
- * Therefore we can compare OldImage and NewImage.
+ * may enter online earnings allocation or online funds release.
+ *
+ * CASH orders must NEVER enter these three online-funds paths.
+ *
+ * ALLOCATION:
+ * - PAYSTACK
+ * - PAID
+ * - Courier assigned
+ * - Positive courier earnings
+ * - Allocation not yet completed
+ *
+ * MICRO / MOTO RELEASE:
+ * - PAYSTACK
+ * - PAID
+ * - Earnings ALLOCATED
+ * - Courier assigned
+ * - Positive courier earnings
+ * - Order DELIVERED
+ *
+ * MAXI RELEASE:
+ * - Same financial eligibility as above.
+ * - Uses releaseCourierMilestoneFunds only.
+ * - PICKED_UP and DELIVERED are separate milestones.
+ *
+ *
+ * IMPORTANT DEPLOYMENT REQUIREMENTS
+ * ---------------------------------
+ * 1. DynamoDB Stream view type must be NEW_AND_OLD_IMAGES.
+ * 2. Event source mapping must enable ReportBatchItemFailures.
+ * 3. Target financial Lambdas must enforce their own idempotency.
+ * 4. The target Lambda names must match the deployed functions.
+ * 5. This Lambda must have lambda:InvokeFunction permission for all
+ *    three target functions.
  */
+
+"use strict";
 
 const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
-
 const { unmarshall } = require("@aws-sdk/util-dynamodb");
 
-// -----------------------------------------------------------------------------
-// AWS CLIENT
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 1. ENVIRONMENT CONFIGURATION
+// =============================================================================
+
+const ENVIRONMENT = process.env.ENV || process.env.ENVIRONMENT;
+
+if (!ENVIRONMENT || !String(ENVIRONMENT).trim()) {
+  throw new Error(
+    "Missing ENV environment variable. Set it to the deployed Amplify environment, for example staging or production.",
+  );
+}
+
+const REGION = process.env.REGION || process.env.AWS_REGION;
+
+const ALLOCATE_EARNINGS_FUNCTION =
+  process.env.ALLOCATE_EARNINGS_FUNCTION_NAME ||
+  `allocateCourierEarnings-${ENVIRONMENT}`;
+
+const RELEASE_FUNDS_FUNCTION =
+  process.env.RELEASE_FUNDS_FUNCTION_NAME || `releaseFunds-${ENVIRONMENT}`;
+
+const RELEASE_MAXI_MILESTONE_FUNCTION =
+  process.env.RELEASE_MAXI_MILESTONE_FUNCTION_NAME ||
+  `releaseCourierMilestoneFunds-${ENVIRONMENT}`;
+
+// =============================================================================
+// 2. AWS CLIENT
+// =============================================================================
 
 const lambdaClient = new LambdaClient({
-  region: process.env.REGION || process.env.AWS_REGION,
+  ...(REGION ? { region: REGION } : {}),
+  maxAttempts: 2,
 });
 
-// -----------------------------------------------------------------------------
-// ENVIRONMENT
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 3. STARTUP VALIDATION AND LOGGING
+// =============================================================================
 
-/*
- * Amplify provides ENV to the Lambda.
- *
- * For the staging environment:
- *
- *     ENV = staging
- *
- * Therefore the existing Lambda names are:
- *
- *     allocateCourierEarnings-staging
- *     releaseFunds-staging
- *     releaseCourierMilestoneFunds-staging
- *
- * This keeps the trigger environment-aware and avoids hard-coding the
- * staging Lambda names.
- */
+const TARGET_FUNCTIONS = [
+  ALLOCATE_EARNINGS_FUNCTION,
+  RELEASE_FUNDS_FUNCTION,
+  RELEASE_MAXI_MILESTONE_FUNCTION,
+];
 
-const ENVIRONMENT = process.env.ENV || "staging";
-
-// -----------------------------------------------------------------------------
-// TARGET LAMBDA NAMES
-// -----------------------------------------------------------------------------
-
-const ALLOCATE_EARNINGS_FUNCTION = `allocateCourierEarnings-${ENVIRONMENT}`;
-
-const RELEASE_FUNDS_FUNCTION = `releaseFunds-${ENVIRONMENT}`;
-
-const RELEASE_MAXI_MILESTONE_FUNCTION = `releaseCourierMilestoneFunds-${ENVIRONMENT}`;
-
-// -----------------------------------------------------------------------------
-// LOGGING
-// -----------------------------------------------------------------------------
+for (const functionName of TARGET_FUNCTIONS) {
+  if (typeof functionName !== "string" || !functionName.trim()) {
+    throw new Error("A financial Lambda target name is invalid.");
+  }
+}
 
 console.log("=================================================");
 console.log("financialOrderTrigger loaded");
 console.log("Environment:", ENVIRONMENT);
-console.log("Allocate Lambda:", ALLOCATE_EARNINGS_FUNCTION);
+console.log("Region:", REGION || "AWS default region");
+console.log("Allocation Lambda:", ALLOCATE_EARNINGS_FUNCTION);
 console.log("Release Lambda:", RELEASE_FUNDS_FUNCTION);
-console.log("MAXI Release Lambda:", RELEASE_MAXI_MILESTONE_FUNCTION);
+console.log("MAXI milestone Lambda:", RELEASE_MAXI_MILESTONE_FUNCTION);
 console.log("=================================================");
 
-// -----------------------------------------------------------------------------
-// HELPER: SAFELY CONVERT DYNAMODB STREAM IMAGE
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 4. DYNAMODB STREAM IMAGE HELPERS
+// =============================================================================
 
+/**
+ * Converts a DynamoDB Stream image into a JavaScript object.
+ *
+ * Missing images return null.
+ * Invalid images throw so that the stream record is not silently lost.
+ */
 function unmarshallImage(image) {
   if (!image) {
     return null;
   }
 
-  try {
-    return unmarshall(image);
-  } catch (error) {
-    console.error("❌ Failed to unmarshall DynamoDB image:", error);
-
-    throw error;
-  }
+  return unmarshall(image);
 }
-
-// -----------------------------------------------------------------------------
-// HELPER: GET ORDER ID
-// -----------------------------------------------------------------------------
-
-function getOrderId(order) {
-  if (!order) {
-    return null;
-  }
-
-  return order.id || null;
-}
-
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER EARNINGS ARE ALREADY ALLOCATED
-// -----------------------------------------------------------------------------
 
 /**
- * IMPORTANT:
+ * Returns the Order ID.
  *
- * Your actual Order data can have earningsAllocationStatus empty/null.
- *
- * Therefore null/undefined/empty string is treated as NOT ALLOCATED.
- *
- * We also recognise the explicit enum value:
- *
- *     NOT_ALLOCATED
- *
- * as not allocated.
+ * The current Order model uses `id` as its primary identifier.
  */
+function getOrderId(order) {
+  return order?.id || null;
+}
 
+/**
+ * Checks whether the Order has been soft-deleted.
+ */
+function isDeletedOrder(order) {
+  return order?._deleted === true;
+}
+
+// =============================================================================
+// 5. PAYMENT ELIGIBILITY
+// =============================================================================
+
+/**
+ * Only an explicitly PAYSTACK order can enter online financial processing.
+ *
+ * Missing paymentMethod is NOT treated as PAYSTACK.
+ * CASH is always excluded.
+ */
+function isPaystackOrder(order) {
+  return order?.paymentMethod === "PAYSTACK";
+}
+
+/**
+ * The payment must be confirmed as PAID.
+ */
+function isPaymentComplete(order) {
+  return order?.paymentStatus === "PAID";
+}
+
+/**
+ * Both conditions must be true before online financial processing.
+ */
+function isPaystackPaymentComplete(order) {
+  return (
+    !isDeletedOrder(order) && isPaystackOrder(order) && isPaymentComplete(order)
+  );
+}
+
+// =============================================================================
+// 6. EARNINGS ALLOCATION STATE
+// =============================================================================
+
+/**
+ * Allocation can be attempted when the status is:
+ *
+ * - null / undefined
+ * - empty string
+ * - NOT_ALLOCATED
+ * - FAILED
+ *
+ * FAILED is included because allocateCourierEarnings supports recovery
+ * of a failed allocation when its transaction state permits a safe retry.
+ *
+ * PROCESSING is deliberately excluded. A PROCESSING allocation must not
+ * be started again automatically because its previous wallet operation
+ * may have an uncertain outcome.
+ *
+ * ALLOCATED is excluded because it is already complete.
+ */
 function isEarningsNotAllocated(order) {
   if (!order) {
     return true;
@@ -214,38 +225,33 @@ function isEarningsNotAllocated(order) {
     status === null ||
     status === undefined ||
     status === "" ||
-    status === "NOT_ALLOCATED"
+    status === "NOT_ALLOCATED" ||
+    status === "FAILED"
   );
 }
 
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER EARNINGS ARE ALLOCATED
-// -----------------------------------------------------------------------------
-
+/**
+ * Checks whether earnings have been allocated successfully.
+ */
 function isEarningsAllocated(order) {
   return order?.earningsAllocationStatus === "ALLOCATED";
 }
 
-// -----------------------------------------------------------------------------
-// HELPER: CHECK PAYMENT
-// -----------------------------------------------------------------------------
-
-function isPaymentComplete(order) {
-  return order?.paymentStatus === "PAID";
-}
-
-// -----------------------------------------------------------------------------
-// HELPER: CHECK COURIER ASSIGNMENT
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 7. COURIER AND EARNINGS VALIDATION
+// =============================================================================
 
 function hasAssignedCourier(order) {
-  return Boolean(order?.assignedCourierId);
+  return Boolean(
+    order?.assignedCourierId && String(order.assignedCourierId).trim(),
+  );
 }
 
-// -----------------------------------------------------------------------------
-// HELPER: GET COURIER EARNINGS
-// -----------------------------------------------------------------------------
-
+/**
+ * Converts courier earnings to a finite number.
+ *
+ * Missing, invalid, zero, and negative earnings are not eligible.
+ */
 function getCourierEarnings(order) {
   const earnings = Number(order?.courierEarnings);
 
@@ -256,103 +262,220 @@ function getCourierEarnings(order) {
   return earnings;
 }
 
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER ORDER IS MAXI
-// -----------------------------------------------------------------------------
+function hasPositiveCourierEarnings(order) {
+  return getCourierEarnings(order) > 0;
+}
+
+// =============================================================================
+// 8. TRANSPORTATION-TYPE HELPERS
+// =============================================================================
+
+function getTransportationType(order) {
+  return String(order?.transportationType || "")
+    .trim()
+    .toUpperCase();
+}
 
 function isMaxiOrder(order) {
-  const transportationType = String(order?.transportationType || "")
-    .trim()
-    .toUpperCase();
-
-  return transportationType === "MAXI";
+  return getTransportationType(order) === "MAXI";
 }
-
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER ORDER IS MICRO
-// -----------------------------------------------------------------------------
 
 function isMicroOrder(order) {
-  const transportationType = String(order?.transportationType || "")
-    .trim()
-    .toUpperCase();
+  const type = getTransportationType(order);
 
-  return (
-    transportationType === "MICRO" || transportationType.startsWith("MICRO_")
-  );
+  return type === "MICRO" || type.startsWith("MICRO_");
 }
-
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER ORDER IS MOTO
-// -----------------------------------------------------------------------------
 
 function isMotoOrder(order) {
-  const transportationType = String(order?.transportationType || "")
-    .trim()
-    .toUpperCase();
+  const type = getTransportationType(order);
 
-  return (
-    transportationType === "MOTO" || transportationType.startsWith("MOTO_")
-  );
+  return type === "MOTO" || type.startsWith("MOTO_");
 }
-
-// -----------------------------------------------------------------------------
-// HELPER: CHECK WHETHER ORDER IS MICRO/MOTO
-// -----------------------------------------------------------------------------
 
 function isMicroOrMotoOrder(order) {
   return isMicroOrder(order) || isMotoOrder(order);
 }
 
-// -----------------------------------------------------------------------------
-// HELPER: INVOKE FINANCIAL LAMBDA
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 9. ALLOCATION ELIGIBILITY
+// =============================================================================
 
 /**
- * Financial Lambda payloads:
+ * Determines whether the Order should be sent to allocateCourierEarnings.
  *
- * allocateCourierEarnings:
+ * This function intentionally does not require a particular Order status.
+ * Payment confirmation and courier assignment can happen in separate
+ * database updates.
  *
- * {
- *   "orderID": "..."
- * }
+ * Examples:
  *
+ * 1. Payment becomes PAID, but no courier is assigned yet.
+ *    No allocation.
  *
- * releaseFunds:
+ * 2. Courier is assigned later.
+ *    Allocation becomes eligible.
  *
- * {
- *   "orderID": "..."
- * }
+ * 3. Payment method is CASH.
+ *    No allocation.
  *
+ * 4. Payment method is missing.
+ *    No allocation.
  *
- * releaseCourierMilestoneFunds:
- *
- * {
- *   "orderID": "...",
- *   "milestone": "PICKED_UP"
- * }
- *
- * OR
- *
- * {
- *   "orderID": "...",
- *   "milestone": "DELIVERED"
- * }
- *
- *
- * IMPORTANT:
- *
- * - Micro/Moto MUST only invoke releaseFunds.
- * - Maxi MUST only invoke releaseCourierMilestoneFunds.
- * - Maxi milestone releases REQUIRE the milestone.
- *
- * We use RequestResponse so this trigger can see whether the target Lambda
- * invocation itself failed.
- *
- * The financial Lambda remains responsible for its own financial
- * idempotency and validation.
+ * 5. Allocation status is PROCESSING.
+ *    No automatic duplicate allocation.
  */
+function shouldAllocateEarnings(order) {
+  if (!order || isDeletedOrder(order)) {
+    return false;
+  }
 
+  if (!isPaystackPaymentComplete(order)) {
+    return false;
+  }
+
+  if (!hasAssignedCourier(order)) {
+    return false;
+  }
+
+  if (!hasPositiveCourierEarnings(order)) {
+    return false;
+  }
+
+  if (!isEarningsNotAllocated(order)) {
+    return false;
+  }
+
+  return true;
+}
+
+// =============================================================================
+// 10. RELEASE ELIGIBILITY
+// =============================================================================
+
+/**
+ * A release must not be attempted until allocation is complete.
+ *
+ * The release Lambdas also validate their own financial conditions.
+ * This trigger-level check prevents unnecessary calls and ensures CASH
+ * orders cannot reach online release processing.
+ */
+function isReadyForOnlineRelease(order) {
+  if (!order || isDeletedOrder(order)) {
+    return false;
+  }
+
+  if (!isPaystackPaymentComplete(order)) {
+    return false;
+  }
+
+  if (!isEarningsAllocated(order)) {
+    return false;
+  }
+
+  if (!hasAssignedCourier(order)) {
+    return false;
+  }
+
+  if (!hasPositiveCourierEarnings(order)) {
+    return false;
+  }
+
+  return true;
+}
+
+// =============================================================================
+// 11. CHANGE-DETECTION HELPERS
+// =============================================================================
+
+function statusChangedTo(oldOrder, newOrder, status) {
+  return newOrder?.status === status && oldOrder?.status !== status;
+}
+
+function paymentBecamePaid(oldOrder, newOrder) {
+  return (
+    newOrder?.paymentStatus === "PAID" && oldOrder?.paymentStatus !== "PAID"
+  );
+}
+
+function paymentMethodBecamePaystack(oldOrder, newOrder) {
+  return (
+    newOrder?.paymentMethod === "PAYSTACK" &&
+    oldOrder?.paymentMethod !== "PAYSTACK"
+  );
+}
+
+function earningsBecameAllocated(oldOrder, newOrder) {
+  return isEarningsAllocated(newOrder) && !isEarningsAllocated(oldOrder);
+}
+
+/**
+ * Detects when an administrator removes a funds-release hold.
+ *
+ * This allows a previously held order to be reconsidered.
+ */
+function fundsReleaseWasUnblocked(oldOrder, newOrder) {
+  return (
+    oldOrder?.fundsReleaseBlocked === true &&
+    newOrder?.fundsReleaseBlocked !== true
+  );
+}
+
+/**
+ * Determines whether the financial milestone should be reconsidered.
+ *
+ * The Order must:
+ * - Currently have the requested status.
+ * - Be a confirmed PAYSTACK payment.
+ * - Have allocated earnings.
+ * - Have an assigned courier.
+ * - Have positive courier earnings.
+ *
+ * It is reconsidered when:
+ * - The Order enters the milestone status.
+ * - Payment becomes PAID.
+ * - Payment method becomes PAYSTACK.
+ * - Earnings become ALLOCATED.
+ * - A funds-release hold is removed.
+ *
+ * If OldImage is unavailable, the current eligible state is sufficient
+ * for a first attempt. The target Lambda must remain idempotent.
+ */
+function shouldRetryFinancialMilestone(oldOrder, newOrder, status) {
+  if (!newOrder || newOrder.status !== status) {
+    return false;
+  }
+
+  if (!isReadyForOnlineRelease(newOrder)) {
+    return false;
+  }
+
+  // Missing OldImage: attempt based on the current eligible state.
+  if (!oldOrder) {
+    return true;
+  }
+
+  return (
+    statusChangedTo(oldOrder, newOrder, status) ||
+    paymentBecamePaid(oldOrder, newOrder) ||
+    paymentMethodBecamePaystack(oldOrder, newOrder) ||
+    earningsBecameAllocated(oldOrder, newOrder) ||
+    fundsReleaseWasUnblocked(oldOrder, newOrder)
+  );
+}
+
+// =============================================================================
+// 12. FINANCIAL LAMBDA INVOCATION
+// =============================================================================
+
+/**
+ * Invokes a financial Lambda synchronously.
+ *
+ * RequestResponse is intentional. It allows this router to inspect the
+ * target Lambda's result rather than treating a successful AWS invocation
+ * as proof that the financial operation succeeded.
+ *
+ * Both AWS execution errors and business-level errors are detected.
+ */
 async function invokeFinancialLambda({
   functionName,
   orderID,
@@ -367,13 +490,9 @@ async function invokeFinancialLambda({
     throw new Error("Cannot invoke financial Lambda without orderID.");
   }
 
-  // ---------------------------------------------------------------------------
-  // VALIDATE MAXI MILESTONE
-  // ---------------------------------------------------------------------------
-
-  /*
-   * Only releaseCourierMilestoneFunds is allowed to receive a milestone.
-   */
+  // -------------------------------------------------------------------------
+  // Validate the requested target and milestone.
+  // -------------------------------------------------------------------------
 
   if (functionName === RELEASE_MAXI_MILESTONE_FUNCTION) {
     if (milestone !== "PICKED_UP" && milestone !== "DELIVERED") {
@@ -381,43 +500,21 @@ async function invokeFinancialLambda({
         "MAXI milestone Lambda requires milestone PICKED_UP or DELIVERED.",
       );
     }
+  } else if (milestone !== null && milestone !== undefined) {
+    throw new Error(`A milestone cannot be sent to ${functionName}.`);
   }
 
-  // ---------------------------------------------------------------------------
-  // PREVENT MILESTONE FROM BEING SENT TO OTHER FINANCIAL LAMBDAS
-  // ---------------------------------------------------------------------------
-
-  /*
-   * allocateCourierEarnings and releaseFunds do not use milestones.
-   *
-   * If a milestone accidentally reaches either Lambda, fail here rather than
-   * sending an incorrect payload.
-   */
-  else if (milestone !== null && milestone !== undefined) {
-    throw new Error(
-      `Milestone was supplied to non-MAXI financial Lambda ${functionName}.`,
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // BUILD PAYLOAD
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Construct the existing target Lambda payload.
+  // -------------------------------------------------------------------------
 
   const payload = {
     orderID,
   };
 
-  /*
-   * Only Maxi milestone releases get this property.
-   */
-
   if (milestone) {
     payload.milestone = milestone;
   }
-
-  // ---------------------------------------------------------------------------
-  // LOG INVOCATION
-  // ---------------------------------------------------------------------------
 
   console.log("-------------------------------------------------");
   console.log("Invoking financial Lambda");
@@ -430,171 +527,139 @@ async function invokeFinancialLambda({
   }
 
   console.log("Payload:", JSON.stringify(payload));
-
   console.log("-------------------------------------------------");
 
-  // ---------------------------------------------------------------------------
-  // INVOKE TARGET LAMBDA
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Invoke synchronously.
+  // -------------------------------------------------------------------------
 
   const command = new InvokeCommand({
     FunctionName: functionName,
-
-    /*
-     * RequestResponse allows us to detect an invocation/function error.
-     */
-
     InvocationType: "RequestResponse",
-
-    /*
-     * Send the correctly constructed payload.
-     */
-
     Payload: Buffer.from(JSON.stringify(payload)),
   });
 
   const response = await lambdaClient.send(command);
 
   console.log(
-    "Lambda invocation response:",
+    "Lambda invocation metadata:",
     JSON.stringify({
       StatusCode: response.StatusCode,
-      FunctionError: response.FunctionError,
+      FunctionError: response.FunctionError || null,
+      ExecutedVersion: response.ExecutedVersion || null,
     }),
   );
 
-  // ---------------------------------------------------------------------------
-  // AWS-LEVEL / LAMBDA-LEVEL FAILURE
-  // ---------------------------------------------------------------------------
+  // -------------------------------------------------------------------------
+  // Validate the AWS invocation status.
+  // -------------------------------------------------------------------------
+
+  if (response.StatusCode !== 200) {
+    throw new Error(
+      `${functionName} returned unexpected AWS invocation status ${response.StatusCode}.`,
+    );
+  }
 
   if (response.FunctionError) {
-    let responsePayload = null;
+    let errorPayload = null;
 
     if (response.Payload) {
-      try {
-        responsePayload = JSON.parse(Buffer.from(response.Payload).toString());
-      } catch (parseError) {
-        responsePayload = Buffer.from(response.Payload).toString();
-      }
+      errorPayload = Buffer.from(response.Payload).toString();
     }
 
+    console.error("Financial Lambda execution error:", errorPayload);
+
+    throw new Error(`${functionName} reported a Lambda execution error.`);
+  }
+
+  // -------------------------------------------------------------------------
+  // Parse the returned payload.
+  // -------------------------------------------------------------------------
+
+  if (!response.Payload || response.Payload.length === 0) {
+    throw new Error(`${functionName} returned an empty response.`);
+  }
+
+  const rawPayload = Buffer.from(response.Payload).toString();
+
+  let responsePayload;
+
+  try {
+    responsePayload = JSON.parse(rawPayload);
+  } catch (error) {
+    console.error("Financial Lambda returned invalid JSON:", rawPayload);
+
+    throw new Error(`${functionName} returned an invalid JSON response.`);
+  }
+
+  // -------------------------------------------------------------------------
+  // Parse an API-style body when the target returns one.
+  // -------------------------------------------------------------------------
+
+  let businessPayload = responsePayload;
+
+  if (
+    responsePayload &&
+    typeof responsePayload === "object" &&
+    typeof responsePayload.body === "string"
+  ) {
+    try {
+      businessPayload = JSON.parse(responsePayload.body);
+    } catch (error) {
+      // A plain-text body is retained as the original response.
+      businessPayload = responsePayload;
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Detect business-level failures.
+  // -------------------------------------------------------------------------
+
+  const outerStatusCode = Number(responsePayload?.statusCode);
+  const innerStatusCode = Number(businessPayload?.statusCode);
+
+  const outerStatusFailed =
+    Number.isFinite(outerStatusCode) && outerStatusCode >= 400;
+
+  const innerStatusFailed =
+    Number.isFinite(innerStatusCode) && innerStatusCode >= 400;
+
+  const businessFailed =
+    responsePayload?.success === false || businessPayload?.success === false;
+
+  if (outerStatusFailed || innerStatusFailed || businessFailed) {
     console.error(
-      "❌ Financial Lambda reported an error:",
+      "Financial Lambda returned an unsuccessful result:",
       JSON.stringify(responsePayload),
     );
 
-    throw new Error(`Financial Lambda ${functionName} returned FunctionError.`);
+    throw new Error(
+      `${functionName} returned an unsuccessful financial result.`,
+    );
   }
 
-  console.log(`✅ Successfully invoked ${functionName} for Order ${orderID}`);
+  console.log(
+    `Successfully completed invocation of ${functionName} for Order ${orderID}.`,
+  );
 
-  return response;
-}
-// -----------------------------------------------------------------------------
-// ALLOCATION DECISION
-// -----------------------------------------------------------------------------
-
-/**
- * Earnings allocation is allowed when:
- *
- * 1. Order is paid
- * 2. Courier is assigned
- * 3. Courier earnings > 0
- * 4. Earnings have not already been allocated
- *
- *
- * IMPORTANT:
- *
- * We do NOT require the Order status to be ACCEPTED.
- *
- * This is intentional.
- *
- * Payment and courier assignment can occur in separate Order updates.
- *
- * Therefore the trigger watches the Order stream and allocates as soon as
- * the required financial conditions are simultaneously true.
- */
-
-function shouldAllocateEarnings(order) {
-  if (!order) {
-    return false;
-  }
-
-  // ---------------------------------------------------------------------------
-  // PAYMENT MUST BE SUCCESSFUL
-  // ---------------------------------------------------------------------------
-
-  if (!isPaymentComplete(order)) {
-    return false;
-  }
-
-  // ---------------------------------------------------------------------------
-  // COURIER MUST BE ASSIGNED
-  // ---------------------------------------------------------------------------
-
-  if (!hasAssignedCourier(order)) {
-    return false;
-  }
-
-  // ---------------------------------------------------------------------------
-  // THERE MUST BE ACTUAL COURIER EARNINGS
-  // ---------------------------------------------------------------------------
-
-  const courierEarnings = getCourierEarnings(order);
-
-  if (courierEarnings <= 0) {
-    return false;
-  }
-
-  // ---------------------------------------------------------------------------
-  // DO NOT ALLOCATE AGAIN
-  // ---------------------------------------------------------------------------
-
-  if (!isEarningsNotAllocated(order)) {
-    return false;
-  }
-
-  return true;
+  return responsePayload;
 }
 
-// -----------------------------------------------------------------------------
-// RELEASE DECISION
-// -----------------------------------------------------------------------------
-
-/**
- * We only release funds when the Order actually transitions into the
- * appropriate milestone.
- *
- * This prevents an unrelated later Order update from repeatedly calling
- * a release Lambda just because the status remains DELIVERED.
- */
-
-function statusChangedTo(oldOrder, newOrder, status) {
-  return newOrder?.status === status && oldOrder?.status !== status;
-}
-
-// -----------------------------------------------------------------------------
-// PROCESS ONE STREAM RECORD
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 13. PROCESS ONE DYNAMODB STREAM RECORD
+// =============================================================================
 
 async function processRecord(record) {
   if (!record) {
-    return {
-      processed: false,
-      reason: "Missing record",
-    };
+    throw new Error("DynamoDB Stream record is missing.");
   }
 
-  // ===========================================================================
-  // 1. ONLY MODIFY EVENTS ARE RELEVANT
-  // ===========================================================================
-
-  /*
-   * The financial trigger is watching changes to existing Orders.
-   */
+  // -------------------------------------------------------------------------
+  // Only MODIFY events are relevant to this financial router.
+  // -------------------------------------------------------------------------
 
   if (record.eventName !== "MODIFY") {
-    console.log(`Skipping ${record.eventName} event.`);
+    console.log(`Ignoring DynamoDB event type: ${record.eventName}`);
 
     return {
       processed: false,
@@ -602,305 +667,196 @@ async function processRecord(record) {
     };
   }
 
-  // ===========================================================================
-  // 2. DYNAMODB STREAM MUST CONTAIN NEW IMAGE
-  // ===========================================================================
+  // -------------------------------------------------------------------------
+  // A MODIFY event must contain NewImage.
+  // -------------------------------------------------------------------------
 
   if (!record.dynamodb?.NewImage) {
-    console.log("Skipping MODIFY event because NewImage is missing.");
-
-    return {
-      processed: false,
-      reason: "NewImage missing",
-    };
+    throw new Error("DynamoDB MODIFY record does not contain NewImage.");
   }
 
-  // ===========================================================================
-  // 3. CONVERT DYNAMODB IMAGES
-  // ===========================================================================
+  // -------------------------------------------------------------------------
+  // Convert stream images.
+  // -------------------------------------------------------------------------
 
   const newOrder = unmarshallImage(record.dynamodb.NewImage);
 
-  const oldOrder = unmarshallImage(record.dynamodb.OldImage);
+  // OldImage is expected because the stream should use NEW_AND_OLD_IMAGES.
+  // If absent, the current NewImage can still be evaluated safely because
+  // the target financial Lambdas enforce idempotency.
+  const oldOrder = record.dynamodb.OldImage
+    ? unmarshallImage(record.dynamodb.OldImage)
+    : null;
 
   const orderID = getOrderId(newOrder);
 
-  // ===========================================================================
-  // LOG ORDER INFORMATION
-  // ===========================================================================
+  if (!orderID) {
+    throw new Error("DynamoDB MODIFY record has no Order ID.");
+  }
+
+  // -------------------------------------------------------------------------
+  // Ignore deleted Orders.
+  // -------------------------------------------------------------------------
+
+  if (isDeletedOrder(newOrder)) {
+    console.log(`Skipping deleted Order ${orderID}.`);
+
+    return {
+      processed: false,
+      orderID,
+      reason: "Order is deleted",
+    };
+  }
+
+  // -------------------------------------------------------------------------
+  // Log the relevant financial state.
+  // -------------------------------------------------------------------------
 
   console.log("=================================================");
   console.log("Processing Order Stream record");
   console.log("Order ID:", orderID);
-  console.log("Event ID:", record.eventID);
-  console.log("Old status:", oldOrder?.status);
-  console.log("New status:", newOrder?.status);
-  console.log("Transportation type:", newOrder?.transportationType);
-  console.log("Payment status:", newOrder?.paymentStatus);
-  console.log("Assigned courier:", newOrder?.assignedCourierId);
-  console.log("Courier earnings:", newOrder?.courierEarnings);
-  console.log(
-    "Earnings allocation status:",
-    newOrder?.earningsAllocationStatus,
-  );
+  console.log("Event ID:", record.eventID || null);
+  console.log("Sequence Number:", record.dynamodb?.SequenceNumber || null);
+  console.log("Old status:", oldOrder?.status || null);
+  console.log("New status:", newOrder.status || null);
+  console.log("Transportation type:", newOrder.transportationType || null);
+  console.log("Payment method:", newOrder.paymentMethod || null);
+  console.log("Payment status:", newOrder.paymentStatus || null);
+  console.log("Assigned courier:", newOrder.assignedCourierId || null);
+  console.log("Courier earnings:", newOrder.courierEarnings ?? null);
+  console.log("Allocation status:", newOrder.earningsAllocationStatus || null);
+  console.log("Funds release blocked:", newOrder.fundsReleaseBlocked === true);
   console.log("=================================================");
 
-  // ===========================================================================
-  // 4. ORDER ID IS REQUIRED
-  // ===========================================================================
-
-  if (!orderID) {
-    console.warn("⚠️ Order ID is missing. Skipping record.");
-
-    return {
-      processed: false,
-      reason: "Order ID missing",
-    };
-  }
-
-  // ===========================================================================
-  // 5. ALLOCATE COURIER EARNINGS
-  // ===========================================================================
+  // =========================================================================
+  // 14. ALLOCATE COURIER EARNINGS
+  // =========================================================================
 
   /**
-   * This check is intentionally independent of status transitions.
+   * Allocation is checked on every Order modification.
    *
-   * Example:
+   * This is intentional:
+   * - Payment may become PAID before courier assignment.
+   * - Courier assignment may happen later.
+   * - Payment method may be set after an earlier state update.
+   * - FAILED allocation may be safely recoverable by the allocation Lambda.
    *
-   * Update 1:
-   *     paymentStatus = PAID
-   *     assignedCourierId = null
-   *
-   *     → Cannot allocate yet.
-   *
-   *
-   * Update 2:
-   *     paymentStatus = PAID
-   *     assignedCourierId = courier123
-   *
-   *     → Allocation should now happen.
-   *
-   *
-   * Another example:
-   *
-   * Update 1:
-   *     assignedCourierId = courier123
-   *     paymentStatus = PENDING
-   *
-   *     → Cannot allocate.
-   *
-   *
-   * Update 2:
-   *     paymentStatus = PAID
-   *
-   *     → Allocation should now happen.
+   * The allocation Lambda itself protects against duplicate wallet credits.
    */
 
   if (shouldAllocateEarnings(newOrder)) {
-    console.log("💰 Allocation conditions satisfied.");
+    console.log(
+      `Order ${orderID} is eligible for PAYSTACK earnings allocation.`,
+    );
 
     await invokeFinancialLambda({
       functionName: ALLOCATE_EARNINGS_FUNCTION,
-
       orderID,
-
       reason:
-        "Order is PAID, has an assigned courier, has courier earnings, and earningsAllocationStatus is not allocated.",
+        "PAYSTACK payment is PAID, courier is assigned, courier earnings are positive, and allocation is not complete.",
     });
   } else {
-    console.log("ℹ️ Courier earnings allocation not required for this record.");
+    console.log(
+      `Order ${orderID} is not currently eligible for earnings allocation.`,
+    );
   }
 
-  // ===========================================================================
-  // IMPORTANT RELEASE ROUTING RULE
-  // ===========================================================================
-  //
-  // There are two completely separate release systems:
-  //
-  // MICRO / MOTO
-  //     ↓
-  // releaseFunds
-  //
-  // MAXI
-  //     ↓
-  // releaseCourierMilestoneFunds
-  //
-  //
-  // A MAXI order MUST NEVER be sent to releaseFunds.
-  //
-  // A MICRO/MOTO order MUST NEVER be sent to
-  // releaseCourierMilestoneFunds.
-  //
-  // ===========================================================================
-
-  // ===========================================================================
-  // 6. MAXI PICKUP MILESTONE
-  // ===========================================================================
+  // =========================================================================
+  // 15. MAXI PICKUP MILESTONE
+  // =========================================================================
 
   /**
-   * MAXI earnings are released in milestones.
+   * MAXI uses releaseCourierMilestoneFunds.
    *
-   * At PICKED_UP:
+   * It must NEVER use releaseFunds.
    *
-   *     50% is released.
-   *
-   * The actual 50% calculation is performed by:
-   *
-   *     releaseCourierMilestoneFunds
-   *
-   * This trigger only routes the event.
-   *
-   * IMPORTANT:
-   *
-   * The milestone MUST be included in the Lambda payload.
+   * The milestone Lambda controls the actual amount released at pickup.
    */
 
   if (
     isMaxiOrder(newOrder) &&
-    statusChangedTo(oldOrder, newOrder, "PICKED_UP")
+    shouldRetryFinancialMilestone(oldOrder, newOrder, "PICKED_UP")
   ) {
-    console.log("🚚 MAXI PICKED_UP milestone detected.");
-
     console.log(
-      "Routing MAXI pickup exclusively to releaseCourierMilestoneFunds.",
+      `MAXI PICKED_UP milestone is eligible for reconsideration: ${orderID}.`,
     );
 
     await invokeFinancialLambda({
-      // -----------------------------------------------------------------------
-      // IMPORTANT:
-      //
-      // MAXI orders use the milestone release Lambda.
-      //
-      // They must NOT use releaseFunds.
-      // -----------------------------------------------------------------------
-
       functionName: RELEASE_MAXI_MILESTONE_FUNCTION,
-
       orderID,
-
-      // -----------------------------------------------------------------------
-      // REQUIRED BY releaseCourierMilestoneFunds
-      // -----------------------------------------------------------------------
-
       milestone: "PICKED_UP",
-
       reason:
-        "MAXI order transitioned to PICKED_UP; releaseCourierMilestoneFunds should release the pickup milestone.",
+        "MAXI order is PICKED_UP, PAYSTACK payment is confirmed, and courier earnings are allocated.",
     });
   }
 
-  // ===========================================================================
-  // 7. MICRO/MOTO DELIVERY
-  // ===========================================================================
+  // =========================================================================
+  // 16. MICRO / MOTO DELIVERY RELEASE
+  // =========================================================================
 
   /**
-   * Micro and Moto orders release the courier's full earnings when
-   * the Order reaches DELIVERED.
+   * MICRO and MOTO use releaseFunds.
    *
-   * The actual wallet movement is performed by:
+   * This block requires:
+   * - PAYSTACK payment confirmed.
+   * - Earnings ALLOCATED.
+   * - Courier assigned.
+   * - Positive courier earnings.
+   * - Order DELIVERED.
    *
-   *     releaseFunds
-   *
-   *
-   * IMPORTANT:
-   *
-   * This condition specifically checks MICRO/MOTO.
-   *
-   * Therefore a MAXI order cannot enter this block.
+   * MAXI orders cannot enter this block.
    */
 
   if (
     isMicroOrMotoOrder(newOrder) &&
-    statusChangedTo(oldOrder, newOrder, "DELIVERED")
+    shouldRetryFinancialMilestone(oldOrder, newOrder, "DELIVERED")
   ) {
-    console.log("✅ MICRO/MOTO DELIVERED milestone detected.");
-
-    console.log("Routing MICRO/MOTO order exclusively to releaseFunds.");
+    console.log(`MICRO/MOTO DELIVERED release is eligible: ${orderID}.`);
 
     await invokeFinancialLambda({
-      // -----------------------------------------------------------------------
-      // IMPORTANT:
-      //
-      // Micro and Moto use the normal full-release Lambda.
-      //
-      // They must NOT invoke releaseCourierMilestoneFunds.
-      // -----------------------------------------------------------------------
-
       functionName: RELEASE_FUNDS_FUNCTION,
-
       orderID,
-
-      /*
-       * No milestone is sent here.
-       *
-       * releaseFunds only needs orderID.
-       */
-
       reason:
-        "MICRO/MOTO order transitioned to DELIVERED; releaseFunds should release the courier's earnings.",
+        "MICRO/MOTO order is DELIVERED, PAYSTACK payment is confirmed, and courier earnings are allocated.",
     });
   }
 
-  // ===========================================================================
-  // 8. MAXI DELIVERY
-  // ===========================================================================
+  // =========================================================================
+  // 17. MAXI DELIVERY MILESTONE
+  // =========================================================================
 
   /**
-   * MAXI delivery releases the remaining amount.
+   * MAXI delivery uses releaseCourierMilestoneFunds.
    *
-   * If 50% was released at pickup, this call releases the remaining 50%.
+   * If payment or allocation was not ready at PICKED_UP, this delivery
+   * invocation gives the milestone Lambda an opportunity to perform its
+   * supported catch-up handling.
    *
-   * The actual calculation is handled by:
-   *
-   *     releaseCourierMilestoneFunds
-   *
-   *
-   * IMPORTANT:
-   *
-   * This condition specifically checks MAXI.
-   *
-   * Therefore a Micro/Moto order cannot enter this block.
+   * MAXI must NEVER invoke releaseFunds.
    */
 
   if (
     isMaxiOrder(newOrder) &&
-    statusChangedTo(oldOrder, newOrder, "DELIVERED")
+    shouldRetryFinancialMilestone(oldOrder, newOrder, "DELIVERED")
   ) {
-    console.log("🏁 MAXI DELIVERED milestone detected.");
-
     console.log(
-      "Routing MAXI delivery exclusively to releaseCourierMilestoneFunds.",
+      `MAXI DELIVERED milestone is eligible for reconsideration: ${orderID}.`,
     );
 
     await invokeFinancialLambda({
-      // -----------------------------------------------------------------------
-      // IMPORTANT:
-      //
-      // Maxi orders use milestone-based releases.
-      //
-      // They must NOT invoke releaseFunds.
-      // -----------------------------------------------------------------------
-
       functionName: RELEASE_MAXI_MILESTONE_FUNCTION,
-
       orderID,
-
-      // -----------------------------------------------------------------------
-      // REQUIRED BY releaseCourierMilestoneFunds
-      // -----------------------------------------------------------------------
-
       milestone: "DELIVERED",
-
       reason:
-        "MAXI order transitioned to DELIVERED; releaseCourierMilestoneFunds should release the remaining courier earnings.",
+        "MAXI order is DELIVERED, PAYSTACK payment is confirmed, and courier earnings are allocated.",
     });
   }
 
-  // ===========================================================================
-  // FINISHED
-  // ===========================================================================
+  // =========================================================================
+  // 18. RECORD SUCCESSFUL PROCESSING
+  // =========================================================================
 
-  console.log(`✅ Finished processing financial events for Order ${orderID}`);
+  console.log(`Finished financial routing for Order ${orderID}.`);
 
   return {
     processed: true,
@@ -908,82 +864,77 @@ async function processRecord(record) {
   };
 }
 
-// -----------------------------------------------------------------------------
-// MAIN HANDLER
-// -----------------------------------------------------------------------------
+// =============================================================================
+// 19. MAIN LAMBDA HANDLER
+// =============================================================================
 
 exports.handler = async (event) => {
   console.log("");
   console.log("=================================================");
-  console.log("💰 financialOrderTrigger START");
+  console.log("financialOrderTrigger START");
   console.log("=================================================");
 
-  console.log("Received records:", event?.Records?.length || 0);
+  const records = event?.Records;
 
-  // ===========================================================================
-  // VALIDATE DYNAMODB STREAM EVENT
-  // ===========================================================================
-
-  if (!event || !Array.isArray(event.Records)) {
-    console.warn("⚠️ Event does not contain DynamoDB Stream Records.");
-
-    return {
-      batchItemFailures: [],
-    };
+  if (!Array.isArray(records)) {
+    throw new Error("Invalid DynamoDB Stream event: Records must be an array.");
   }
 
-  // ===========================================================================
-  // PROCESS EVERY STREAM RECORD
-  // ===========================================================================
-
-  /*
-   * DynamoDB Streams can deliver multiple records in one Lambda invocation.
-   *
-   * We process every record rather than only Records[0].
-   */
+  console.log("Received records:", records.length);
 
   const batchItemFailures = [];
 
-  for (const record of event.Records) {
+  // -------------------------------------------------------------------------
+  // Process records sequentially.
+  //
+  // Sequential processing keeps invocation behavior predictable and avoids
+  // creating an uncontrolled burst of financial Lambda invocations.
+  // -------------------------------------------------------------------------
+
+  for (const record of records) {
     try {
       await processRecord(record);
     } catch (error) {
-      console.error("❌ Failed to process stream record:", record.eventID);
+      console.error("=================================================");
+      console.error(
+        "Failed to process DynamoDB Stream record:",
+        record?.eventID || "UNKNOWN_EVENT",
+      );
+      console.error(
+        "Sequence number:",
+        record?.dynamodb?.SequenceNumber || "MISSING",
+      );
+      console.error("Processing error:", error);
+      console.error("=================================================");
 
-      console.error("Error:", error);
+      // DynamoDB Streams partial batch responses require the sequence number
+      // as itemIdentifier. Do NOT use record.eventID here.
+      const sequenceNumber = record?.dynamodb?.SequenceNumber;
 
-      // -----------------------------------------------------------------------
-      // REPORT THIS PARTICULAR RECORD AS FAILED
-      // -----------------------------------------------------------------------
-      //
-      // Our EventSourceMapping uses:
-      //
-      //     ReportBatchItemFailures
-      //
-      // so DynamoDB Streams can retry the failed record.
-      // -----------------------------------------------------------------------
-
-      if (record.eventID) {
-        batchItemFailures.push({
-          itemIdentifier: record.eventID,
-        });
-      } else {
-        /*
-         * If AWS did not provide an event ID, rethrowing causes the whole
-         * batch to be retried.
-         */
-
-        throw error;
+      if (!sequenceNumber) {
+        // Without a sequence number, a valid partial failure response cannot
+        // be constructed. Throwing fails the entire invocation.
+        throw new Error(
+          "Cannot report partial batch failure because the DynamoDB record has no SequenceNumber.",
+          { cause: error },
+        );
       }
+
+      batchItemFailures.push({
+        itemIdentifier: sequenceNumber,
+      });
     }
   }
 
-  // ===========================================================================
-  // FINAL RESULT
-  // ===========================================================================
+  // -------------------------------------------------------------------------
+  // Return partial batch failures.
+  //
+  // The event source mapping must have ReportBatchItemFailures enabled.
+  // -------------------------------------------------------------------------
 
   console.log("=================================================");
   console.log("financialOrderTrigger FINISHED");
+  console.log("Total records:", records.length);
   console.log("Failed records:", batchItemFailures.length);
   console.log("=================================================");
 

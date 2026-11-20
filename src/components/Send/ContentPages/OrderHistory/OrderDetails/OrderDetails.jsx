@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { DataStore } from "aws-amplify/datastore";
 import { getUrl } from "aws-amplify/storage";
-import { Order } from "../../../../../../src/models";
+import { Order, Payment } from "../../../../../../src/models";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -13,18 +13,20 @@ import {
   FaChevronUp,
   FaClock,
   FaCopy,
+  FaCreditCard,
   FaExternalLinkAlt,
+  FaImages,
   FaMapMarkerAlt,
   FaPhone,
   FaTimes,
   FaTruck,
   FaUser,
   FaWallet,
-  FaImages,
 } from "react-icons/fa";
 import "./OrderDetails.css";
 
 const PLACEHOLDER_IMAGE = "/placeholder.png";
+
 const ACTIVE_STATUSES = [
   "READY_FOR_PICKUP",
   "BIDDING",
@@ -33,7 +35,10 @@ const ACTIVE_STATUSES = [
 ];
 
 function safeString(value) {
-  if (value === null || value === undefined || value === "") return "-";
+  if (value === null || value === undefined || value === "") {
+    return "-";
+  }
+
   if (typeof value === "object") {
     try {
       return JSON.stringify(value);
@@ -41,12 +46,17 @@ function safeString(value) {
       return String(value);
     }
   }
+
   return String(value);
 }
 
 function formatCurrency(value) {
-  if (value === null || value === undefined || value === "") return "-";
+  if (value === null || value === undefined || value === "") {
+    return "-";
+  }
+
   const number = Number(value);
+
   return Number.isNaN(number)
     ? `₦${String(value)}`
     : `₦${number.toLocaleString("en-NG")}`;
@@ -54,8 +64,13 @@ function formatCurrency(value) {
 
 function formatDate(value, fallback = "-") {
   if (!value) return fallback;
+
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return fallback;
+
+  if (Number.isNaN(date.getTime())) {
+    return fallback;
+  }
+
   return date.toLocaleString("en-NG", {
     year: "numeric",
     month: "short",
@@ -67,13 +82,19 @@ function formatDate(value, fallback = "-") {
 
 async function resolveStorageUrl(imagePath) {
   if (!imagePath) return null;
+
   if (
     typeof imagePath === "string" &&
     /^(https?:|blob:|data:|file:)/i.test(imagePath)
-  )
+  ) {
     return imagePath;
+  }
+
   try {
-    const result = await getUrl({ path: String(imagePath) });
+    const result = await getUrl({
+      path: String(imagePath),
+    });
+
     return result?.url?.toString?.() || null;
   } catch (error) {
     console.error("Unable to resolve Storage image URL:", error);
@@ -91,13 +112,15 @@ function StatusBadge({ status }) {
     CANCELLED: ["Cancelled", "red"],
     CANCELED: ["Cancelled", "red"],
   };
+
   const [label, tone] = configs[status] || [
     String(status || "Unknown")
       .replace(/_/g, " ")
       .toLowerCase()
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+      .replace(/\b\w/g, (character) => character.toUpperCase()),
     "neutral",
   ];
+
   return (
     <span className={`od-status od-status--${tone}`}>
       <span className="od-status-dot" />
@@ -113,19 +136,25 @@ function DetailRow({
   onCopy,
   multiline = false,
 }) {
-  if (value === null || value === undefined || value === "") return null;
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
   return (
     <div
       className={`od-detail-row${multiline ? " od-detail-row--multiline" : ""}`}
     >
       <span className="od-detail-label">{label}</span>
+
       <div className="od-detail-value-wrap">
         <span className="od-detail-value">{safeString(value)}</span>
+
         {copyable && (
           <button
             className="od-icon-button od-copy-small"
             type="button"
             title={`Copy ${label}`}
+            aria-label={`Copy ${label}`}
             onClick={onCopy}
           >
             <FaCopy />
@@ -146,14 +175,17 @@ function Section({ title, eyebrow, icon, open, onToggle, children }) {
         aria-expanded={open}
       >
         <span className="od-section-icon">{icon}</span>
+
         <span className="od-section-heading">
           <span className="od-eyebrow">{eyebrow}</span>
           <strong>{title}</strong>
         </span>
+
         <span className="od-chevron">
           {open ? <FaChevronUp /> : <FaChevronDown />}
         </span>
       </button>
+
       {open && <div className="od-section-content">{children}</div>}
     </section>
   );
@@ -194,29 +226,36 @@ function Timeline({
       value: unloadingCompletedAt,
     },
   ];
+
   return (
     <div className="od-timeline">
       {steps.map((step, index) => {
         const cancelled = ["CANCELLED", "CANCELED"].includes(status);
+
         const done =
           !cancelled && (status === "DELIVERED" || Boolean(step.value));
+
         return (
           <div className="od-timeline-item" key={step.label}>
             <div className="od-timeline-rail">
               <span className={`od-timeline-dot${done ? " is-done" : ""}`}>
                 {done && <FaCheck />}
               </span>
+
               {index < steps.length - 1 && (
                 <span className={`od-timeline-line${done ? " is-done" : ""}`} />
               )}
             </div>
+
             <div className="od-timeline-content">
               <div className="od-timeline-title">
                 <strong className={!done ? "is-pending" : ""}>
                   {step.label}
                 </strong>
+
                 {done && <span>Done</span>}
               </div>
+
               <p>{step.description}</p>
               <time>{formatDate(step.value, "Pending")}</time>
             </div>
@@ -227,27 +266,76 @@ function Timeline({
   );
 }
 
+function paymentStatusLabel(status) {
+  const labels = {
+    PAID: "Paid",
+    SUCCESS: "Successful",
+    SUCCESSFUL: "Successful",
+    PENDING: "Pending",
+    PROCESSING: "Processing",
+    FAILED: "Failed",
+    ABANDONED: "Abandoned",
+    CANCELLED: "Cancelled",
+    CANCELED: "Cancelled",
+    REFUNDED: "Refunded",
+    NOT_PAID: "Not paid",
+    UNPAID: "Unpaid",
+  };
+
+  const normalized = String(status || "PENDING").toUpperCase();
+
+  return labels[normalized] || normalized.replace(/_/g, " ");
+}
+
+function paymentMethodLabel(method) {
+  const labels = {
+    CASH: "Cash",
+    CASH_ON_DELIVERY: "Cash on delivery",
+    CASH_AT_PICKUP: "Cash at pickup",
+    ELECTRONIC: "Electronic payment",
+    PAYSTACK: "Paystack",
+    CARD: "Card",
+    TRANSFER: "Bank transfer",
+    UNDECIDED: "Not selected yet",
+    NOT_SELECTED: "Not selected yet",
+  };
+
+  const normalized = String(method || "UNDECIDED").toUpperCase();
+
+  return labels[normalized] || normalized.replace(/_/g, " ");
+}
+
 export default function OrderDetails({ orderId: receivedOrderId }) {
   const params = useParams();
   const navigate = useNavigate();
+
   const orderId = receivedOrderId || params.orderId || params.id;
+
   const [order, setOrder] = useState(null);
   const [courier, setCourier] = useState(null);
   const [loading, setLoading] = useState(true);
+
   const [profileImage, setProfileImage] = useState(null);
   const [evidence, setEvidence] = useState([]);
+
   const [showViewer, setShowViewer] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
+
   const [notice, setNotice] = useState("");
+  const [map, setMap] = useState(null);
+
+  // Payment records are read from the existing Payment model.
+  const [payments, setPayments] = useState([]);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+
   const [sections, setSections] = useState({
     recipient: true,
     route: true,
+    payment: true,
     load: false,
     pricing: false,
     evidence: false,
   });
-
-  const [map, setMap] = useState(null);
 
   const origin = useMemo(() => {
     const lat = Number(order?.originLat);
@@ -290,6 +378,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
     if (!origin || !destination) return;
 
     const bounds = new window.google.maps.LatLngBounds();
+
     bounds.extend(origin);
     bounds.extend(destination);
 
@@ -306,12 +395,18 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
 
   const notify = useCallback((message) => {
     setNotice(message);
-    window.setTimeout(() => setNotice(""), 2800);
+
+    window.setTimeout(() => {
+      setNotice("");
+    }, 2800);
   }, []);
 
   const copyToClipboard = useCallback(
     async (value, label = "Copied") => {
-      if (value === null || value === undefined || value === "") return;
+      if (value === null || value === undefined || value === "") {
+        return;
+      }
+
       try {
         await navigator.clipboard.writeText(String(value));
         notify(`${label} to clipboard`);
@@ -343,34 +438,79 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
       if (error?.name === "AbortError") return;
 
       console.error("Unable to share tracking link:", error);
+
       await copyToClipboard(trackingUrl, "Tracking link copied");
     }
   };
 
+  // Load the order, its payment records, courier, and delivery evidence.
   useEffect(() => {
     let alive = true;
+
     async function fetchData() {
       if (!orderId) {
         setOrder(null);
         setCourier(null);
         setProfileImage(null);
         setEvidence([]);
+        setPayments([]);
+        setPaymentLoading(false);
         setLoading(false);
         return;
       }
+
       setLoading(true);
+
       try {
         const data = await DataStore.query(Order, orderId);
+
         if (!alive) return;
+
         if (!data) {
           setOrder(null);
           setCourier(null);
           setProfileImage(null);
           setEvidence([]);
+          setPayments([]);
           return;
         }
+
         setOrder(data);
+
+        // Fetch saved payment records associated with this order.
+        // This does not create a payment link or confirm a payment.
+        setPaymentLoading(true);
+
+        try {
+          const paymentRecords = await DataStore.query(Payment, (payment) =>
+            payment.orderID.eq(data.id),
+          );
+
+          if (!alive) return;
+
+          const sortedPayments = [...paymentRecords].sort((a, b) => {
+            const dateA = new Date(a.createdAt || 0).getTime();
+
+            const dateB = new Date(b.createdAt || 0).getTime();
+
+            return dateB - dateA;
+          });
+
+          setPayments(sortedPayments);
+        } catch (paymentError) {
+          console.error("Unable to load order payment records:", paymentError);
+
+          if (alive) {
+            setPayments([]);
+          }
+        } finally {
+          if (alive) {
+            setPaymentLoading(false);
+          }
+        }
+
         let courierData = null;
+
         if (data.assignedCourierId) {
           try {
             courierData = await data.assignedCourier;
@@ -381,13 +521,17 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
             );
           }
         }
+
         if (!alive) return;
+
         setCourier(courierData || null);
+
         setProfileImage(
           courierData?.profilePic
             ? await resolveStorageUrl(courierData.profilePic)
             : null,
         );
+
         const groups = [
           data.senderPreTransferPhotos || [],
           data.courierPreTransferPhotos || [],
@@ -395,6 +539,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           data.dropoffArrivalPhotos || [],
           data.postDeliveryPhotos || [],
         ];
+
         const paths = groups
           .flat()
           .filter(Boolean)
@@ -406,56 +551,142 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 : null,
           )
           .filter(Boolean);
+
         const images = [];
+
         for (const path of paths) {
           const uri = await resolveStorageUrl(path);
-          if (uri) images.push({ uri });
+
+          if (uri) {
+            images.push({ uri });
+          }
         }
-        if (alive) setEvidence(images);
+
+        if (alive) {
+          setEvidence(images);
+        }
       } catch (error) {
         console.error("Error loading order details:", error);
+
         if (alive) {
           setOrder(null);
           setCourier(null);
           setProfileImage(null);
           setEvidence([]);
+          setPayments([]);
         }
       } finally {
-        if (alive) setLoading(false);
+        if (alive) {
+          setLoading(false);
+        }
       }
     }
+
     fetchData();
+
     return () => {
       alive = false;
     };
   }, [orderId]);
 
-  const toggleSection = (key) =>
-    setSections((previous) => ({ ...previous, [key]: !previous[key] }));
+  const toggleSection = (key) => {
+    setSections((previous) => ({
+      ...previous,
+      [key]: !previous[key],
+    }));
+  };
+
   const orderReference = order?.id
     ? order.id.slice(0, 8).toUpperCase()
     : "--------";
+
   const courierName =
     [courier?.firstName, courier?.lastName].filter(Boolean).join(" ") ||
     "Courier assigned";
+
   const isActiveOrder = ACTIVE_STATUSES.includes(order?.status);
+
   const isPaid = order?.paymentStatus === "PAID";
+
   const isDelivered = order?.status === "DELIVERED";
+
   const isCancelled = ["CANCELLED", "CANCELED"].includes(order?.status);
 
-  if (loading)
+  // The latest saved payment record is shown first.
+  const latestPayment = payments[0] || null;
+
+  // Adjust these names if your actual model uses another field.
+  const paymentLink =
+    latestPayment?.checkoutUrl ||
+    order?.checkoutUrl ||
+    order?.paymentLink ||
+    order?.paymentUrl ||
+    null;
+
+  // Only allow HTTPS checkout URLs to be opened from this page.
+  const canOpenPaymentLink =
+    typeof paymentLink === "string" && /^https:\/\/[^\s]+$/i.test(paymentLink);
+
+  const paymentStatus = String(
+    order?.paymentStatus || latestPayment?.status || "PENDING",
+  ).toUpperCase();
+
+  const paymentMethod = String(
+    order?.paymentMethod || latestPayment?.paymentMethod || "UNDECIDED",
+  ).toUpperCase();
+
+  const paymentTiming = order?.paymentTiming || "Not specified";
+
+  const paymentResponsibility = order?.paymentResponsibility || "Not specified";
+
+  const cashCollectionStatus = order?.cashCollectionStatus || "Not specified";
+
+  const paymentReference =
+    order?.paymentReference || latestPayment?.reference || "-";
+
+  const paymentRecordId = order?.paymentID || latestPayment?.id || "-";
+
+  const sharePaymentLink = async () => {
+    if (!canOpenPaymentLink) {
+      notify("No valid saved payment link is available.");
+      return;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Atua Order #${orderReference} Payment`,
+          text: `Payment link for Atua order #${orderReference}`,
+          url: paymentLink,
+        });
+      } else {
+        await copyToClipboard(paymentLink, "Payment link copied");
+      }
+    } catch (error) {
+      if (error?.name === "AbortError") return;
+
+      console.error("Unable to share payment link:", error);
+
+      await copyToClipboard(paymentLink, "Payment link copied");
+    }
+  };
+
+  if (loading) {
     return (
       <main className="od-state">
         <span className="od-spinner" />
         <p>Loading your delivery...</p>
       </main>
     );
-  if (!order)
+  }
+
+  if (!order) {
     return (
       <main className="od-state">
         <span className="od-empty-icon">!</span>
         <h2>Order not found</h2>
         <p>We could not find the delivery you are looking for.</p>
+
         <button
           className="od-button od-button--primary"
           onClick={() => navigate(-1)}
@@ -464,6 +695,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
         </button>
       </main>
     );
+  }
 
   return (
     <main className="order-details-page">
@@ -472,6 +704,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           {notice}
         </div>
       )}
+
       <div className="od-page-inner">
         <header className="od-page-header">
           <div className="od-header-top">
@@ -482,18 +715,22 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
             >
               <FaArrowLeft />
             </button>
+
             <div className="od-header-title">
               <span className="od-eyebrow">DELIVERY DETAILS</span>
               <h1>Order #{orderReference}</h1>
             </div>
+
             <span className="od-logo">A</span>
           </div>
+
           <div className="od-header-bottom">
             <p>Your delivery at a glance</p>
             <StatusBadge status={order.status} />
           </div>
         </header>
 
+        {/* DELIVERY OVERVIEW AND MAP */}
         <section className="od-card od-overview-card">
           <div className="od-overview-top">
             <span className="od-overview-label">
@@ -506,8 +743,10 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                     ? "DELIVERY IN PROGRESS"
                     : "DELIVERY OVERVIEW"}
             </span>
+
             <span className="od-reference">#{orderReference}</span>
           </div>
+
           <div className="od-overview-title-row">
             <div>
               <h2>
@@ -517,6 +756,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                     ? "Order cancelled"
                     : "Your delivery is on its way"}
               </h2>
+
               <p>
                 {isDelivered
                   ? "Thank you for using Atua."
@@ -525,6 +765,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                     : "Track your order and stay updated."}
               </p>
             </div>
+
             <span className="od-package-emoji">📦</span>
           </div>
 
@@ -578,16 +819,20 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               <span className="od-route-marker od-route-marker--pickup">
                 <i />
               </span>
+
               <div>
                 <span className="od-eyebrow">PICKUP FROM</span>
                 <strong>{order.originAddress || "-"}</strong>
               </div>
             </div>
+
             <div className="od-route-divider" />
+
             <div className="od-route-item">
               <span className="od-route-marker od-route-marker--dropoff">
                 ●
               </span>
+
               <div>
                 <span className="od-eyebrow">DELIVERING TO</span>
                 <strong>{order.destinationAddress || "-"}</strong>
@@ -596,12 +841,14 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           </div>
         </section>
 
+        {/* ASSIGNED COURIER */}
         {courier && (
           <section className="od-card od-courier-card">
             <div className="od-card-heading">
               <span className="od-eyebrow">YOUR COURIER</span>
               <span className="od-assigned">✓ Assigned</span>
             </div>
+
             <div className="od-courier-profile">
               <div className="od-avatar-wrap">
                 <img
@@ -614,14 +861,18 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 />
                 <i />
               </div>
+
               <div className="od-courier-info">
                 <h3>{courierName}</h3>
+
                 <p>
                   {courier.vehicleClass || "Courier"}
                   {courier.plateNumber ? ` • ${courier.plateNumber}` : ""}
                 </p>
+
                 <small>Atua delivery partner</small>
               </div>
+
               {isPaid && courier.phoneNumber && (
                 <button
                   className="od-icon-button od-phone-button"
@@ -634,6 +885,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 </button>
               )}
             </div>
+
             {isPaid && courier.phoneNumber && (
               <button
                 className="od-phone-row"
@@ -642,6 +894,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 }
               >
                 <span>Courier phone number</span>
+
                 <strong>
                   {courier.phoneNumber} <FaCopy />
                 </strong>
@@ -650,16 +903,19 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           </section>
         )}
 
+        {/* DELIVERY TIMELINE */}
         <section className="od-card">
           <div className="od-section-static-heading">
             <div>
               <span className="od-eyebrow">DELIVERY JOURNEY</span>
               <h2>Delivery Timeline</h2>
             </div>
+
             <span className="od-section-icon">
               <FaClock />
             </span>
           </div>
+
           <Timeline
             acceptedAt={order.acceptedAt}
             arrivedPickupAt={order.arrivedPickupAt}
@@ -670,6 +926,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           />
         </section>
 
+        {/* RECIPIENT DETAILS */}
         <Section
           title="Recipient Details"
           eyebrow="DELIVERY CONTACT"
@@ -678,6 +935,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           onToggle={() => toggleSection("recipient")}
         >
           <DetailRow label="Full name" value={order.recipientName} />
+
           <DetailRow
             label="Phone number"
             value={order.recipientNumber}
@@ -686,6 +944,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               copyToClipboard(order.recipientNumber, "Phone copied")
             }
           />
+
           <DetailRow
             label="Alternative phone"
             value={order.recipientNumber2}
@@ -695,6 +954,8 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
             }
           />
         </Section>
+
+        {/* ROUTE DETAILS */}
         <Section
           title="Route Details"
           eyebrow="PICKUP & DROPOFF"
@@ -703,13 +964,195 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           onToggle={() => toggleSection("route")}
         >
           <DetailRow label="Pickup location" value={order.originAddress} />
+
           <DetailRow
             label="Dropoff location"
             value={order.destinationAddress}
           />
+
           <DetailRow label="Trip type" value={order.tripType} />
         </Section>
 
+        {/* PAYMENT AND COLLECTION */}
+        <Section
+          title="Payment & Collection"
+          eyebrow="PAYMENT INFORMATION"
+          icon={<FaWallet />}
+          open={sections.payment}
+          onToggle={() => toggleSection("payment")}
+        >
+          <div className="od-payment-summary">
+            <div className="od-payment-summary-item">
+              <span>Payment status</span>
+              <strong>{paymentStatusLabel(paymentStatus)}</strong>
+            </div>
+
+            <div className="od-payment-summary-item">
+              <span>Total amount</span>
+              <strong>{formatCurrency(order.totalPrice)}</strong>
+            </div>
+          </div>
+
+          <DetailRow
+            label="Payment responsibility"
+            value={order.paymentResponsibility || "Not specified"}
+          />
+
+          <DetailRow
+            label="Payment timing"
+            value={order.paymentTiming || "Not specified"}
+          />
+
+          <DetailRow
+            label="Payment method"
+            value={paymentMethodLabel(paymentMethod)}
+          />
+
+          {/* <DetailRow
+            label="Payment reference"
+            value={paymentReference}
+            copyable={paymentReference !== "-"}
+            onCopy={() =>
+              copyToClipboard(paymentReference, "Payment reference copied")
+            }
+          /> */}
+
+          <DetailRow
+            label="Payment record ID"
+            value={paymentRecordId}
+            copyable={paymentRecordId !== "-"}
+            onCopy={() => copyToClipboard(paymentRecordId, "Payment ID copied")}
+          />
+
+          <DetailRow
+            label="Cash collection status"
+            value={order.cashCollectionStatus}
+          />
+
+          <DetailRow label="Funds status" value={order.fundsStatus} />
+
+          <DetailRow
+            label="Funds hold reason"
+            value={order.fundsHoldReason}
+            multiline
+          />
+
+          <DetailRow label="Payout status" value={order.payoutStatus} />
+
+          <DetailRow
+            label="Payment record status"
+            value={latestPayment?.status}
+          />
+
+          <DetailRow label="Payment provider" value={latestPayment?.provider} />
+
+          <DetailRow
+            label="Payment currency"
+            value={latestPayment?.currency || "NGN"}
+          />
+
+          <DetailRow
+            label="Payment record amount"
+            value={
+              latestPayment?.amount !== null &&
+              latestPayment?.amount !== undefined
+                ? formatCurrency(latestPayment.amount)
+                : null
+            }
+          />
+
+          <DetailRow
+            label="Payment created"
+            value={
+              latestPayment?.createdAt
+                ? formatDate(latestPayment.createdAt)
+                : null
+            }
+          />
+
+          {paymentLoading && (
+            <p className="od-payment-note">Loading payment information...</p>
+          )}
+
+          {!paymentLoading && canOpenPaymentLink && !isPaid && (
+            <div className="od-payment-link-card">
+              <div className="od-payment-link-heading">
+                <span className="od-section-icon">
+                  <FaCreditCard />
+                </span>
+
+                <div>
+                  <span className="od-eyebrow">SAVED PAYMENT LINK</span>
+                  <h3>Complete or revisit payment</h3>
+                </div>
+              </div>
+
+              <p>
+                This is the payment link saved for this order. You can reopen
+                it, copy it, or share it with the person responsible for
+                payment.
+              </p>
+
+              <div className="od-tracking-url">{paymentLink}</div>
+
+              <div className="od-button-row">
+                <button
+                  type="button"
+                  className="od-button od-button--primary"
+                  onClick={() =>
+                    copyToClipboard(paymentLink, "Payment link copied")
+                  }
+                >
+                  <FaCopy /> Copy Payment Link
+                </button>
+
+                <button
+                  type="button"
+                  className="od-button od-button--secondary"
+                  onClick={() =>
+                    window.open(paymentLink, "_blank", "noopener,noreferrer")
+                  }
+                >
+                  <FaExternalLinkAlt /> Open Payment Link
+                </button>
+
+                <button
+                  type="button"
+                  className="od-button od-button--secondary"
+                  onClick={sharePaymentLink}
+                >
+                  <FaExternalLinkAlt /> Share Payment Link
+                </button>
+              </div>
+            </div>
+          )}
+
+          {!paymentLoading && !canOpenPaymentLink && !isPaid && (
+            <p className="od-payment-note">
+              No saved payment link is available for this order. If electronic
+              payment is required, confirm that your payment initialization
+              function saves the checkout URL to the Payment record.
+            </p>
+          )}
+
+          {isPaid && (
+            <div className="od-completed-banner">
+              <span>
+                <FaCheck />
+              </span>
+
+              <div>
+                <strong>Payment Confirmed</strong>
+                <p>
+                  This order is marked as paid. Payment confirmation should come
+                  from backend verification or the Paystack webhook.
+                </p>
+              </div>
+            </div>
+          )}
+        </Section>
+
+        {/* RECIPIENT TRACKING */}
         {order.recipientTrackingEnabled &&
           order.recipientTrackingToken &&
           !order.recipientTrackingRevokedAt && (
@@ -718,16 +1161,20 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 <span className="od-section-icon">
                   <FaExternalLinkAlt />
                 </span>
+
                 <div>
                   <span className="od-eyebrow">RECIPIENT TRACKING</span>
                   <h2>Share delivery progress</h2>
                 </div>
               </div>
+
               <p>
                 Send this link to the recipient so they can follow the delivery
                 without signing into Atua.
               </p>
+
               <div className="od-tracking-url">{trackingUrl}</div>
+
               <div className="od-button-row">
                 <button
                   className="od-button od-button--primary"
@@ -735,9 +1182,9 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                     copyToClipboard(trackingUrl, "Tracking link copied")
                   }
                 >
-                  {" "}
                   <FaCopy /> Copy Link
                 </button>
+
                 <button
                   className="od-button od-button--secondary"
                   onClick={shareTrackingLink}
@@ -748,6 +1195,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
             </section>
           )}
 
+        {/* PARCEL DETAILS */}
         <Section
           title="Parcel Details"
           eyebrow="PACKAGE INFORMATION"
@@ -756,19 +1204,24 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           onToggle={() => toggleSection("load")}
         >
           <DetailRow label="Load category" value={order.loadCategory} />
+
           <DetailRow label="Vehicle class" value={order.vehicleClass} />
+
           <DetailRow label="Weight" value={order.declaredWeightBracket} />
+
           <DetailRow
             label="Package description"
             value={order.orderDetails}
             multiline
           />
+
           {order.deliveryVerificationCode && (
             <div className="od-verification">
               <div>
                 <span className="od-eyebrow">DELIVERY VERIFICATION CODE</span>
                 <small>Keep this safe</small>
               </div>
+
               <button
                 onClick={() =>
                   copyToClipboard(order.deliveryVerificationCode, "Code copied")
@@ -781,6 +1234,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           )}
         </Section>
 
+        {/* PRICE BREAKDOWN */}
         <Section
           title="Price Breakdown"
           eyebrow="PAYMENT SUMMARY"
@@ -807,15 +1261,18 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                 value={formatCurrency(value)}
               />
             ))}
+
           <div className="od-total-row">
             <div>
               <strong>Total Amount</strong>
               <small>Final delivery cost</small>
             </div>
+
             <strong>{formatCurrency(order.totalPrice)}</strong>
           </div>
         </Section>
 
+        {/* DELIVERY EVIDENCE */}
         {evidence.length > 0 && (
           <Section
             title="Delivery Evidence"
@@ -828,6 +1285,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               Photos captured during the delivery process. Select any image to
               view it in full screen.
             </p>
+
             <div className="od-evidence-grid">
               {evidence.map((image, index) => (
                 <button
@@ -839,7 +1297,9 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
                   }}
                 >
                   <img src={image.uri} alt={`Delivery evidence ${index + 1}`} />
+
                   <span className="od-evidence-expand">⤢</span>
+
                   <span className="od-evidence-number">{index + 1}</span>
                 </button>
               ))}
@@ -847,6 +1307,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           </Section>
         )}
 
+        {/* ORDER ACTIONS */}
         <div className="od-actions">
           {order.status === "BIDDING" && (
             <>
@@ -858,6 +1319,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               >
                 View Bids <FaArrowRight />
               </button>
+
               <button
                 className="od-button od-button--secondary"
                 onClick={() =>
@@ -868,6 +1330,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               </button>
             </>
           )}
+
           {isActiveOrder && (
             <button
               className="od-button od-button--primary"
@@ -876,11 +1339,13 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               Track Order <FaArrowRight />
             </button>
           )}
+
           {isDelivered && (
             <div className="od-completed-banner">
               <span>
                 <FaCheck />
               </span>
+
               <div>
                 <strong>Delivery Complete</strong>
                 <p>Your order has been successfully delivered.</p>
@@ -890,6 +1355,7 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
         </div>
       </div>
 
+      {/* FULL-SCREEN EVIDENCE VIEWER */}
       {showViewer && evidence.length > 0 && (
         <div
           className="od-viewer"
@@ -904,10 +1370,12 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
           >
             <div>
               <span className="od-eyebrow">DELIVERY EVIDENCE</span>
+
               <strong>
                 {selectedImage + 1} / {evidence.length}
               </strong>
             </div>
+
             <button
               onClick={() => setShowViewer(false)}
               aria-label="Close image viewer"
@@ -915,34 +1383,42 @@ export default function OrderDetails({ orderId: receivedOrderId }) {
               <FaTimes />
             </button>
           </div>
+
           <button
             className="od-viewer-nav od-viewer-prev"
             disabled={selectedImage === 0}
             onClick={(event) => {
               event.stopPropagation();
-              setSelectedImage((i) => Math.max(0, i - 1));
+
+              setSelectedImage((index) => Math.max(0, index - 1));
             }}
             aria-label="Previous image"
           >
             ‹
           </button>
+
           <img
             className="od-viewer-image"
             src={evidence[selectedImage]?.uri}
             alt={`Delivery evidence ${selectedImage + 1}`}
             onClick={(event) => event.stopPropagation()}
           />
+
           <button
             className="od-viewer-nav od-viewer-next"
             disabled={selectedImage === evidence.length - 1}
             onClick={(event) => {
               event.stopPropagation();
-              setSelectedImage((i) => Math.min(evidence.length - 1, i + 1));
+
+              setSelectedImage((index) =>
+                Math.min(evidence.length - 1, index + 1),
+              );
             }}
             aria-label="Next image"
           >
             ›
           </button>
+
           <p
             className="od-viewer-footer"
             onClick={(event) => event.stopPropagation()}

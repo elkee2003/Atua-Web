@@ -12,6 +12,30 @@ import { uploadEvidence } from "../../../../../../../../utils/uploadEvidence";
 import MaxiReviewScreen from "../MaxiReviewCom/MaxiReviewScreen";
 import "./MaxiSubmit.css";
 
+// Generate a cryptographically secure six-digit delivery verification code.
+const generateVerificationCode = () => {
+  if (!globalThis.crypto?.getRandomValues) {
+    throw new Error(
+      "Secure verification-code generation is unavailable in this browser.",
+    );
+  }
+
+  const range = 900000;
+  const maxValue = 0x100000000; // 2^32
+  const limit = Math.floor(maxValue / range) * range;
+  const randomValues = new Uint32Array(1);
+
+  // Rejection sampling avoids modulo bias.
+  while (true) {
+    globalThis.crypto.getRandomValues(randomValues);
+    const randomValue = randomValues[0];
+
+    if (randomValue < limit) {
+      return String(100000 + (randomValue % range));
+    }
+  }
+};
+
 const MaxiSubmit = () => {
   const [submitting, setSubmitting] = useState(false);
 
@@ -34,6 +58,10 @@ const MaxiSubmit = () => {
   } = useLocationContext();
 
   const {
+    paymentResponsibility,
+    paymentTiming,
+    paymentMethod,
+
     senderName,
     senderNumber,
     senderNumber2,
@@ -111,6 +139,27 @@ const MaxiSubmit = () => {
         return;
       }
 
+      // Keep this validation aligned with MaxiRecipient.jsx.
+      // When the receiver is responsible, the sender must not choose
+      // CASH or PAYSTACK. The receiver chooses the method at delivery.
+      const isValidPaymentArrangement =
+        (paymentResponsibility === "SENDER" &&
+          paymentTiming === "BEFORE_PICKUP" &&
+          paymentMethod === "PAYSTACK") ||
+        (paymentResponsibility === "SENDER" &&
+          paymentTiming === "AT_PICKUP" &&
+          paymentMethod === "CASH") ||
+        (paymentResponsibility === "RECEIVER" &&
+          paymentTiming === "ON_DELIVERY" &&
+          paymentMethod == null);
+
+      if (!isValidPaymentArrangement) {
+        window.alert(
+          "Invalid Payment Arrangement: Please return to the previous step and select a valid payment method and timing.",
+        );
+        return;
+      }
+
       // Calculate freight pricing.
       const pricing = freightPricingEngine({
         type: vehicleClass,
@@ -139,6 +188,21 @@ const MaxiSubmit = () => {
         return;
       }
 
+      // Generate a delivery code for sender cash-at-pickup orders and
+      // receiver-responsible orders. The receiver-responsible order stores
+      // paymentMethod as null because the receiver chooses at delivery.
+      // Sender Paystack-before-pickup orders should receive their code
+      // from the trusted payment backend after successful payment.
+      const shouldGenerateVerificationCode =
+        (paymentResponsibility === "SENDER" &&
+          paymentTiming === "AT_PICKUP" &&
+          paymentMethod === "CASH") ||
+        paymentResponsibility === "RECEIVER";
+
+      const deliveryVerificationCode = shouldGenerateVerificationCode
+        ? generateVerificationCode()
+        : undefined;
+
       // Capture media before resetting context.
       const mediaPhotos = [...(senderPreTransferPhotos || [])];
       const mediaVideo = senderPreTransferVideo;
@@ -150,7 +214,19 @@ const MaxiSubmit = () => {
       // Create the Maxi order.
       const newOrder = await DataStore.save(
         new Order({
+          // orderEnvironment: "TEST",
           orderEnvironment: "PRODUCTION",
+
+          // Booking source.
+          bookingSource: "WEBSITE",
+
+          // Payment arrangement.
+          paymentResponsibility,
+          paymentTiming,
+          paymentMethod,
+
+          // Delivery verification code.
+          deliveryVerificationCode,
 
           // Sender details.
           senderName: senderName.trim(),
@@ -246,7 +322,9 @@ const MaxiSubmit = () => {
       // Upload evidence in the background.
       if (hasSenderMedia) {
         setTimeout(() => {
-          uploadEvidence(newOrder, mediaPhotos, mediaVideo);
+          uploadEvidence(newOrder, mediaPhotos, mediaVideo).catch((error) => {
+            console.error("Maxi evidence upload failed:", error);
+          });
         }, 0);
       }
 

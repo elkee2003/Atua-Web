@@ -38,9 +38,14 @@ export default function MaxiReviewScreen() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const {
+    paymentResponsibility,
+    paymentTiming,
+    paymentMethod,
+
     senderName,
     senderNumber,
     senderNumber2,
+
     recipientName,
     recipientNumber,
     recipientNumber2,
@@ -152,8 +157,12 @@ export default function MaxiReviewScreen() {
     "Not selected";
 
   const isOfferInvalid =
-    initialOfferPrice < estimatedMinPrice ||
-    initialOfferPrice > estimatedMaxPrice;
+    initialOfferPrice === "" ||
+    initialOfferPrice == null ||
+    !Number.isFinite(Number(initialOfferPrice)) ||
+    Number(initialOfferPrice) <= 0 ||
+    Number(initialOfferPrice) < Number(estimatedMinPrice) ||
+    Number(initialOfferPrice) > Number(estimatedMaxPrice);
 
   const formatCurrency = (value) => `₦${Number(value || 0).toLocaleString()}`;
 
@@ -544,6 +553,97 @@ export default function MaxiReviewScreen() {
           </div>
         </div>
 
+        {/* PAYMENT ARRANGEMENT */}
+        <div className="maxiReviewScreenCard">
+          <div className="maxiReviewScreenCardHeader">
+            <div className="maxiReviewScreenSectionIcon">
+              <Banknote size={17} color="#F97316" strokeWidth={2} />
+            </div>
+
+            <div>
+              <span className="maxiReviewScreenSectionTitle">
+                Payment Arrangement
+              </span>
+
+              <span className="maxiReviewScreenSectionSubtitle">
+                Who pays, how they pay, and when payment is due
+              </span>
+            </div>
+          </div>
+
+          <div className="maxiReviewScreenDetailRows">
+            {/* PAYER */}
+            <div className="maxiReviewScreenPayerRow">
+              <span className="maxiReviewScreenFieldLabel">PAYER</span>
+
+              <span
+                className={`maxiReviewScreenPayerBadge ${
+                  paymentResponsibility === "RECEIVER"
+                    ? "maxiReviewScreenPayerBadgeReceiver"
+                    : "maxiReviewScreenPayerBadgeSender"
+                }`}
+              >
+                {paymentResponsibility === "RECEIVER"
+                  ? "Receiver pays"
+                  : "Sender pays"}
+              </span>
+            </div>
+
+            <div className="maxiReviewScreenRowDivider" />
+
+            {/* PAYMENT METHOD */}
+            <div className="maxiReviewScreenDetailRow">
+              <span className="maxiReviewScreenFieldLabel">METHOD</span>
+
+              <span className="maxiReviewScreenFieldValue">
+                {paymentMethod === "PAYSTACK"
+                  ? "Electronic payment (Paystack)"
+                  : paymentMethod === "CASH"
+                    ? "Cash"
+                    : "Not selected"}
+              </span>
+            </div>
+
+            <div className="maxiReviewScreenRowDivider" />
+
+            {/* PAYMENT TIMING */}
+            <div className="maxiReviewScreenDetailRow">
+              <span className="maxiReviewScreenFieldLabel">WHEN TO PAY</span>
+
+              <span className="maxiReviewScreenFieldValue">
+                {paymentTiming === "BEFORE_PICKUP"
+                  ? "Before pickup"
+                  : paymentTiming === "AT_PICKUP"
+                    ? "At pickup"
+                    : paymentTiming === "ON_DELIVERY"
+                      ? "On delivery"
+                      : "Not selected"}
+              </span>
+            </div>
+          </div>
+
+          {paymentResponsibility === "RECEIVER" && (
+            <div className="maxiReviewScreenPayerNotice">
+              <Info size={15} color="#92400E" />
+
+              <span className="maxiReviewScreenPayerNoticeText">
+                {paymentMethod === "PAYSTACK" &&
+                paymentTiming === "BEFORE_PICKUP"
+                  ? "The receiver must complete electronic payment before pickup. Ensure their phone number is correct so the payment request can reach them."
+                  : paymentMethod === "PAYSTACK" &&
+                      paymentTiming === "ON_DELIVERY"
+                    ? "The receiver is responsible for electronic payment on delivery. Payment must be verified before the order is treated as paid."
+                    : paymentMethod === "CASH" &&
+                        paymentTiming === "ON_DELIVERY"
+                      ? "The receiver is expected to pay cash on delivery. The payment must be recorded separately from electronic payments."
+                      : paymentMethod == null && paymentTiming === "ON_DELIVERY"
+                        ? "The receiver will choose whether to pay by cash or electronic payment on delivery."
+                        : "The receiver is responsible for the delivery payment. Confirm the selected timing and method before continuing."}
+              </span>
+            </div>
+          )}
+        </div>
+
         {/* PRICE AND OFFER */}
         <div className="maxiReviewScreenPriceCard">
           <div className="maxiReviewScreenPriceHeader">
@@ -600,9 +700,10 @@ export default function MaxiReviewScreen() {
                 className="maxiReviewScreenOfferInput"
                 type="number"
                 value={initialOfferPrice ?? ""}
-                onChange={(event) =>
-                  setInitialOfferPrice(Number(event.target.value))
-                }
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setInitialOfferPrice(value === "" ? "" : Number(value));
+                }}
               />
             </div>
 

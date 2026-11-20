@@ -1067,6 +1067,14 @@ const ORDER_FIELDS = `
   transportationType
   vehicleClass
   orderEnvironment
+
+  bookingSource
+  paymentResponsibility
+  paymentTiming
+  paymentMethod
+  supportCreatedByID
+  receiverConfirmationStatus
+
   status
 
   hasNewOffer
@@ -1437,58 +1445,115 @@ const incrementMaxiCourierCount = async (order) => {
    GET PAYMENT BY REFERENCE
 ========================================================== */
 
+/* ==========================================================
+   GET PAYMENT BY REFERENCE
+========================================================== */
+
 const getPaymentByReference = async (reference) => {
   if (!reference) {
     throw new Error("Payment reference is required.");
   }
 
+  console.log("GET PAYMENT BY REFERENCE REQUEST:", {
+    operationName: "GetPaymentByReference",
+    endpointHost: new URL(GRAPHQL_ENDPOINT).hostname,
+    environment: process.env.ENV || null,
+    reference,
+  });
+
+  /*
+   * IMPORTANT:
+   * Do not use limit: 1 here.
+   *
+   * AppSync list queries can paginate through records.
+   * A filtered query with limit: 1 can return no match
+   * even when the Payment exists further into the table.
+   */
   const query = `
     query ListPayments(
       $filter: ModelPaymentFilterInput
+      $limit: Int
+      $nextToken: String
     ) {
       listPayments(
         filter: $filter
-        limit: 1
+        limit: $limit
+        nextToken: $nextToken
       ) {
         items {
           id
-
           orderID
           userID
-
           amount
           currency
-
           status
           paymentMethod
           provider
-
           reference
-
           createdAt
           updatedAt
-
           _version
           _lastChangedAt
           _deleted
         }
+        nextToken
       }
     }
   `;
 
-  const data = await graphqlRequest(
-    query,
-    {
-      filter: {
-        reference: {
-          eq: reference,
-        },
-      },
-    },
-    "GetPaymentByReference",
-  );
+  let nextToken = null;
+  let payment = null;
 
-  return data?.listPayments?.items?.find((item) => !item?._deleted) || null;
+  do {
+    const data = await graphqlRequest(
+      query,
+      {
+        filter: {
+          reference: {
+            eq: reference,
+          },
+        },
+        limit: 100,
+        nextToken,
+      },
+      "GetPaymentByReference",
+    );
+
+    const result = data?.listPayments;
+
+    if (!result) {
+      throw new Error("AppSync did not return the Payment list.");
+    }
+
+    const matches = (result.items || []).filter(
+      (item) => item && !item._deleted && item.reference === reference,
+    );
+
+    if (matches.length > 1) {
+      throw new Error(
+        `Multiple Payment records found for reference ${reference}.`,
+      );
+    }
+
+    if (matches.length === 1) {
+      payment = matches[0];
+      break;
+    }
+
+    // Continue through the remaining pages if necessary.
+    nextToken = result.nextToken || null;
+  } while (nextToken);
+
+  console.log("GET PAYMENT BY REFERENCE RESULT:", {
+    reference,
+    paymentFound: Boolean(payment),
+    paymentID: payment?.id || null,
+    orderID: payment?.orderID || null,
+    paymentStatus: payment?.status || null,
+    returnedReference: payment?.reference || null,
+  });
+
+  return payment;
 };
 
 /* ==========================================================
@@ -1526,6 +1591,9 @@ const createPayment = async ({ order, transaction }) => {
         orderID
         userID
 
+        payerPhone
+        payerEmail
+
         amount
         currency
 
@@ -1561,6 +1629,15 @@ const createPayment = async ({ order, transaction }) => {
     provider: "PAYSTACK",
 
     reference: transaction.reference,
+
+    payerPhone:
+      transaction?.customer?.phone || transaction?.metadata?.payerPhone || null,
+
+    payerEmail:
+      transaction?.customer?.email ||
+      transaction?.customer?.customer_email ||
+      transaction?.email ||
+      null,
   };
 
   console.log("CREATING PAYMENT:", {
@@ -1594,6 +1671,72 @@ const createPayment = async ({ order, transaction }) => {
   });
 
   return payment;
+};
+
+/* ==========================================================
+   MARK EXISTING PAYMENT AS SUCCESSFUL
+========================================================== */
+
+const markPaymentAsSuccessful = async (payment) => {
+  if (!payment?.id) {
+    throw new Error("Cannot update Payment: missing Payment ID.");
+  }
+
+  if (payment.status === "SUCCESS") {
+    return payment;
+  }
+
+  if (payment.status !== "PENDING") {
+    throw new Error(
+      `Cannot mark Payment ${payment.id} as SUCCESS because its current status is ${payment.status}.`,
+    );
+  }
+
+  const mutation = `
+    mutation UpdatePayment($input: UpdatePaymentInput!) {
+      updatePayment(input: $input) {
+        id
+        orderID
+        userID
+        amount
+        currency
+        status
+        provider
+        reference
+        paidAt
+        _version
+      }
+    }
+  `;
+
+  const input = {
+    id: payment.id,
+    status: "SUCCESS",
+    paidAt: new Date().toISOString(),
+  };
+
+  if (Number.isInteger(payment._version)) {
+    input._version = payment._version;
+  }
+
+  const data = await graphqlRequest(mutation, { input }, "UpdatePayment");
+
+  const updatedPayment = data?.updatePayment;
+
+  if (!updatedPayment || updatedPayment.status !== "SUCCESS") {
+    throw new Error(
+      `Payment ${payment.id} was not confirmed as SUCCESS after update.`,
+    );
+  }
+
+  console.log("PAYMENT MARKED SUCCESSFUL:", {
+    paymentID: updatedPayment.id,
+    orderID: updatedPayment.orderID,
+    reference: updatedPayment.reference,
+    status: updatedPayment.status,
+  });
+
+  return updatedPayment;
 };
 
 /* ==========================================================
@@ -1649,8 +1792,21 @@ const finalizePaidOrder = async ({ order, payment, transaction }) => {
    * again.
    */
 
-  const expectedPostPaymentStatus =
-    order.transportationType === "MAXI" ? "ACCEPTED" : "READY_FOR_PICKUP";
+  const isMaxiOrder =
+    String(order.transportationType || "")
+      .trim()
+      .toUpperCase() === "MAXI";
+
+  const isPayOnDelivery =
+    String(order.paymentTiming || "")
+      .trim()
+      .toUpperCase() === "ON_DELIVERY";
+
+  const expectedPostPaymentStatus = isPayOnDelivery
+    ? order.status
+    : isMaxiOrder
+      ? "ACCEPTED"
+      : "READY_FOR_PICKUP";
 
   if (
     order.paymentStatus === "PAID" &&
@@ -1668,6 +1824,22 @@ const finalizePaidOrder = async ({ order, payment, transaction }) => {
     });
 
     return order;
+  }
+
+  // Do not overwrite a different or incompletely finalized payment.
+  if (order.paymentStatus === "PAID") {
+    throw new Error(
+      `Order ${order.id} is already PAID with payment reference ` +
+        `${order.paymentReference || "unknown"}.`,
+    );
+  }
+
+  // Do not resurrect cancelled or delivered orders.
+  if (order.status === "CANCELLED" || order.status === "DELIVERED") {
+    throw new Error(
+      `Cannot finalize payment for Order ${order.id} ` +
+        `because its status is ${order.status}.`,
+    );
   }
 
   /*
@@ -1706,8 +1878,11 @@ const finalizePaidOrder = async ({ order, payment, transaction }) => {
     }
   `;
 
-  const paymentFinalizedStatus =
-    order.transportationType === "MAXI" ? "ACCEPTED" : "READY_FOR_PICKUP";
+  const paymentFinalizedStatus = isPayOnDelivery
+    ? order.status
+    : isMaxiOrder
+      ? "ACCEPTED"
+      : "READY_FOR_PICKUP";
 
   const input = {
     id: order.id,
@@ -3430,30 +3605,172 @@ exports.handler = async (event) => {
     }
 
     /* ======================================================
+      VALIDATE ORDER PAYMENT ARRANGEMENT
+    ====================================================== */
+
+    const paymentResponsibility = String(order.paymentResponsibility || "")
+      .trim()
+      .toUpperCase();
+
+    const paymentTiming = String(order.paymentTiming || "")
+      .trim()
+      .toUpperCase();
+
+    const paymentMethod = String(order.paymentMethod || "")
+      .trim()
+      .toUpperCase();
+
+    const isSupportedPaystackArrangement =
+      paymentMethod === "PAYSTACK" &&
+      ((paymentResponsibility === "SENDER" &&
+        paymentTiming === "BEFORE_PICKUP") ||
+        (paymentResponsibility === "RECEIVER" &&
+          (paymentTiming === "BEFORE_PICKUP" ||
+            paymentTiming === "ON_DELIVERY")));
+
+    if (!isSupportedPaystackArrangement) {
+      throw new Error(
+        `Order ${order.id} is not configured for a supported ` +
+          `Paystack payment. Received responsibility=${paymentResponsibility}, ` +
+          `timing=${paymentTiming}, method=${paymentMethod}.`,
+      );
+    }
+
+    console.log("PAYSTACK PAYMENT ARRANGEMENT VALIDATED:", {
+      orderID: order.id,
+      paymentResponsibility,
+      paymentTiming,
+      paymentMethod,
+    });
+
+    /* ======================================================
        FIND EXISTING PAYMENT
     ====================================================== */
 
     let payment = await getPaymentByReference(reference);
 
+    if (!order.paymentReference || order.paymentReference !== reference) {
+      throw new Error(
+        `Paystack reference ${reference} does not match ` +
+          `the current paymentReference on Order ${order.id}.`,
+      );
+    }
+
     /* ======================================================
-       CREATE PAYMENT IF NEEDED
+       VALIDATE PAYSTACK TRANSACTION
+    ====================================================== */
+
+    // A charge.success event must also report success.
+    if (
+      typeof transaction.status !== "string" ||
+      transaction.status.toLowerCase() !== "success"
+    ) {
+      throw new Error(
+        `Paystack transaction ${reference} is not successful. Status: ${transaction.status}`,
+      );
+    }
+
+    // All Atua orders must be paid in NGN for the expected
+    // order total, regardless of who is responsible for paying.
+    const expectedAmountKobo = Math.round(Number(order.totalPrice) * 100);
+
+    const receivedAmountKobo = Number(transaction.amount);
+
+    if (
+      !Number.isFinite(expectedAmountKobo) ||
+      expectedAmountKobo <= 0 ||
+      !Number.isFinite(receivedAmountKobo) ||
+      receivedAmountKobo !== expectedAmountKobo
+    ) {
+      throw new Error(
+        `Payment amount mismatch for Order ${order.id}. ` +
+          `Expected ${expectedAmountKobo} kobo; ` +
+          `received ${receivedAmountKobo} kobo.`,
+      );
+    }
+
+    if (
+      typeof transaction.currency !== "string" ||
+      transaction.currency.toUpperCase() !== "NGN"
+    ) {
+      throw new Error(
+        `Payment currency mismatch for Order ${order.id}. ` +
+          `Expected NGN; received ${transaction.currency}.`,
+      );
+    }
+
+    /* ======================================================
+       CREATE OR VALIDATE PAYMENT
     ====================================================== */
 
     if (!payment) {
-      payment = await createPayment({
-        order,
-        transaction,
-      });
+      throw new Error(
+        `No Payment record exists for Paystack reference ${reference}. ` +
+          `Order ${order.id} must be checked before this payment can be finalized.`,
+      );
     } else {
-      console.log("PAYMENT ALREADY EXISTS:", {
+      // Never associate a Payment with a different Order.
+      if (payment.orderID !== order.id) {
+        throw new Error(
+          `Payment ${payment.id} belongs to Order ${payment.orderID}, ` +
+            `not Order ${order.id}.`,
+        );
+      }
+
+      if (payment.userID !== order.userID) {
+        throw new Error(
+          `Payment ${payment.id} userID does not match Order ${order.id}.`,
+        );
+      }
+
+      if (payment.reference !== reference) {
+        throw new Error(`Payment reference mismatch for Order ${order.id}.`);
+      }
+
+      if (payment.provider !== "PAYSTACK") {
+        throw new Error(`Payment ${payment.id} is not a PAYSTACK payment.`);
+      }
+
+      const recordedPaymentAmount = Number(payment.amount);
+
+      if (
+        !Number.isFinite(recordedPaymentAmount) ||
+        Math.round(recordedPaymentAmount * 100) !== expectedAmountKobo
+      ) {
+        throw new Error(
+          `Recorded Payment amount does not match Order ${order.id}.`,
+        );
+      }
+
+      if (
+        typeof payment.currency !== "string" ||
+        payment.currency.toUpperCase() !== "NGN"
+      ) {
+        throw new Error(
+          `Recorded Payment currency is invalid for Order ${order.id}.`,
+        );
+      }
+
+      // Do not silently treat a failed or refunded payment
+      // record as a successful payment.
+      if (payment.status !== "PENDING" && payment.status !== "SUCCESS") {
+        throw new Error(
+          `Payment ${payment.id} has unexpected status ${payment.status}.`,
+        );
+      }
+
+      console.log("EXISTING PAYMENT VALIDATED:", {
         paymentID: payment.id,
-
         orderID: payment.orderID,
-
         reference: payment.reference,
-
         status: payment.status,
       });
+
+      // Paystack confirmed the charge, so persist the
+      // successful status on an existing PENDING Payment.
+      if (payment.status === "PENDING") {
+        payment = await markPaymentAsSuccessful(payment);
+      }
     }
 
     /* ======================================================

@@ -25,7 +25,6 @@ const ReviewUser = () => {
 
   return (
     <div className="reviewUserCom-container">
-      {/* ================= HEADER ================= */}
       <header className="reviewUserCom-header">
         <button
           type="button"
@@ -53,9 +52,7 @@ const ReviewUser = () => {
         </button>
       </header>
 
-      {/* ================= CONTENT ================= */}
       <main className="reviewUserCom-content">
-        {/* PROFILE HERO */}
         <section className="reviewUserCom-photoCard">
           <div className="reviewUserCom-photoCardBody">
             <div className="reviewUserCom-reviewProfilePicContainer">
@@ -83,7 +80,6 @@ const ReviewUser = () => {
           </div>
         </section>
 
-        {/* CONTACT SECTION */}
         <section className="reviewUserCom-infoCard">
           <div className="reviewUserCom-cardHeader">
             <div className="reviewUserCom-cardHeaderIcon">
@@ -116,7 +112,6 @@ const ReviewUser = () => {
           </div>
         </section>
 
-        {/* ADDRESS SECTION */}
         <section className="reviewUserCom-infoCard">
           <div className="reviewUserCom-cardHeader">
             <div className="reviewUserCom-cardHeaderIcon">
@@ -168,7 +163,6 @@ const ReviewUser = () => {
           </div>
         </section>
 
-        {/* LOCATION CONFIRMATION */}
         <div className="reviewUserCom-locationConfirmation">
           <div className="reviewUserCom-locationConfirmationIcon">
             <FaCheckCircle className="reviewUserCom-locationConfirmationGlyph" />
@@ -185,11 +179,9 @@ const ReviewUser = () => {
           </div>
         </div>
 
-        {/* SPACING FOR FIXED FOOTER */}
         <div className="reviewUserCom-bottomSpacer" />
       </main>
 
-      {/* ================= BOTTOM CTA ================= */}
       <footer className="reviewUserCom-footer">
         <button
           type="button"

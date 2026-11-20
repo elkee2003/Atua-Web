@@ -24,6 +24,18 @@
   font-weight: 700;
 }
 
+.maxiRecipient__section {
+  margin-bottom: 26px;
+}
+
+.maxiRecipient__sectionTitle {
+  margin: 0 0 12px;
+  color: #0f172a;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
 .maxiRecipient__fields {
   display: flex;
   flex-direction: column;
@@ -56,6 +68,141 @@
 .maxiRecipient__input:focus {
   border-color: #64748b;
   box-shadow: 0 0 0 3px rgb(148 163 184 / 18%);
+}
+
+.maxiRecipient__payerSection {
+  margin-top: 6px;
+  margin-bottom: 16px;
+}
+
+.maxiRecipient__payerSubtitle {
+  margin: -4px 0 16px;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.maxiRecipient__payerOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+
+/* Payment method section: add space between the heading and options */
+.maxiRecipient__paymentMethods {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+/* Keep the payment-method heading separate from the buttons */
+.maxiRecipient__paymentMethods .maxiRecipient__sectionTitle {
+  margin: 0 0 4px;
+}
+
+
+.maxiRecipient__payerOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.maxiRecipient__payerOption:hover {
+  border-color: #94a3b8;
+}
+
+.maxiRecipient__payerOption--selected {
+  border-color: #0f766e;
+  background: #f0fdfa;
+}
+
+.maxiRecipient__payerOption:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.maxiRecipient__payerIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  font-size: 20px;
+}
+
+.maxiRecipient__payerText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.maxiRecipient__payerTitle {
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.maxiRecipient__payerDescription {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.maxiRecipient__radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 21px;
+  width: 21px;
+  height: 21px;
+  box-sizing: border-box;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 50%;
+}
+
+.maxiRecipient__radio--selected {
+  border-color: #0f766e;
+}
+
+.maxiRecipient__radioInner {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #0f766e;
+}
+
+.maxiRecipient__payerNotice {
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .maxiRecipient__error {
@@ -106,6 +253,98 @@
   outline: 3px solid #93c5fd;
   outline-offset: 3px;
 }
+
+
+.maxiRecipient__arrangementHeading {
+  margin: 20px 0 10px;
+  color: #0f172a;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.maxiRecipient__arrangementOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.maxiRecipient__arrangementOption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 15px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 14px;
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.maxiRecipient__arrangementOption:hover {
+  border-color: #94a3b8;
+}
+
+.maxiRecipient__arrangementOption--selected {
+  border-color: #0f766e;
+  background: #f0fdfa;
+  box-shadow: 0 0 0 1px rgb(15 118 110 / 8%);
+}
+
+.maxiRecipient__arrangementOption:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 3px;
+}
+
+.maxiRecipient__arrangementIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  font-size: 20px;
+}
+
+.maxiRecipient__arrangementText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.maxiRecipient__arrangementTitle {
+  color: #0f172a;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.maxiRecipient__arrangementDescription {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.maxiRecipient__paymentValidationHint {
+  margin: 8px 0 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
 
 @media (min-width: 768px) {
   .maxiRecipient {

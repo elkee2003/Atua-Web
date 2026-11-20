@@ -7,8 +7,6 @@ import { User } from "../../src/models";
 
 const AuthContext = createContext({});
 
-
-
 const AuthProvider = ({ children }) => {
   const navigate = useNavigate(); // ✅ added
 
@@ -134,7 +132,7 @@ const AuthProvider = ({ children }) => {
         if (opType === "UPDATE") {
           setDbUser(element);
         }
-      }
+      },
     );
 
     return () => subscription.unsubscribe();
@@ -150,11 +148,48 @@ const AuthProvider = ({ children }) => {
           await DataStore.clear();
           setDbUser(null);
         }
-      }
+      },
     );
 
     return () => deleteSubscription.unsubscribe();
   }, [dbUser]);
+
+  // ============================================================
+  // TEMPORARY LOCAL DATASTORE RESET — RUN ONCE
+  // ============================================================
+
+  // useEffect(() => {
+  //   let cancelled = false;
+
+  //   const resetLocalDataStore = async () => {
+  //     try {
+  //       console.log("==========================================");
+  //       console.log("🧹 CLEARING LOCAL DATASTORE...");
+  //       console.log("==========================================");
+
+  //       await DataStore.clear();
+
+  //       if (cancelled) return;
+
+  //       console.log("🧹 LOCAL DATASTORE CLEARED");
+
+  //       await DataStore.start();
+
+  //       if (cancelled) return;
+
+  //       console.log("✅ DATASTORE RESTARTED");
+  //       console.log("🧹 LOCAL DATASTORE RESET COMPLETE");
+  //     } catch (error) {
+  //       console.error("❌ FAILED TO RESET LOCAL DATASTORE:", error);
+  //     }
+  //   };
+
+  //   resetLocalDataStore();
+
+  //   return () => {
+  //     cancelled = true;
+  //   };
+  // }, []);
 
   return (
     <AuthContext.Provider

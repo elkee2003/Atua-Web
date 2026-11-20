@@ -648,7 +648,13 @@ const OrderTrackingScreen = ({ orderId: receivedOrderId }) => {
         );
       }
 
-      navigate(`/send/payment/${updatedOrder.id}`);
+      const paymentPath =
+        updatedOrder.transportationType === "MAXI" &&
+        updatedOrder.paymentResponsibility === "RECEIVER"
+          ? `/send/receiver_payment/${updatedOrder.id}`
+          : `/send/payment/${updatedOrder.id}`;
+
+      navigate(paymentPath);
     } catch (error) {
       console.error("ACCEPT OFFER ERROR:", error);
       window.alert(error?.message || "Unable to accept this offer.");
@@ -739,9 +745,13 @@ const OrderTrackingScreen = ({ orderId: receivedOrderId }) => {
         );
 
         if (proceed) {
-          navigate(`/send/payment/${latestOrder.id}`, {
-            replace: true,
-          });
+          const paymentPath =
+            latestOrder.transportationType === "MAXI" &&
+            latestOrder.paymentResponsibility === "RECEIVER"
+              ? `/send/receiver_payment/${latestOrder.id}`
+              : `/send/payment/${latestOrder.id}`;
+
+          navigate(paymentPath, { replace: true });
         }
       } catch (error) {
         console.error("MAXI ACCEPTANCE CHECK ERROR:", error);

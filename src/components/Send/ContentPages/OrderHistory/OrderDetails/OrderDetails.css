@@ -1273,6 +1273,186 @@
 }
 
 /* =========================================================
+   PAYMENT & COLLECTION
+   Added for the Payment & Collection section in OrderDetails.jsx
+========================================================= */
+
+.od-payment-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 14px 0;
+  padding: 16px;
+  border: 1px solid var(--od-border);
+  border-radius: 17px;
+  background: var(--od-surface-muted);
+}
+
+.od-payment-summary > div {
+  min-width: 0;
+}
+
+.od-payment-summary .od-eyebrow {
+  margin-bottom: 5px;
+}
+
+.od-payment-summary strong {
+  display: block;
+  color: var(--od-text);
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.od-payment-summary p {
+  margin: 5px 0 0;
+  color: var(--od-text-secondary);
+  font-size: 11px;
+  line-height: 17px;
+}
+
+.od-payment-summary .od-status {
+  white-space: normal;
+  text-align: center;
+}
+
+/* Payment link card */
+
+.od-payment-link-card {
+  margin-top: 14px;
+  padding: 15px;
+  border: 1px solid var(--od-border);
+  border-radius: 17px;
+  background: var(--od-surface);
+}
+
+.od-payment-link-card > strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--od-text);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.od-payment-link-card > p {
+  margin: 0 0 12px;
+  color: var(--od-text-secondary);
+  font-size: 12px;
+  line-height: 19px;
+  overflow-wrap: anywhere;
+}
+
+.od-payment-link-url {
+  display: block;
+  margin: 10px 0;
+  padding: 11px;
+  border: 1px solid var(--od-border);
+  border-radius: 11px;
+  background: var(--od-surface-muted);
+  color: var(--od-text);
+  font-size: 11px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.od-payment-link-card .od-button-row {
+  margin: 12px 0 0;
+}
+
+.od-payment-link-card .od-button {
+  min-height: 42px;
+  padding: 10px 12px;
+  font-size: 12px;
+}
+
+/* Payment confirmation banner */
+
+.od-payment-confirmed {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid #B7E5C5;
+  border-radius: 15px;
+  background: var(--od-success-soft);
+  color: var(--od-success);
+}
+
+.od-payment-confirmed > span {
+  display: inline-flex;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #D0F0DA;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.od-payment-confirmed > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.od-payment-confirmed strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.od-payment-confirmed p {
+  margin: 4px 0 0;
+  color: #286340;
+  font-size: 12px;
+  line-height: 18px;
+  overflow-wrap: anywhere;
+}
+
+/* Payment amount breakdown */
+
+.od-payment-breakdown {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 15px;
+  background: var(--od-surface-muted);
+}
+
+.od-payment-breakdown h3 {
+  margin: 0 0 8px;
+  color: var(--od-text);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.od-payment-breakdown-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--od-border);
+  color: var(--od-text-secondary);
+  font-size: 12px;
+}
+
+.od-payment-breakdown-row:last-child {
+  border-bottom: 0;
+}
+
+.od-payment-breakdown-row strong {
+  color: var(--od-text);
+  font-weight: 800;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+/* =========================================================
    RESPONSIVE LAYOUT
 ========================================================= */
 
@@ -1370,6 +1550,41 @@
   .od-completed-banner {
     align-items: flex-start;
     padding: 16px;
+  }
+
+  .od-payment-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .od-payment-summary strong {
+    font-size: 20px;
+  }
+
+  .od-payment-summary .od-status {
+    align-self: flex-start;
+  }
+
+  .od-payment-link-card {
+    padding: 12px;
+  }
+
+  .od-payment-link-card .od-button-row {
+    flex-direction: column;
+  }
+
+  .od-payment-link-card .od-button {
+    width: 100%;
+  }
+
+  .od-payment-confirmed {
+    padding: 12px;
+  }
+
+  .od-payment-breakdown {
+    padding: 12px;
   }
 }
 

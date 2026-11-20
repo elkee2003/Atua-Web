@@ -15,7 +15,9 @@ import {
 import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 import { useLocationContext } from "../../../../../../Providers/ClientProvider/LocationProvider";
 import { useOrderContext } from "../../../../../../Providers/ClientProvider/OrderProvider";
+
 import { Order, PaymentMethod } from "../../../../../../src/models";
+
 import {
   verifyAtuaPayment,
   chargeAtuaPaymentMethod,
@@ -25,19 +27,54 @@ import "./Payment.css";
 
 const client = generateClient();
 
+/* ============================================================
+   INITIALIZE ATUA PAYMENT MUTATION
+
+   This must match the InitializeAtuaPaymentResult fields
+   exposed by your AppSync schema.
+============================================================ */
+
+const initializeAtuaPaymentMutation = /* GraphQL */ `
+  mutation InitializeAtuaPayment(
+    $orderId: ID!
+    $payerEmail: AWSEmail
+    $payerPhone: String
+  ) {
+    initializeAtuaPayment(
+      orderId: $orderId
+      payerEmail: $payerEmail
+      payerPhone: $payerPhone
+    ) {
+      success
+      message
+      orderId
+      paymentId
+      reference
+      checkoutUrl
+      amount
+      currency
+      payerEmail
+      paymentResponsibility
+    }
+  }
+`;
+
+/* ============================================================
+   HELPERS
+============================================================ */
+
 const formatMoney = (value) =>
   Number(value || 0).toLocaleString("en-NG", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
 
-const getPaymentReference = (response) =>
-  response?.reference ||
-  response?.transactionRef?.reference ||
-  response?.transactionRef ||
-  response?.data?.reference ||
-  response?.trxref ||
-  null;
+const sleep = (milliseconds) =>
+  new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+/* ============================================================
+   PAYMENT COMPONENT
+============================================================ */
 
 const Payment = () => {
   const { orderId } = useParams();
@@ -50,19 +87,32 @@ const Payment = () => {
   const [order, setOrder] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedMethodId, setSelectedMethodId] = useState("");
+
   const [loadingOrder, setLoadingOrder] = useState(true);
   const [loadingMethods, setLoadingMethods] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false);
+
   const [error, setError] = useState("");
   const [notice, setNotice] = useState(null);
 
   const amount = Number(order?.totalPrice || 0);
   const formattedAmount = formatMoney(amount);
-  const publicKey = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY;
+
+  /* ============================================================
+     NOTICE / MODAL
+  ============================================================ */
 
   const showNotice = (title, message, onContinue = null) => {
-    setNotice({ title, message, onContinue });
+    setNotice({
+      title,
+      message,
+      onContinue,
+    });
   };
+
+  /* ============================================================
+     COMPLETE PAYMENT FLOW
+  ============================================================ */
 
   const completePaymentFlow = useCallback(
     (paidOrderId) => {
@@ -78,7 +128,10 @@ const Payment = () => {
     [navigate, resetAllOrderFields, resetAllLocationFields],
   );
 
-  // Load and validate the order.
+  /* ============================================================
+     LOAD AND VALIDATE ORDER
+  ============================================================ */
+
   useEffect(() => {
     let active = true;
 
@@ -105,13 +158,19 @@ const Payment = () => {
           );
         }
 
-        if (active) setOrder(savedOrder);
+        if (active) {
+          setOrder(savedOrder);
+        }
       } catch (err) {
+        console.error("LOAD PAYMENT ORDER ERROR:", err);
+
         if (active) {
           setError(err?.message || "Unable to load this order.");
         }
       } finally {
-        if (active) setLoadingOrder(false);
+        if (active) {
+          setLoadingOrder(false);
+        }
       }
     };
 
@@ -122,7 +181,12 @@ const Payment = () => {
     };
   }, [orderId, dbUser?.id]);
 
-  // Load reusable saved Paystack cards.
+  /* ============================================================
+     LOAD SAVED PAYSTACK CARDS
+
+     This remains separate from the new-card checkout flow.
+  ============================================================ */
+
   useEffect(() => {
     let active = true;
 
@@ -166,7 +230,9 @@ const Payment = () => {
       } catch (err) {
         console.error("LOAD PAYMENT METHODS ERROR:", err);
       } finally {
-        if (active) setLoadingMethods(false);
+        if (active) {
+          setLoadingMethods(false);
+        }
       }
     };
 
@@ -177,55 +243,114 @@ const Payment = () => {
     };
   }, [dbUser?.id]);
 
-  // Wait for the server/webhook changes to synchronize into DataStore.
-  const waitForOrderSync = (id, timeout = 30000) =>
-    new Promise((resolve, reject) => {
-      let finished = false;
-      let subscription;
-      let timer;
+  /* ============================================================
+     CHECK WHETHER ORDER IS FULLY PAID
 
-      const finish = (callback, value) => {
-        if (finished) return;
-        finished = true;
-        subscription?.unsubscribe();
-        clearTimeout(timer);
-        callback(value);
-      };
+     This matches the payment confirmation fields currently
+     used by this payment page.
 
-      const isPaid = (item) =>
-        item?.id === id &&
-        item?.paymentStatus === "PAID" &&
-        Boolean(item?.paymentID) &&
-        item?.fundsStatus === "HELD";
+     The webhook should update these fields.
+  ============================================================ */
 
-      subscription = DataStore.observe(Order, id).subscribe({
-        next: ({ element }) => {
-          if (isPaid(element)) finish(resolve, element);
-        },
-        error: (err) => finish(reject, err),
-      });
+  const isOrderPaid = (item, id) =>
+    item?.id === id &&
+    item?.paymentStatus === "PAID" &&
+    Boolean(item?.paymentID) &&
+    item?.fundsStatus === "HELD";
 
-      timer = setTimeout(
-        () => finish(reject, new Error("Order synchronization timed out.")),
-        timeout,
-      );
+  /* ============================================================
+     WAIT FOR WEBHOOK / DATASTORE SYNCHRONIZATION
 
-      DataStore.query(Order, id)
-        .then((current) => {
-          if (isPaid(current)) finish(resolve, current);
-        })
-        .catch((err) => console.error("ORDER SYNC CHECK:", err));
-    });
+     IMPORTANT:
+     - Webhook is the primary payment confirmation.
+     - This function does not call verifyAtuaPayment.
+     - It waits for the backend changes to reach DataStore.
+
+     The initial query also handles a case where the webhook
+     updated the order before the observer was established.
+  ============================================================ */
+
+  const waitForOrderSync = useCallback(
+    (id, timeout = 60000) =>
+      new Promise((resolve, reject) => {
+        let finished = false;
+        let subscription = null;
+        let timer = null;
+
+        const finish = (callback, value) => {
+          if (finished) return;
+
+          finished = true;
+
+          if (subscription) {
+            subscription.unsubscribe();
+          }
+
+          if (timer) {
+            clearTimeout(timer);
+          }
+
+          callback(value);
+        };
+
+        const checkOrder = (item) => {
+          if (isOrderPaid(item, id)) {
+            finish(resolve, item);
+          }
+        };
+
+        timer = setTimeout(() => {
+          finish(reject, new Error("The order has not synchronized yet."));
+        }, timeout);
+
+        try {
+          subscription = DataStore.observe(Order, id).subscribe({
+            next: ({ element }) => {
+              checkOrder(element);
+            },
+
+            error: (err) => {
+              finish(reject, err);
+            },
+          });
+        } catch (err) {
+          finish(reject, err);
+          return;
+        }
+
+        // Check the current DataStore record after subscribing.
+        DataStore.query(Order, id)
+          .then((current) => {
+            checkOrder(current);
+          })
+          .catch((err) => {
+            console.error("INITIAL ORDER SYNC CHECK ERROR:", err);
+          });
+      }),
+    [],
+  );
+
+  /* ============================================================
+     VERIFY PAYMENT - FALLBACK ONLY
+
+     This function must receive the exact reference returned
+     by initializeAtuaPayment.
+
+     Never generate a local reference here.
+  ============================================================ */
 
   const verifyPayment = async (reference) => {
     if (!reference) {
       throw new Error(
-        "The transaction reference is missing. Do not attempt another payment until you have checked the transaction.",
+        "The transaction reference is missing. Do not attempt another payment until the transaction has been checked.",
       );
     }
 
     const result = await client.graphql({
       query: verifyAtuaPayment,
+
+      authMode: "userPool",
+
       variables: {
         orderId: order.id,
         reference,
@@ -247,51 +372,51 @@ const Payment = () => {
     return verification;
   };
 
-  const confirmAndContinue = async (reference) => {
-    setPaymentLoading(true);
+  /* ============================================================
+     SHOW CONFIRMED PAYMENT NOTICE
+  ============================================================ */
 
-    try {
-      const verification = await verifyPayment(reference);
+  const showConfirmedPayment = (verification, syncedOrder = null) => {
+    const verificationCode =
+      verification?.deliveryVerificationCode ||
+      syncedOrder?.deliveryVerificationCode;
 
-      const verificationCode = verification.deliveryVerificationCode;
-
-      try {
-        const synced = await waitForOrderSync(order.id, 15000);
-
-        showNotice(
-          verification.alreadyPaid ? "Payment Confirmed" : "Payment Successful",
-          `Your payment has been confirmed.\n\n${
-            verificationCode || synced.deliveryVerificationCode
-              ? `Delivery Verification Code: ${
-                  verificationCode || synced.deliveryVerificationCode
-                }\n\nKeep this code safe.`
-              : "Your order is being prepared."
-          }`,
-          () => completePaymentFlow(order.id),
-        );
-      } catch (syncError) {
-        console.error("PAYMENT SYNC:", syncError);
-
-        // Verification already succeeded. Never prompt another payment.
-        showNotice(
-          "Payment Confirmed",
-          "Your payment was verified successfully. Your order is still synchronizing. Please continue to your order; do not pay again.",
-          () => completePaymentFlow(order.id),
-        );
-      }
-    } catch (err) {
-      console.error("PAYMENT VERIFICATION ERROR:", err);
-
-      showNotice(
-        "Payment Verification",
-        `${err?.errors?.[0]?.message || err?.message || "We could not confirm your payment."}\n\nIf you were charged, do not make another payment yet.`,
-      );
-    } finally {
-      setPaymentLoading(false);
-    }
+    showNotice(
+      "Payment Confirmed",
+      verificationCode
+        ? `Your payment has been confirmed.\n\nDelivery Verification Code: ${verificationCode}\n\nKeep this code safe.`
+        : "Your payment has been confirmed. Your order is being updated.",
+      () => completePaymentFlow(order.id),
+    );
   };
 
-  const handlePay = () => {
+  /* ============================================================
+     NEW CARD PAYMENT
+
+     CORRECT FLOW:
+
+     1. Open a blank checkout tab immediately from the click.
+        This avoids popup blockers after an asynchronous request.
+
+     2. Call initializeAtuaPayment.
+
+     3. Backend creates/reuses the Payment record and registers
+        the reference against the Order.
+
+     4. Open the exact checkoutUrl returned by the backend.
+
+     5. Wait for paystackWebhook / DataStore synchronization.
+
+     6. Only if synchronization times out, call
+        verifyAtuaPayment using the exact backend reference.
+
+     DO NOT:
+     - Generate a reference in the frontend.
+     - Call Paystack directly from the frontend.
+     - Call verifyAtuaPayment immediately after checkout.
+  ============================================================ */
+
+  const handlePay = async () => {
     if (paymentLoading) return;
 
     if (!order?.id) {
@@ -317,75 +442,241 @@ const Payment = () => {
           : "This order has already been paid. You can continue to your order.",
         () => completePaymentFlow(order.id),
       );
+
       return;
     }
 
-    if (!publicKey) {
-      showNotice(
-        "Payment Configuration",
-        "The Paystack public key is missing. Configure VITE_PAYSTACK_PUBLIC_KEY in your Vite environment.",
-      );
-      return;
-    }
+    /*
+     * Open the tab synchronously during the user's click.
+     * Opening it only after awaiting the GraphQL request can
+     * cause the browser to block the popup.
+     */
+    const checkoutWindow = window.open("about:blank", "_blank");
 
-    if (!window.PaystackPop) {
+    if (!checkoutWindow) {
       showNotice(
-        "Payment Unavailable",
-        "The Paystack checkout script has not loaded. Refresh the page and try again.",
+        "Checkout Window Blocked",
+        "Your browser blocked the Paystack checkout window. Please allow popups for this site and try again. No new payment has been initialized.",
       );
+
       return;
     }
 
     setPaymentLoading(true);
 
+    let initializedReference = null;
+
     try {
-      const reference = `atua_${order.id}_${Date.now()}`;
+      /* -----------------------------------------------
+         STEP 1: INITIALIZE PAYMENT ON ATUA BACKEND
+      ----------------------------------------------- */
 
-      const handler = window.PaystackPop.setup({
-        key: publicKey,
-        email: dbUser.email,
-        amount: Math.round(amount * 100),
-        currency: "NGN",
-        ref: reference,
-        metadata: {
-          custom_fields: [
-            {
-              display_name: "Atua Order ID",
-              variable_name: "order_id",
-              value: order.id,
-            },
-          ],
-        },
-        callback: (response) => {
-          const paymentReference = getPaymentReference(response);
+      console.log("INITIALIZING ATUA PAYMENT:", {
+        orderId: order.id,
+        payerEmail: dbUser.email,
+      });
 
-          if (!paymentReference) {
-            setPaymentLoading(false);
-            showNotice(
-              "Payment Verification",
-              "Paystack returned without a transaction reference. If you were charged, do not pay again until the transaction is checked.",
-            );
-            return;
-          }
+      const initializationResponse = await client.graphql({
+        query: initializeAtuaPaymentMutation,
 
-          confirmAndContinue(paymentReference);
-        },
-        onClose: () => {
-          setPaymentLoading(false);
+        authMode: "userPool",
+
+        variables: {
+          orderId: order.id,
+          payerEmail: dbUser.email.trim().toLowerCase(),
+          payerPhone: dbUser.phoneNumber || null,
         },
       });
 
-      handler.openIframe();
+      const initialization =
+        initializationResponse?.data?.initializeAtuaPayment;
+
+      console.log("INITIALIZE ATUA PAYMENT RESPONSE:", initialization);
+
+      if (!initialization?.success) {
+        throw new Error(
+          initialization?.message || "Atua could not initialize your payment.",
+        );
+      }
+
+      /* -----------------------------------------------
+         STEP 2: VALIDATE BACKEND RESPONSE
+      ----------------------------------------------- */
+
+      const reference = initialization.reference;
+      const checkoutUrl = initialization.checkoutUrl;
+
+      initializedReference = reference;
+
+      if (!initialization.paymentId || !reference || !checkoutUrl) {
+        throw new Error(
+          "Atua returned incomplete checkout details. Please contact support before attempting another payment.",
+        );
+      }
+
+      if (initialization.orderId && initialization.orderId !== order.id) {
+        throw new Error(
+          "The initialized payment does not belong to this order.",
+        );
+      }
+
+      /*
+       * The backend amount is authoritative.
+       * Do not open checkout if it differs from the amount
+       * currently shown on this order.
+       */
+      const backendAmount = Number(initialization.amount);
+
+      if (
+        !Number.isFinite(backendAmount) ||
+        backendAmount <= 0 ||
+        Math.round(backendAmount * 100) !== Math.round(amount * 100)
+      ) {
+        throw new Error(
+          "The payment amount returned by Atua does not match the order total. Please contact support before paying.",
+        );
+      }
+
+      /*
+       * Only allow secure Paystack checkout URLs.
+       */
+      let parsedCheckoutUrl;
+
+      try {
+        parsedCheckoutUrl = new URL(checkoutUrl);
+      } catch {
+        throw new Error("Atua returned an invalid Paystack checkout URL.");
+      }
+
+      if (
+        parsedCheckoutUrl.protocol !== "https:" ||
+        parsedCheckoutUrl.hostname !== "checkout.paystack.com"
+      ) {
+        throw new Error(
+          "Atua returned an unrecognized Paystack checkout address.",
+        );
+      }
+
+      /* -----------------------------------------------
+         STEP 3: OPEN BACKEND-GENERATED CHECKOUT URL
+      ----------------------------------------------- */
+
+      console.log("OPENING REGISTERED PAYSTACK CHECKOUT:", {
+        orderId: order.id,
+        paymentId: initialization.paymentId,
+        reference,
+        amount: backendAmount,
+      });
+
+      /*
+       * The tab was opened synchronously above.
+       * Now navigate it to the exact checkout URL returned
+       * by initializeAtuaPayment.
+       */
+      checkoutWindow.location.replace(checkoutUrl);
+
+      /*
+       * Keep this page open. It is responsible for waiting
+       * for the webhook/DataStore update.
+       */
+
+      /* -----------------------------------------------
+         STEP 4: WAIT FOR WEBHOOK / DATASTORE
+      ----------------------------------------------- */
+
+      try {
+        const syncedOrder = await waitForOrderSync(order.id, 60000);
+
+        console.log("PAYMENT CONFIRMED THROUGH DATASTORE:", {
+          orderId: syncedOrder.id,
+          paymentID: syncedOrder.paymentID,
+          paymentReference: syncedOrder.paymentReference,
+        });
+
+        showConfirmedPayment(null, syncedOrder);
+
+        return;
+      } catch (syncError) {
+        console.warn(
+          "WEBHOOK SYNC WAIT EXPIRED. USING VERIFICATION FALLBACK:",
+          syncError?.message,
+        );
+      }
+
+      /* -----------------------------------------------
+         STEP 5: FALLBACK VERIFICATION
+
+         Only reached if the webhook/DataStore update
+         did not arrive within the waiting period.
+
+         Uses the exact backend-generated reference.
+      ----------------------------------------------- */
+
+      console.log("RUNNING FALLBACK PAYMENT VERIFICATION:", {
+        orderId: order.id,
+        reference,
+      });
+
+      const verification = await verifyPayment(reference);
+
+      console.log("FALLBACK PAYMENT VERIFICATION RESULT:", verification);
+
+      /*
+       * Verification has succeeded. Give DataStore another
+       * short period to receive the corresponding Order update.
+       */
+      try {
+        const syncedOrder = await waitForOrderSync(order.id, 15000);
+
+        showConfirmedPayment(verification, syncedOrder);
+      } catch (syncError) {
+        console.warn(
+          "PAYMENT VERIFIED BUT DATASTORE IS STILL SYNCHRONIZING:",
+          syncError,
+        );
+
+        /*
+         * Do not fabricate a paid Order object.
+         * The backend verification result is the confirmation.
+         * The user can continue without being asked to pay again.
+         */
+        showConfirmedPayment(verification, null);
+      }
     } catch (err) {
-      console.error("START PAYSTACK ERROR:", err);
-      setPaymentLoading(false);
+      console.error("NEW CARD PAYMENT ERROR:", err);
+
+      /*
+       * Close the blank tab only when checkout was never
+       * successfully initialized.
+       *
+       * If a reference was returned, the payment attempt may
+       * exist. Do not create another transaction automatically.
+       */
+      if (!initializedReference && checkoutWindow && !checkoutWindow.closed) {
+        checkoutWindow.close();
+      }
 
       showNotice(
-        "Unable to Start Payment",
-        err?.message || "The payment page could not be opened.",
+        "Payment Status",
+        `${
+          err?.errors?.[0]?.message ||
+          err?.message ||
+          "We could not complete payment processing."
+        }\n\nIf you were charged or reached the Paystack checkout page, do not make another payment yet. Please allow us to check the existing transaction.`,
       );
+    } finally {
+      setPaymentLoading(false);
     }
   };
+
+  /* ============================================================
+     SAVED CARD PAYMENT
+
+     Preserve the existing saved-card Lambda.
+
+     A successful charge request is not treated as final
+     confirmation. We wait for the Order update.
+  ============================================================ */
 
   const handlePayWithSavedCard = async () => {
     if (paymentLoading) return;
@@ -395,6 +686,7 @@ const Payment = () => {
         "Select a Saved Card",
         "Please select an available saved payment method.",
       );
+
       return;
     }
 
@@ -404,6 +696,7 @@ const Payment = () => {
         "This order has already been paid.",
         () => completePaymentFlow(order.id),
       );
+
       return;
     }
 
@@ -412,7 +705,9 @@ const Payment = () => {
     try {
       const result = await client.graphql({
         query: chargeAtuaPaymentMethod,
+
         authMode: "userPool",
+
         variables: {
           orderId: order.id,
           paymentMethodId: selectedMethodId,
@@ -427,7 +722,10 @@ const Payment = () => {
         );
       }
 
-      // A charge request being accepted is not final payment confirmation.
+      /*
+       * Do not assume that the charge request being accepted
+       * means the order is already paid.
+       */
       const syncedOrder = await waitForOrderSync(order.id, 30000);
 
       showNotice(
@@ -442,12 +740,20 @@ const Payment = () => {
 
       showNotice(
         "Saved Card Payment",
-        `${err?.errors?.[0]?.message || err?.message || "We could not confirm the saved-card payment."}\n\nIf you were charged, do not make another payment yet.`,
+        `${
+          err?.errors?.[0]?.message ||
+          err?.message ||
+          "We could not confirm the saved-card payment."
+        }\n\nIf you were charged, do not make another payment yet.`,
       );
     } finally {
       setPaymentLoading(false);
     }
   };
+
+  /* ============================================================
+     LOADING STATE
+  ============================================================ */
 
   if (loadingOrder) {
     return (
@@ -460,15 +766,22 @@ const Payment = () => {
     );
   }
 
+  /* ============================================================
+     ORDER ERROR STATE
+  ============================================================ */
+
   if (!order || error) {
     return (
       <main className="atua-payment">
         <div className="atua-payment-state">
           <AlertCircle size={42} />
+
           <h2>Order unavailable</h2>
+
           <p>
             {error || "We could not load the order you are trying to pay for."}
           </p>
+
           <button
             className="atua-payment-secondary"
             onClick={() => navigate(-1)}
@@ -479,6 +792,10 @@ const Payment = () => {
       </main>
     );
   }
+
+  /* ============================================================
+     MAIN PAYMENT PAGE
+  ============================================================ */
 
   return (
     <main className="atua-payment">
@@ -491,34 +808,48 @@ const Payment = () => {
         >
           <ArrowLeft size={21} />
         </button>
+
         <h1>Secure Payment</h1>
+
         <span className="atua-payment-header-spacer" />
       </header>
 
       <div className="atua-payment-layout">
         <section className="atua-payment-main">
+          {/* TOTAL AMOUNT */}
+
           <div className="atua-payment-amount-card">
             <span className="atua-payment-muted">Total to Pay</span>
+
             <strong className="atua-payment-amount">₦{formattedAmount}</strong>
+
             <div className="atua-payment-order-reference">
               <span>Order</span>
+
               <strong title={order.id}>#{order.id}</strong>
             </div>
           </div>
+
+          {/* PAYMENT SUMMARY */}
 
           <section className="atua-payment-card">
             <h2>Payment Summary</h2>
 
             <div className="atua-payment-summary-row">
               <span>Delivery fare</span>
+
               <strong>₦{formatMoney(order.operationalFare)}</strong>
             </div>
+
             <div className="atua-payment-summary-row">
               <span>Platform fee</span>
+
               <strong>₦{formatMoney(order.platformFee)}</strong>
             </div>
+
             <div className="atua-payment-summary-row">
               <span>VAT</span>
+
               <strong>₦{formatMoney(order.vatAmount)}</strong>
             </div>
 
@@ -526,13 +857,17 @@ const Payment = () => {
 
             <div className="atua-payment-summary-row atua-payment-total-row">
               <strong>Total</strong>
+
               <strong>₦{formattedAmount}</strong>
             </div>
           </section>
 
+          {/* SAVED PAYMENT METHODS */}
+
           <section className="atua-payment-card">
             <div className="atua-payment-method-heading">
               <h2>Saved Payment Methods</h2>
+
               {loadingMethods && (
                 <RefreshCw className="atua-payment-spin" size={17} />
               )}
@@ -560,19 +895,24 @@ const Payment = () => {
                   onChange={() => setSelectedMethodId(method.id)}
                   disabled={paymentLoading}
                 />
+
                 <CreditCard size={22} />
+
                 <span className="atua-payment-method-details">
                   <strong>
                     {method.cardType || method.brand || "Card"}{" "}
                     {method.last4 ? `•••• ${method.last4}` : ""}
                   </strong>
+
                   <small>
                     {method.isDefault ? "Default payment method" : "Saved card"}
+
                     {method.expiryMonth && method.expiryYear
                       ? ` · Expires ${method.expiryMonth}/${method.expiryYear}`
                       : ""}
                   </small>
                 </span>
+
                 {selectedMethodId === method.id && (
                   <span className="atua-payment-selected">Selected</span>
                 )}
@@ -591,21 +931,29 @@ const Payment = () => {
               </button>
             )}
 
+            {/* NEW CARD CHECKOUT */}
+
             <button
               className="atua-payment-new-card"
               onClick={handlePay}
               disabled={paymentLoading}
             >
               <CreditCard size={19} />
-              Pay with a new card
+
+              {paymentLoading ? "Processing payment..." : "Pay with a new card"}
+
               <ArrowRight size={18} />
             </button>
           </section>
 
+          {/* SECURITY INFORMATION */}
+
           <section className="atua-payment-security">
             <ShieldCheck size={25} />
+
             <div>
               <strong>Secure checkout</strong>
+
               <p>
                 Your payment is securely processed by Paystack. Atua does not
                 store your card details.
@@ -619,9 +967,12 @@ const Payment = () => {
           </p>
         </section>
 
+        {/* PAYMENT SIDEBAR */}
+
         <aside className="atua-payment-sidebar">
           <div className="atua-payment-sidebar-total">
             <span>Total due</span>
+
             <strong>₦{formattedAmount}</strong>
           </div>
 
@@ -650,12 +1001,16 @@ const Payment = () => {
         </aside>
       </div>
 
+      {/* NOTICE MODAL */}
+
       {notice && (
         <div
           className="atua-payment-modal-backdrop"
           role="presentation"
           onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setNotice(null);
+            if (event.target === event.currentTarget) {
+              setNotice(null);
+            }
           }}
         >
           <section
@@ -667,13 +1022,18 @@ const Payment = () => {
             <div className="atua-payment-modal-icon">
               <AlertCircle size={25} />
             </div>
+
             <h2 id="atua-payment-modal-title">{notice.title}</h2>
+
             <p>{notice.message}</p>
+
             <button
               className="atua-payment-pay-button"
               onClick={() => {
                 const callback = notice.onContinue;
+
                 setNotice(null);
+
                 callback?.();
               }}
             >

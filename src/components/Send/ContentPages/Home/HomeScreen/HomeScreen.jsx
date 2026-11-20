@@ -1,19 +1,49 @@
 import React, { useState, useEffect } from "react";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 import "../SendStyles/HomeScreen.css";
 import { FaSearchLocation, FaClock, FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { GoogleMap, Marker } from "@react-google-maps/api";
 import { DataStore } from "aws-amplify/datastore";
-import { getCurrentUser } from "aws-amplify/auth";
-import { Courier, User } from "../../../../../models";
+import { Courier } from "../../../../../models";
 
 function HomeScreen() {
+  const { authUser, dbUser } = useAuthContext();
+  const navigate = useNavigate();
+
   const [currentPosition, setCurrentPosition] = useState(null);
   const [couriers, setCouriers] = useState([]);
   const [lastDestination, setLastDestination] = useState("");
-  const [homeAddress, setHomeAddress] = useState("");
 
-  const navigate = useNavigate();
+  const homeAddress = dbUser?.address || dbUser?.exactAddress || "";
+
+  // Check profile completion for signed-in users only.
+  useEffect(() => {
+    // Wait for the initial authentication check.
+    if (authUser === undefined) return;
+
+    // Signed-out users can view this screen.
+    // DestinationSearch handles the sign-in alert.
+    if (authUser === null) return;
+
+    // Wait for the database profile to finish loading.
+    if (dbUser === undefined) return;
+
+    const phoneNumber = dbUser?.phoneNumber?.trim() || "";
+
+    const profileComplete = Boolean(
+      dbUser?.firstName?.trim() && phoneNumber && phoneNumber.length >= 10,
+    );
+
+    // Redirect signed-in users with incomplete profiles.
+    if (!profileComplete) {
+      alert("Kindly complete your profile before continuing.");
+
+      navigate("/send/edit_profile", {
+        replace: true,
+      });
+    }
+  }, [authUser, dbUser, navigate]);
 
   // Load the last destination from browser storage.
   useEffect(() => {
@@ -28,36 +58,6 @@ function HomeScreen() {
     }
   }, []);
 
-  // Fetch the signed-in customer's home address from the User model.
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchHomeAddress = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-
-        // Amplify userId corresponds to the Cognito user's sub.
-        const users = await DataStore.query(User, (u) =>
-          u.sub.eq(currentUser.userId),
-        );
-
-        const profile = users.find((user) => user.sub === currentUser.userId);
-
-        if (isMounted && profile) {
-          setHomeAddress(profile.address || profile.exactAddress || "");
-        }
-      } catch (error) {
-        console.error("Failed to load customer home address:", error);
-      }
-    };
-
-    fetchHomeAddress();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   // Get the customer's current location.
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -65,15 +65,21 @@ function HomeScreen() {
       return;
     }
 
+    let isMounted = true;
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
+        if (!isMounted) return;
+
         setCurrentPosition({
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         });
       },
       (error) => {
-        console.error("Failed to get current location:", error);
+        if (isMounted) {
+          console.error("Failed to get current location:", error);
+        }
       },
       {
         enableHighAccuracy: true,
@@ -81,6 +87,10 @@ function HomeScreen() {
         maximumAge: 30000,
       },
     );
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Fetch online couriers and observe updates.
@@ -89,8 +99,8 @@ function HomeScreen() {
 
     const fetchCouriers = async () => {
       try {
-        const onlineCouriers = await DataStore.query(Courier, (c) =>
-          c.isOnline.eq(true),
+        const onlineCouriers = await DataStore.query(Courier, (courier) =>
+          courier.isOnline.eq(true),
         );
 
         if (isMounted) {
@@ -125,12 +135,16 @@ function HomeScreen() {
     switch (type) {
       case "Micro X":
         return "/atuaImages/Bicycle.png";
+
       case "Moto X":
         return "/atuaImages/Bike.jpg";
+
       case "Maxi Batch":
         return "/atuaImages/top-UberXL.png";
+
       case "Maxi":
         return "/atuaImages/Deliverybicycle.png";
+
       default:
         return "/atuaImages/Walk.png";
     }
@@ -157,6 +171,24 @@ function HomeScreen() {
       state: { address: homeAddress },
     });
   };
+
+  // Check whether the customer's profile is complete.
+  const phoneNumber = dbUser?.phoneNumber?.trim() || "";
+
+  const profileComplete = Boolean(
+    dbUser?.firstName?.trim() && phoneNumber && phoneNumber.length >= 10,
+  );
+
+  // Wait while authentication is loading.
+  if (authUser === undefined) {
+    return null;
+  }
+
+  // For signed-in users, wait for the profile check.
+  // Signed-out users are allowed to see the home screen.
+  if (authUser !== null && (dbUser === undefined || !profileComplete)) {
+    return null;
+  }
 
   return (
     <div className="homeScreenContainer">

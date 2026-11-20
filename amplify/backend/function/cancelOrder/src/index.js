@@ -1657,19 +1657,33 @@ exports.handler = async (event) => {
       ====================================================== */
 
     if (order.status === "CANCELLED") {
-      /*
-       * If the order is already cancelled and
-       * we have its cancellation record,
-       * simply return that record.
-       *
-       * This is important for retries.
-       */
+      if (!cancellation) {
+        throw new Error(
+          "This order is already cancelled, but its cancellation record is missing. Manual review is required.",
+        );
+      }
 
-      if (cancellation) {
+      const cancellationIsComplete =
+        cancellation.status === "COMPLETED" &&
+        (cancellation.refundStatus === "PROCESSED" ||
+          cancellation.refundStatus === "NONE");
+
+      if (cancellationIsComplete) {
         return cancellation;
       }
 
-      throw new Error("This order has already been cancelled.");
+      console.error("CANCELLED ORDER REQUIRES RECOVERY:", {
+        orderID: order.id,
+        cancellationID: cancellation.id,
+        cancellationStatus: cancellation.status,
+        refundStatus: cancellation.refundStatus,
+        assignmentReversed: cancellation.assignmentReversed,
+        courierEarningsReversed: cancellation.courierEarningsReversed,
+      });
+
+      throw new Error(
+        "This order is already cancelled, but its cancellation is incomplete. Manual reconciliation is required before retrying.",
+      );
     }
 
     /* ======================================================

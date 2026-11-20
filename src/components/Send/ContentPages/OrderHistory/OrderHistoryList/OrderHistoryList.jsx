@@ -48,6 +48,14 @@ const OrderHistoryList = ({ order, refreshOrders }) => {
   const isAwaitingPayment =
     isMicroOrMoto && order?.status === "AWAITING_PAYMENT";
 
+  // Payment responsibility.
+  // Treat older orders without this field as sender-pay orders.
+  const isSenderResponsible =
+    String(order?.paymentResponsibility || "SENDER").toUpperCase() === "SENDER";
+
+  // Only the sender should see the Pay button.
+  const canSenderPay = isAwaitingPayment && isSenderResponsible;
+
   // Delete eligibility
   const isMaxiUnpaid =
     isMaxi &&
@@ -265,10 +273,16 @@ const OrderHistoryList = ({ order, refreshOrders }) => {
               </div>
 
               <div>
-                <h4>Payment Required</h4>
+                <h4>
+                  {isSenderResponsible
+                    ? "Payment Required"
+                    : "Awaiting Receiver Payment"}
+                </h4>
+
                 <p>
-                  This order has not been paid for yet. Complete payment to
-                  continue with your delivery.
+                  {isSenderResponsible
+                    ? "This order has not been paid for yet. Complete payment to continue with your delivery."
+                    : "The receiver is responsible for paying for this delivery. You do not need to make this payment."}
                 </p>
               </div>
             </div>
@@ -296,7 +310,7 @@ const OrderHistoryList = ({ order, refreshOrders }) => {
             </button>
           </div>
 
-          {isAwaitingPayment && (
+          {canSenderPay && (
             <button
               type="button"
               className="orderHistoryList-payButton"

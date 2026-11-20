@@ -96,6 +96,25 @@ const CourierAvailabilityStatus = {
   "SUSPENDED": "SUSPENDED"
 };
 
+const OrderBookingSource = {
+  "APP": "APP",
+  "WEBSITE": "WEBSITE",
+  "SUPPORT": "SUPPORT"
+};
+
+const OrderPaymentResponsibility = {
+  "SENDER": "SENDER",
+  "RECEIVER": "RECEIVER"
+};
+
+const ReceiverConfirmationStatus = {
+  "PENDING": "PENDING",
+  "CONFIRMED": "CONFIRMED",
+  "DECLINED": "DECLINED",
+  "UNREACHABLE": "UNREACHABLE",
+  "EXPIRED": "EXPIRED"
+};
+
 const PaystackEnvironment = {
   "TEST": "TEST",
   "LIVE": "LIVE"
@@ -147,11 +166,22 @@ const PaymentStatus = {
 
 const TransactionType = {
   "CREDIT": "CREDIT",
-  "DEBIT": "DEBIT"
+  "DEBIT": "DEBIT",
+  "DEBT_REPAYMENT": "DEBT_REPAYMENT",
+  "CASH_EARNINGS": "CASH_EARNINGS"
 };
 
 const TransactionStatus = {
   "PENDING": "PENDING",
+  "COMPLETED": "COMPLETED",
+  "FAILED": "FAILED",
+  "REVERSED": "REVERSED"
+};
+
+const PayoutReservationStatus = {
+  "PENDING": "PENDING",
+  "WALLET_DEBITED": "WALLET_DEBITED",
+  "RESERVED": "RESERVED",
   "COMPLETED": "COMPLETED",
   "FAILED": "FAILED",
   "REVERSED": "REVERSED"
@@ -251,6 +281,48 @@ const CancellationStatus = {
   "REJECTED": "REJECTED"
 };
 
+const OrderPaymentTiming = {
+  "BEFORE_PICKUP": "BEFORE_PICKUP",
+  "AT_PICKUP": "AT_PICKUP",
+  "ON_DELIVERY": "ON_DELIVERY"
+};
+
+const OrderPaymentMethod = {
+  "PAYSTACK": "PAYSTACK",
+  "CASH": "CASH"
+};
+
+const CourierDebtStatus = {
+  "OPEN": "OPEN",
+  "PARTIALLY_PAID": "PARTIALLY_PAID",
+  "PAID": "PAID",
+  "OVERDUE": "OVERDUE",
+  "REVERSED": "REVERSED",
+  "WAIVED": "WAIVED"
+};
+
+const CourierReconciliationStatus = {
+  "PENDING": "PENDING",
+  "CALCULATED": "CALCULATED",
+  "APPROVED": "APPROVED",
+  "SETTLED": "SETTLED",
+  "REVERSED": "REVERSED"
+};
+
+const CourierReconciliationDirection = {
+  "ATUA_OWES_COURIER": "ATUA_OWES_COURIER",
+  "COURIER_OWES_ATUA": "COURIER_OWES_ATUA",
+  "BALANCED": "BALANCED"
+};
+
+const CashCollectionStatus = {
+  "NOT_REQUIRED": "NOT_REQUIRED",
+  "PENDING": "PENDING",
+  "CONFIRMED": "CONFIRMED",
+  "DISPUTED": "DISPUTED",
+  "REVERSED": "REVERSED"
+};
+
 const OrderStatus = {
   "BIDDING": "BIDDING",
   "AWAITING_PAYMENT": "AWAITING_PAYMENT",
@@ -276,7 +348,7 @@ const CourierReportStatus = {
   "DISMISSED": "DISMISSED"
 };
 
-const { FleetWallet, FleetTransaction, FleetSubscription, FleetOrder, Fleet, FleetMember, FleetInvitation, FleetVehicle, PaymentMethod, Payout, Transaction, Wallet, Payment, Offer, OrderCancellation, Order, CourierReport, CourierReview, AdminAlert, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails, ChargeAtuaPaymentMethodResult, DeleteSavedPaymentMethodResult, ProcessPayoutsResponse, ReversePayoutResponse } = initSchema(schema);
+const { FleetWallet, FleetTransaction, FleetSubscription, FleetOrder, Fleet, FleetMember, FleetInvitation, FleetVehicle, PaymentMethod, PayoutReservation, Payout, Transaction, Wallet, Payment, Offer, OrderCancellation, CourierDebtReconciliation, CourierDebt, CourierDebtPayment, CourierReconciliation, CashCollection, Order, CourierReport, CourierReview, AdminAlert, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails, ChargeAtuaPaymentMethodResult, DeleteSavedPaymentMethodResult, InitializeAtuaPaymentResult, InitializeDeliveryPaymentResult, RecordCashCollectionResult, UpdateCourierOrderStatusResult, AcceptDeliveryOrderResult, SelectDeliveryPaymentMethodResult, InitializeCourierDebtPaymentResult, VerifyCourierDebtPaymentResult, ProcessPayoutsResponse, ReversePayoutResponse } = initSchema(schema);
 
 export {
   FleetWallet,
@@ -288,12 +360,18 @@ export {
   FleetInvitation,
   FleetVehicle,
   PaymentMethod,
+  PayoutReservation,
   Payout,
   Transaction,
   Wallet,
   Payment,
   Offer,
   OrderCancellation,
+  CourierDebtReconciliation,
+  CourierDebt,
+  CourierDebtPayment,
+  CourierReconciliation,
+  CashCollection,
   Order,
   CourierReport,
   CourierReview,
@@ -314,6 +392,9 @@ export {
   FleetSubscriptionPlan,
   FleetSubscriptionStatus,
   CourierAvailabilityStatus,
+  OrderBookingSource,
+  OrderPaymentResponsibility,
+  ReceiverConfirmationStatus,
   PaystackEnvironment,
   OrderEnvironment,
   PaymentMethodStatus,
@@ -324,6 +405,7 @@ export {
   PaymentStatus,
   TransactionType,
   TransactionStatus,
+  PayoutReservationStatus,
   PayoutStatus,
   PayoutSource,
   OwnerType,
@@ -336,12 +418,26 @@ export {
   CancellationStage,
   CancellationReason,
   CancellationStatus,
+  OrderPaymentTiming,
+  OrderPaymentMethod,
+  CourierDebtStatus,
+  CourierReconciliationStatus,
+  CourierReconciliationDirection,
+  CashCollectionStatus,
   OrderStatus,
   CourierReportStatus,
   VerifyAtuaPaymentResult,
   VerifiedPaymentDetails,
   ChargeAtuaPaymentMethodResult,
   DeleteSavedPaymentMethodResult,
+  InitializeAtuaPaymentResult,
+  InitializeDeliveryPaymentResult,
+  RecordCashCollectionResult,
+  UpdateCourierOrderStatusResult,
+  AcceptDeliveryOrderResult,
+  SelectDeliveryPaymentMethodResult,
+  InitializeCourierDebtPaymentResult,
+  VerifyCourierDebtPaymentResult,
   ProcessPayoutsResponse,
   ReversePayoutResponse
 };

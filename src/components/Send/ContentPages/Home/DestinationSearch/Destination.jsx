@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useAuthContext } from "../../../../../../Providers/ClientProvider/AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { MdNavigateNext } from "react-icons/md";
 import { AiFillCloseCircle } from "react-icons/ai";
@@ -11,6 +12,9 @@ import { useLocationContext } from "../../../../../../Providers/ClientProvider/L
 
 function DestinationSearch() {
   const navigate = useNavigate();
+
+  const { authUser } = useAuthContext();
+  const redirectHandled = useRef(false);
 
   /* ============================================================
    INPUT REFS
@@ -118,6 +122,29 @@ function DestinationSearch() {
 
     setDestinationAddress(null);
   };
+
+  /* ============================================================
+   useEffect to navigate to signin section if user is not signed in
+  ============================================================ */
+
+  useEffect(() => {
+    // Wait until the initial authentication check finishes.
+    if (authUser === undefined) return;
+
+    // Redirect users who are not signed in.
+    if (authUser === null) {
+      if (redirectHandled.current) return;
+
+      redirectHandled.current = true;
+
+      alert("Kindly sign in to continue.");
+
+      navigate("/", {
+        replace: true,
+        state: { scrollTo: "signIn" },
+      });
+    }
+  }, [authUser, navigate]);
 
   /* ============================================================
    INTERSTATE DETECTION
@@ -361,6 +388,10 @@ function DestinationSearch() {
 
     navigate("/send/search_results");
   };
+
+  if (authUser === undefined || authUser === null) {
+    return null;
+  }
 
   /* ============================================================
    RENDER

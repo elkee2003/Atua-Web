@@ -88,6 +88,11 @@
     }
   },
   "function": {
+    "acceptDeliveryOrder": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "allocateCourierEarnings": {
       "build": true,
       "dependsOn": [
@@ -203,6 +208,22 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "enforceCourierDebtDeadline": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "financialOrderTrigger": {
       "build": true,
       "dependsOn": [],
@@ -210,6 +231,54 @@
       "service": "Lambda"
     },
     "forceDispatch": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "initializeAtuaPayment": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "initializeCourierDebtPayment": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "initializeDeliveryPayment": {
       "build": true,
       "dependsOn": [
         {
@@ -273,7 +342,39 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "reconcileCourierBalance": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "reconcilePayouts": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "recordCashCollection": {
       "build": true,
       "dependsOn": [
         {
@@ -321,6 +422,11 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "reservePayoutWallet": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "resetCourierIfIdle": {
       "build": true,
       "dependsOn": [
@@ -353,7 +459,45 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "selectDeliveryPaymentMethod": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateCourierOrderStatus": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "verifyAtuaPayment": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "Atua"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "verifyCourierDebtPayment": {
       "build": true,
       "dependsOn": [
         {
@@ -371,6 +515,22 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_acceptDeliveryOrder_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "acceptDeliveryOrder"
+        }
+      ]
+    },
+    "AMPLIFY_function_acceptDeliveryOrder_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "acceptDeliveryOrder"
+        }
+      ]
+    },
     "AMPLIFY_function_allocateCourierEarnings_deploymentBucketName": {
       "usedBy": [
         {
@@ -523,6 +683,22 @@
         }
       ]
     },
+    "AMPLIFY_function_enforceCourierDebtDeadline_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "enforceCourierDebtDeadline"
+        }
+      ]
+    },
+    "AMPLIFY_function_enforceCourierDebtDeadline_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "enforceCourierDebtDeadline"
+        }
+      ]
+    },
     "AMPLIFY_function_financialOrderTrigger_deploymentBucketName": {
       "usedBy": [
         {
@@ -552,6 +728,78 @@
         {
           "category": "function",
           "resourceName": "forceDispatch"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeAtuaPayment_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeAtuaPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeAtuaPayment_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeAtuaPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeAtuaPayment_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeAtuaPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeCourierDebtPayment_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeCourierDebtPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeCourierDebtPayment_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeCourierDebtPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeCourierDebtPayment_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeCourierDebtPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeDeliveryPayment_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeDeliveryPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeDeliveryPayment_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeDeliveryPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_initializeDeliveryPayment_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "initializeDeliveryPayment"
         }
       ]
     },
@@ -627,6 +875,22 @@
         }
       ]
     },
+    "AMPLIFY_function_reconcileCourierBalance_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reconcileCourierBalance"
+        }
+      ]
+    },
+    "AMPLIFY_function_reconcileCourierBalance_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reconcileCourierBalance"
+        }
+      ]
+    },
     "AMPLIFY_function_reconcilePayouts_deploymentBucketName": {
       "usedBy": [
         {
@@ -648,6 +912,22 @@
         {
           "category": "function",
           "resourceName": "reconcilePayouts"
+        }
+      ]
+    },
+    "AMPLIFY_function_recordCashCollection_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recordCashCollection"
+        }
+      ]
+    },
+    "AMPLIFY_function_recordCashCollection_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "recordCashCollection"
         }
       ]
     },
@@ -683,6 +963,22 @@
         }
       ]
     },
+    "AMPLIFY_function_reservePayoutWallet_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reservePayoutWallet"
+        }
+      ]
+    },
+    "AMPLIFY_function_reservePayoutWallet_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reservePayoutWallet"
+        }
+      ]
+    },
     "AMPLIFY_function_resetCourierIfIdle_deploymentBucketName": {
       "usedBy": [
         {
@@ -715,6 +1011,54 @@
         }
       ]
     },
+    "AMPLIFY_function_selectDeliveryPaymentMethod_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "selectDeliveryPaymentMethod"
+        }
+      ]
+    },
+    "AMPLIFY_function_selectDeliveryPaymentMethod_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "selectDeliveryPaymentMethod"
+        }
+      ]
+    },
+    "AMPLIFY_function_settleCourierBalance_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "settleCourierBalance"
+        }
+      ]
+    },
+    "AMPLIFY_function_settleCourierBalance_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "settleCourierBalance"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCourierOrderStatus_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCourierOrderStatus"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateCourierOrderStatus_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateCourierOrderStatus"
+        }
+      ]
+    },
     "AMPLIFY_function_verifyAtuaPayment_deploymentBucketName": {
       "usedBy": [
         {
@@ -736,6 +1080,30 @@
         {
           "category": "function",
           "resourceName": "verifyAtuaPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_verifyCourierDebtPayment_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "verifyCourierDebtPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_verifyCourierDebtPayment_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "verifyCourierDebtPayment"
+        }
+      ]
+    },
+    "AMPLIFY_function_verifyCourierDebtPayment_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "verifyCourierDebtPayment"
         }
       ]
     }

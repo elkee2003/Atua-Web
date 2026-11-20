@@ -14,6 +14,35 @@ import { getTransportLabel } from "../../../../../../utils/transportFormatter";
 
 import "../SendStyles/Checkout.css";
 
+/**
+ * Generates a six-digit delivery verification code.
+ *
+ * Uses the browser's cryptographically secure random generator.
+ * Rejection sampling avoids modulo bias.
+ */
+const generateVerificationCode = () => {
+  if (!globalThis.crypto?.getRandomValues) {
+    throw new Error(
+      "Secure verification-code generation is unavailable in this browser.",
+    );
+  }
+
+  const range = 900000;
+  const maxValue = 0x100000000; // 2^32
+  const limit = Math.floor(maxValue / range) * range;
+  const randomValues = new Uint32Array(1);
+
+  while (true) {
+    globalThis.crypto.getRandomValues(randomValues);
+
+    const randomValue = randomValues[0];
+
+    if (randomValue < limit) {
+      return String(100000 + (randomValue % range));
+    }
+  }
+};
+
 function Checkout() {
   const navigate = useNavigate();
 
@@ -39,6 +68,9 @@ function Checkout() {
   } = useLocationContext();
 
   const {
+    paymentResponsibility,
+    paymentTiming,
+    paymentMethod,
     senderName,
     senderNumber,
     senderNumber2,
@@ -57,6 +89,7 @@ function Checkout() {
     platformNetRevenue,
   } = useOrderContext();
 
+  console.log("Payment Method in checkout:", paymentMethod);
   /* ==========================================================
       STATE
   ========================================================== */
@@ -116,6 +149,53 @@ function Checkout() {
       return false;
     }
 
+    const validPaymentArrangements = [
+      {
+        responsibility: "SENDER",
+        timing: "BEFORE_PICKUP",
+        method: "PAYSTACK",
+      },
+      {
+        responsibility: "SENDER",
+        timing: "AT_PICKUP",
+        method: "CASH",
+      },
+      {
+        responsibility: "RECEIVER",
+        timing: "BEFORE_PICKUP",
+        method: "PAYSTACK",
+      },
+      {
+        responsibility: "RECEIVER",
+        timing: "ON_DELIVERY",
+        method: "PAYSTACK",
+      },
+      {
+        responsibility: "RECEIVER",
+        timing: "ON_DELIVERY",
+        method: "CASH",
+      },
+      {
+        responsibility: "RECEIVER",
+        timing: "ON_DELIVERY",
+        method: null,
+      },
+    ];
+
+    const validPaymentArrangement = validPaymentArrangements.some(
+      (option) =>
+        option.responsibility === paymentResponsibility &&
+        option.timing === paymentTiming &&
+        option.method === paymentMethod,
+    );
+
+    if (!validPaymentArrangement) {
+      window.alert(
+        "Please return to the sender and recipient details screen and select a valid payment arrangement.",
+      );
+      return false;
+    }
+
     const amount = Number(totalPrice);
 
     if (!Number.isFinite(amount) || amount <= 0) {
@@ -138,6 +218,19 @@ function Checkout() {
     try {
       setLoading(true);
 
+      // Generate a delivery verification code when:
+      // 1. The sender will pay cash, or
+      // 2. The receiver is responsible for payment.
+      //
+      // For receiver-paid orders, generate the code now even if
+      // the receiver has not yet chosen cash or electronic payment.
+      const shouldGenerateVerificationCode =
+        paymentMethod === "CASH" || paymentResponsibility === "RECEIVER";
+
+      const deliveryVerificationCode = shouldGenerateVerificationCode
+        ? generateVerificationCode()
+        : undefined;
+
       const order = await DataStore.save(
         new Order({
           /* Environment */
@@ -146,6 +239,14 @@ function Checkout() {
           // TEST orders should explicitly use TEST.
           orderEnvironment: "PRODUCTION",
           // orderEnvironment: "TEST",
+
+          // Booking source
+          bookingSource: "WEBSITE",
+
+          // Payment arrangement
+          paymentResponsibility,
+          paymentTiming,
+          paymentMethod,
 
           // Sender
           senderName: senderName?.trim() || null,
@@ -180,6 +281,9 @@ function Checkout() {
           vatAmount: Number(vatAmount),
 
           platformNetRevenue: Number(platformNetRevenue),
+
+          // Delivery verification code
+          deliveryVerificationCode,
 
           /* Pickup */
 
@@ -227,7 +331,19 @@ function Checkout() {
         }),
       );
 
-      navigate(`/send/payment/${order.id}`);
+      //-------------------------------------
+      // Navigate After Order Creation
+      //-------------------------------------
+
+      if (paymentTiming === "BEFORE_PICKUP" && paymentMethod === "PAYSTACK") {
+        // Payment is required before pickup.
+        // Only the sender's payment flow is initiated here.
+        navigate(`/send/payment/${order.id}`);
+      } else {
+        // Pay on Delivery and Cash at Pickup
+        // go directly to Order History.
+        navigate("/send/orders");
+      }
     } catch (error) {
       console.error("CREATE ORDER ERROR:", error);
 
@@ -349,6 +465,112 @@ function Checkout() {
           </div>
         )}
 
+        {/* Payment Arrangement */}
+
+        <div className="checkoutCard checkoutPaymentResponsibility">
+          <h2 className="checkoutSectionTitle">Payment Arrangement</h2>
+
+          <div className="checkoutPaymentResponsibilityRow">
+            <div className="checkoutPaymentResponsibilityIcon">
+              <span>{paymentResponsibility === "RECEIVER" ? "↗" : "↙"}</span>
+            </div>
+
+            <div className="checkoutPaymentResponsibilityContent">
+              <span className="checkoutPaymentResponsibilityLabel">
+                Who will pay?
+              </span>
+
+              <span className="checkoutPaymentResponsibilityValue">
+                {paymentResponsibility === "RECEIVER"
+                  ? "Receiver will pay"
+                  : "Sender will pay"}
+              </span>
+            </div>
+          </div>
+
+          <div className="checkoutDivider" />
+
+          <div className="checkoutPaymentResponsibilityRow">
+            <div className="checkoutPaymentResponsibilityIcon">
+              <span>
+                {paymentMethod === "CASH"
+                  ? "₦"
+                  : paymentMethod === "PAYSTACK"
+                    ? "₱"
+                    : "?"}
+              </span>
+            </div>
+
+            <div className="checkoutPaymentResponsibilityContent">
+              <span className="checkoutPaymentResponsibilityLabel">
+                Payment method
+              </span>
+
+              <span className="checkoutPaymentResponsibilityValue">
+                {paymentMethod === "CASH"
+                  ? "Cash"
+                  : paymentMethod === "PAYSTACK"
+                    ? "Paystack"
+                    : "Receiver chooses on delivery"}
+              </span>
+            </div>
+          </div>
+
+          <div className="checkoutDivider" />
+
+          <div className="checkoutPaymentResponsibilityRow">
+            <div className="checkoutPaymentResponsibilityIcon">
+              <span>◷</span>
+            </div>
+
+            <div className="checkoutPaymentResponsibilityContent">
+              <span className="checkoutPaymentResponsibilityLabel">
+                When will payment be made?
+              </span>
+
+              <span className="checkoutPaymentResponsibilityValue">
+                {paymentTiming === "BEFORE_PICKUP"
+                  ? "Before pickup"
+                  : paymentTiming === "AT_PICKUP"
+                    ? "At pickup"
+                    : "On delivery"}
+              </span>
+            </div>
+          </div>
+
+          <p className="checkoutPaymentResponsibilityDescription">
+            {paymentResponsibility === "SENDER" &&
+              paymentTiming === "BEFORE_PICKUP" &&
+              paymentMethod === "PAYSTACK" &&
+              "You will complete electronic payment before the courier picks up your item."}
+
+            {paymentResponsibility === "SENDER" &&
+              paymentTiming === "AT_PICKUP" &&
+              paymentMethod === "CASH" &&
+              "You will pay the courier in cash when your item is picked up."}
+
+            {paymentResponsibility === "RECEIVER" &&
+              paymentTiming === "BEFORE_PICKUP" &&
+              paymentMethod === "PAYSTACK" &&
+              "The receiver must complete electronic payment before pickup."}
+
+            {paymentResponsibility === "RECEIVER" &&
+              paymentTiming === "ON_DELIVERY" &&
+              paymentMethod === "PAYSTACK" &&
+              "The receiver will pay electronically when the item is delivered."}
+
+            {paymentResponsibility === "RECEIVER" &&
+              paymentTiming === "ON_DELIVERY" &&
+              paymentMethod === "CASH" &&
+              "The receiver will pay the courier in cash on delivery."}
+
+            {paymentResponsibility === "RECEIVER" &&
+              paymentTiming === "ON_DELIVERY" &&
+              paymentMethod == null &&
+              "The receiver can choose to pay in cash or electronically when the courier arrives. Electronic payments must be verified before the delivery is treated as paid. If the receiver refuses or fails to pay, you, as the sender, remain responsible for the outstanding delivery fee."}
+          </p>
+        </div>
+
         {/* Payment Summary */}
 
         <div className="checkoutCard">
@@ -412,7 +634,13 @@ function Checkout() {
             "Preparing Order..."
           ) : (
             <>
-              <span>Continue to Payment</span>
+              <span>
+                {paymentTiming === "BEFORE_PICKUP" &&
+                paymentMethod === "PAYSTACK" &&
+                paymentResponsibility === "SENDER"
+                  ? "Proceed to Payment"
+                  : "Confirm Delivery Order"}
+              </span>
 
               <IoArrowForward size={18} />
             </>

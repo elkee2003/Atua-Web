@@ -1,8 +1,24 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+
 import { useNavigate, useParams } from "react-router-dom";
 import { DataStore } from "aws-amplify/datastore";
-import { Order, User, Courier } from "../../../../../../../../src/models";
+
+import {
+  Order,
+  User,
+  Courier,
+  Offer,
+} from "../../../../../../../../src/models";
+
+import { calculateMaxiFinancials } from "../../../../../../../../modules/freightPricingEngine";
+
 import "./OrderDetails.css";
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+const MAX_ACTIVE_BATCH_ORDERS = 10;
 
 const STATUS_LABELS = {
   BIDDING: "Bidding",
@@ -21,6 +37,10 @@ const STATUS_LABELS = {
   CANCELLED: "Cancelled",
   DISPUTED: "Disputed",
 };
+
+// ============================================================
+// GENERAL HELPERS
+// ============================================================
 
 const formatValue = (value, fallback = "Not available") => {
   if (value === null || value === undefined || value === "") {
@@ -66,15 +86,53 @@ const formatCurrency = (value) => {
   }).format(amount);
 };
 
+const formatLabel = (value) => {
+  if (!value) return "Not available";
+
+  return String(value)
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+};
+
 const getStatusLabel = (status) => {
   if (!status) return "Unknown";
 
+  return STATUS_LABELS[status] || formatLabel(status);
+};
+
+const getPaymentArrangement = (order) => {
+  if (!order) return "Not specified";
+
+  const responsibility = String(
+    order.paymentResponsibility || "",
+  ).toUpperCase();
+
+  const timing = String(order.paymentTiming || "").toUpperCase();
+
+  // Receiver pays when the delivery arrives.
+  if (responsibility === "RECEIVER" && timing === "ON_DELIVERY") {
+    return "Receiver pays on delivery";
+  }
+
+  // Sender pays when the courier arrives for pickup.
+  if (responsibility === "SENDER" && timing === "AT_PICKUP") {
+    return "Sender pays at pickup";
+  }
+
+  // Sender pays before the courier picks up the order.
+  if (
+    responsibility === "SENDER" &&
+    ["BEFORE_PICKUP", "BEFORE_PICK_UP"].includes(timing)
+  ) {
+    return "Sender pays before pickup";
+  }
+
   return (
-    STATUS_LABELS[status] ||
-    String(status)
-      .replace(/_/g, " ")
-      .toLowerCase()
-      .replace(/\b\w/g, (letter) => letter.toUpperCase())
+    `${formatLabel(responsibility)} · ${formatLabel(timing)}`.replace(
+      /^ · | · $/g,
+      "",
+    ) || "Not specified"
   );
 };
 
@@ -82,6 +140,7 @@ const getStatusClass = (status) => {
   const normalized = String(status || "").toUpperCase();
 
   if (normalized === "DELIVERED") return "success";
+
   if (normalized === "CANCELLED" || normalized === "DISPUTED") {
     return "danger";
   }
@@ -111,14 +170,268 @@ const getDisplayName = (record) => {
 
   const firstName = record.firstName || "";
   const lastName = record.lastName || "";
+
   const fullName = `${firstName} ${lastName}`.trim();
 
   return fullName || record.name || "Name unavailable";
 };
 
+const getInitials = (record) => {
+  if (!record) return "CO";
+
+  const first = record.firstName?.charAt(0) || "";
+  const last = record.lastName?.charAt(0) || "";
+
+  return `${first}${last}`.toUpperCase() || "CO";
+};
+
+const getTransportationCategory = (transportationType) => {
+  if (!transportationType) return null;
+
+  if (transportationType.startsWith("MICRO")) return "MICRO";
+  if (transportationType.startsWith("MOTO")) return "MOTO";
+  if (transportationType === "MAXI") return "MAXI";
+
+  return null;
+};
+
+// ============================================================
+// PAYMENT AND ORDER ELIGIBILITY
+// ============================================================
+
+const isAwaitingPaymentEligible = (order) => {
+  if (order?.status !== "AWAITING_PAYMENT") {
+    return false;
+  }
+
+  const receiverPayOnDelivery =
+    order.paymentResponsibility === "RECEIVER" &&
+    order.paymentTiming === "ON_DELIVERY";
+
+  const senderPayAtPickup =
+    order.paymentResponsibility === "SENDER" &&
+    order.paymentTiming === "AT_PICKUP";
+
+  return receiverPayOnDelivery || senderPayAtPickup;
+};
+
+const isOrderEligibleForAssignment = (order) => {
+  if (!order) return false;
+
+  if (order.assignedCourierId) return false;
+
+  if (order.orderEnvironment !== "PRODUCTION") {
+    return false;
+  }
+
+  const transportationType = order.transportationType;
+
+  const isMicroOrMoto = [
+    "MICRO_EXPRESS",
+    "MICRO_BATCH",
+    "MOTO_EXPRESS",
+    "MOTO_BATCH",
+  ].includes(transportationType);
+
+  const isMaxi = transportationType === "MAXI";
+
+  if (!isMicroOrMoto && !isMaxi) {
+    return false;
+  }
+
+  if (isMaxi) {
+    return order.status === "BIDDING" || isAwaitingPaymentEligible(order);
+  }
+
+  // READY_FOR_PICKUP is eligible regardless of payment status.
+  if (order.status === "READY_FOR_PICKUP") {
+    return true;
+  }
+
+  return isAwaitingPaymentEligible(order);
+};
+
+// ============================================================
+// COURIER ELIGIBILITY
+// ============================================================
+
+const getCourierIneligibilityReason = (courier, order) => {
+  if (!courier || !order) {
+    return "Courier information unavailable";
+  }
+
+  if (courier.isOnline !== true) {
+    return "Courier is offline";
+  }
+
+  if (courier.isApproved !== true) {
+    return "Courier is not approved";
+  }
+
+  if (courier.isBlocked === true) {
+    return "Courier is blocked";
+  }
+
+  if (courier.debtRestrictionActive === true) {
+    return "Courier has an active debt restriction";
+  }
+
+  const orderType = order.transportationType;
+  const courierType = courier.transportationType;
+
+  // MAXI
+  if (orderType === "MAXI") {
+    if (courierType !== "MAXI") {
+      return "Wrong courier category";
+    }
+
+    if (!order.vehicleClass || courier.vehicleClass !== order.vehicleClass) {
+      return "Vehicle class does not match";
+    }
+
+    if (Number(courier.currentMaxiCount || 0) > 0) {
+      return "Courier already has an active Maxi delivery";
+    }
+
+    return null;
+  }
+
+  // MICRO / MOTO
+  const orderCategory = getTransportationCategory(orderType);
+
+  if (courierType !== orderCategory) {
+    return "Wrong courier category";
+  }
+
+  const expressCount = Number(courier.currentExpressCount || 0);
+
+  const batchCount = Number(courier.currentBatchCount || 0);
+
+  const isExpress =
+    orderType === "MICRO_EXPRESS" || orderType === "MOTO_EXPRESS";
+
+  const isBatch = orderType === "MICRO_BATCH" || orderType === "MOTO_BATCH";
+
+  if (isExpress && (expressCount > 0 || batchCount > 0)) {
+    return "Courier has active deliveries";
+  }
+
+  if (isBatch && expressCount > 0) {
+    return "Courier has an active Express delivery";
+  }
+
+  if (isBatch && batchCount >= MAX_ACTIVE_BATCH_ORDERS) {
+    return "Courier has reached the Batch limit";
+  }
+
+  return null;
+};
+
+// ============================================================
+// COUNT HELPERS
+// ============================================================
+
+const getCountField = (transportationType) => {
+  if (
+    transportationType === "MICRO_EXPRESS" ||
+    transportationType === "MOTO_EXPRESS"
+  ) {
+    return "currentExpressCount";
+  }
+
+  if (
+    transportationType === "MICRO_BATCH" ||
+    transportationType === "MOTO_BATCH"
+  ) {
+    return "currentBatchCount";
+  }
+
+  if (transportationType === "MAXI") {
+    return "currentMaxiCount";
+  }
+
+  return null;
+};
+
+const updateCourierCount = async ({
+  courierId,
+  transportationType,
+  direction,
+}) => {
+  const countField = getCountField(transportationType);
+
+  if (!countField) {
+    throw new Error(
+      "Unable to identify the courier count for this order type.",
+    );
+  }
+
+  const latestCourier = await DataStore.query(Courier, courierId);
+
+  if (!latestCourier) {
+    throw new Error("The courier record could not be found.");
+  }
+
+  const currentCount = Number(latestCourier[countField] || 0);
+
+  const nextCount =
+    direction === "increase" ? currentCount + 1 : Math.max(0, currentCount - 1);
+
+  const now = new Date().toISOString();
+
+  return DataStore.save(
+    Courier.copyOf(latestCourier, (updated) => {
+      updated[countField] = nextCount;
+
+      if (
+        transportationType === "MICRO_BATCH" ||
+        transportationType === "MOTO_BATCH"
+      ) {
+        // Keep the most recent Batch assignment timestamp.
+        // Do not erase it when unassigning one Batch order.
+        if (direction === "increase") {
+          updated.lastBatchAssignedAt = now;
+        }
+      }
+    }),
+  );
+};
+
+// ============================================================
+// RESTORE STATUS
+// ============================================================
+
+const getStatusToRestore = (order) => {
+  // New assignments store the exact status before assignment.
+  if (order.statusBeforeAssignment) {
+    return order.statusBeforeAssignment;
+  }
+
+  // Fallback for older assignments created before this field
+  // was added to the Order model.
+  if (order.transportationType === "MAXI") {
+    return "BIDDING";
+  }
+
+  if (order.status === "ACCEPTED") {
+    if (order.paymentStatus === "PAID") {
+      return "READY_FOR_PICKUP";
+    }
+
+    return "AWAITING_PAYMENT";
+  }
+
+  return order.status;
+};
+
+// ============================================================
+// SMALL REUSABLE COMPONENTS
+// ============================================================
+
 const DetailField = ({ label, value, className = "" }) => (
   <div className={`order-detail-field ${className}`}>
     <span className="order-detail-field-label">{label}</span>
+
     <span className="order-detail-field-value">
       {value === null || value === undefined || value === ""
         ? "Not available"
@@ -169,6 +482,7 @@ const TimelineItem = ({
     <div className="order-timeline-content">
       <div className="order-timeline-title-row">
         <h3>{title}</h3>
+
         <span className="order-timeline-date">{formatDate(timestamp)}</span>
       </div>
 
@@ -176,6 +490,10 @@ const TimelineItem = ({
     </div>
   </div>
 );
+
+// ============================================================
+// MAIN PAGE
+// ============================================================
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -185,9 +503,30 @@ const OrderDetails = () => {
   const [customer, setCustomer] = useState(null);
   const [courier, setCourier] = useState(null);
 
+  const [couriers, setCouriers] = useState([]);
+  const [offers, setOffers] = useState([]);
+
+  const [courierSearch, setCourierSearch] = useState("");
+
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadingCouriers, setLoadingCouriers] = useState(false);
+
+  const [assigningCourierId, setAssigningCourierId] = useState("");
+
+  const [unassigning, setUnassigning] = useState(false);
+
+  const [assignmentError, setAssignmentError] = useState("");
+
+  const [assignmentSuccess, setAssignmentSuccess] = useState("");
+
   const [error, setError] = useState("");
+
+  const [showUnavailableCouriers, setShowUnavailableCouriers] = useState(false);
+
+  // ==========================================================
+  // LOAD ORDER DETAILS
+  // ==========================================================
 
   const loadOrderDetails = useCallback(
     async (isRefresh = false) => {
@@ -212,6 +551,7 @@ const OrderDetails = () => {
           setOrder(null);
           setCustomer(null);
           setCourier(null);
+
           setError("This order could not be found.");
           return;
         }
@@ -238,6 +578,7 @@ const OrderDetails = () => {
         setCourier(foundCourier);
       } catch (err) {
         console.error("Failed to load order details:", err);
+
         setError("Unable to load this order. Please try again.");
       } finally {
         setLoading(false);
@@ -247,8 +588,55 @@ const OrderDetails = () => {
     [id],
   );
 
+  // ==========================================================
+  // LOAD COURIERS
+  // ==========================================================
+
+  const loadCouriers = useCallback(async () => {
+    try {
+      setLoadingCouriers(true);
+
+      const result = await DataStore.query(Courier);
+
+      setCouriers(result || []);
+    } catch (err) {
+      console.error("Failed to load couriers:", err);
+
+      setAssignmentError(
+        "Unable to load couriers. Please refresh and try again.",
+      );
+    } finally {
+      setLoadingCouriers(false);
+    }
+  }, []);
+
+  // ==========================================================
+  // LOAD OFFERS
+  // ==========================================================
+
+  const loadOffers = useCallback(async () => {
+    if (!id) return;
+
+    try {
+      const result = await DataStore.query(Offer, (item) =>
+        item.orderID.eq(id),
+      );
+
+      setOffers(result || []);
+    } catch (err) {
+      console.error("Failed to load order offers:", err);
+      setOffers([]);
+    }
+  }, [id]);
+
+  // ==========================================================
+  // INITIAL LOAD AND REAL-TIME ORDER UPDATE
+  // ==========================================================
+
   useEffect(() => {
     loadOrderDetails();
+    loadCouriers();
+    loadOffers();
 
     let subscription;
 
@@ -257,6 +645,7 @@ const OrderDetails = () => {
         next: () => {
           loadOrderDetails(true);
         },
+
         error: (err) => {
           console.error("Order subscription error:", err);
         },
@@ -266,7 +655,92 @@ const OrderDetails = () => {
     return () => {
       subscription?.unsubscribe();
     };
-  }, [id, loadOrderDetails]);
+  }, [id, loadOrderDetails, loadCouriers, loadOffers]);
+
+  // ==========================================================
+  // DERIVED ORDER INFORMATION
+  // ==========================================================
+
+  const latestOffer = useMemo(() => {
+    return [...offers].sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+    )[0];
+  }, [offers]);
+
+  const latestUserOffer = useMemo(() => {
+    return [...offers]
+      .filter((item) => item.senderType === "USER")
+      .sort(
+        (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+      )[0];
+  }, [offers]);
+
+  const orderCanBeAssigned = isOrderEligibleForAssignment(order);
+
+  const maxiOfferReady =
+    order?.transportationType !== "MAXI" ||
+    (latestOffer &&
+      latestOffer.senderType === "USER" &&
+      Number(latestOffer.amount) > 0);
+
+  // ==========================================================
+  // COURIER LIST
+  // ==========================================================
+
+  const courierOptions = useMemo(() => {
+    if (!order) return [];
+
+    const search = courierSearch.trim().toLowerCase();
+
+    return couriers
+      .map((item) => {
+        const reason = getCourierIneligibilityReason(item, order);
+
+        return {
+          ...item,
+          eligible: !reason,
+          ineligibilityReason: reason,
+        };
+      })
+      .filter((item) => {
+        if (!showUnavailableCouriers && !item.eligible) {
+          return false;
+        }
+
+        if (!search) return true;
+
+        const name = getDisplayName(item).toLowerCase();
+
+        const phone = String(item.phoneNumber || "").toLowerCase();
+
+        const courierId = String(item.id || "").toLowerCase();
+
+        return (
+          name.includes(search) ||
+          phone.includes(search) ||
+          courierId.includes(search)
+        );
+      })
+      .sort((a, b) => {
+        if (a.eligible !== b.eligible) {
+          return a.eligible ? -1 : 1;
+        }
+
+        return getDisplayName(a).localeCompare(getDisplayName(b));
+      });
+  }, [couriers, order, courierSearch, showUnavailableCouriers]);
+
+  const eligibleCourierCount = useMemo(() => {
+    if (!order) return 0;
+
+    return couriers.filter(
+      (item) => !getCourierIneligibilityReason(item, order),
+    ).length;
+  }, [couriers, order]);
+
+  // ==========================================================
+  // TIMELINE
+  // ==========================================================
 
   const timeline = useMemo(() => {
     if (!order) return [];
@@ -312,7 +786,7 @@ const OrderDetails = () => {
       {
         title: "Delivered",
         timestamp: order.deliveredAt,
-        description: "The order was marked as delivered.",
+        description: "The order was delivered.",
       },
       {
         title: "Cancelled",
@@ -331,20 +805,340 @@ const OrderDetails = () => {
       );
   }, [order, courier]);
 
-  const paymentStatus = order?.paymentStatus;
-  const orderStatus = order?.status;
+  // ==========================================================
+  // ASSIGN COURIER
+  // ==========================================================
+
+  const handleAssignCourier = async (selectedCourier) => {
+    if (!order?.id || !selectedCourier?.id) return;
+
+    if (assigningCourierId || unassigning) return;
+
+    setAssignmentError("");
+    setAssignmentSuccess("");
+    setAssigningCourierId(selectedCourier.id);
+
+    let courierCountUpdated = false;
+    let assignedOrderSaved = false;
+
+    const transportationType = order.transportationType;
+
+    try {
+      // Re-fetch order before making changes.
+      const latestOrder = await DataStore.query(Order, order.id);
+
+      if (!latestOrder) {
+        throw new Error("This order no longer exists.");
+      }
+
+      if (latestOrder.assignedCourierId) {
+        throw new Error("This order has already been assigned to a courier.");
+      }
+
+      if (!isOrderEligibleForAssignment(latestOrder)) {
+        throw new Error("This order is no longer eligible for assignment.");
+      }
+
+      // Re-fetch selected courier.
+      const freshCourier = await DataStore.query(Courier, selectedCourier.id);
+
+      if (!freshCourier) {
+        throw new Error("The selected courier could not be found.");
+      }
+
+      const ineligibilityReason = getCourierIneligibilityReason(
+        freshCourier,
+        latestOrder,
+      );
+
+      if (ineligibilityReason) {
+        throw new Error(ineligibilityReason);
+      }
+
+      // MAXI: get the latest offer from the customer.
+      let acceptedOffer = null;
+      let maxiFinancials = null;
+
+      if (latestOrder.transportationType === "MAXI") {
+        const freshOffers = await DataStore.query(Offer, (item) =>
+          item.orderID.eq(latestOrder.id),
+        );
+
+        const latest = [...freshOffers].sort(
+          (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0),
+        )[0];
+
+        if (!latest || latest.senderType !== "USER") {
+          throw new Error(
+            "The latest Maxi offer must be from the customer before assignment.",
+          );
+        }
+
+        if (!Number(latest.amount) || Number(latest.amount) <= 0) {
+          throw new Error("The customer's latest offer is invalid.");
+        }
+
+        acceptedOffer = latest;
+
+        // Actual helper signature:
+        // calculateMaxiFinancials(vehicleClass, agreedAmount)
+        maxiFinancials = calculateMaxiFinancials(
+          latestOrder.vehicleClass,
+          latest.amount,
+        );
+
+        if (!maxiFinancials) {
+          throw new Error("Unable to calculate the Maxi financial breakdown.");
+        }
+      }
+
+      const now = new Date().toISOString();
+
+      // Increase courier count first.
+      await updateCourierCount({
+        courierId: freshCourier.id,
+        transportationType,
+        direction: "increase",
+      });
+
+      courierCountUpdated = true;
+
+      // Save original status so unassignment can restore it.
+      await DataStore.save(
+        Order.copyOf(latestOrder, (updated) => {
+          updated.statusBeforeAssignment = latestOrder.status;
+
+          updated.status = "ACCEPTED";
+          updated.acceptedAt = now;
+
+          updated.assignedCourierId = freshCourier.id;
+          updated.courierAssignedAt = now;
+
+          updated.assignmentStatus = "ACCEPTED";
+          updated.hasNewOffer = false;
+
+          if (transportationType === "MAXI" && maxiFinancials) {
+            updated.operationalFare = maxiFinancials.operationalFare;
+
+            updated.commissionAmount = maxiFinancials.commissionAmount;
+
+            updated.platformFee = maxiFinancials.platformFee;
+
+            updated.platformServiceRevenue =
+              maxiFinancials.platformServiceRevenue;
+
+            updated.vatAmount = maxiFinancials.vatAmount;
+
+            updated.platformNetRevenue = maxiFinancials.platformNetRevenue;
+
+            updated.courierEarnings = maxiFinancials.courierEarnings;
+
+            updated.totalPrice = maxiFinancials.customerPrice;
+
+            updated.acceptedOfferID = acceptedOffer.id;
+          }
+        }),
+      );
+
+      assignedOrderSaved = true;
+
+      // Keep the Maxi offer acceptance behaviour.
+      if (acceptedOffer) {
+        await DataStore.save(
+          Offer.copyOf(acceptedOffer, (updated) => {
+            updated.status = "ACCEPTED";
+          }),
+        );
+      }
+
+      setAssignmentSuccess(
+        `${getDisplayName(freshCourier)} has been assigned successfully.`,
+      );
+
+      await Promise.all([loadOrderDetails(true), loadCouriers(), loadOffers()]);
+    } catch (err) {
+      console.error("Courier assignment failed:", err);
+
+      // If the courier count increased but the order did not
+      // save, reverse the count update.
+      if (courierCountUpdated && !assignedOrderSaved) {
+        try {
+          await updateCourierCount({
+            courierId: selectedCourier.id,
+            transportationType,
+            direction: "decrease",
+          });
+        } catch (rollbackError) {
+          console.error("Assignment count rollback failed:", rollbackError);
+        }
+      }
+
+      setAssignmentError(
+        err?.message || "Unable to assign this courier. Please try again.",
+      );
+
+      await Promise.all([loadOrderDetails(true), loadCouriers()]);
+    } finally {
+      setAssigningCourierId("");
+    }
+  };
+
+  // ==========================================================
+  // UNASSIGN COURIER
+  // ==========================================================
+
+  const handleUnassignCourier = async () => {
+    if (!order?.id || !order.assignedCourierId) return;
+
+    if (unassigning || assigningCourierId) return;
+
+    setAssignmentError("");
+    setAssignmentSuccess("");
+
+    // This page only unassigns orders that have been accepted
+    // but have not progressed to pickup or delivery.
+    if (order.status !== "ACCEPTED") {
+      setAssignmentError(
+        "This order has already progressed beyond the accepted stage. It cannot be unassigned from this page.",
+      );
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Are you sure you want to unassign this courier? The courier's active delivery count will be reduced and the order will return to its previous status.",
+    );
+
+    if (!confirmed) return;
+
+    setUnassigning(true);
+
+    const assignedCourierId = order.assignedCourierId;
+    const transportationType = order.transportationType;
+
+    let courierCountDecreased = false;
+    let orderUnassigned = false;
+
+    try {
+      // Re-fetch latest order.
+      const latestOrder = await DataStore.query(Order, order.id);
+
+      if (!latestOrder) {
+        throw new Error("This order no longer exists.");
+      }
+
+      if (
+        !latestOrder.assignedCourierId ||
+        latestOrder.assignedCourierId !== assignedCourierId
+      ) {
+        throw new Error(
+          "The order's courier assignment has changed. Refresh and try again.",
+        );
+      }
+
+      if (latestOrder.status !== "ACCEPTED") {
+        throw new Error(
+          "This order has progressed beyond the accepted stage and can no longer be unassigned here.",
+        );
+      }
+
+      const statusToRestore = getStatusToRestore(latestOrder);
+
+      // Confirm the courier record exists before changing
+      // the order or its assignment.
+      const latestCourier = await DataStore.query(Courier, assignedCourierId);
+
+      if (!latestCourier) {
+        throw new Error(
+          "The assigned courier record could not be found. The order was not changed.",
+        );
+      }
+
+      // Decrease the relevant courier count.
+      await updateCourierCount({
+        courierId: assignedCourierId,
+        transportationType,
+        direction: "decrease",
+      });
+
+      courierCountDecreased = true;
+
+      // Restore order status and clear courier assignment.
+      await DataStore.save(
+        Order.copyOf(latestOrder, (updated) => {
+          updated.status = statusToRestore;
+
+          updated.assignedCourierId = null;
+          updated.courierAssignedAt = null;
+
+          updated.assignmentStatus = null;
+          updated.acceptedAt = null;
+
+          updated.statusBeforeAssignment = null;
+
+          // Clear the accepted Maxi offer reference.
+          // The offer itself and all financial records remain
+          // untouched.
+          if (transportationType === "MAXI") {
+            updated.acceptedOfferID = null;
+          }
+        }),
+      );
+
+      orderUnassigned = true;
+
+      setAssignmentSuccess(
+        `${getDisplayName(latestCourier)} has been unassigned. The order has returned to ${getStatusLabel(statusToRestore)}.`,
+      );
+
+      await Promise.all([loadOrderDetails(true), loadCouriers(), loadOffers()]);
+    } catch (err) {
+      console.error("Courier unassignment failed:", err);
+
+      // If the count was decreased but the order update failed,
+      // restore the courier count.
+      if (courierCountDecreased && !orderUnassigned) {
+        try {
+          await updateCourierCount({
+            courierId: assignedCourierId,
+            transportationType,
+            direction: "increase",
+          });
+        } catch (rollbackError) {
+          console.error("Unassignment count rollback failed:", rollbackError);
+        }
+      }
+
+      setAssignmentError(
+        err?.message || "Unable to unassign this courier. Please try again.",
+      );
+
+      await Promise.all([loadOrderDetails(true), loadCouriers()]);
+    } finally {
+      setUnassigning(false);
+    }
+  };
+
+  // ==========================================================
+  // LOADING STATE
+  // ==========================================================
 
   if (loading) {
     return (
       <div className="order-details-page">
         <div className="order-details-loading">
           <span className="order-details-spinner" />
+
           <h2>Loading order details</h2>
+
           <p>Please wait while we retrieve this order.</p>
         </div>
       </div>
     );
   }
+
+  // ==========================================================
+  // ERROR STATE
+  // ==========================================================
 
   if (error || !order) {
     return (
@@ -366,6 +1160,7 @@ const OrderDetails = () => {
           </div>
 
           <h2>Unable to display order</h2>
+
           <p>{error || "This order could not be found."}</p>
 
           <div className="order-details-state-actions">
@@ -390,6 +1185,10 @@ const OrderDetails = () => {
     );
   }
 
+  // ==========================================================
+  // DISPLAY DATA
+  // ==========================================================
+
   const customerName = getDisplayName(customer);
   const courierName = getDisplayName(courier);
 
@@ -403,18 +1202,28 @@ const OrderDetails = () => {
 
   const courierPhone = courier?.phoneNumber || courier?.phone || null;
 
+  const paymentStatus = order.paymentStatus;
+  const orderStatus = order.status;
+
   const paymentLabel = paymentStatus
-    ? String(paymentStatus)
-        .replace(/_/g, " ")
-        .toLowerCase()
-        .replace(/\b\w/g, (letter) => letter.toUpperCase())
+    ? formatLabel(paymentStatus)
     : "Not recorded";
 
   const environment = order.orderEnvironment || "Not specified";
 
+  const hasAssignedCourier = Boolean(order.assignedCourierId);
+
+  const showAssignmentPanel = !hasAssignedCourier && orderCanBeAssigned;
+
+  const canUnassign = hasAssignedCourier && order.status === "ACCEPTED";
+
+  // ==========================================================
+  // RENDER
+  // ==========================================================
+
   return (
     <div className="order-details-page">
-      {/* PAGE HEADER */}
+      {/* TOP ACTIONS */}
 
       <div className="order-details-back-row">
         <button
@@ -439,18 +1248,25 @@ const OrderDetails = () => {
           <button
             type="button"
             className="order-details-refresh-button"
-            onClick={() => loadOrderDetails(true)}
-            disabled={refreshing}
+            onClick={() => {
+              loadOrderDetails(true);
+              loadCouriers();
+              loadOffers();
+            }}
+            disabled={refreshing || unassigning}
           >
             <i
               className={`bi ${
                 refreshing ? "bi-arrow-repeat" : "bi-arrow-clockwise"
               }`}
             />
+
             <span>{refreshing ? "Refreshing..." : "Refresh"}</span>
           </button>
         </div>
       </div>
+
+      {/* PAGE HEADER */}
 
       <header className="order-details-header">
         <div className="order-details-heading">
@@ -500,11 +1316,7 @@ const OrderDetails = () => {
               className="order-details-copy-button"
               title="Copy order ID"
               onClick={() => {
-                if (navigator.clipboard?.writeText) {
-                  navigator.clipboard.writeText(order.id).catch((err) => {
-                    console.error("Unable to copy order ID:", err);
-                  });
-                }
+                navigator.clipboard?.writeText(order.id);
               }}
             >
               <i className="bi bi-copy" />
@@ -517,11 +1329,13 @@ const OrderDetails = () => {
         <div className="order-details-summary-metrics">
           <div>
             <span>Order value</span>
+
             <strong>{formatCurrency(order.totalPrice)}</strong>
           </div>
 
           <div>
             <span>Payment status</span>
+
             <strong
               className={`order-details-payment-text ${getStatusClass(
                 paymentStatus,
@@ -531,12 +1345,34 @@ const OrderDetails = () => {
             </strong>
           </div>
 
+          <div className="order-details-financial-row">
+            <span>Payment arrangement</span>
+            <strong>{getPaymentArrangement(order)}</strong>
+          </div>
+
           <div>
             <span>Transportation</span>
+
             <strong>{formatValue(order.transportationType)}</strong>
           </div>
         </div>
       </section>
+
+      {/* NOTIFICATIONS */}
+
+      {assignmentSuccess && (
+        <div className="order-details-notice success">
+          <i className="bi bi-check-circle" />
+          <p>{assignmentSuccess}</p>
+        </div>
+      )}
+
+      {assignmentError && (
+        <div className="order-details-notice danger">
+          <i className="bi bi-exclamation-circle" />
+          <p>{assignmentError}</p>
+        </div>
+      )}
 
       {/* MAIN CONTENT */}
 
@@ -639,7 +1475,194 @@ const OrderDetails = () => {
             </div>
           </SectionCard>
 
-          {/* CUSTOMER */}
+          {/* ASSIGNMENT PANEL */}
+
+          {showAssignmentPanel && (
+            <SectionCard
+              title="Assign a courier"
+              description="Select an eligible courier for this delivery."
+              className="order-details-assignment-card"
+            >
+              <div className="order-assignment-intro">
+                <div className="order-assignment-intro-icon">
+                  <i className="bi bi-truck" />
+                </div>
+
+                <div>
+                  <strong>
+                    {eligibleCourierCount} eligible{" "}
+                    {eligibleCourierCount === 1 ? "courier" : "couriers"}
+                  </strong>
+
+                  <p>
+                    {formatLabel(order.transportationType)}
+                    {order.vehicleClass
+                      ? ` · ${formatLabel(order.vehicleClass)}`
+                      : ""}
+                  </p>
+                </div>
+              </div>
+
+              {order.transportationType === "MAXI" && (
+                <div
+                  className={`order-maxi-offer-summary ${
+                    maxiOfferReady
+                      ? "order-maxi-offer-ready"
+                      : "order-maxi-offer-warning"
+                  }`}
+                >
+                  <i
+                    className={`bi ${
+                      maxiOfferReady
+                        ? "bi-check-circle"
+                        : "bi-exclamation-triangle"
+                    }`}
+                  />
+
+                  <div>
+                    <strong>
+                      {maxiOfferReady
+                        ? "Customer offer available"
+                        : "Customer offer required"}
+                    </strong>
+
+                    <p>
+                      {maxiOfferReady
+                        ? `Latest customer offer: ${formatCurrency(
+                            latestOffer.amount,
+                          )}`
+                        : "The latest offer must be from the customer before a Maxi courier can be assigned."}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <div className="order-courier-search">
+                <i className="bi bi-search" />
+
+                <input
+                  type="text"
+                  value={courierSearch}
+                  onChange={(event) => setCourierSearch(event.target.value)}
+                  placeholder="Search couriers by name, ID or phone"
+                />
+              </div>
+
+              <div className="order-courier-list-header">
+                <span>
+                  {showUnavailableCouriers
+                    ? "All couriers"
+                    : "Available couriers"}
+                </span>
+
+                <button
+                  type="button"
+                  className="order-details-card-action"
+                  onClick={() =>
+                    setShowUnavailableCouriers((previous) => !previous)
+                  }
+                >
+                  {showUnavailableCouriers
+                    ? "Show eligible only"
+                    : "Show unavailable"}
+                </button>
+              </div>
+
+              {loadingCouriers ? (
+                <div className="order-details-inline-empty">
+                  <div className="order-details-inline-empty-icon">
+                    <i className="bi bi-arrow-repeat" />
+                  </div>
+
+                  <div>
+                    <h3>Loading couriers</h3>
+                    <p>Please wait while couriers are retrieved.</p>
+                  </div>
+                </div>
+              ) : courierOptions.length === 0 ? (
+                <div className="order-details-inline-empty">
+                  <div className="order-details-inline-empty-icon">
+                    <i className="bi bi-people" />
+                  </div>
+
+                  <div>
+                    <h3>No couriers found</h3>
+
+                    <p>
+                      {courierSearch
+                        ? "Try another search term."
+                        : "There are currently no couriers matching this order."}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="order-courier-list">
+                  {courierOptions.map((item) => {
+                    const isAssigning = assigningCourierId === item.id;
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`order-courier-option ${
+                          !item.eligible ? "unavailable" : ""
+                        }`}
+                      >
+                        <div className="order-courier-option-main">
+                          <div className="order-courier-avatar">
+                            {getInitials(item)}
+                          </div>
+
+                          <div className="order-courier-option-info">
+                            <strong>{getDisplayName(item)}</strong>
+
+                            <span className="order-courier-option-id">
+                              {item.phoneNumber || item.id}
+                            </span>
+
+                            <div className="order-courier-eligibility">
+                              <span
+                                className={
+                                  item.eligible ? "available" : "unavailable"
+                                }
+                              >
+                                {item.eligible
+                                  ? "Available"
+                                  : item.ineligibilityReason}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="order-courier-option-actions">
+                          {item.eligible ? (
+                            <button
+                              type="button"
+                              className="order-details-primary-button"
+                              disabled={
+                                Boolean(assigningCourierId) ||
+                                unassigning ||
+                                (order.transportationType === "MAXI" &&
+                                  !maxiOfferReady)
+                              }
+                              onClick={() => handleAssignCourier(item)}
+                            >
+                              {isAssigning ? "Assigning..." : "Assign"}
+                            </button>
+                          ) : (
+                            <span className="order-courier-capacity">
+                              Unavailable
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </SectionCard>
+          )}
+
+          {/* CUSTOMER INFORMATION */}
 
           <SectionCard
             title="Customer information"
@@ -674,7 +1697,7 @@ const OrderDetails = () => {
             </div>
           </SectionCard>
 
-          {/* COURIER */}
+          {/* COURIER INFORMATION */}
 
           <SectionCard
             title="Courier assignment"
@@ -697,7 +1720,7 @@ const OrderDetails = () => {
                       order.assignmentStatus,
                     )}`}
                   >
-                    {formatValue(order.assignmentStatus, "Unspecified")}
+                    {formatValue(order.assignmentStatus, "Assigned")}
                   </span>
                 </div>
 
@@ -714,12 +1737,41 @@ const OrderDetails = () => {
                     label="Assigned at"
                     value={formatDate(order.courierAssignedAt)}
                   />
-
-                  <DetailField
-                    label="Assignment attempts"
-                    value={order.assignmentAttempts}
-                  />
                 </div>
+
+                {canUnassign && (
+                  <div className="order-details-unassign">
+                    <div>
+                      <strong>Remove this courier?</strong>
+
+                      <p>
+                        The courier's active delivery count will decrease and
+                        the order will return to its previous status.
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="order-details-danger-button"
+                      onClick={handleUnassignCourier}
+                      disabled={unassigning || Boolean(assigningCourierId)}
+                    >
+                      {unassigning ? "Unassigning..." : "Unassign courier"}
+                    </button>
+                  </div>
+                )}
+
+                {!canUnassign && (
+                  <div className="order-details-notice warning">
+                    <i className="bi bi-lock" />
+
+                    <p>
+                      This order has progressed beyond the accepted stage.
+                      Unassignment is disabled to prevent releasing a courier
+                      who may already have the delivery.
+                    </p>
+                  </div>
+                )}
               </>
             ) : (
               <div className="order-details-inline-empty">
@@ -728,11 +1780,18 @@ const OrderDetails = () => {
                 </div>
 
                 <div>
-                  <h3>No courier information available</h3>
+                  <h3>
+                    {hasAssignedCourier
+                      ? "Courier record unavailable"
+                      : "No courier assigned"}
+                  </h3>
+
                   <p>
-                    {order.assignedCourierId
+                    {hasAssignedCourier
                       ? "A courier ID exists, but the courier record could not be loaded."
-                      : "No assigned courier is recorded for this order."}
+                      : orderCanBeAssigned
+                        ? "Use the assignment section above to select a courier."
+                        : "This order is not currently eligible for courier assignment."}
                   </p>
                 </div>
               </div>
@@ -757,24 +1816,13 @@ const OrderDetails = () => {
                     last={index === timeline.length - 1}
                   />
                 ))}
-
-                {orderStatus &&
-                  orderStatus !== "DELIVERED" &&
-                  orderStatus !== "CANCELLED" &&
-                  orderStatus !== "DISPUTED" && (
-                    <TimelineItem
-                      title="Current order status"
-                      timestamp={null}
-                      description={getStatusLabel(orderStatus)}
-                      state="current"
-                      last
-                    />
-                  )}
               </div>
             ) : (
               <div className="order-details-empty-content">
                 <i className="bi bi-clock-history" />
+
                 <h3>No milestone timestamps</h3>
+
                 <p>
                   Timeline entries will appear here when milestone timestamps
                   are recorded.
@@ -795,49 +1843,59 @@ const OrderDetails = () => {
           >
             <div className="order-details-financial-row total">
               <span>Total order price</span>
+
               <strong>{formatCurrency(order.totalPrice)}</strong>
             </div>
 
             <div className="order-details-financial-row">
               <span>Operational fare</span>
+
               <strong>{formatCurrency(order.operationalFare)}</strong>
             </div>
 
             <div className="order-details-financial-row">
               <span>Platform fee</span>
+
               <strong>{formatCurrency(order.platformFee)}</strong>
             </div>
 
             <div className="order-details-financial-row">
               <span>Commission</span>
+
               <strong>{formatCurrency(order.commissionAmount)}</strong>
             </div>
 
             <div className="order-details-financial-row">
+              <span>VAT</span>
+
+              <strong>{formatCurrency(order.vatAmount)}</strong>
+            </div>
+
+            <div className="order-details-financial-row">
+              <span>Platform service revenue</span>
+
+              <strong>{formatCurrency(order.platformServiceRevenue)}</strong>
+            </div>
+
+            <div className="order-details-financial-row">
               <span>Courier earnings</span>
+
               <strong>{formatCurrency(order.courierEarnings)}</strong>
             </div>
 
             <div className="order-details-divider" />
 
-            <div className="order-details-payment-summary">
-              <span>Payment status</span>
-
-              <span
-                className={`order-details-status-badge ${getStatusClass(
-                  paymentStatus,
-                )}`}
-              >
-                {paymentLabel}
-              </span>
+            <div className="order-details-financial-row payment-arrangement">
+              <span>Payment arrangement</span>
+              <strong>{getPaymentArrangement(order)}</strong>
             </div>
           </SectionCard>
 
-          {/* CANCELLATION / REFUND */}
+          {/* CANCELLATION AND REFUNDS */}
 
           <SectionCard
             title="Cancellation and refunds"
-            description="Review any recorded cancellation or refund information."
+            description="Recorded cancellation and refund information."
           >
             <div className="order-details-fields-stack">
               <DetailField
@@ -857,25 +1915,6 @@ const OrderDetails = () => {
                 value={formatCurrency(order.refundAmount)}
               />
             </div>
-
-            {orderStatus === "CANCELLED" && (
-              <div className="order-details-notice warning">
-                <i className="bi bi-exclamation-triangle" />
-                <p>
-                  This order is cancelled. Review the recorded cancellation and
-                  refund information before taking further action.
-                </p>
-              </div>
-            )}
-
-            {orderStatus === "DISPUTED" && (
-              <div className="order-details-notice danger">
-                <i className="bi bi-exclamation-circle" />
-                <p>
-                  This order is disputed and may require operational review.
-                </p>
-              </div>
-            )}
           </SectionCard>
 
           {/* RECORD INFORMATION */}
@@ -894,7 +1933,12 @@ const OrderDetails = () => {
                 value={order.assignedCourierId}
               />
 
-              <DetailField label="Order classification" value={environment} />
+              <DetailField
+                label="Original status before assignment"
+                value={order.statusBeforeAssignment}
+              />
+
+              <DetailField label="Order environment" value={environment} />
 
               <DetailField
                 label="Created at"

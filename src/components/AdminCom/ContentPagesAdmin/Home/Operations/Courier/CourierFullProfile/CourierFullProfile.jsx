@@ -122,6 +122,8 @@ function CourierFullProfile() {
 
   const [blockLoading, setBlockLoading] = useState(false);
 
+  const [debtRestrictionLoading, setDebtRestrictionLoading] = useState(false);
+
   const [resetLoading, setResetLoading] = useState(false);
 
   /*
@@ -528,9 +530,19 @@ function CourierFullProfile() {
           updated.isOnline = false;
         }
 
-        updated.statusKey = `${updated.isOnline ? "ONLINE" : "OFFLINE"}#${
-          newApprovalStatus ? "APPROVED" : "NOT_APPROVED"
-        }`;
+        if (!newApprovalStatus) {
+          updated.statusKey = "OFFLINE#NOT_APPROVED";
+        } else if (updated.isBlocked) {
+          updated.isOnline = false;
+          updated.statusKey = "OFFLINE#BLOCKED";
+        } else if (updated.debtRestrictionActive) {
+          updated.isOnline = false;
+          updated.statusKey = "OFFLINE#DEBT";
+        } else {
+          updated.statusKey = `${
+            updated.isOnline ? "ONLINE" : "OFFLINE"
+          }#APPROVED`;
+        }
       });
 
       await DataStore.save(updatedCourier);
@@ -595,18 +607,22 @@ function CourierFullProfile() {
           updated.statusKey = "OFFLINE#BLOCKED";
         } else {
           /*
-        ----------------------------------------------------
-        UNBLOCKING DOES NOT AUTOMATICALLY PUT THE COURIER
-        ONLINE.
-        ----------------------------------------------------
+            ----------------------------------------------------
+            UNBLOCKING DOES NOT AUTOMATICALLY PUT THE COURIER
+            ONLINE.
+            ----------------------------------------------------
+          */
 
-        They must manually go online from the courier app.
-        ----------------------------------------------------
-        */
-
-          updated.statusKey = `${updated.isOnline ? "ONLINE" : "OFFLINE"}#${
-            updated.isApproved ? "APPROVED" : "NOT_APPROVED"
-          }`;
+          if (!updated.isApproved) {
+            updated.statusKey = "OFFLINE#NOT_APPROVED";
+          } else if (updated.debtRestrictionActive) {
+            updated.isOnline = false;
+            updated.statusKey = "OFFLINE#DEBT";
+          } else {
+            updated.statusKey = `${
+              updated.isOnline ? "ONLINE" : "OFFLINE"
+            }#APPROVED`;
+          }
         }
       });
 
@@ -617,6 +633,91 @@ function CourierFullProfile() {
       console.error("Failed to update courier block status:", blockError);
     } finally {
       setBlockLoading(false);
+    }
+  };
+
+  /*
+  ==========================================================
+  DEBT RESTRICTION / UNRESTRICTION
+  ==========================================================
+  */
+
+  const handleDebtRestriction = async () => {
+    if (!courier || debtRestrictionLoading) {
+      return;
+    }
+
+    const courierName =
+      `${courier.firstName || ""} ${courier.lastName || ""}`.trim() ||
+      "this courier";
+
+    const isCurrentlyRestricted = Boolean(courier.debtRestrictionActive);
+
+    const confirmed = window.confirm(
+      isCurrentlyRestricted
+        ? `Remove the debt restriction from ${courierName}?\n\nThe courier will remain offline and must manually go online.`
+        : `Restrict ${courierName}?\n\nThis will immediately take the courier offline and prevent them from going online or receiving delivery jobs.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDebtRestrictionLoading(true);
+
+      // Always retrieve the latest courier record before updating.
+      const freshCourier = await DataStore.query(Courier, courier.id);
+
+      if (!freshCourier) {
+        window.alert("Courier could not be found.");
+        return;
+      }
+
+      // Toggle using the latest database value, not potentially stale UI state.
+      const newRestrictionStatus = !Boolean(freshCourier.debtRestrictionActive);
+
+      const updatedCourier = Courier.copyOf(freshCourier, (updated) => {
+        updated.debtRestrictionActive = newRestrictionStatus;
+
+        // A debt restriction always forces the courier offline.
+        // Removing the restriction does not automatically put them online.
+        updated.isOnline = false;
+
+        if (updated.isBlocked) {
+          // Account blocking takes priority.
+          updated.statusKey = "OFFLINE#BLOCKED";
+        } else if (!updated.isApproved) {
+          // Approval status takes priority over debt status.
+          updated.statusKey = "OFFLINE#NOT_APPROVED";
+        } else if (newRestrictionStatus) {
+          updated.statusKey = "OFFLINE#DEBT";
+        } else {
+          updated.statusKey = "OFFLINE#APPROVED";
+        }
+      });
+
+      const savedCourier = await DataStore.save(updatedCourier);
+
+      // Update the profile immediately.
+      setCourier(savedCourier);
+
+      window.alert(
+        newRestrictionStatus
+          ? `${courierName} has been debt restricted.`
+          : `${courierName} has been unrestricted.`,
+      );
+    } catch (restrictionError) {
+      console.error(
+        "Failed to update courier debt restriction:",
+        restrictionError,
+      );
+
+      window.alert(
+        "Failed to update the courier's debt restriction.\n\nPlease try again.",
+      );
+    } finally {
+      setDebtRestrictionLoading(false);
     }
   };
 
@@ -1094,6 +1195,7 @@ function CourierFullProfile() {
         blockLoading={blockLoading}
         onApprove={handleApproval}
         onBlock={handleBlock}
+        onDebtRestriction={handleDebtRestriction}
         onForceReset={handleForceReset}
         onTrack={goToLiveTracking}
       />
