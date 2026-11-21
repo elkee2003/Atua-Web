@@ -236,6 +236,7 @@ export const getFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -896,6 +897,7 @@ export const getFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1593,6 +1595,7 @@ export const getFleetMember = /* GraphQL */ `
     getFleetMember(id: $id) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -1743,6 +1746,7 @@ export const listFleetMembers = /* GraphQL */ `
       items {
         id
         fleetID
+        userSub
         courierID
         role
         status
@@ -1780,6 +1784,7 @@ export const syncFleetMembers = /* GraphQL */ `
       items {
         id
         fleetID
+        userSub
         courierID
         role
         status
@@ -1819,6 +1824,47 @@ export const fleetMembersByFleetID = /* GraphQL */ `
       items {
         id
         fleetID
+        userSub
+        courierID
+        role
+        status
+        currentVehicleID
+        invitedByID
+        approvedByID
+        joinedAt
+        leftAt
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        __typename
+      }
+      nextToken
+      startedAt
+      __typename
+    }
+  }
+`;
+export const fleetMembersByUserSub = /* GraphQL */ `
+  query FleetMembersByUserSub(
+    $userSub: String!
+    $sortDirection: ModelSortDirection
+    $filter: ModelFleetMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    fleetMembersByUserSub(
+      userSub: $userSub
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        fleetID
+        userSub
         courierID
         role
         status
@@ -1858,6 +1904,7 @@ export const fleetMembersByCourierID = /* GraphQL */ `
       items {
         id
         fleetID
+        userSub
         courierID
         role
         status
@@ -1897,6 +1944,7 @@ export const fleetMembersByCurrentVehicleID = /* GraphQL */ `
       items {
         id
         fleetID
+        userSub
         courierID
         role
         status
@@ -3511,6 +3559,8 @@ export const getWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -3541,6 +3591,8 @@ export const listWallets = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -3576,6 +3628,8 @@ export const syncWallets = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -3629,6 +3683,7 @@ export const getPayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4019,6 +4074,7 @@ export const getOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -5822,15 +5878,15 @@ export const cashCollectionsByOrderID = /* GraphQL */ `
     }
   }
 `;
-export const cashCollectionsByCourierID = /* GraphQL */ `
-  query CashCollectionsByCourierID(
+export const cashCollectionsByCourier = /* GraphQL */ `
+  query CashCollectionsByCourier(
     $courierID: ID!
     $sortDirection: ModelSortDirection
     $filter: ModelCashCollectionFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    cashCollectionsByCourierID(
+    cashCollectionsByCourier(
       courierID: $courierID
       sortDirection: $sortDirection
       filter: $filter
@@ -5969,6 +6025,7 @@ export const getOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -6227,6 +6284,7 @@ export const listOrders = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6401,6 +6459,7 @@ export const syncOrders = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6577,6 +6636,7 @@ export const ordersByAssignedCourierId = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6755,6 +6815,7 @@ export const ordersByAssignmentStatusAndAssignmentExpiresAt = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6931,6 +6992,7 @@ export const ordersByRecipientTrackingToken = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7107,6 +7169,7 @@ export const ordersByUserID = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7360,6 +7423,7 @@ export const getCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7807,6 +7871,7 @@ export const getCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8569,6 +8634,8 @@ export const getCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9079,6 +9146,51 @@ export const usersBySub = /* GraphQL */ `
       }
       nextToken
       startedAt
+      __typename
+    }
+  }
+`;
+export const getMyCashCollections = /* GraphQL */ `
+  query GetMyCashCollections {
+    getMyCashCollections {
+      success
+      message
+      items {
+        id
+        orderID
+        courierID
+        amount
+        status
+        idempotencyKey
+        confirmedAt
+        reconciledAt
+        reconciliationReference
+        courierDebtID
+        atuaShareAmount
+        debtAppliedAt
+        createdAt
+        updatedAt
+        __typename
+      }
+      __typename
+    }
+  }
+`;
+export const getAssignedOrderStatus = /* GraphQL */ `
+  query GetAssignedOrderStatus($orderId: ID!) {
+    getAssignedOrderStatus(orderId: $orderId) {
+      success
+      message
+      orderId
+      assignedCourierId
+      status
+      acceptedAt
+      arrivedPickupAt
+      loadingStartedAt
+      tripStartedAt
+      arrivedDropoffAt
+      unloadingCompletedAt
+      updatedAt
       __typename
     }
   }

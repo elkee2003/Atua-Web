@@ -43,11 +43,11 @@
         },
         "releaseFunds": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/releaseFunds-3136367a6936747a4d48-build.zip"
+          "s3Key": "amplify-builds/releaseFunds-64456457714c694f6670-build.zip"
         },
         "processPayouts": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/processPayouts-39695567767a734c726c-build.zip",
+          "s3Key": "amplify-builds/processPayouts-675a632f4475376e6849-build.zip",
           "paystackSecretKey": "sk_test_02e162f3ef2ad01ddf01867bb9fbad18a5618fb0"
         },
         "verifyAtuaPayment": {
@@ -66,7 +66,7 @@
         },
         "releaseCourierMilestoneFunds": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/releaseCourierMilestoneFunds-30736b614276385a6e30-build.zip"
+          "s3Key": "amplify-builds/releaseCourierMilestoneFunds-6b2b56307741324a634f-build.zip"
         },
         "processPaymentAndWallet": {
           "paystackSecretKey": ""
@@ -128,12 +128,12 @@
         },
         "verifyCourierDebtPayment": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/verifyCourierDebtPayment-476338734278544d4a38-build.zip",
+          "s3Key": "amplify-builds/verifyCourierDebtPayment-786878366d716652516a-build.zip",
           "secretsPathAmplifyAppId": "d4d2e6dwzso4a"
         },
         "recordCashCollection": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/recordCashCollection-59536332752f61616a36-build.zip"
+          "s3Key": "amplify-builds/recordCashCollection-787a727273426c767132-build.zip"
         },
         "selectDeliveryPaymentMethod": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
@@ -141,7 +141,7 @@
         },
         "reservePayoutWallet": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
-          "s3Key": "amplify-builds/reservePayoutWallet-4f302f415066786a734d-build.zip"
+          "s3Key": "amplify-builds/reservePayoutWallet-7372426654306f694451-build.zip"
         },
         "enforceCourierDebtDeadline": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
@@ -154,6 +154,18 @@
         "acceptDeliveryOrder": {
           "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
           "s3Key": "amplify-builds/acceptDeliveryOrder-4471444d73314768624d-build.zip"
+        },
+        "getMyCashCollections": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/getMyCashCollections-3672626547566d597350-build.zip"
+        },
+        "getAssignedOrderStatus": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/getAssignedOrderStatus-742f3333426553644372-build.zip"
+        },
+        "createFleet": {
+          "deploymentBucketName": "amplify-atua-staging-19d66-deployment",
+          "s3Key": "amplify-builds/createFleet-6470394c726e41376763-build.zip"
         }
       },
       "api": {

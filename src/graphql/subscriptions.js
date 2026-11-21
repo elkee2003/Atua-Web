@@ -270,6 +270,7 @@ export const onCreateFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -498,6 +499,7 @@ export const onUpdateFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -726,6 +728,7 @@ export const onDeleteFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1134,6 +1137,7 @@ export const onCreateFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1436,6 +1440,7 @@ export const onUpdateFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1738,6 +1743,7 @@ export const onDeleteFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -2201,6 +2207,7 @@ export const onCreateFleetMember = /* GraphQL */ `
     onCreateFleetMember(filter: $filter) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -2348,6 +2355,7 @@ export const onUpdateFleetMember = /* GraphQL */ `
     onUpdateFleetMember(filter: $filter) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -2495,6 +2503,7 @@ export const onDeleteFleetMember = /* GraphQL */ `
     onDeleteFleetMember(filter: $filter) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -3850,6 +3859,8 @@ export const onCreateWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -3875,6 +3886,8 @@ export const onUpdateWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -3900,6 +3913,8 @@ export const onDeleteWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -3954,6 +3969,7 @@ export const onCreatePayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4155,6 +4171,7 @@ export const onUpdatePayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4356,6 +4373,7 @@ export const onDeletePayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4546,6 +4564,7 @@ export const onCreateOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4783,6 +4802,7 @@ export const onUpdateOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -5020,6 +5040,7 @@ export const onDeleteOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6448,6 +6469,7 @@ export const onCreateOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -6701,6 +6723,7 @@ export const onUpdateOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -6954,6 +6977,7 @@ export const onDeleteOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -7299,6 +7323,7 @@ export const onCreateCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7563,6 +7588,7 @@ export const onUpdateCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7827,6 +7853,7 @@ export const onDeleteCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8091,6 +8118,7 @@ export const onCreateCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8351,6 +8379,7 @@ export const onUpdateCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8611,6 +8640,7 @@ export const onDeleteCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -9256,6 +9286,8 @@ export const onCreateCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9409,6 +9441,8 @@ export const onUpdateCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9562,6 +9596,8 @@ export const onDeleteCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt

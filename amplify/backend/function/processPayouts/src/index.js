@@ -871,6 +871,21 @@ const getActiveCourierPayouts = async (courierID) => {
 
     const payouts = data?.listPayouts?.items || [];
 
+    console.log(
+      "[ACTIVE PAYOUT CHECK] Records returned:",
+      JSON.stringify(
+        payouts.map((payout) => ({
+          id: payout?.id,
+          courierID: payout?.courierID,
+          status: payout?.status,
+          reference: payout?.reference,
+          deleted: payout?._deleted,
+        })),
+        null,
+        2,
+      ),
+    );
+
     activePayouts.push(
       ...payouts.filter((payout) => {
         const status = normalizeStatus(payout?.status);
@@ -4216,6 +4231,7 @@ const processCourierPayout = async ({
 
     if (
       reservationResult.status !== "RESERVED" ||
+      !reservationResult.reservationID ||
       !reservationResult.transactionID ||
       !reservedWalletID ||
       !reservedPayoutID ||
@@ -4935,113 +4951,41 @@ const processCourierPayout = async ({
       };
     }
 
-    /*
-     * The wallet was reserved, but no debit transaction
-     * is available to identify the exact amount to reverse.
-     * Do not blindly credit the wallet.
-     */
-    if ((walletReserved || reservationAttempted) && !transaction) {
-      console.error(
-        "CRITICAL: WALLET RESERVED BUT DEBIT TRANSACTION IS MISSING:",
-        {
-          courierID,
-          walletID: wallet?.id,
-          payoutID: payout?.id,
-          reference,
-          amountToRestore: financials.totalWalletDebit,
-        },
-      );
+    // The reservation outcome is uncertain.
+    // Keep the payout active so another payout cannot be
+    // created while this one requires reconciliation.
 
-      return {
-        success: false,
-        status: "FAILED_RECONCILIATION_REQUIRED",
-        transferStarted: false,
-        courierID,
-        payout,
-        transaction: null,
-        payoutSource: normalizedSource,
-        payoutMethod: normalizedMethod,
-        financials,
-        message:
-          "Wallet balance was reserved, but the debit transaction could not be confirmed. Reconcile the wallet and transaction records before restoring the balance.",
-      };
-    }
-
-    /*
-     * A debit transaction exists and transfer initiation
-     * has not started. Request reversal through reversePayout
-     * instead of restoring the wallet directly.
-     */
-    if (walletReserved && transaction) {
-      try {
-        const reversal = await requestPayoutReversal({
+    try {
+      if (payout?.id) {
+        payout = await updatePayoutStatus({
           payout,
-          transaction,
-          transfer: null,
-          eventType: "transfer.failed",
-          failureReason:
-            error?.message || "Payout failed before transfer initiation.",
+          status: PAYOUT_STATUS.PROCESSING,
+          updates: {
+            processedAt: new Date().toISOString(),
+            failureReason:
+              "Wallet reservation outcome could not be confirmed. Manual reconciliation is required before retrying.",
+          },
         });
-
-        walletReserved = false;
-
-        return {
-          success: false,
-          status: "FAILED",
-          transferStarted: false,
-          courierID,
-          payout,
-          transaction,
-          payoutSource: normalizedSource,
-          payoutMethod: normalizedMethod,
-          financials,
-          reversal,
-          message:
-            "Payout failed before transfer initiation and the payout reversal was completed.",
-        };
-      } catch (reversalError) {
-        console.error(
-          "CRITICAL: Pre-transfer payout reversal did not complete:",
-          reversalError,
-        );
-
-        return {
-          success: false,
-          status: "FAILED_RECONCILIATION_REQUIRED",
-          transferStarted: false,
-          courierID,
-          payout,
-          transaction,
-          payoutSource: normalizedSource,
-          payoutMethod: normalizedMethod,
-          financials,
-          message:
-            "Payout failed before transfer initiation, but the wallet reversal did not complete. Reconciliation is required.",
-          error: reversalError.message,
-        };
       }
+    } catch (statusUpdateError) {
+      console.error(
+        "CRITICAL: Could not mark uncertain payout as PROCESSING:",
+        statusUpdateError,
+      );
     }
 
     return {
       success: false,
-
-      status: "FAILED",
-
+      status: "FAILED_RECONCILIATION_REQUIRED",
       transferStarted: false,
-
       courierID,
-
       payout,
-
-      transaction,
-
+      transaction: null,
       payoutSource: normalizedSource,
-
       payoutMethod: normalizedMethod,
-
       financials,
-
-      message: error?.message || "Payout processing failed.",
+      message:
+        "Wallet reservation outcome could not be confirmed. Do not retry this payout until the wallet, reservation and transaction records have been reconciled.",
     };
   }
 };

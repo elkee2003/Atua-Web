@@ -162,6 +162,16 @@ const Header = () => {
                 Contact Us
               </span>
             )}
+
+            {/* Atua Courier Pro */}
+            <span
+              onClick={() => {
+                navigate("/courier-pro");
+                closeMenu();
+              }}
+            >
+              Atua Courier Pro
+            </span>
           </nav>
           <button
             className="button"

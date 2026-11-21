@@ -3,6 +3,10 @@
 const https = require("https");
 const crypto = require("crypto");
 
+/* ==========================================================
+   CONFIGURATION
+========================================================== */
+
 const GRAPHQL_ENDPOINT = process.env.API_ATUA_GRAPHQLAPIENDPOINTOUTPUT;
 
 const REGION = process.env.REGION || process.env.AWS_REGION || "eu-north-1";
@@ -24,12 +28,50 @@ const money = (value) => {
 const errorMessage = (error) => {
   if (!error) return "Unknown error.";
   if (typeof error === "string") return error;
+
   return error.message || JSON.stringify(error);
 };
+
+const definiteFailure = (payoutID, code, message) => ({
+  success: false,
+  status: "FAILED",
+  walletDebited: false,
+  reservationCreated: false,
+  uncertain: false,
+  payoutID: payoutID || null,
+  code,
+  message,
+});
+
+const uncertainFailure = (
+  payoutID,
+  message,
+  reservationID = null,
+  status = "PENDING",
+) => ({
+  success: false,
+  status,
+  walletDebited: null,
+  reservationCreated: reservationID !== null,
+  uncertain: true,
+  payoutID: payoutID || null,
+  reservationID,
+  code: "PAYOUT_RESERVATION_UNCERTAIN",
+  message,
+});
 
 /* ==========================================================
    AWS IAM SIGNING
 ========================================================== */
+
+/*
+  Lambda supplies temporary execution-role credentials through
+  its runtime environment.
+
+  Do not manually create permanent IAM access keys for this
+  Lambda. Its execution role must have the required AppSync
+  permissions.
+*/
 
 const getAwsCredentials = () => {
   const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
@@ -38,7 +80,7 @@ const getAwsCredentials = () => {
 
   if (!accessKeyId || !secretAccessKey) {
     throw new Error(
-      "Lambda IAM credentials are unavailable. Check the execution role.",
+      "Lambda IAM credentials are unavailable. Check the Lambda execution role.",
     );
   }
 
@@ -67,7 +109,9 @@ const signAppSyncRequest = ({ method, path, body, host }) => {
   const credentials = getAwsCredentials();
 
   const now = new Date();
+
   const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, "");
+
   const dateStamp = amzDate.slice(0, 8);
 
   const service = "appsync";
@@ -145,6 +189,10 @@ const graphqlRequest = async (
   }
 
   const endpoint = new URL(GRAPHQL_ENDPOINT);
+
+  if (endpoint.protocol !== "https:" || !endpoint.hostname) {
+    throw new Error("The AppSync GraphQL endpoint is invalid.");
+  }
 
   const body = JSON.stringify({
     query,
@@ -409,7 +457,9 @@ const getReservation = async (payoutID) => {
 
   const reservation = data?.getPayoutReservation || null;
 
-  if (reservation?._deleted === true) return null;
+  if (reservation?._deleted === true) {
+    return null;
+  }
 
   return reservation;
 };
@@ -599,7 +649,9 @@ const getPayoutDebitTransaction = async (transactionID) => {
 
   const transaction = data?.getTransaction || null;
 
-  if (transaction?._deleted === true) return null;
+  if (transaction?._deleted === true) {
+    return null;
+  }
 
   return transaction;
 };
@@ -671,6 +723,11 @@ const createPayoutDebitTransaction = async ({ payout, wallet, debit }) => {
 
     return transaction;
   } catch (error) {
+    /*
+      A create mutation can succeed even if the response is lost.
+      Read the transaction again before treating it as failed.
+    */
+
     const retryRead = await getPayoutDebitTransaction(transactionID);
 
     if (retryRead) {
@@ -768,17 +825,49 @@ exports.handler = async (event) => {
 
       payoutID = body?.payoutID;
     } catch {
-      // Invalid body is handled by the required-field check below.
+      // The required-field validation below handles invalid bodies.
     }
   }
 
   if (!payoutID) {
-    return {
-      success: false,
-      code: "MISSING_PAYOUT_ID",
-      message: "payoutID is required.",
-    };
+    return definiteFailure(null, "MISSING_PAYOUT_ID", "payoutID is required.");
   }
+
+  /*
+    Fail before any GraphQL operation if configuration is missing.
+    This is a definite no-mutation failure.
+  */
+
+  if (!GRAPHQL_ENDPOINT) {
+    return definiteFailure(
+      payoutID,
+      "APPSYNC_ENDPOINT_MISSING",
+      "API_ATUA_GRAPHQLAPIENDPOINTOUTPUT is not configured.",
+    );
+  }
+
+  try {
+    getAwsCredentials();
+  } catch (error) {
+    return definiteFailure(
+      payoutID,
+      "IAM_CREDENTIALS_MISSING",
+      errorMessage(error),
+    );
+  }
+
+  /*
+    These flags are deliberately conservative.
+
+    We only report walletDebited:false when we have established
+    that no wallet debit was attempted and no reservation remains.
+  */
+
+  let reservationLookupCompleted = false;
+  let reservationWasAbsent = false;
+  let reservation = null;
+  let walletDebitAttempted = false;
+  let walletDebitConfirmed = false;
 
   try {
     /* ------------------------------------------------------
@@ -788,7 +877,11 @@ exports.handler = async (event) => {
     const payout = await getPayout(payoutID);
 
     if (!payout) {
-      throw new Error("Payout record does not exist.");
+      return definiteFailure(
+        payoutID,
+        "PAYOUT_NOT_FOUND",
+        "Payout record does not exist.",
+      );
     }
 
     /* ------------------------------------------------------
@@ -801,7 +894,11 @@ exports.handler = async (event) => {
     });
 
     if (!wallet) {
-      throw new Error("Courier wallet does not exist.");
+      return definiteFailure(
+        payoutID,
+        "WALLET_NOT_FOUND",
+        "Courier wallet does not exist.",
+      );
     }
 
     /* ------------------------------------------------------
@@ -819,13 +916,32 @@ exports.handler = async (event) => {
        4. CHECK EXISTING RESERVATION
     ------------------------------------------------------ */
 
-    let reservation = await getReservation(payout.id);
+    reservation = await getReservation(payout.id);
+
+    reservationLookupCompleted = true;
+    reservationWasAbsent = !reservation;
 
     if (reservation) {
+      if (
+        reservation.walletID !== wallet.id ||
+        reservation.courierID !== payout.courierID ||
+        money(reservation.totalWalletDebit) !== debit ||
+        reservation.reference !== payout.reference
+      ) {
+        return uncertainFailure(
+          payout.id,
+          "Existing reservation does not match this payout. Manual reconciliation is required.",
+          reservation.id,
+          reservation.status,
+        );
+      }
+
       if (reservation.status === "RESERVED") {
         return {
           success: true,
           alreadyReserved: true,
+          walletDebited: true,
+          reservationCreated: true,
           payoutID: payout.id,
           walletID: reservation.walletID,
           reservationID: reservation.id,
@@ -839,14 +955,12 @@ exports.handler = async (event) => {
       }
 
       if (reservation.status === "WALLET_DEBITED") {
-        if (
-          reservation.walletID !== wallet.id ||
-          reservation.courierID !== payout.courierID ||
-          money(reservation.totalWalletDebit) !== debit ||
-          reservation.reference !== payout.reference
-        ) {
-          throw new Error("Existing reservation does not match the payout.");
-        }
+        /*
+          The wallet debit already happened.
+          Never deduct the wallet again.
+        */
+
+        walletDebitConfirmed = true;
 
         const transaction = await createPayoutDebitTransaction({
           payout,
@@ -862,12 +976,19 @@ exports.handler = async (event) => {
         });
 
         if (!confirmed) {
-          throw new Error("Could not confirm the final reservation status.");
+          return uncertainFailure(
+            payout.id,
+            "Wallet debit exists, but the final reservation status could not be confirmed. Reconcile before retrying.",
+            reservation.id,
+            "WALLET_DEBITED",
+          );
         }
 
         return {
           success: true,
           resumed: true,
+          walletDebited: true,
+          reservationCreated: true,
           payoutID: payout.id,
           walletID: reservation.walletID,
           reservationID: confirmed.id,
@@ -884,12 +1005,15 @@ exports.handler = async (event) => {
         return {
           success: false,
           inProgress: true,
+          walletDebited: null,
+          reservationCreated: true,
+          uncertain: true,
           payoutID: payout.id,
           reservationID: reservation.id,
           status: reservation.status,
+          code: "RESERVATION_PENDING",
           message:
-            "A payout reservation already exists in PENDING status. " +
-            "No second wallet deduction was attempted. Reconcile it before retrying.",
+            "A payout reservation already exists in PENDING status. No second wallet deduction was attempted. Reconcile it before retrying.",
         };
       }
 
@@ -897,47 +1021,74 @@ exports.handler = async (event) => {
         reservation.status === "FAILED" ||
         reservation.status === "REVERSED"
       ) {
-        throw new Error(
-          `This payout reservation is ${reservation.status}. ` +
-            "It must be reviewed before another reservation can be made.",
-        );
+        return {
+          success: false,
+          walletDebited: null,
+          reservationCreated: true,
+          uncertain: true,
+          payoutID: payout.id,
+          reservationID: reservation.id,
+          status: reservation.status,
+          code: "RESERVATION_REQUIRES_REVIEW",
+          message: `This payout reservation is ${reservation.status}. It must be reviewed before another reservation can be made.`,
+        };
       }
 
-      throw new Error(`Unsupported reservation status: ${reservation.status}`);
+      return uncertainFailure(
+        payout.id,
+        `Unsupported reservation status: ${reservation.status}`,
+        reservation.id,
+        reservation.status,
+      );
     }
 
     /* ------------------------------------------------------
-       5. CHECK COURIER RESTRICTIONS BEFORE A NEW RESERVATION
+       5. CHECK COURIER RESTRICTIONS
     ------------------------------------------------------ */
 
     const courier = await getCourier(payout.courierID);
 
     if (!courier) {
-      throw new Error("Courier record could not be found.");
+      return definiteFailure(
+        payout.id,
+        "COURIER_NOT_FOUND",
+        "Payout courier could not be found.",
+      );
     }
 
     if (courier.isBlocked === true) {
-      throw new Error(
+      return definiteFailure(
+        payout.id,
+        "COURIER_ADMIN_BLOCKED",
         "This courier is administratively blocked and cannot withdraw.",
       );
     }
 
     if (courier.debtRestrictionActive === true) {
-      return {
-        success: false,
-        blocked: true,
-        code: "COURIER_DEBT_RESTRICTED",
-        payoutID: payout.id,
-        message:
-          "This courier has overdue Atua debt. Withdrawals are frozen until the overdue debt is repaid.",
-      };
+      return definiteFailure(
+        payout.id,
+        "COURIER_DEBT_RESTRICTED",
+        "This courier has overdue Atua debt. Withdrawals are frozen until the overdue debt is repaid.",
+      );
     }
 
     /* ------------------------------------------------------
-       6. CREATE THE RESERVATION RECORD
+       6. CHECK AVAILABLE BALANCE
     ------------------------------------------------------ */
 
-    let createdByThisInvocation = false;
+    const currentBalance = money(wallet.availableBalance || 0);
+
+    if (currentBalance < debit) {
+      return definiteFailure(
+        payout.id,
+        "INSUFFICIENT_BALANCE",
+        "Insufficient available wallet balance for this payout.",
+      );
+    }
+
+    /* ------------------------------------------------------
+       7. CREATE RESERVATION RECORD
+    ------------------------------------------------------ */
 
     try {
       reservation = await createReservation({
@@ -949,33 +1100,58 @@ exports.handler = async (event) => {
       if (!reservation) {
         throw new Error("Reservation creation was not confirmed.");
       }
-
-      createdByThisInvocation = true;
     } catch (createError) {
-      const existing = await getReservation(payout.id);
+      /*
+        The create operation may have succeeded even if its
+        response was lost. Read the reservation before deciding.
+      */
+
+      let existing;
+
+      try {
+        existing = await getReservation(payout.id);
+      } catch (readError) {
+        return uncertainFailure(
+          payout.id,
+          "Reservation creation could not be confirmed and the follow-up read also failed. Reconcile before retrying. " +
+            errorMessage(readError),
+        );
+      }
 
       if (existing) {
         return {
           success: false,
           inProgress: true,
+          walletDebited: null,
+          reservationCreated: true,
+          uncertain: true,
           payoutID: payout.id,
           reservationID: existing.id,
           status: existing.status,
+          code: "RESERVATION_ALREADY_EXISTS",
           message:
-            "A reservation already exists. No additional wallet debit was attempted.",
+            "A reservation already exists. No additional wallet debit was attempted. Reconcile it before retrying.",
         };
       }
 
-      throw createError;
-    }
-
-    if (!createdByThisInvocation) {
-      throw new Error("Reservation ownership could not be confirmed.");
+      return definiteFailure(
+        payout.id,
+        "RESERVATION_CREATION_FAILED",
+        errorMessage(createError),
+      );
     }
 
     /* ------------------------------------------------------
-       7. DEDUCT WALLET BALANCE
+       8. DEDUCT WALLET BALANCE
     ------------------------------------------------------ */
+
+    /*
+      From this point onward, an error may have an uncertain
+      outcome. Do not report walletDebited:false unless a
+      follow-up read proves the wallet was not changed.
+    */
+
+    walletDebitAttempted = true;
 
     let updatedWallet;
 
@@ -984,23 +1160,20 @@ exports.handler = async (event) => {
         wallet,
         debit,
       });
+
+      walletDebitConfirmed = true;
     } catch (walletError) {
       console.error(
         "WALLET DEDUCTION NOT CONFIRMED:",
         errorMessage(walletError),
       );
 
-      return {
-        success: false,
-        uncertain: true,
-        payoutID: payout.id,
-        reservationID: reservation.id,
-        status: "PENDING",
-        message:
-          "Wallet deduction could not be confirmed. " +
-          "The reservation remains PENDING to prevent a duplicate debit. " +
-          "Reconcile before retrying.",
-      };
+      return uncertainFailure(
+        payout.id,
+        "Wallet deduction could not be confirmed. The reservation remains PENDING to prevent a duplicate debit. Reconcile before retrying.",
+        reservation.id,
+        "PENDING",
+      );
     }
 
     console.log("PAYOUT WALLET DEBIT CONFIRMED:", {
@@ -1012,64 +1185,101 @@ exports.handler = async (event) => {
     });
 
     /* ------------------------------------------------------
-       8. MARK WALLET_DEBITED
+       9. MARK RESERVATION WALLET_DEBITED
     ------------------------------------------------------ */
 
-    reservation = await updateReservation(reservation, {
-      status: "WALLET_DEBITED",
-      failureReason: null,
-    });
-
-    if (!reservation) {
-      return {
-        success: false,
-        uncertain: true,
-        payoutID: payout.id,
-        reservationID: payout.id,
+    try {
+      reservation = await updateReservation(reservation, {
         status: "WALLET_DEBITED",
-        message:
-          "Wallet debit succeeded, but reservation status update was not confirmed. " +
-          "Do not repeat the wallet debit. Reconcile this payout.",
-      };
+        failureReason: null,
+      });
+
+      if (!reservation) {
+        return uncertainFailure(
+          payout.id,
+          "Wallet debit succeeded, but the reservation status update was not confirmed. Do not repeat the wallet debit. Reconcile this payout.",
+          payout.id,
+          "WALLET_DEBITED",
+        );
+      }
+    } catch (reservationUpdateError) {
+      console.error(
+        "RESERVATION WALLET_DEBITED UPDATE FAILED:",
+        errorMessage(reservationUpdateError),
+      );
+
+      return uncertainFailure(
+        payout.id,
+        "Wallet debit succeeded, but the reservation status update failed. Do not repeat the wallet debit. Reconcile this payout.",
+        payout.id,
+        "WALLET_DEBITED",
+      );
     }
 
     /* ------------------------------------------------------
-       9. CREATE OR RETRIEVE DEBIT TRANSACTION
+       10. CREATE OR RETRIEVE DEBIT TRANSACTION
     ------------------------------------------------------ */
 
-    const transaction = await createPayoutDebitTransaction({
-      payout,
-      wallet: updatedWallet,
-      debit,
-    });
+    let transaction;
+
+    try {
+      transaction = await createPayoutDebitTransaction({
+        payout,
+        wallet: updatedWallet,
+        debit,
+      });
+    } catch (transactionError) {
+      console.error(
+        "PAYOUT DEBIT TRANSACTION FAILED:",
+        errorMessage(transactionError),
+      );
+
+      return uncertainFailure(
+        payout.id,
+        "Wallet debit succeeded, but the payout debit transaction could not be confirmed. Do not deduct again. Reconcile this payout.",
+        reservation.id,
+        "WALLET_DEBITED",
+      );
+    }
 
     /* ------------------------------------------------------
-       10. MARK RESERVATION RESERVED
+       11. MARK RESERVATION RESERVED
     ------------------------------------------------------ */
 
-    const confirmedReservation = await updateReservation(reservation, {
-      transactionID: transaction.id,
-      status: "RESERVED",
-      failureReason: null,
-      reservedAt: new Date().toISOString(),
-    });
+    let confirmedReservation;
+
+    try {
+      confirmedReservation = await updateReservation(reservation, {
+        transactionID: transaction.id,
+        status: "RESERVED",
+        failureReason: null,
+        reservedAt: new Date().toISOString(),
+      });
+    } catch (finalUpdateError) {
+      console.error(
+        "FINAL RESERVATION UPDATE FAILED:",
+        errorMessage(finalUpdateError),
+      );
+
+      return uncertainFailure(
+        payout.id,
+        "Wallet debit and transaction are recorded, but final reservation confirmation failed. Do not deduct again. Reconcile this payout.",
+        reservation.id,
+        "WALLET_DEBITED",
+      );
+    }
 
     if (!confirmedReservation) {
-      return {
-        success: false,
-        uncertain: true,
-        payoutID: payout.id,
-        reservationID: reservation.id,
-        transactionID: transaction.id,
-        status: "WALLET_DEBITED",
-        message:
-          "Wallet debit and transaction are recorded, but final reservation confirmation failed. " +
-          "Do not deduct again. Reconcile this payout.",
-      };
+      return uncertainFailure(
+        payout.id,
+        "Wallet debit and transaction are recorded, but final reservation confirmation failed. Do not deduct again. Reconcile this payout.",
+        reservation.id,
+        "WALLET_DEBITED",
+      );
     }
 
     /* ------------------------------------------------------
-       11. SUCCESS
+       12. SUCCESS
     ------------------------------------------------------ */
 
     console.log("PAYOUT WALLET RESERVED SUCCESSFULLY:", {
@@ -1082,6 +1292,8 @@ exports.handler = async (event) => {
 
     return {
       success: true,
+      walletDebited: true,
+      reservationCreated: true,
       payoutID: payout.id,
       reservationID: confirmedReservation.id,
       walletID: wallet.id,
@@ -1097,11 +1309,37 @@ exports.handler = async (event) => {
   } catch (error) {
     console.error("RESERVE PAYOUT WALLET FAILED:", errorMessage(error));
 
-    return {
-      success: false,
+    /*
+      Only classify an error as a definite no-debit failure
+      when the reservation lookup confirmed there was no
+      existing reservation and no wallet debit was attempted.
+    */
+
+    if (
+      reservationLookupCompleted &&
+      reservationWasAbsent &&
+      !walletDebitAttempted &&
+      !walletDebitConfirmed &&
+      !reservation
+    ) {
+      return definiteFailure(
+        payoutID,
+        "PAYOUT_RESERVATION_FAILED",
+        errorMessage(error),
+      );
+    }
+
+    /*
+      If a reservation exists or a wallet debit was attempted,
+      preserve the uncertainty. Never tell processPayouts that
+      the wallet definitely was not debited in these cases.
+    */
+
+    return uncertainFailure(
       payoutID,
-      code: "PAYOUT_RESERVATION_FAILED",
-      message: errorMessage(error),
-    };
+      errorMessage(error),
+      reservation?.id || null,
+      reservation?.status || "PENDING",
+    );
   }
 };

@@ -86,23 +86,6 @@ export const adminMakeAllPayouts = /* GraphQL */ `
     }
   }
 `;
-export const requestPayout = /* GraphQL */ `
-  mutation RequestPayout(
-    $courierID: ID!
-    $requestedAmount: Float!
-    $payoutMethod: String!
-  ) {
-    requestPayout(
-      courierID: $courierID
-      requestedAmount: $requestedAmount
-      payoutMethod: $payoutMethod
-    ) {
-      statusCode
-      body
-      __typename
-    }
-  }
-`;
 export const createFleetWallet = /* GraphQL */ `
   mutation CreateFleetWallet(
     $input: CreateFleetWalletInput!
@@ -376,6 +359,7 @@ export const createFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -605,6 +589,7 @@ export const updateFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -834,6 +819,7 @@ export const deleteFleetTransaction = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1246,6 +1232,7 @@ export const createFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1549,6 +1536,7 @@ export const updateFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -1852,6 +1840,7 @@ export const deleteFleetOrder = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -2325,6 +2314,7 @@ export const createFleetMember = /* GraphQL */ `
     createFleetMember(input: $input, condition: $condition) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -2473,6 +2463,7 @@ export const updateFleetMember = /* GraphQL */ `
     updateFleetMember(input: $input, condition: $condition) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -2621,6 +2612,7 @@ export const deleteFleetMember = /* GraphQL */ `
     deleteFleetMember(input: $input, condition: $condition) {
       id
       fleetID
+      userSub
       courierID
       role
       status
@@ -4000,6 +3992,8 @@ export const createWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -4028,6 +4022,8 @@ export const updateWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -4056,6 +4052,8 @@ export const deleteWallet = /* GraphQL */ `
       availableBalance
       pendingBalance
       lifetimeEarnings
+      cashLifetimeEarnings
+      electronicLifetimeEarnings
       outstandingDebt
       activeCourierDebtID
       transactions {
@@ -4113,6 +4111,7 @@ export const createPayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4317,6 +4316,7 @@ export const updatePayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4521,6 +4521,7 @@ export const deletePayment = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4714,6 +4715,7 @@ export const createOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -4954,6 +4956,7 @@ export const updateOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -5194,6 +5197,7 @@ export const deleteOffer = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -6640,6 +6644,7 @@ export const createOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -6896,6 +6901,7 @@ export const updateOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -7152,6 +7158,7 @@ export const deleteOrder = /* GraphQL */ `
       transportationType
       vehicleClass
       status
+      statusBeforeAssignment
       supportCreatedByID
       receiverConfirmationStatus
       receiverConfirmedAt
@@ -7498,6 +7505,7 @@ export const createCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -7763,6 +7771,7 @@ export const updateCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8028,6 +8037,7 @@ export const deleteCourierReport = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8293,6 +8303,7 @@ export const createCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8554,6 +8565,7 @@ export const updateCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -8815,6 +8827,7 @@ export const deleteCourierReview = /* GraphQL */ `
         transportationType
         vehicleClass
         status
+        statusBeforeAssignment
         supportCreatedByID
         receiverConfirmationStatus
         receiverConfirmedAt
@@ -9469,6 +9482,8 @@ export const createCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9625,6 +9640,8 @@ export const updateCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9781,6 +9798,8 @@ export const deleteCourier = /* GraphQL */ `
         availableBalance
         pendingBalance
         lifetimeEarnings
+        cashLifetimeEarnings
+        electronicLifetimeEarnings
         outstandingDebt
         activeCourierDebtID
         createdAt
@@ -9945,6 +9964,82 @@ export const deleteUser = /* GraphQL */ `
         __typename
       }
       paymentMethods {
+        nextToken
+        startedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+      __typename
+    }
+  }
+`;
+export const registerFleet = /* GraphQL */ `
+  mutation RegisterFleet($input: RegisterFleetInput!) {
+    registerFleet(input: $input) {
+      id
+      name
+      businessName
+      organisationType
+      legalStatus
+      verificationStatus
+      registrationNumber
+      registrationCountry
+      registrationAuthority
+      isRecognisedBrand
+      brandWebsite
+      verificationNotes
+      logo
+      phoneNumber
+      email
+      address
+      state
+      city
+      landmark
+      lat
+      lng
+      status
+      ownerUserID
+      subscriptionPlan
+      subscriptionStatus
+      subscriptionStartedAt
+      subscriptionRenewsAt
+      trialEndsAt
+      members {
+        nextToken
+        startedAt
+        __typename
+      }
+      vehicles {
+        nextToken
+        startedAt
+        __typename
+      }
+      invitations {
+        nextToken
+        startedAt
+        __typename
+      }
+      fleetOrders {
+        nextToken
+        startedAt
+        __typename
+      }
+      walletID
+      wallets {
+        nextToken
+        startedAt
+        __typename
+      }
+      transactions {
+        nextToken
+        startedAt
+        __typename
+      }
+      subscriptions {
         nextToken
         startedAt
         __typename
@@ -10150,6 +10245,23 @@ export const verifyCourierDebtPayment = /* GraphQL */ `
       previousDebt
       remainingDebt
       paidAt
+      __typename
+    }
+  }
+`;
+export const requestPayout = /* GraphQL */ `
+  mutation RequestPayout(
+    $courierID: ID!
+    $requestedAmount: Float!
+    $payoutMethod: String!
+  ) {
+    requestPayout(
+      courierID: $courierID
+      requestedAmount: $requestedAmount
+      payoutMethod: $payoutMethod
+    ) {
+      statusCode
+      body
       __typename
     }
   }

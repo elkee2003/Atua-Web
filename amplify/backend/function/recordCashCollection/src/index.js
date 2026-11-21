@@ -67,6 +67,8 @@ const WALLET_FIELDS = `
   availableBalance
   pendingBalance
   lifetimeEarnings
+  cashLifetimeEarnings
+  electronicLifetimeEarnings
   outstandingDebt
   activeCourierDebtID
   _version
@@ -704,6 +706,8 @@ async function createCourierWallet(courierId) {
     availableBalance: 0,
     pendingBalance: 0,
     lifetimeEarnings: 0,
+    cashLifetimeEarnings: 0,
+    electronicLifetimeEarnings: 0,
     outstandingDebt: 0,
   };
 
@@ -1214,6 +1218,90 @@ async function updateWallet(wallet, updates) {
   throw new Error("Unable to update courier wallet after repeated conflicts.");
 }
 
+async function updateWalletEarnings(wallet, cashLifetimeEarnings) {
+  let current = wallet;
+
+  for (let attempt = 0; attempt < MAX_CAS_ATTEMPTS; attempt++) {
+    assertVersioned(current, "Wallet");
+
+    // Always use the latest electronic total from the wallet.
+    // This prevents cash collection from overwriting electronic earnings.
+    const electronicLifetimeEarnings = roundMoney(
+      Number(current.electronicLifetimeEarnings || 0),
+    );
+
+    const newCashLifetimeEarnings = roundMoney(cashLifetimeEarnings);
+
+    const lifetimeEarnings = roundMoney(
+      newCashLifetimeEarnings + electronicLifetimeEarnings,
+    );
+
+    const input = {
+      id: current.id,
+      cashLifetimeEarnings: newCashLifetimeEarnings,
+      lifetimeEarnings,
+      _version: current._version,
+    };
+
+    const mutation = `
+      mutation UpdateWalletLifetimeEarnings(
+        $input: UpdateWalletInput!
+      ) {
+        updateWallet(input: $input) {
+          ${WALLET_FIELDS}
+        }
+      }
+    `;
+
+    try {
+      const data = await graphqlRequest(
+        mutation,
+        { input },
+        "UpdateWalletLifetimeEarnings",
+        "IAM",
+      );
+
+      const updated = data?.updateWallet;
+
+      if (!updated) {
+        throw new Error("Wallet lifetime earnings update failed.");
+      }
+
+      return updated;
+    } catch (error) {
+      // Reload the wallet before retrying.
+      // The next attempt recalculates the combined total using
+      // the latest electronic earnings value.
+      current = await getWalletForCourier(current.ownerID);
+
+      if (!current) {
+        throw new Error("Courier wallet could not be reloaded.");
+      }
+
+      // The update may have succeeded even if the response timed out.
+      if (
+        roundMoney(Number(current.cashLifetimeEarnings || 0)) ===
+          newCashLifetimeEarnings &&
+        roundMoney(Number(current.lifetimeEarnings || 0)) ===
+          roundMoney(
+            newCashLifetimeEarnings +
+              Number(current.electronicLifetimeEarnings || 0),
+          )
+      ) {
+        return current;
+      }
+
+      if (attempt === MAX_CAS_ATTEMPTS - 1) {
+        throw error;
+      }
+    }
+  }
+
+  throw new Error(
+    "Unable to update wallet lifetime earnings after repeated conflicts.",
+  );
+}
+
 async function ensureCashEarnings({ order, courierId, courierEarnings }) {
   const earnings = getCourierEarnings({
     ...order,
@@ -1223,17 +1311,17 @@ async function ensureCashEarnings({ order, courierId, courierEarnings }) {
   let wallet = await getWalletForCourier(courierId);
 
   // Create one deterministic transaction for this cash order.
+  // This prevents the same order from being counted twice.
   await createCashEarningsTransaction({
     walletId: wallet.id,
     orderId: order.id,
     courierEarnings: earnings,
   });
 
-  // Rebuild lifetime earnings from the completed CASH_EARNINGS ledger.
-  // This makes a retry repair the wallet total instead of incrementing twice.
+  // Rebuild the cash earnings total from the cash earnings ledger.
   const transactions = await listCashEarningsTransactions(wallet.id);
 
-  const lifetimeEarnings = roundMoney(
+  const cashLifetimeEarnings = roundMoney(
     transactions.reduce((sum, transaction) => {
       const amount = Number(transaction.amount);
 
@@ -1247,16 +1335,19 @@ async function ensureCashEarnings({ order, courierId, courierEarnings }) {
     }, 0),
   );
 
+  // Reload the latest wallet before updating its lifetime earnings.
   wallet = await getWalletForCourier(courierId);
 
-  if (Number(wallet.lifetimeEarnings || 0) !== lifetimeEarnings) {
-    wallet = await updateWallet(wallet, { lifetimeEarnings });
-  }
+  // Update cash lifetime earnings and recalculate the combined total.
+  // Electronic lifetime earnings are preserved.
+  wallet = await updateWalletEarnings(wallet, cashLifetimeEarnings);
 
   return {
     wallet,
     courierEarnings: earnings,
-    lifetimeEarnings,
+    cashLifetimeEarnings: Number(wallet.cashLifetimeEarnings || 0),
+    electronicLifetimeEarnings: Number(wallet.electronicLifetimeEarnings || 0),
+    lifetimeEarnings: Number(wallet.lifetimeEarnings || 0),
   };
 }
 

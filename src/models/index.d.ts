@@ -504,6 +504,60 @@ export declare type RecordCashCollectionResult = LazyLoading extends LazyLoading
 
 export declare const RecordCashCollectionResult: (new (init: ModelInit<RecordCashCollectionResult>) => RecordCashCollectionResult)
 
+type EagerMyCashCollection = {
+  readonly id: string;
+  readonly orderID: string;
+  readonly courierID: string;
+  readonly amount: number;
+  readonly status: CashCollectionStatus | keyof typeof CashCollectionStatus;
+  readonly idempotencyKey: string;
+  readonly confirmedAt: string;
+  readonly reconciledAt?: string | null;
+  readonly reconciliationReference?: string | null;
+  readonly courierDebtID?: string | null;
+  readonly atuaShareAmount?: number | null;
+  readonly debtAppliedAt?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyMyCashCollection = {
+  readonly id: string;
+  readonly orderID: string;
+  readonly courierID: string;
+  readonly amount: number;
+  readonly status: CashCollectionStatus | keyof typeof CashCollectionStatus;
+  readonly idempotencyKey: string;
+  readonly confirmedAt: string;
+  readonly reconciledAt?: string | null;
+  readonly reconciliationReference?: string | null;
+  readonly courierDebtID?: string | null;
+  readonly atuaShareAmount?: number | null;
+  readonly debtAppliedAt?: string | null;
+  readonly createdAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type MyCashCollection = LazyLoading extends LazyLoadingDisabled ? EagerMyCashCollection : LazyMyCashCollection
+
+export declare const MyCashCollection: (new (init: ModelInit<MyCashCollection>) => MyCashCollection)
+
+type EagerGetMyCashCollectionsResult = {
+  readonly success: boolean;
+  readonly message: string;
+  readonly items?: (MyCashCollection | null)[] | null;
+}
+
+type LazyGetMyCashCollectionsResult = {
+  readonly success: boolean;
+  readonly message: string;
+  readonly items?: (MyCashCollection | null)[] | null;
+}
+
+export declare type GetMyCashCollectionsResult = LazyLoading extends LazyLoadingDisabled ? EagerGetMyCashCollectionsResult : LazyGetMyCashCollectionsResult
+
+export declare const GetMyCashCollectionsResult: (new (init: ModelInit<GetMyCashCollectionsResult>) => GetMyCashCollectionsResult)
+
 type EagerUpdateCourierOrderStatusResult = {
   readonly success: boolean;
   readonly message: string;
@@ -637,6 +691,40 @@ type LazyVerifyCourierDebtPaymentResult = {
 export declare type VerifyCourierDebtPaymentResult = LazyLoading extends LazyLoadingDisabled ? EagerVerifyCourierDebtPaymentResult : LazyVerifyCourierDebtPaymentResult
 
 export declare const VerifyCourierDebtPaymentResult: (new (init: ModelInit<VerifyCourierDebtPaymentResult>) => VerifyCourierDebtPaymentResult)
+
+type EagerGetAssignedOrderStatusResult = {
+  readonly success: boolean;
+  readonly message: string;
+  readonly orderId?: string | null;
+  readonly assignedCourierId?: string | null;
+  readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly acceptedAt?: string | null;
+  readonly arrivedPickupAt?: string | null;
+  readonly loadingStartedAt?: string | null;
+  readonly tripStartedAt?: string | null;
+  readonly arrivedDropoffAt?: string | null;
+  readonly unloadingCompletedAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+type LazyGetAssignedOrderStatusResult = {
+  readonly success: boolean;
+  readonly message: string;
+  readonly orderId?: string | null;
+  readonly assignedCourierId?: string | null;
+  readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly acceptedAt?: string | null;
+  readonly arrivedPickupAt?: string | null;
+  readonly loadingStartedAt?: string | null;
+  readonly tripStartedAt?: string | null;
+  readonly arrivedDropoffAt?: string | null;
+  readonly unloadingCompletedAt?: string | null;
+  readonly updatedAt?: string | null;
+}
+
+export declare type GetAssignedOrderStatusResult = LazyLoading extends LazyLoadingDisabled ? EagerGetAssignedOrderStatusResult : LazyGetAssignedOrderStatusResult
+
+export declare const GetAssignedOrderStatusResult: (new (init: ModelInit<GetAssignedOrderStatusResult>) => GetAssignedOrderStatusResult)
 
 type EagerProcessPayoutsResponse = {
   readonly statusCode: number;
@@ -962,7 +1050,8 @@ type EagerFleetMember = {
   };
   readonly id: string;
   readonly fleetID: string;
-  readonly courierID: string;
+  readonly userSub: string;
+  readonly courierID?: string | null;
   readonly role: FleetRole | keyof typeof FleetRole;
   readonly status: FleetMemberStatus | keyof typeof FleetMemberStatus;
   readonly currentVehicleID?: string | null;
@@ -983,7 +1072,8 @@ type LazyFleetMember = {
   };
   readonly id: string;
   readonly fleetID: string;
-  readonly courierID: string;
+  readonly userSub: string;
+  readonly courierID?: string | null;
   readonly role: FleetRole | keyof typeof FleetRole;
   readonly status: FleetMemberStatus | keyof typeof FleetMemberStatus;
   readonly currentVehicleID?: string | null;
@@ -1339,6 +1429,8 @@ type EagerWallet = {
   readonly availableBalance?: number | null;
   readonly pendingBalance?: number | null;
   readonly lifetimeEarnings?: number | null;
+  readonly cashLifetimeEarnings?: number | null;
+  readonly electronicLifetimeEarnings?: number | null;
   readonly outstandingDebt?: number | null;
   readonly activeCourierDebtID?: string | null;
   readonly transactions?: (Transaction | null)[] | null;
@@ -1357,6 +1449,8 @@ type LazyWallet = {
   readonly availableBalance?: number | null;
   readonly pendingBalance?: number | null;
   readonly lifetimeEarnings?: number | null;
+  readonly cashLifetimeEarnings?: number | null;
+  readonly electronicLifetimeEarnings?: number | null;
   readonly outstandingDebt?: number | null;
   readonly activeCourierDebtID?: string | null;
   readonly transactions: AsyncCollection<Transaction>;
@@ -1824,6 +1918,7 @@ type EagerOrder = {
   readonly transportationType?: string | null;
   readonly vehicleClass?: string | null;
   readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly statusBeforeAssignment?: string | null;
   readonly supportCreatedByID?: string | null;
   readonly receiverConfirmationStatus?: ReceiverConfirmationStatus | keyof typeof ReceiverConfirmationStatus | null;
   readonly receiverConfirmedAt?: string | null;
@@ -1987,6 +2082,7 @@ type LazyOrder = {
   readonly transportationType?: string | null;
   readonly vehicleClass?: string | null;
   readonly status?: OrderStatus | keyof typeof OrderStatus | null;
+  readonly statusBeforeAssignment?: string | null;
   readonly supportCreatedByID?: string | null;
   readonly receiverConfirmationStatus?: ReceiverConfirmationStatus | keyof typeof ReceiverConfirmationStatus | null;
   readonly receiverConfirmedAt?: string | null;

@@ -318,13 +318,11 @@ async function getCourierById(courierID) {
         email
         walletID
 
-        // Debt restriction fields
         debtRestrictionActive
         debtDueAt
         debtBlockedAt
         debtBlockReason
 
-        // Courier status fields
         isOnline
         isApproved
         isBlocked

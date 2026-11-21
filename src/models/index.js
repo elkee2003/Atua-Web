@@ -348,7 +348,7 @@ const CourierReportStatus = {
   "DISMISSED": "DISMISSED"
 };
 
-const { FleetWallet, FleetTransaction, FleetSubscription, FleetOrder, Fleet, FleetMember, FleetInvitation, FleetVehicle, PaymentMethod, PayoutReservation, Payout, Transaction, Wallet, Payment, Offer, OrderCancellation, CourierDebtReconciliation, CourierDebt, CourierDebtPayment, CourierReconciliation, CashCollection, Order, CourierReport, CourierReview, AdminAlert, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails, ChargeAtuaPaymentMethodResult, DeleteSavedPaymentMethodResult, InitializeAtuaPaymentResult, InitializeDeliveryPaymentResult, RecordCashCollectionResult, UpdateCourierOrderStatusResult, AcceptDeliveryOrderResult, SelectDeliveryPaymentMethodResult, InitializeCourierDebtPaymentResult, VerifyCourierDebtPaymentResult, ProcessPayoutsResponse, ReversePayoutResponse } = initSchema(schema);
+const { FleetWallet, FleetTransaction, FleetSubscription, FleetOrder, Fleet, FleetMember, FleetInvitation, FleetVehicle, PaymentMethod, PayoutReservation, Payout, Transaction, Wallet, Payment, Offer, OrderCancellation, CourierDebtReconciliation, CourierDebt, CourierDebtPayment, CourierReconciliation, CashCollection, Order, CourierReport, CourierReview, AdminAlert, CourierLiveLocation, Courier, User, VerifyAtuaPaymentResult, VerifiedPaymentDetails, ChargeAtuaPaymentMethodResult, DeleteSavedPaymentMethodResult, InitializeAtuaPaymentResult, InitializeDeliveryPaymentResult, RecordCashCollectionResult, MyCashCollection, GetMyCashCollectionsResult, UpdateCourierOrderStatusResult, AcceptDeliveryOrderResult, SelectDeliveryPaymentMethodResult, InitializeCourierDebtPaymentResult, VerifyCourierDebtPaymentResult, GetAssignedOrderStatusResult, ProcessPayoutsResponse, ReversePayoutResponse } = initSchema(schema);
 
 export {
   FleetWallet,
@@ -433,11 +433,14 @@ export {
   InitializeAtuaPaymentResult,
   InitializeDeliveryPaymentResult,
   RecordCashCollectionResult,
+  MyCashCollection,
+  GetMyCashCollectionsResult,
   UpdateCourierOrderStatusResult,
   AcceptDeliveryOrderResult,
   SelectDeliveryPaymentMethodResult,
   InitializeCourierDebtPaymentResult,
   VerifyCourierDebtPaymentResult,
+  GetAssignedOrderStatusResult,
   ProcessPayoutsResponse,
   ReversePayoutResponse
 };
